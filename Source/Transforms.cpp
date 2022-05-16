@@ -70,7 +70,7 @@ void Transformations<SampleType>::coefficients(SampleType b0, SampleType b1, Sam
 }
 
 template <typename SampleType>
-void Transformations<SampleType>::setTransformType(dfType newTransformType)
+void Transformations<SampleType>::setTransformType(directForm newTransformType)
 {
     if (transformType != newTransformType)
     {

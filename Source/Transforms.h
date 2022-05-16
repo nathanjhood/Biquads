@@ -17,17 +17,17 @@
 
 enum class TransformationType
 {
-    dfI,
-    dfII,
-    dfIt,
-    dfIIt
+    directFormI = 0,
+    directFormII,
+    directFormItransposed,
+    directFormIItransposed
 };
 
 template <typename SampleType>
 class Transformations
 {
 public:
-    using dfType = TransformationType;
+    using directForm = TransformationType;
     //==============================================================================
     /** Constructor. */
     Transformations();
@@ -47,7 +47,7 @@ public:
     //==============================================================================
     void coefficients(SampleType b0, SampleType b1, SampleType b2, SampleType a0, SampleType a1, SampleType a2);
 
-    void setTransformType(dfType newTransformType);
+    void setTransformType(directForm newTransformType);
 
     //==============================================================================
     /** Processes the input and output samples supplied in the processing context. */
@@ -101,7 +101,7 @@ private:
 
     //==============================================================================
     SampleType b0_ = 1.0, b1_ = 0.0, b2_ = 0.0, a0_ = 1.0, a1_ = 0.0, a2_ = 0.0;
-    dfType transformType = dfType::dfI;
+    directForm transformType = directForm::directFormIItransposed;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Transformations)
 };
