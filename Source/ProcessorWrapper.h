@@ -62,8 +62,9 @@ private:
     /** Parameter pointers. */
     juce::AudioParameterBool*       ioPtr           { nullptr };
     juce::AudioParameterFloat*      frequencyPtr    { nullptr };
-    juce::AudioParameterFloat*      bandwidthPtr    { nullptr };
+    juce::AudioParameterFloat*      resonancePtr    { nullptr };
     juce::AudioParameterFloat*      gainPtr         { nullptr };
+    juce::AudioParameterChoice*     typePtr         { nullptr };
     juce::AudioParameterChoice*     transformPtr    { nullptr };
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ProcessWrapper)

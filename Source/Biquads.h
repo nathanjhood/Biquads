@@ -121,9 +121,11 @@ public:
 
 private:
     //==============================================================================
-    void update();
+    //void update();
 
-    void coefficients(SampleType newOmega, SampleType newCos, SampleType newSin, SampleType newTan, SampleType newAlpha, SampleType newGain);
+    //void coefficients(SampleType newOmega, SampleType newCos, SampleType newSin, SampleType newTan, SampleType newAlpha, SampleType newGain);
+
+    void coefficients();
 
     //==============================================================================
     /*Calculations<SampleType> calculate;

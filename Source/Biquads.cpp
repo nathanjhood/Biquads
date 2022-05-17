@@ -14,14 +14,6 @@
 template <typename SampleType>
 Biquads<SampleType>::Biquads()
 {
-    b0_ = SampleType(1.0);
-    b1_ = SampleType(0.0);
-    b2_ = SampleType(0.0);
-    a0_ = SampleType(1.0);
-    a1_ = SampleType(0.0);
-    a2_ = SampleType(0.0);
-
-    update();
     reset(static_cast<SampleType>(0.0));
 }
 
@@ -32,7 +24,7 @@ void Biquads<SampleType>::setFrequency(SampleType newFreq)
     jassert(static_cast<SampleType>(20.0) <= newFreq && newFreq <= static_cast<SampleType>(20000.0));
 
     hz = static_cast<SampleType>(jlimit(minFreq, maxFreq, newFreq));
-    update();
+    coefficients();
 }
 
 template <typename SampleType>
@@ -41,14 +33,14 @@ void Biquads<SampleType>::setResonance(SampleType newRes)
     jassert(static_cast<SampleType>(0.0) <= newRes && newRes <= static_cast<SampleType>(1.0));
 
     q = static_cast<SampleType>(jlimit(SampleType(0.0), SampleType(1.0), newRes));
-    update();
+    coefficients();
 }
 
 template <typename SampleType>
 void Biquads<SampleType>::setGain(SampleType newGain)
 {
     g = static_cast<SampleType>(newGain);
-    update();
+    coefficients();
 }
 
 template <typename SampleType>
@@ -58,7 +50,7 @@ void Biquads<SampleType>::setFilterType(filterType newFiltType)
     {
         filtType = newFiltType;
         reset(static_cast<SampleType>(0.0));
-        update();
+        coefficients();
     }
 }
 
@@ -69,7 +61,7 @@ void Biquads<SampleType>::setTransformType(transformationType newTransformType)
     {
         transformType = newTransformType;
         reset(static_cast<SampleType>(0.0));
-        update();
+        coefficients();
     }
 }
 
@@ -89,7 +81,7 @@ void Biquads<SampleType>::prepare(juce::dsp::ProcessSpec& spec)
     Yn_1.resize(spec.numChannels);
     Yn_2.resize(spec.numChannels);
 
-    update();
+    coefficients();
     reset(static_cast<SampleType>(0.0));
 
     minFreq = static_cast <SampleType>(sampleRate) / static_cast <SampleType>(24576.0);
@@ -121,12 +113,7 @@ void Biquads<SampleType>::reset(SampleType initialValue)
     for (auto& yn_2 : Yn_2)
         yn_2 = initialValue;
 
-    b0_ = SampleType(1.0);
-    b1_ = SampleType(0.0);
-    b2_ = SampleType(0.0);
-    a0_ = SampleType(1.0);
-    a1_ = SampleType(0.0);
-    a2_ = SampleType(0.0);
+    coefficients();
 }
 
 template <typename SampleType>
@@ -211,61 +198,88 @@ SampleType Biquads<SampleType>::directFormIITransposed(int channel, SampleType i
     return Yn;
 }
 
+//template <typename SampleType>
+//void Biquads<SampleType>::update()
+//{
+//    auto omega = static_cast <SampleType>(hz * ((pi * static_cast <SampleType>(2.0)) / sampleRate));
+//    auto cos = static_cast <SampleType>(std::cos(omega));
+//    auto sin = static_cast <SampleType>(std::sin(omega));
+//    auto tan = static_cast <SampleType>(sin / cos);
+//    auto alpha = static_cast <SampleType>(sin * (static_cast <SampleType>(1.0) - q));
+//    auto a = static_cast <SampleType>(std::pow(static_cast <SampleType>(10.0), (g / static_cast <SampleType>(40.0))));
+//
+//    coefficients(omega, cos, sin, tan, alpha, a);
+//}
+
 template <typename SampleType>
-void Biquads<SampleType>::update()
+void Biquads<SampleType>::coefficients()
 {
-    auto omega = static_cast <SampleType>(hz * ((pi * static_cast <SampleType>(2.0)) / sampleRate));
-    auto cos = static_cast <SampleType>(std::cos(omega));
-    auto sin = static_cast <SampleType>(std::sin(omega));
-    auto tan = static_cast <SampleType>(sin / cos);
-    auto alpha = static_cast <SampleType>(sin * (static_cast <SampleType>(1.0) - q));
-    auto a = static_cast <SampleType>(std::pow(static_cast <SampleType>(10.0), (g / static_cast <SampleType>(40.0))));
+    SampleType omega = static_cast <SampleType>(hz * ((pi * static_cast <SampleType>(2.0)) / sampleRate));
+    SampleType cos = static_cast <SampleType>(std::cos(omega));
+    SampleType sin = static_cast <SampleType>(std::sin(omega));
+    SampleType tan = static_cast <SampleType>(sin / cos);
+    SampleType alpha = static_cast <SampleType>(sin * (static_cast <SampleType>(1.0) - q));
+    SampleType a = static_cast <SampleType>(std::pow(static_cast <SampleType>(10.0), (g / static_cast <SampleType>(40.0))));
 
-    coefficients(omega, cos, sin, tan, alpha, a);
-}
+    SampleType b0 = SampleType(1.0);
+    SampleType b1 = SampleType(0.0);
+    SampleType b2 = SampleType(0.0);
+    SampleType a0 = SampleType(1.0);
+    SampleType a1 = SampleType(0.0);
+    SampleType a2 = SampleType(0.0);
 
-template <typename SampleType>
-void Biquads<SampleType>::coefficients(SampleType newOmega, SampleType newCos, SampleType newSin, SampleType newTan, SampleType newAlpha, SampleType newGain)
-{
-    juce::ignoreUnused(newOmega);
-    //juce::ignoreUnused(newCos);
-    juce::ignoreUnused(newSin);
-    juce::ignoreUnused(newTan);
-    //juce::ignoreUnused(newAlpha);
-    //juce::ignoreUnused(newGain);
-
-    SampleType alphaMulGain = static_cast <SampleType>(newAlpha * newGain);
-    SampleType alphaDivGain = static_cast <SampleType>(newAlpha / newGain);
-    SampleType cosMinOne = static_cast <SampleType>(static_cast <SampleType>(1.0) - newCos);
-    SampleType cosMinTwo = static_cast <SampleType>(newCos * static_cast <SampleType>(-2.0));
-    SampleType divTwo = static_cast <SampleType>(cosMinOne / static_cast <SampleType>(2.0));
+    juce::ignoreUnused(omega);
+    //juce::ignoreUnused(cos);
+    juce::ignoreUnused(sin);
+    juce::ignoreUnused(tan);
+    //juce::ignoreUnused(alpha);
+    juce::ignoreUnused(a);
 
     switch (filtType)
     {
         case filterType::lowPass:
 
-            b0_ = static_cast <SampleType>(divTwo);
-            b1_ = static_cast <SampleType>(cosMinOne);
-            b2_ = static_cast <SampleType>(divTwo);
-            a0_ = static_cast <SampleType>(alphaDivGain + static_cast <SampleType>(1.0));
-            a1_ = static_cast <SampleType>(cosMinTwo);
-            a2_ = static_cast <SampleType>(static_cast <SampleType>(1.0) - alphaDivGain);
+            b0 = (SampleType(1.0) - cos) / SampleType(2.0);
+            b1 = SampleType(1.0) - cos;
+            b2 = (SampleType(1.0) - cos) / SampleType(2.0);
+            a0 = alpha + SampleType(1.0);
+            a1 = cos * SampleType(-2.0);
+            a2 = SampleType(1.0) - alpha;
+
+            break;
+
+
+        case filterType::peak:
+
+            b0 = SampleType(1.0);
+            b1 = SampleType(0.0);
+            b2 = SampleType(0.0);
+            a0 = SampleType(1.0);
+            a1 = SampleType(0.0);
+            a2 = SampleType(0.0);
 
             break;
 
 
         default:
 
-            b0_ = static_cast <SampleType>(divTwo);
-            b1_ = static_cast <SampleType>(cosMinOne);
-            b2_ = static_cast <SampleType>(divTwo);
-            a0_ = static_cast <SampleType>(alphaDivGain + static_cast <SampleType>(1.0));
-            a1_ = static_cast <SampleType>(cosMinTwo);
-            a2_ = static_cast <SampleType>(static_cast <SampleType>(1.0) - alphaDivGain);
+            b0 = SampleType(1.0);
+            b1 = SampleType(0.0);
+            b2 = SampleType(0.0);
+            a0 = SampleType(1.0);
+            a1 = SampleType(0.0);
+            a2 = SampleType(0.0);
 
             break;
 
     }
+
+    a0_ = (static_cast <SampleType>(1.0) / a0);
+    a1_ = (static_cast <SampleType>((a1 * a0_) * SampleType(-1.0)));
+    a2_ = (static_cast <SampleType>((a2 * a0_) * SampleType(-1.0)));
+    b0_ = (static_cast <SampleType>(b0 * a0_));
+    b1_ = (static_cast <SampleType>(b1 * a0_));
+    b2_ = (static_cast <SampleType>(b2 * a0_));
 }
 
 template <typename SampleType>
