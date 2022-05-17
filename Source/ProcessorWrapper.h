@@ -44,7 +44,7 @@ public:
 
 private:
     //==============================================================================
-    // This reference is provided as a quick way for your editor to
+    // This reference is provided as a quick way for the wrapper to
     // access the processor object that created it.
     BiquadsAudioProcessor& audioProcessor;
 
