@@ -1,7 +1,7 @@
 /*
   ==============================================================================
 
-    Transformations.cpp
+    Transforms.cpp
     Created: 7 May 2022 4:36:01am
     Author:  StoneyDSP
 
@@ -89,13 +89,13 @@ SampleType Transformations<SampleType>::processSample(int channel, SampleType in
     jassert(isPositiveAndBelow(channel, Yn_1.size()));
     jassert(isPositiveAndBelow(channel, Yn_1.size()));
 
-    if (transformType == TransformationType::dfI)
+    if (transformType == TransformationType::directFormI)
         inputValue = directFormI(channel, inputValue);
-    else if (transformType == TransformationType::dfII)
+    else if (transformType == TransformationType::directFormII)
         inputValue = directFormII(channel, inputValue);
-    else if (transformType == TransformationType::dfIt)
+    else if (transformType == TransformationType::directFormItransposed)
         inputValue = directFormITransposed(channel, inputValue);
-    else if (transformType == TransformationType::dfIIt)
+    else if (transformType == TransformationType::directFormIItransposed)
         inputValue = directFormIITransposed(channel, inputValue);
 
     return inputValue;
