@@ -1,7 +1,7 @@
 /*
   ==============================================================================
 
-    Biquads.cpp
+    Coefficients.cpp
     Created: 13 May 2022 8:29:03pm
     Author:  StoneyDSP
 
@@ -33,7 +33,12 @@ void Coefficients<SampleType>::prepare(juce::dsp::ProcessSpec& spec)
 template <typename SampleType>
 void Coefficients<SampleType>::reset()
 {
-
+    b0_ = SampleType(1.0);
+    b1_ = SampleType(0.0);
+    b2_ = SampleType(0.0);
+    a0_ = SampleType(1.0);
+    a1_ = SampleType(0.0);
+    a2_ = SampleType(0.0);
 }
 
 template <typename SampleType>
@@ -50,9 +55,9 @@ void Coefficients<SampleType>::peakFilter(SampleType newOmega, SampleType newCos
 
     auto alphaMulGain = newAlpha * newGain;
     auto alphaDivGain = newAlpha / newGain;
-    auto cosMinTwo = newCos * SampleType(-2.0);
+    auto cosMinTwo = newCos * static_cast<SampleType>(-2.0);
 
-    const SampleType one = static_cast<SampleType>(1.0);
+    SampleType one = static_cast<SampleType>(1.0);
 
     b0_ = (alphaMulGain + one);
     b1_ = (cosMinTwo);

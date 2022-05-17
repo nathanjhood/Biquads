@@ -17,7 +17,7 @@
 
 enum class TransformationType
 {
-    directFormI = 0,
+    directFormI,
     directFormII,
     directFormItransposed,
     directFormIItransposed
@@ -107,12 +107,12 @@ private:
 
     //==============================================================================
     /** Initialise the coefficient gains. */
-    SampleType b0_ { 1.0 };
-    SampleType b1_ { 0.0 };
-    SampleType b2_ { 0.0 };
-    SampleType a0_ { 1.0 };
-    SampleType a1_ { 0.0 };
-    SampleType a2_ { 0.0 };
+    SampleType b0_ = 1.0 ;
+    SampleType b1_ = 0.0 ;
+    SampleType b2_ = 0.0 ;
+    SampleType a0_ = 1.0 ;
+    SampleType a1_ = 0.0 ;
+    SampleType a2_ = 0.0 ;
 
     directForm transformType = directForm::directFormIItransposed;
 

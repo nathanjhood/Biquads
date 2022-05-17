@@ -19,7 +19,6 @@ template <typename SampleType>
 class Calculations
 {
 public:
-    using filterType = FilterType;
     //==============================================================================
     /** Constructor. */
     Calculations();
@@ -31,10 +30,39 @@ public:
     /** Resets the internal state variables of the processor. */
     void reset();
 
-    void calc(SampleType newFreq, SampleType newRes, SampleType newdB);
+    //==============================================================================
+    void setFrequency(SampleType newFreq);
+
+    void setResonance(SampleType newRes);
+
+    void setGain(SampleType newGain);
+
+    //==============================================================================
+    SampleType omega()      { return static_cast<SampleType>(omega_)    ; };
+    SampleType sine()       { return static_cast<SampleType>(sine_)     ; };
+    SampleType cosine()     { return static_cast<SampleType>(cosine_)   ; };
+    SampleType tan()        { return static_cast<SampleType>(tan_)      ; };
+    SampleType alpha()      { return static_cast<SampleType>(alpha_)    ; };
+    SampleType a()          { return static_cast<SampleType>(a_)        ; };
 
 private:
+
+    void calc();
     //==============================================================================
+    
+    
+    SampleType minFreq = 20.0;
+    SampleType maxFreq = 20000.0;
+
+    SampleType hz = 1000.0, q = 0.5, g = 0.0;
+
+    SampleType omega_;
+    SampleType sine_;
+    SampleType cosine_;
+    SampleType tan_;
+    SampleType alpha_;
+    SampleType a_;
+
     double sampleRate = 44100.0;
     const SampleType pi = static_cast<SampleType>(juce::MathConstants<SampleType>::pi);
 

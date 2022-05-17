@@ -14,20 +14,9 @@
 #define BIQUADS_H_INCLUDED
 
 #include "../JuceLibraryCode/JuceHeader.h"
-
-enum class FilterType
-{
-    lowPass = 0,
-    peak
-};
-
-enum class TransformationType
-{
-    directFormI = 0,
-    directFormII = 1,
-    directFormItransposed = 2,
-    directFormIItransposed = 3
-};
+#include "Calculations.h"
+#include "Coefficients.h"
+#include "Transforms.h"
 
 /**
     A handy 2-pole Biquad multi-mode equalizer.
@@ -46,13 +35,6 @@ public:
     Biquads();
 
     //==============================================================================
-    /** Initialises the processor. */
-    void prepare(juce::dsp::ProcessSpec& spec);
-
-    /** Resets the internal state variables of the processor. */
-    void reset(SampleType initialValue);
-
-    //==============================================================================
     void setFrequency(SampleType newFreq);
 
     void setResonance(SampleType newRes);
@@ -64,13 +46,11 @@ public:
     void setTransformType(transformationType newTransformType);
 
     //==============================================================================
-    void coefficients();
+    /** Initialises the processor. */
+    void prepare(juce::dsp::ProcessSpec& spec);
 
-    //void calculate(SampleType newHz, SampleType newQ, SampleType newG);
-
-    //void coefficients(SampleType newOmega, SampleType newCos, SampleType newSin, SampleType newAlpha, SampleType newGain);
-
-    //void apply(SampleType b0, SampleType b1, SampleType b2, SampleType a0, SampleType a1, SampleType a2);
+    /** Resets the internal state variables of the processor. */
+    void reset();
 
     //==============================================================================
     /** Processes the input and output samples supplied in the processing context. */
@@ -101,84 +81,33 @@ public:
                 outputSamples[i] = processSample((int)channel, inputSamples[i]);
         }
 
-#if JUCE_DSP_ENABLE_SNAP_TO_ZERO
-        snapToZero();
-#endif
     }
+
 
     //==============================================================================
     /** Processes one sample at a time on a given channel. */
     SampleType processSample(int channel, SampleType inputValue);
 
-    SampleType directFormI(int channel, SampleType inputValue);
-
-    SampleType directFormII(int channel, SampleType inputValue);
-
-    SampleType directFormITransposed(int channel, SampleType inputValue);
-
-    SampleType directFormIITransposed(int channel, SampleType inputValue);
-
-    /** Ensure that the state variables are rounded to zero if the state
-    variables are denormals. This is only needed if you are doing sample
-    by sample processing.*/
-    void snapToZero() noexcept;
-
 private:
+    //==============================================================================
+    void update();
 
     //==============================================================================
-    //SampleType omega(SampleType f)
-    //{
-    //    return f * ((pi * SampleType(2.0)) / sampleRate);
-    //}
-
-    //SampleType cosine(SampleType w)
-    //{
-    //    return std::cos(w);
-    //}
-
-    //SampleType sine(SampleType w)
-    //{
-    //    return std::sin(w);
-    //}
-
-    SampleType div(SampleType a, SampleType b)
-    {
-        return b != static_cast<SampleType> (0.0) ? (a / b) : static_cast<SampleType> (0.0);
-    }
-
-    /*SampleType b0() { return static_cast<SampleType>(b0_); };
-    SampleType b1() { return static_cast<SampleType>(b1_); };
-    SampleType b2() { return static_cast<SampleType>(b2_); };
-    SampleType a0() { return static_cast<SampleType>(a0_); };
-    SampleType a1() { return static_cast<SampleType>(a1_); };
-    SampleType a2() { return static_cast<SampleType>(a2_); };*/
-
-    //==============================================================================
-    /** Unit-delay objects. */
-    std::vector<SampleType> Wn_1; 
-    std::vector<SampleType> Wn_2;
-    std::vector<SampleType> Xn_1;
-    std::vector<SampleType> Xn_2;
-    std::vector<SampleType> Yn_1;
-    std::vector<SampleType> Yn_2;
-
-    //==============================================================================
-    /** Initialise the coefficient gains. */
-    SampleType b0 { 1.0 };
-    SampleType b1 { 0.0 };
-    SampleType b2 { 0.0 };
-    SampleType a0 { 1.0 };
-    SampleType a1 { 0.0 };
-    SampleType a2 { 0.0 };
+    Calculations<SampleType> calculate;
+    Coefficients<SampleType> coeffs;
+    Transformations<SampleType> transform;
 
     //==============================================================================
     double sampleRate = 44100.0;
-    //int numChannels = 1;
     SampleType minFreq = 20.0;
     SampleType maxFreq = 20000.0;
-    SampleType hz = 1000.0, q = 0.5, g = 0.0;
-    filterType filtType = filterType::lowPass;
+    SampleType hz = 1000.0;
+    SampleType q = 0.5;
+    SampleType g = 0.0;
+
     transformationType transformType = transformationType::directFormIItransposed;
+    filterType filtType = filterType::lowPass;
+    
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Biquads)

@@ -74,12 +74,12 @@ private:
 
     //==============================================================================
     /** Audio processor members. */
-    ProcessWrapper<float> processor { (apvts) };
+    ProcessWrapper<float> processor{ apvts };
 
     //==============================================================================
     /** Parameter pointers. */
-    juce::AudioParameterBool* doublesPtr{ nullptr };
-    juce::AudioParameterBool* bypassPtr{ nullptr };
+    juce::AudioParameterBool* doublesPtr    { nullptr };
+    juce::AudioParameterBool* bypassPtr     { nullptr };
 
     //==============================================================================
     /** Init variables. */

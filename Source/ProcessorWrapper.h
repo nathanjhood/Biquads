@@ -14,7 +14,9 @@
 #define PROCESSORWRAPPER_H_INCLUDED
 
 #include "../JuceLibraryCode/JuceHeader.h"
-#include "Biquads.h"
+#include "Coefficients.h"
+#include "Transforms.h"
+
 
 template <typename SampleType>
 class ProcessWrapper
@@ -22,7 +24,11 @@ class ProcessWrapper
 public:
     //==============================================================================
     /** Constructor. */
-    ProcessWrapper(juce::AudioProcessorValueTreeState& apvts);
+    ProcessWrapper(AudioProcessorValueTreeState& apvts);
+
+    //==============================================================================
+    /** Create Parameter Layout. */
+    static void createParameterLayout(std::vector<std::unique_ptr<RangedAudioParameter>>& params);
 
     //==============================================================================
     /** Initialises the processor. */
@@ -30,10 +36,6 @@ public:
 
     /** Resets the internal state variables of the processor. */
     void reset();
-
-    //==============================================================================
-    /** Create Parameter Layout. */
-    static void createParameterLayout(std::vector<std::unique_ptr<RangedAudioParameter>>& params);
 
     //==============================================================================
     /** Updates the internal state variables of the processor. */
@@ -46,13 +48,14 @@ private:
     //==============================================================================
     // This reference is provided as a quick way for the wrapper to
     // access the processor object that created it.
-    BiquadsAudioProcessor& audioProcessor;
+    //BiquadsAudioProcessor& audioProcessor;
 
     //==============================================================================
     /** Instantiate objects. */
     juce::dsp::ProcessSpec spec;
-
-    Biquads<SampleType> biquad;
+    Coefficients<SampleType> coeffs;
+    Transformations<SampleType> transform;
+    //Biquads<SampleType> biquad;
 
     //==============================================================================
     /** Parameter pointers. */

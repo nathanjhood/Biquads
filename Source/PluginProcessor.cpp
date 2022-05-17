@@ -44,8 +44,6 @@ juce::AudioProcessorValueTreeState::ParameterLayout BiquadsAudioProcessor::creat
 
     ProcessWrapper<float>::createParameterLayout(params);
 
-    auto tString = juce::StringArray({ "Direct Form I", "Direct Form II", "Direct Form I (t)", "Direct Form II (t)" });
-
     params.push_back(std::make_unique<juce::AudioParameterBool>("doublesID", "Doubles", false));
     params.push_back(std::make_unique<juce::AudioParameterBool>("bypassID", "Bypass", false));
 
@@ -194,12 +192,12 @@ void BiquadsAudioProcessor::processBlock(juce::AudioBuffer<double>& buffer, juce
     if (bypassPtr->get() == false)
 
     {
-        juce::ignoreUnused(buffer);
-        juce::ignoreUnused(midiMessages);
-
         juce::ScopedNoDenormals noDenormals;
 
         update();
+
+        juce::ignoreUnused(buffer);
+        juce::ignoreUnused(midiMessages);
     }
 
     else
