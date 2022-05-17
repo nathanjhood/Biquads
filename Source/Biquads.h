@@ -123,6 +123,8 @@ private:
     //==============================================================================
     void update();
 
+    void coefficients(SampleType newOmega, SampleType newCos, SampleType newSin, SampleType newTan, SampleType newAlpha, SampleType newGain);
+
     //==============================================================================
     /*Calculations<SampleType> calculate;
     Coefficients<SampleType> coeffs;

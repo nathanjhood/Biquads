@@ -31,7 +31,7 @@ void Biquads<SampleType>::setFrequency(SampleType newFreq)
 {
     jassert(static_cast<SampleType>(20.0) <= newFreq && newFreq <= static_cast<SampleType>(20000.0));
 
-    hz = (jlimit(minFreq, maxFreq, newFreq));
+    hz = static_cast<SampleType>(jlimit(minFreq, maxFreq, newFreq));
     update();
 }
 
@@ -40,14 +40,14 @@ void Biquads<SampleType>::setResonance(SampleType newRes)
 {
     jassert(static_cast<SampleType>(0.0) <= newRes && newRes <= static_cast<SampleType>(1.0));
 
-    q = (jlimit(SampleType(0.0), SampleType(1.0), newRes));
+    q = static_cast<SampleType>(jlimit(SampleType(0.0), SampleType(1.0), newRes));
     update();
 }
 
 template <typename SampleType>
 void Biquads<SampleType>::setGain(SampleType newGain)
 {
-    g = newGain;
+    g = static_cast<SampleType>(newGain);
     update();
 }
 
@@ -128,79 +128,6 @@ void Biquads<SampleType>::reset(SampleType initialValue)
     a1_ = SampleType(0.0);
     a2_ = SampleType(0.0);
 }
-
-////==============================================================================
-//
-//template <typename SampleType>
-//void Biquads<SampleType>::coefficients()
-//{
-//    const SampleType pi = static_cast<SampleType>(juce::MathConstants<SampleType>::pi);
-//    const SampleType one = static_cast<SampleType>(1.0);
-//    
-//    auto omega = hz * ((pi * 2.0) / sampleRate);
-//    auto cos = std::cos(omega);
-//    auto sin = std::sin(omega);
-//    auto tan = sin / cos;
-//    auto alpha = (sin * (SampleType(1.0) - q));
-//    auto a = std::pow(SampleType(10.0), (g / SampleType(40.0)));
-//
-//    //LP2 with resonance...
-//    auto oneMinCos = one - cos;
-//    auto cosTwo = oneMinCos / SampleType(2.0);
-//    auto cosMinTwo = cos * SampleType(-2.0);
-//
-//    auto b0_ = (cosTwo);
-//    auto b1_ = (oneMinCos);
-//    auto b2_ = (cosTwo);
-//    auto a0_ = (alpha + one);
-//    auto a1_ = (cosMinTwo);
-//    auto a2_ = (one - alpha);
-//
-//    // Apply...
-//    a0 = (static_cast <SampleType>(SampleType(1.0) / a0_));
-//    a1 = (static_cast <SampleType>((a1_ * a0) * SampleType(-1.0)));
-//    a2 = (static_cast <SampleType>((a2_ * a0) * SampleType(-1.0)));
-//    b0 = (static_cast <SampleType>(b0_ * a0));
-//    b1 = (static_cast <SampleType>(b1_ * a0));
-//    b2 = (static_cast <SampleType>(b2_ * a0));
-//
-//
-//}
-
-//template <typename SampleType>
-//void Biquads<SampleType>::coefficients(SampleType newOmega, SampleType newCos, SampleType newSin, SampleType newAlpha, SampleType newGain)
-//{
-//    //LP2 with resonance...
-//    juce::ignoreUnused(newOmega);
-//    juce::ignoreUnused(newSin);
-//
-//    const SampleType one = static_cast<SampleType>(1.0);
-//
-//    auto alphaMulGain = newAlpha * newGain;
-//    auto alphaDivGain = newAlpha / newGain;
-//    auto cosMinOne = one - newCos;
-//    auto cosMinTwo = newCos * SampleType(-2.0);
-//    auto divTwo = cosMinOne / SampleType(2.0);
-//
-//    
-//
-//    auto b0_ = (divTwo);
-//    auto b1_ = (cosMinOne);
-//    auto b2_ = (divTwo);
-//    auto a0_ = (alphaDivGain + one);
-//    auto a1_ = (cosMinTwo);
-//    auto a2_ = (one - alphaDivGain);
-//
-//    // Apply...
-//    a0 = (static_cast <SampleType>(div(one, a0_)));
-//    a1 = (static_cast <SampleType>((a1_ * a0) * SampleType(-1.0)));
-//    a2 = (static_cast <SampleType>((a2_ * a0) * SampleType(-1.0)));
-//    b0 = (static_cast <SampleType>(b0_ * a0));
-//    b1 = (static_cast <SampleType>(b1_ * a0));
-//    b2 = (static_cast <SampleType>(b2_ * a0));
-//
-//
-//}
 
 template <typename SampleType>
 SampleType Biquads<SampleType>::processSample(int channel, SampleType inputValue)
@@ -287,7 +214,58 @@ SampleType Biquads<SampleType>::directFormIITransposed(int channel, SampleType i
 template <typename SampleType>
 void Biquads<SampleType>::update()
 {
+    auto omega = static_cast <SampleType>(hz * ((pi * static_cast <SampleType>(2.0)) / sampleRate));
+    auto cos = static_cast <SampleType>(std::cos(omega));
+    auto sin = static_cast <SampleType>(std::sin(omega));
+    auto tan = static_cast <SampleType>(sin / cos);
+    auto alpha = static_cast <SampleType>(sin * (static_cast <SampleType>(1.0) - q));
+    auto a = static_cast <SampleType>(std::pow(static_cast <SampleType>(10.0), (g / static_cast <SampleType>(40.0))));
 
+    coefficients(omega, cos, sin, tan, alpha, a);
+}
+
+template <typename SampleType>
+void Biquads<SampleType>::coefficients(SampleType newOmega, SampleType newCos, SampleType newSin, SampleType newTan, SampleType newAlpha, SampleType newGain)
+{
+    juce::ignoreUnused(newOmega);
+    //juce::ignoreUnused(newCos);
+    juce::ignoreUnused(newSin);
+    juce::ignoreUnused(newTan);
+    //juce::ignoreUnused(newAlpha);
+    //juce::ignoreUnused(newGain);
+
+    SampleType alphaMulGain = static_cast <SampleType>(newAlpha * newGain);
+    SampleType alphaDivGain = static_cast <SampleType>(newAlpha / newGain);
+    SampleType cosMinOne = static_cast <SampleType>(static_cast <SampleType>(1.0) - newCos);
+    SampleType cosMinTwo = static_cast <SampleType>(newCos * static_cast <SampleType>(-2.0));
+    SampleType divTwo = static_cast <SampleType>(cosMinOne / static_cast <SampleType>(2.0));
+
+    switch (filtType)
+    {
+        case filterType::lowPass:
+
+            b0_ = static_cast <SampleType>(divTwo);
+            b1_ = static_cast <SampleType>(cosMinOne);
+            b2_ = static_cast <SampleType>(divTwo);
+            a0_ = static_cast <SampleType>(alphaDivGain + static_cast <SampleType>(1.0));
+            a1_ = static_cast <SampleType>(cosMinTwo);
+            a2_ = static_cast <SampleType>(static_cast <SampleType>(1.0) - alphaDivGain);
+
+            break;
+
+
+        default:
+
+            b0_ = static_cast <SampleType>(divTwo);
+            b1_ = static_cast <SampleType>(cosMinOne);
+            b2_ = static_cast <SampleType>(divTwo);
+            a0_ = static_cast <SampleType>(alphaDivGain + static_cast <SampleType>(1.0));
+            a1_ = static_cast <SampleType>(cosMinTwo);
+            a2_ = static_cast <SampleType>(static_cast <SampleType>(1.0) - alphaDivGain);
+
+            break;
+
+    }
 }
 
 template <typename SampleType>

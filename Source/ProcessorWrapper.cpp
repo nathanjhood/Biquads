@@ -51,39 +51,38 @@ void ProcessWrapper<SampleType>::prepare(double sampleRate, int samplesPerBlock,
     spec.maximumBlockSize = samplesPerBlock;
     spec.numChannels = numChannels;
 
-    coeffs.prepare(spec);
-    transform.prepare(spec);
+    biquad.prepare(spec);
+
+    //coeffs.prepare(spec);
+    //transform.prepare(spec);
 }
 
 template <typename SampleType>
 void ProcessWrapper<SampleType>::reset()
 {
-    coeffs.reset();
-    transform.reset(static_cast<SampleType>(0.0));
+    biquad.reset(static_cast<SampleType>(0.0));
+
+    //coeffs.reset();
+    //transform.reset(static_cast<SampleType>(0.0));
 }
 
 template <typename SampleType>
 void ProcessWrapper<SampleType>::update()
 {
-    /*if (ioPtr->get() == true)
-        context.isBypassed = true;
-    else
-        context.isBypassed = false;*/
+    
 
-    /*biquad.setFrequency(frequencyPtr->get());
+    biquad.setFrequency(frequencyPtr->get());
     biquad.setResonance(bandwidthPtr->get());
-    biquad.setGain(gainPtr->get());*/
-
-    transform.coefficients(coeffs.b0(), coeffs.b1(), coeffs.b2(), coeffs.a0(), coeffs.a1(), coeffs.a2());
+    biquad.setGain(gainPtr->get());
 
     if (transformPtr->getIndex() == 0)
-        transform.setTransformType(TransformationType::directFormI);
+        biquad.setTransformType(TransformationType::directFormI);
     else if (transformPtr->getIndex() == 1)
-        transform.setTransformType(TransformationType::directFormII);
+        biquad.setTransformType(TransformationType::directFormII);
     else if (transformPtr->getIndex() == 2)
-        transform.setTransformType(TransformationType::directFormItransposed);
+        biquad.setTransformType(TransformationType::directFormItransposed);
     else if (transformPtr->getIndex() == 3)
-        transform.setTransformType(TransformationType::directFormIItransposed);
+        biquad.setTransformType(TransformationType::directFormIItransposed);
 }
 
 //==============================================================================
@@ -97,8 +96,12 @@ void ProcessWrapper<SampleType>::process(juce::AudioBuffer<SampleType>& buffer, 
     juce::dsp::AudioBlock<SampleType> block(buffer);
     juce::dsp::ProcessContextReplacing<SampleType> context(block);
     
+    if (ioPtr->get() == true)
+        context.isBypassed = true;
+    else
+        context.isBypassed = false;
 
-    transform.process(context);
+    biquad.process(context);
 }
 
 //==============================================================================
