@@ -1,7 +1,7 @@
 /*
   ==============================================================================
 
-    Transformations.cpp
+    Transforms.cpp
     Created: 7 May 2022 4:36:01am
     Author:  StoneyDSP
 
@@ -16,6 +16,27 @@ Transformations<SampleType>::Transformations()
 {
     reset(static_cast<SampleType>(0.0));
     coefficients(b0_, b1_, b2_, a0_, a1_, a2_);
+}
+
+template <typename SampleType>
+void Transformations<SampleType>::coefficients(SampleType b0, SampleType b1, SampleType b2, SampleType a0, SampleType a1, SampleType a2)
+{
+    a0_ = (static_cast <SampleType>(1.0) / a0);
+    a1_ = (static_cast <SampleType>((a1 * a0_) * SampleType(-1.0)));
+    a2_ = (static_cast <SampleType>((a2 * a0_) * SampleType(-1.0)));
+    b0_ = (static_cast <SampleType>(b0 * a0_));
+    b1_ = (static_cast <SampleType>(b1 * a0_));
+    b2_ = (static_cast <SampleType>(b2 * a0_));
+}
+
+template <typename SampleType>
+void Transformations<SampleType>::setTransformType(directForm newTransformType)
+{
+    if (transformType != newTransformType)
+    {
+        transformType = newTransformType;
+        reset(static_cast<SampleType>(0.0));
+    }
 }
 
 //==============================================================================
@@ -59,27 +80,6 @@ void Transformations<SampleType>::reset(SampleType initialValue)
 }
 
 template <typename SampleType>
-void Transformations<SampleType>::coefficients(SampleType b0, SampleType b1, SampleType b2, SampleType a0, SampleType a1, SampleType a2)
-{
-    a0_ = (static_cast <SampleType>(1.0) / a0);
-    a1_ = (static_cast <SampleType>((a1 * a0_) * SampleType(-1.0)));
-    a2_ = (static_cast <SampleType>((a2 * a0_) * SampleType(-1.0)));
-    b0_ = (static_cast <SampleType>(b0 * a0_));
-    b1_ = (static_cast <SampleType>(b1 * a0_));
-    b2_ = (static_cast <SampleType>(b2 * a0_));
-}
-
-template <typename SampleType>
-void Transformations<SampleType>::setTransformType(dfType newTransformType)
-{
-    if (transformType != newTransformType)
-    {
-        transformType = newTransformType;
-        reset(static_cast<SampleType>(0.0));
-    }
-}
-
-template <typename SampleType>
 SampleType Transformations<SampleType>::processSample(int channel, SampleType inputValue)
 {
     jassert(isPositiveAndBelow(channel, Wn_1.size()));
@@ -89,13 +89,13 @@ SampleType Transformations<SampleType>::processSample(int channel, SampleType in
     jassert(isPositiveAndBelow(channel, Yn_1.size()));
     jassert(isPositiveAndBelow(channel, Yn_1.size()));
 
-    if (transformType == TransformationType::dfI)
+    if (transformType == TransformationType::directFormI)
         inputValue = directFormI(channel, inputValue);
-    else if (transformType == TransformationType::dfII)
+    else if (transformType == TransformationType::directFormII)
         inputValue = directFormII(channel, inputValue);
-    else if (transformType == TransformationType::dfIt)
+    else if (transformType == TransformationType::directFormItransposed)
         inputValue = directFormITransposed(channel, inputValue);
-    else if (transformType == TransformationType::dfIIt)
+    else if (transformType == TransformationType::directFormIItransposed)
         inputValue = directFormIITransposed(channel, inputValue);
 
     return inputValue;

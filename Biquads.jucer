@@ -5,6 +5,14 @@
               pluginFormats="buildVST3" companyName="StoneyDSP" cppLanguageStandard="latest">
   <MAINGROUP id="butqEA" name="Biquads">
     <GROUP id="{B7BEB523-13AE-DC81-1072-78BF4CC3A396}" name="Source">
+      <FILE id="wgkJtv" name="Calculations.cpp" compile="1" resource="0"
+            file="Source/Calculations.cpp"/>
+      <FILE id="IGSEx6" name="Calculations.h" compile="0" resource="0" file="Source/Calculations.h"/>
+      <FILE id="eGDYxr" name="Coefficients.cpp" compile="1" resource="0"
+            file="Source/Coefficients.cpp"/>
+      <FILE id="Kgx16M" name="Coefficients.h" compile="0" resource="0" file="Source/Coefficients.h"/>
+      <FILE id="stgrxn" name="Transforms.cpp" compile="1" resource="0" file="Source/Transforms.cpp"/>
+      <FILE id="eoMCkz" name="Transforms.h" compile="0" resource="0" file="Source/Transforms.h"/>
       <FILE id="pvZewN" name="ProcessorWrapper.cpp" compile="1" resource="0"
             file="Source/ProcessorWrapper.cpp"/>
       <FILE id="irQxwW" name="ProcessorWrapper.h" compile="0" resource="0"

@@ -14,7 +14,10 @@
 #define PROCESSORWRAPPER_H_INCLUDED
 
 #include "../JuceLibraryCode/JuceHeader.h"
+//#include "Coefficients.h"
+//#include "Transforms.h"
 #include "Biquads.h"
+
 
 template <typename SampleType>
 class ProcessWrapper
@@ -22,7 +25,11 @@ class ProcessWrapper
 public:
     //==============================================================================
     /** Constructor. */
-    ProcessWrapper(juce::AudioProcessorValueTreeState& apvts);
+    ProcessWrapper(AudioProcessorValueTreeState& apvts);
+
+    //==============================================================================
+    /** Create Parameter Layout. */
+    static void createParameterLayout(std::vector<std::unique_ptr<RangedAudioParameter>>& params);
 
     //==============================================================================
     /** Initialises the processor. */
@@ -30,10 +37,6 @@ public:
 
     /** Resets the internal state variables of the processor. */
     void reset();
-
-    //==============================================================================
-    /** Create Parameter Layout. */
-    static void createParameterLayout(std::vector<std::unique_ptr<RangedAudioParameter>>& params);
 
     //==============================================================================
     /** Updates the internal state variables of the processor. */
@@ -44,17 +47,24 @@ public:
 
 private:
     //==============================================================================
+    // This reference is provided as a quick way for the wrapper to
+    // access the processor object that created it.
+    //BiquadsAudioProcessor& audioProcessor;
+
+    //==============================================================================
     /** Instantiate objects. */
     juce::dsp::ProcessSpec spec;
-
+    //Coefficients<SampleType> coeffs;
+    //Transformations<SampleType> transform;
     Biquads<SampleType> biquad;
 
     //==============================================================================
     /** Parameter pointers. */
     juce::AudioParameterBool*       ioPtr           { nullptr };
     juce::AudioParameterFloat*      frequencyPtr    { nullptr };
-    juce::AudioParameterFloat*      bandwidthPtr    { nullptr };
+    juce::AudioParameterFloat*      resonancePtr    { nullptr };
     juce::AudioParameterFloat*      gainPtr         { nullptr };
+    juce::AudioParameterChoice*     typePtr         { nullptr };
     juce::AudioParameterChoice*     transformPtr    { nullptr };
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ProcessWrapper)
