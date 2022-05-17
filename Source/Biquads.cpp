@@ -198,19 +198,6 @@ SampleType Biquads<SampleType>::directFormIITransposed(int channel, SampleType i
     return Yn;
 }
 
-//template <typename SampleType>
-//void Biquads<SampleType>::update()
-//{
-//    auto omega = static_cast <SampleType>(hz * ((pi * static_cast <SampleType>(2.0)) / sampleRate));
-//    auto cos = static_cast <SampleType>(std::cos(omega));
-//    auto sin = static_cast <SampleType>(std::sin(omega));
-//    auto tan = static_cast <SampleType>(sin / cos);
-//    auto alpha = static_cast <SampleType>(sin * (static_cast <SampleType>(1.0) - q));
-//    auto a = static_cast <SampleType>(std::pow(static_cast <SampleType>(10.0), (g / static_cast <SampleType>(40.0))));
-//
-//    coefficients(omega, cos, sin, tan, alpha, a);
-//}
-
 template <typename SampleType>
 void Biquads<SampleType>::coefficients()
 {
@@ -221,19 +208,14 @@ void Biquads<SampleType>::coefficients()
     SampleType alpha = static_cast <SampleType>(sin * (static_cast <SampleType>(1.0) - q));
     SampleType a = static_cast <SampleType>(std::pow(static_cast <SampleType>(10.0), (g / static_cast <SampleType>(40.0))));
 
+    juce::ignoreUnused(tan);
+
     SampleType b0 = SampleType(1.0);
     SampleType b1 = SampleType(0.0);
     SampleType b2 = SampleType(0.0);
     SampleType a0 = SampleType(1.0);
     SampleType a1 = SampleType(0.0);
     SampleType a2 = SampleType(0.0);
-
-    juce::ignoreUnused(omega);
-    //juce::ignoreUnused(cos);
-    juce::ignoreUnused(sin);
-    juce::ignoreUnused(tan);
-    //juce::ignoreUnused(alpha);
-    juce::ignoreUnused(a);
 
     switch (filtType)
     {
@@ -249,14 +231,25 @@ void Biquads<SampleType>::coefficients()
             break;
 
 
-        case filterType::peak:
+        case filterType::highPass:
 
-            b0 = SampleType(1.0);
+            b0 = (SampleType(1.0) + cos) / SampleType(2.0);
+            b1 = (SampleType(1.0) + cos) * SampleType(-1.0);
+            b2 = (SampleType(1.0) + cos) / SampleType(2.0);
+            a0 = alpha + SampleType(1.0);
+            a1 = cos * SampleType(-2.0);
+            a2 = SampleType(1.0) - alpha;
+
+            break;
+
+        case filterType::bandPass:
+
+            b0 = sin / SampleType(2.0);
             b1 = SampleType(0.0);
-            b2 = SampleType(0.0);
-            a0 = SampleType(1.0);
-            a1 = SampleType(0.0);
-            a2 = SampleType(0.0);
+            b2 = (sin / SampleType(2.0)) * SampleType(-1.0);
+            a0 = alpha + SampleType(1.0);
+            a1 = cos * SampleType(-2.0);
+            a2 = SampleType(1.0) - alpha;
 
             break;
 
