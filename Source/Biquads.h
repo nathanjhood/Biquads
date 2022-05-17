@@ -14,9 +14,19 @@
 #define BIQUADS_H_INCLUDED
 
 #include "../JuceLibraryCode/JuceHeader.h"
-#include "Calculations.h"
-#include "Coefficients.h"
-//#include "Transforms.h"
+
+enum class FilterType
+{
+    lowPass,
+    highPass,
+    bandPass,
+    peak,
+    notch,
+    allPass,
+    lowShelf,
+    highShelf,
+    bandPass1
+};
 
 enum class TransformationType
 {
@@ -103,6 +113,10 @@ public:
     /** Processes one sample at a time on a given channel. */
     SampleType processSample(int channel, SampleType inputValue);
 
+private:
+    //==============================================================================
+    void coefficients();
+
     SampleType directFormI(int channel, SampleType inputValue);
 
     SampleType directFormII(int channel, SampleType inputValue);
@@ -118,19 +132,6 @@ public:
     SampleType a0() { return static_cast<SampleType>(a0_); };
     SampleType a1() { return static_cast<SampleType>(a1_); };
     SampleType a2() { return static_cast<SampleType>(a2_); };
-
-private:
-    //==============================================================================
-    //void update();
-
-    //void coefficients(SampleType newOmega, SampleType newCos, SampleType newSin, SampleType newTan, SampleType newAlpha, SampleType newGain);
-
-    void coefficients();
-
-    //==============================================================================
-    /*Calculations<SampleType> calculate;
-    Coefficients<SampleType> coeffs;
-    Transformations<SampleType> transform;*/
 
     //==============================================================================
     /** Unit-delay objects. */
@@ -158,11 +159,10 @@ private:
     SampleType q = 0.5;
     SampleType g = 0.0;
 
-    const SampleType pi = static_cast<SampleType>(juce::MathConstants<SampleType>::pi);
-
     filterType filtType = filterType::lowPass;
     transformationType transformType = transformationType::directFormIItransposed;
     
+    const SampleType pi = static_cast<SampleType>(juce::MathConstants<SampleType>::pi);
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Biquads)

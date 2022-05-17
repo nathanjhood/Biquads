@@ -14,8 +14,6 @@
 #define PROCESSORWRAPPER_H_INCLUDED
 
 #include "../JuceLibraryCode/JuceHeader.h"
-//#include "Coefficients.h"
-//#include "Transforms.h"
 #include "Biquads.h"
 
 
@@ -54,8 +52,6 @@ private:
     //==============================================================================
     /** Instantiate objects. */
     juce::dsp::ProcessSpec spec;
-    //Coefficients<SampleType> coeffs;
-    //Transformations<SampleType> transform;
     Biquads<SampleType> biquad;
 
     //==============================================================================
