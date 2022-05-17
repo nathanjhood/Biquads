@@ -16,7 +16,15 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "Calculations.h"
 #include "Coefficients.h"
-#include "Transforms.h"
+//#include "Transforms.h"
+
+enum class TransformationType
+{
+    directFormI,
+    directFormII,
+    directFormItransposed,
+    directFormIItransposed
+};
 
 /**
     A handy 2-pole Biquad multi-mode equalizer.
@@ -50,7 +58,12 @@ public:
     void prepare(juce::dsp::ProcessSpec& spec);
 
     /** Resets the internal state variables of the processor. */
-    void reset();
+    void reset(SampleType initialValue);
+
+    /** Ensure that the state variables are rounded to zero if the state
+    variables are denormals. This is only needed if you are doing sample
+    by sample processing.*/
+    void snapToZero() noexcept;
 
     //==============================================================================
     /** Processes the input and output samples supplied in the processing context. */
@@ -81,21 +94,57 @@ public:
                 outputSamples[i] = processSample((int)channel, inputSamples[i]);
         }
 
+#if JUCE_DSP_ENABLE_SNAP_TO_ZERO
+        snapToZero();
+#endif
     }
-
 
     //==============================================================================
     /** Processes one sample at a time on a given channel. */
     SampleType processSample(int channel, SampleType inputValue);
+
+    SampleType directFormI(int channel, SampleType inputValue);
+
+    SampleType directFormII(int channel, SampleType inputValue);
+
+    SampleType directFormITransposed(int channel, SampleType inputValue);
+
+    SampleType directFormIITransposed(int channel, SampleType inputValue);
+
+    //==============================================================================
+    SampleType b0() { return static_cast<SampleType>(b0_); };
+    SampleType b1() { return static_cast<SampleType>(b1_); };
+    SampleType b2() { return static_cast<SampleType>(b2_); };
+    SampleType a0() { return static_cast<SampleType>(a0_); };
+    SampleType a1() { return static_cast<SampleType>(a1_); };
+    SampleType a2() { return static_cast<SampleType>(a2_); };
 
 private:
     //==============================================================================
     void update();
 
     //==============================================================================
-    Calculations<SampleType> calculate;
+    /*Calculations<SampleType> calculate;
     Coefficients<SampleType> coeffs;
-    Transformations<SampleType> transform;
+    Transformations<SampleType> transform;*/
+
+    //==============================================================================
+    /** Unit-delay objects. */
+    std::vector<SampleType> Wn_1;
+    std::vector<SampleType> Wn_2;
+    std::vector<SampleType> Xn_1;
+    std::vector<SampleType> Xn_2;
+    std::vector<SampleType> Yn_1;
+    std::vector<SampleType> Yn_2;
+
+    //==============================================================================
+    /** Initialise the coefficient gains. */
+    SampleType b0_ = 1.0;
+    SampleType b1_ = 0.0;
+    SampleType b2_ = 0.0;
+    SampleType a0_ = 1.0;
+    SampleType a1_ = 0.0;
+    SampleType a2_ = 0.0;
 
     //==============================================================================
     double sampleRate = 44100.0;
@@ -105,8 +154,10 @@ private:
     SampleType q = 0.5;
     SampleType g = 0.0;
 
-    transformationType transformType = transformationType::directFormIItransposed;
+    const SampleType pi = static_cast<SampleType>(juce::MathConstants<SampleType>::pi);
+
     filterType filtType = filterType::lowPass;
+    transformationType transformType = transformationType::directFormIItransposed;
     
 
     //==============================================================================

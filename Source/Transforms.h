@@ -33,6 +33,11 @@ public:
     Transformations();
 
     //==============================================================================
+    void coefficients(SampleType b0, SampleType b1, SampleType b2, SampleType a0, SampleType a1, SampleType a2);
+
+    void setTransformType(directForm newTransformType);
+
+    //==============================================================================
     /** Initialises the processor. */
     void prepare(juce::dsp::ProcessSpec& spec);
 
@@ -43,11 +48,6 @@ public:
     variables are denormals. This is only needed if you are doing sample
     by sample processing.*/
     void snapToZero() noexcept;
-
-    //==============================================================================
-    void coefficients(SampleType b0, SampleType b1, SampleType b2, SampleType a0, SampleType a1, SampleType a2);
-
-    void setTransformType(directForm newTransformType);
 
     //==============================================================================
     /** Processes the input and output samples supplied in the processing context. */

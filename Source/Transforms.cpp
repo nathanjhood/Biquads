@@ -18,6 +18,27 @@ Transformations<SampleType>::Transformations()
     coefficients(b0_, b1_, b2_, a0_, a1_, a2_);
 }
 
+template <typename SampleType>
+void Transformations<SampleType>::coefficients(SampleType b0, SampleType b1, SampleType b2, SampleType a0, SampleType a1, SampleType a2)
+{
+    a0_ = (static_cast <SampleType>(1.0) / a0);
+    a1_ = (static_cast <SampleType>((a1 * a0_) * SampleType(-1.0)));
+    a2_ = (static_cast <SampleType>((a2 * a0_) * SampleType(-1.0)));
+    b0_ = (static_cast <SampleType>(b0 * a0_));
+    b1_ = (static_cast <SampleType>(b1 * a0_));
+    b2_ = (static_cast <SampleType>(b2 * a0_));
+}
+
+template <typename SampleType>
+void Transformations<SampleType>::setTransformType(directForm newTransformType)
+{
+    if (transformType != newTransformType)
+    {
+        transformType = newTransformType;
+        reset(static_cast<SampleType>(0.0));
+    }
+}
+
 //==============================================================================
 template <typename SampleType>
 void Transformations<SampleType>::prepare(juce::dsp::ProcessSpec& spec)
@@ -56,27 +77,6 @@ void Transformations<SampleType>::reset(SampleType initialValue)
 
     for (auto& yn_2 : Yn_2)
         yn_2 = initialValue;
-}
-
-template <typename SampleType>
-void Transformations<SampleType>::coefficients(SampleType b0, SampleType b1, SampleType b2, SampleType a0, SampleType a1, SampleType a2)
-{
-    a0_ = (static_cast <SampleType>(1.0) / a0);
-    a1_ = (static_cast <SampleType>((a1 * a0_) * SampleType(-1.0)));
-    a2_ = (static_cast <SampleType>((a2 * a0_) * SampleType(-1.0)));
-    b0_ = (static_cast <SampleType>(b0 * a0_));
-    b1_ = (static_cast <SampleType>(b1 * a0_));
-    b2_ = (static_cast <SampleType>(b2 * a0_));
-}
-
-template <typename SampleType>
-void Transformations<SampleType>::setTransformType(directForm newTransformType)
-{
-    if (transformType != newTransformType)
-    {
-        transformType = newTransformType;
-        reset(static_cast<SampleType>(0.0));
-    }
 }
 
 template <typename SampleType>
