@@ -38,7 +38,7 @@ void ProcessWrapper<SampleType>::createParameterLayout(std::vector<std::unique_p
     auto freqRange = juce::NormalisableRange<float>(20.00f, 20000.00f, 0.01f, 00.198894f);
     auto gainRange = juce::NormalisableRange<float>(-30.00f, 30.00f, 0.01f, 1.00f);
 
-    auto fString = juce::StringArray({ "Low Pass", "Peak" });
+    auto fString = juce::StringArray({ "Low Pass", "High Pass", "Band Pass"});
     auto tString = juce::StringArray({ "Direct Form I", "Direct Form II", "Direct Form I (t)", "Direct Form II (t)" });
 
     params.push_back(std::make_unique<juce::AudioParameterBool>("ioID", "IO", false));
@@ -57,33 +57,29 @@ void ProcessWrapper<SampleType>::prepare(double sampleRate, int samplesPerBlock,
     spec.numChannels = numChannels;
 
     biquad.prepare(spec);
-
-    //coeffs.prepare(spec);
-    //transform.prepare(spec);
 }
 
 template <typename SampleType>
 void ProcessWrapper<SampleType>::reset()
 {
     biquad.reset(static_cast<SampleType>(0.0));
-
-    //coeffs.reset();
-    //transform.reset(static_cast<SampleType>(0.0));
 }
 
 template <typename SampleType>
 void ProcessWrapper<SampleType>::update()
 {
-    
-
     biquad.setFrequency(frequencyPtr->get());
-    biquad.setResonance(bandwidthPtr->get());
+    biquad.setResonance(resonancePtr->get());
     biquad.setGain(gainPtr->get());
 
     if (typePtr->getIndex() == 0)
         biquad.setFilterType(FilterType::lowPass);
     else if (typePtr->getIndex() == 1)
-        biquad.setFilterType(FilterType::peak);
+        biquad.setFilterType(FilterType::highPass);
+    else if (typePtr->getIndex() == 2)
+        biquad.setFilterType(FilterType::bandPass);
+    else
+        biquad.setFilterType(FilterType::lowPass);
 
     if (transformPtr->getIndex() == 0)
         biquad.setTransformType(TransformationType::directFormI);
@@ -92,6 +88,8 @@ void ProcessWrapper<SampleType>::update()
     else if (transformPtr->getIndex() == 2)
         biquad.setTransformType(TransformationType::directFormItransposed);
     else if (transformPtr->getIndex() == 3)
+        biquad.setTransformType(TransformationType::directFormIItransposed);
+    else
         biquad.setTransformType(TransformationType::directFormIItransposed);
 }
 
