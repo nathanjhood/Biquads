@@ -130,7 +130,7 @@ void BiquadsAudioProcessor::changeProgramName (int index, const juce::String& ne
 //==============================================================================
 void BiquadsAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-    auto precision = getProcessingPrecision();
+    getProcessingPrecision();
     auto numChannels = getTotalNumOutputChannels();
 
     processor.prepare(sampleRate, samplesPerBlock, numChannels);
