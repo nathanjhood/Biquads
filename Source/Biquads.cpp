@@ -211,7 +211,9 @@ void Biquads<SampleType>::coefficients()
     SampleType sin = static_cast <SampleType>(std::sin(omega));
     SampleType tan = static_cast <SampleType>(sin / cos);
     SampleType alpha = static_cast <SampleType>(sin * (one - q));
-    SampleType a = static_cast <SampleType>(std::pow(static_cast <SampleType>(10.0), (g / static_cast <SampleType>(40.0))));
+    SampleType a = static_cast <SampleType>(juce::Decibels::decibelsToGain(g * static_cast <SampleType>(0.5)));
+    
+    //SampleType a = static_cast <SampleType>(std::pow(static_cast <SampleType>(10.0), (g / static_cast <SampleType>(40.0))));
 
     juce::ignoreUnused(tan);
 
@@ -247,6 +249,7 @@ void Biquads<SampleType>::coefficients()
 
             break;
 
+
         case filterType::bandPass:
 
             b0 = sin / two;
@@ -257,6 +260,7 @@ void Biquads<SampleType>::coefficients()
             a2 = one - alpha;
 
             break;
+
 
         case filterType::peak:
 
@@ -269,6 +273,7 @@ void Biquads<SampleType>::coefficients()
 
             break;
 
+
         case filterType::notch:
 
             b0 = one;
@@ -280,6 +285,7 @@ void Biquads<SampleType>::coefficients()
 
             break;
 
+
         case filterType::allPass:
 
             b0 = one - alpha;
@@ -290,6 +296,7 @@ void Biquads<SampleType>::coefficients()
             a2 = one - alpha;
 
             break;
+
 
         case filterType::lowShelf:
 
@@ -309,6 +316,7 @@ void Biquads<SampleType>::coefficients()
 
             break;
 
+
         case filterType::highShelf:
 
             b0 = one;
@@ -319,6 +327,7 @@ void Biquads<SampleType>::coefficients()
             a2 = zero;
 
             break;
+
 
         case filterType::bandPass1:
 
@@ -331,6 +340,7 @@ void Biquads<SampleType>::coefficients()
 
             break;
 
+
         case filterType::lowPass1:
 
             b0 = omega / (omega + one);
@@ -341,6 +351,7 @@ void Biquads<SampleType>::coefficients()
             a2 = zero;
 
             break;
+
 
         case filterType::highPass1:
 
@@ -353,7 +364,8 @@ void Biquads<SampleType>::coefficients()
 
             break;
 
-        default:
+
+        case filterType::lowShelf1:
 
             b0 = one;
             b1 = zero;
@@ -364,6 +376,29 @@ void Biquads<SampleType>::coefficients()
 
             break;
 
+
+        case filterType::highShelf1:
+
+            b0 = one;
+            b1 = zero;
+            b2 = zero;
+            a0 = one;
+            a1 = zero;
+            a2 = zero;
+
+            break;
+
+
+        default:
+
+            b0 = one;
+            b1 = zero;
+            b2 = zero;
+            a0 = one;
+            a1 = zero;
+            a2 = zero;
+
+            break;
     }
 
     a0_ = static_cast <SampleType>(one / a0);

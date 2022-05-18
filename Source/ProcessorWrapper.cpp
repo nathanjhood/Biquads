@@ -47,7 +47,7 @@ void ProcessWrapper<SampleType>::createParameterLayout(std::vector<std::unique_p
     auto freqRange = juce::NormalisableRange<float>(20.00f, 20000.00f, 0.01f, 00.198894f);
     auto gainRange = juce::NormalisableRange<float>(-30.00f, 30.00f, 0.01f, 1.00f);
 
-    auto fString = juce::StringArray({ "Low Pass", "High Pass", "Band Pass", "Peak", "Notch", "All Pass", "Low Shelf", "High Shelf", "Band Pass (g)", "Low Pass (1)", "High Pass (1)"});
+    auto fString = juce::StringArray({ "Low Pass", "High Pass", "Band Pass", "Peak", "Notch", "All Pass", "Low Shelf", "High Shelf", "Band Pass (g)", "Low Pass (1)", "High Pass (1)", "Low Shelf (1)", "High Shelf (1)"});
     auto tString = juce::StringArray({ "Direct Form I", "Direct Form II", "Direct Form I (t)", "Direct Form II (t)" });
     auto osString = juce::StringArray({ "1x", "2x", "4x", "8x", "16x" });
 
@@ -69,6 +69,7 @@ void ProcessWrapper<SampleType>::setOversampling()
         overSamplingFactor = 1 << curOS;
         prevOS = curOS;
         biquad.reset(static_cast<SampleType>(0.0));
+        biquad.sampleRate = spec.sampleRate * overSamplingFactor;
     }
 }
 
@@ -107,7 +108,7 @@ void ProcessWrapper<SampleType>::update()
 {
     setOversampling();
 
-    biquad.setFrequency(frequencyPtr->get() / overSamplingFactor);
+    biquad.setFrequency(frequencyPtr->get());
     biquad.setResonance(resonancePtr->get());
     biquad.setGain(gainPtr->get());
 
@@ -133,6 +134,10 @@ void ProcessWrapper<SampleType>::update()
         biquad.setFilterType(FilterType::lowPass1);
     else if (typePtr->getIndex() == 10)
         biquad.setFilterType(FilterType::highPass1);
+    else if (typePtr->getIndex() == 11)
+        biquad.setFilterType(FilterType::lowShelf1);
+    else if (typePtr->getIndex() == 12)
+        biquad.setFilterType(FilterType::highShelf1);
     else
         biquad.setFilterType(FilterType::lowPass);
 

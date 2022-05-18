@@ -27,7 +27,9 @@ enum class FilterType
     highShelf,
     bandPass1,
     lowPass1,
-    highPass1
+    highPass1,
+    lowShelf1,
+    highShelf1
 };
 
 enum class TransformationType
@@ -120,6 +122,8 @@ public:
     /** Processes one sample at a time on a given channel. */
     SampleType processSample(int channel, SampleType inputValue);
 
+    double sampleRate = 44100.0;
+
 private:
     //==============================================================================
     void coefficients();
@@ -159,7 +163,7 @@ private:
     SampleType a2_ = 0.0;
 
     //==============================================================================
-    double sampleRate = 44100.0;
+    
     SampleType minFreq = 20.0;
     SampleType maxFreq = 20000.0;
     SampleType hz = 1000.0;
