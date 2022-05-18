@@ -73,7 +73,6 @@ private:
 
     //==============================================================================
     /** Init variables. */
-    double sr = 44100.0;
     int curOS = 0, prevOS = 0, overSamplingFactor = 1;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ProcessWrapper)

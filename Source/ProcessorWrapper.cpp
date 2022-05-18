@@ -69,7 +69,6 @@ void ProcessWrapper<SampleType>::setOversampling()
         overSamplingFactor = 1 << curOS;
         prevOS = curOS;
         biquad.reset(static_cast<SampleType>(0.0));
-        spec.sampleRate = sr;
     }
 }
 
@@ -78,15 +77,9 @@ void ProcessWrapper<SampleType>::prepare(double sampleRate, int samplesPerBlock,
 {
     overSamplingFactor = 1 << curOS;
 
-    sr = sampleRate * static_cast<double>(overSamplingFactor);
-
     spec.sampleRate = sampleRate;
     spec.maximumBlockSize = samplesPerBlock;
     spec.numChannels = numChannels;
-
-    
-
-    
 
     for (int i = 0; i < 5; ++i)
         overSample[i]->initProcessing(spec.maximumBlockSize);
@@ -114,7 +107,7 @@ void ProcessWrapper<SampleType>::update()
 {
     setOversampling();
 
-    biquad.setFrequency(frequencyPtr->get());
+    biquad.setFrequency(frequencyPtr->get() / overSamplingFactor);
     biquad.setResonance(resonancePtr->get());
     biquad.setGain(gainPtr->get());
 
