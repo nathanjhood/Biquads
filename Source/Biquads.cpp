@@ -275,6 +275,50 @@ void Biquads<SampleType>::coefficients()
 
             break;
 
+        case filterType::allPass:
+
+            b0 = SampleType(1.0) - alpha;
+            b1 = SampleType(-2.0) * cos;
+            b2 = SampleType(1.0) + alpha;
+            a0 = SampleType(1.0) + alpha;
+            a1 = SampleType(-2.0) * cos;
+            a2 = SampleType(1.0) - alpha;
+
+            break;
+
+        case filterType::lowShelf:
+
+            b0 = SampleType(1.0);
+            b1 = SampleType(0.0);
+            b2 = SampleType(0.0);
+            a0 = SampleType(1.0);
+            a1 = SampleType(0.0);
+            a2 = SampleType(0.0);
+
+            break;
+
+        case filterType::highShelf:
+
+            b0 = SampleType(1.0);
+            b1 = SampleType(0.0);
+            b2 = SampleType(0.0);
+            a0 = SampleType(1.0);
+            a1 = SampleType(0.0);
+            a2 = SampleType(0.0);
+
+            break;
+
+        case filterType::bandPass1:
+
+            b0 = alpha;
+            b1 = SampleType(0.0);
+            b2 = SampleType(-1.0) * alpha;
+            a0 = SampleType(1.0) + alpha;
+            a1 = SampleType(-2.0) * cos;
+            a2 = SampleType(1.0) - alpha;
+
+            break;
+
         default:
 
             b0 = SampleType(1.0);
