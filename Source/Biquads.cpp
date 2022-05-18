@@ -94,7 +94,6 @@ void Biquads<SampleType>::prepare(juce::dsp::ProcessSpec& spec)
 template <typename SampleType>
 void Biquads<SampleType>::reset(SampleType initialValue)
 {
-
     for (auto& wn_1 : Wn_1)
         wn_1 = initialValue;
 
