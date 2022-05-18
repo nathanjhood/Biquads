@@ -25,7 +25,9 @@ enum class FilterType
     allPass,
     lowShelf,
     highShelf,
-    bandPass1
+    bandPass1,
+    lowPass1,
+    highPass1
 };
 
 enum class TransformationType
@@ -53,14 +55,19 @@ public:
     Biquads();
 
     //==============================================================================
+    /** Sets the centre Frequency of the filter. Range = 20..20000 */
     void setFrequency(SampleType newFreq);
 
+    /** Sets the resonance of the filter. Range = 0..1 */
     void setResonance(SampleType newRes);
 
+    /** Sets the centre Frequency gain of the filter. Peak and shelf modes only. */
     void setGain(SampleType newGain);
 
+    /** Sets the type of the filter. See enum for availa ble types. */
     void setFilterType(filterType newFiltType);
 
+    /** Sets the BiLinear Transform for the filter to use. See enum for availa ble types. */
     void setTransformType(transformationType newTransformType);
 
     //==============================================================================
