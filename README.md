@@ -10,7 +10,7 @@ Please see my "Orfanidis Biquad" repository for further information meanwhile.
 
 (Shown below; a resonant 2-pole Low Pass filter with high oversampling, performed on a harmonic-rich 20Hz band-limited Impulse Response in Reaper)
 
-![Biquads](https://github.com/StoneyDSP/Biquads/blob/b96cfa63046e2122e3c016f16a318ab9aa8c5e13/Res/Biquads.png)
+![Biquads](https://github.com/StoneyDSP/Biquads/blob/a6b7b8bace59c063c1c416526af7fb526302715e/Res/Biquads.png)
 
 # Transformations
 Determining an output transfer function (Y(n)), given an input value (X(n)) and six multiplier coefficients within an audio feedback path (b0, b1, b2, a1, and a2 - all of which are pre-scaled by 1/a0) - please note that each feedback term requires a delay of one audio sample;
