@@ -1,8 +1,10 @@
+Current: v1.0.4b
+
 # Biquads
 Multi-mode Biquad filter for audio analysis purposes using variable BiLinear transforms, processing precision, and oversampling to achieve high-quality results (under construction)
 
 + Under construction!
-+ Currently only implementing 12dB low pass, high pass, and band pass using variable BiLinear transforms, processing precision, and oversampling to achieve high-quality results (much more to come)!
++ Implementing various 6dB- and 12dB- filter types (such as low pass, high pass, band pass, plus many more) using variable BiLinear transforms, switchable processing precision, and oversampling to achieve high-quality results (much more to come)!
 + This filter is subject to amplitude and phase warping of the frequency spectrum approaching the Nyquist frequency when oversampling is not used.
 + There is currently no parameter smoothing, so BE AWARE that modulating parameters in real-time WILL create loud clicks and pops while passing audio under many settings.
 
