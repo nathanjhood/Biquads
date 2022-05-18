@@ -78,7 +78,7 @@ private:
 
     //==============================================================================
     /** Parameter pointers. */
-    juce::AudioParameterBool* doublesPtr    { nullptr };
+    juce::AudioParameterChoice* doublesPtr    { nullptr };
     juce::AudioParameterBool* bypassPtr     { nullptr };
 
     //==============================================================================
