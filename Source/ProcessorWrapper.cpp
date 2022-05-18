@@ -47,7 +47,7 @@ void ProcessWrapper<SampleType>::createParameterLayout(std::vector<std::unique_p
     auto freqRange = juce::NormalisableRange<float>(20.00f, 20000.00f, 0.01f, 00.198894f);
     auto gainRange = juce::NormalisableRange<float>(-30.00f, 30.00f, 0.01f, 1.00f);
 
-    auto fString = juce::StringArray({ "Low Pass", "High Pass", "Band Pass"});
+    auto fString = juce::StringArray({ "Low Pass", "High Pass", "Band Pass", "Peak", "Notch" });
     auto tString = juce::StringArray({ "Direct Form I", "Direct Form II", "Direct Form I (t)", "Direct Form II (t)" });
     auto osString = juce::StringArray({ "1x", "2x", "4x", "8x", "16x" });
 
@@ -117,6 +117,10 @@ void ProcessWrapper<SampleType>::update()
         biquad.setFilterType(FilterType::highPass);
     else if (typePtr->getIndex() == 2)
         biquad.setFilterType(FilterType::bandPass);
+    else if (typePtr->getIndex() == 3)
+        biquad.setFilterType(FilterType::peak);
+    else if (typePtr->getIndex() == 4)
+        biquad.setFilterType(FilterType::notch);
     else
         biquad.setFilterType(FilterType::lowPass);
 
