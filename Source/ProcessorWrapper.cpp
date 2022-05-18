@@ -47,7 +47,7 @@ void ProcessWrapper<SampleType>::createParameterLayout(std::vector<std::unique_p
     auto freqRange = juce::NormalisableRange<float>(20.00f, 20000.00f, 0.01f, 00.198894f);
     auto gainRange = juce::NormalisableRange<float>(-30.00f, 30.00f, 0.01f, 1.00f);
 
-    auto fString = juce::StringArray({ "Low Pass", "High Pass", "Band Pass"});
+    auto fString = juce::StringArray({ "Low Pass", "High Pass", "Band Pass", "Peak", "Notch" });
     auto tString = juce::StringArray({ "Direct Form I", "Direct Form II", "Direct Form I (t)", "Direct Form II (t)" });
     auto osString = juce::StringArray({ "1x", "2x", "4x", "8x", "16x" });
 
@@ -69,7 +69,6 @@ void ProcessWrapper<SampleType>::setOversampling()
         overSamplingFactor = 1 << curOS;
         prevOS = curOS;
         biquad.reset(static_cast<SampleType>(0.0));
-        spec.sampleRate = sr;
     }
 }
 
@@ -78,15 +77,9 @@ void ProcessWrapper<SampleType>::prepare(double sampleRate, int samplesPerBlock,
 {
     overSamplingFactor = 1 << curOS;
 
-    sr = sampleRate * static_cast<double>(overSamplingFactor);
-
     spec.sampleRate = sampleRate;
     spec.maximumBlockSize = samplesPerBlock;
     spec.numChannels = numChannels;
-
-    
-
-    
 
     for (int i = 0; i < 5; ++i)
         overSample[i]->initProcessing(spec.maximumBlockSize);
@@ -114,7 +107,7 @@ void ProcessWrapper<SampleType>::update()
 {
     setOversampling();
 
-    biquad.setFrequency(frequencyPtr->get());
+    biquad.setFrequency(frequencyPtr->get() / overSamplingFactor);
     biquad.setResonance(resonancePtr->get());
     biquad.setGain(gainPtr->get());
 
@@ -124,6 +117,10 @@ void ProcessWrapper<SampleType>::update()
         biquad.setFilterType(FilterType::highPass);
     else if (typePtr->getIndex() == 2)
         biquad.setFilterType(FilterType::bandPass);
+    else if (typePtr->getIndex() == 3)
+        biquad.setFilterType(FilterType::peak);
+    else if (typePtr->getIndex() == 4)
+        biquad.setFilterType(FilterType::notch);
     else
         biquad.setFilterType(FilterType::lowPass);
 

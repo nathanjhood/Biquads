@@ -22,7 +22,7 @@ BiquadsAudioProcessor::BiquadsAudioProcessor()
                        )
 #endif
 {
-    doublesPtr = dynamic_cast       <juce::AudioParameterBool*>    (apvts.getParameter("doublesID"));
+    doublesPtr = dynamic_cast       <juce::AudioParameterChoice*>    (apvts.getParameter("precisionID"));
     jassert(doublesPtr != nullptr);
 
     bypassPtr = dynamic_cast       <juce::AudioParameterBool*>    (apvts.getParameter("bypassID"));
@@ -44,7 +44,10 @@ juce::AudioProcessorValueTreeState::ParameterLayout BiquadsAudioProcessor::creat
 
     ProcessWrapper<float>::createParameterLayout(params);
 
-    params.push_back(std::make_unique<juce::AudioParameterBool>("doublesID", "Doubles", false));
+    auto pString = juce::StringArray({ "Floats", "Doubles" });
+
+    //params.push_back(std::make_unique<juce::AudioParameterBool>("doublesID", "Doubles", false));
+    params.push_back(std::make_unique<juce::AudioParameterChoice>("precisionID", "Precision", pString, 0));
     params.push_back(std::make_unique<juce::AudioParameterBool>("bypassID", "Bypass", false));
 
     return { params.begin(), params.end() };
@@ -130,8 +133,8 @@ void BiquadsAudioProcessor::changeProgramName (int index, const juce::String& ne
 //==============================================================================
 void BiquadsAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-    auto precision = getProcessingPrecision();
-    auto numChannels = getTotalNumOutputChannels();
+    getProcessingPrecision();
+    auto numChannels = getMainBusNumInputChannels();
 
     processor.prepare(sampleRate, samplesPerBlock, numChannels);
 }
@@ -144,7 +147,13 @@ void BiquadsAudioProcessor::releaseResources()
 void BiquadsAudioProcessor::update()
 {
     bypassPtr->get();
-    doublesPtr->get();
+    doublesPtr->getIndex();
+    //setProcessingPrecision();
+
+    /*if (doublesPtr->getIndex() == 0)
+        setProcessingPrecision(ProcessingPrecision::singlePrecision);
+    else if (doublesPtr->getIndex() == 1)
+        setProcessingPrecision(ProcessingPrecision::doublePrecision);*/
 }
 
 #ifndef JucePlugin_PreferredChannelConfigurations
