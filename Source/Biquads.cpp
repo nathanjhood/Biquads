@@ -208,136 +208,143 @@ void Biquads<SampleType>::coefficients()
     SampleType alpha = static_cast <SampleType>(sin * (static_cast <SampleType>(1.0) - q));
     SampleType a = static_cast <SampleType>(std::pow(static_cast <SampleType>(10.0), (g / static_cast <SampleType>(40.0))));
 
+    const SampleType zero = SampleType(0.0);
+    const SampleType one = SampleType(1.0);
+    const SampleType two = SampleType(2.0);
+
+    const SampleType minusOne = SampleType(-1.0);
+    const SampleType minusTwo = SampleType(-2.0);
+
     juce::ignoreUnused(tan);
 
-    SampleType b0 = SampleType(1.0);
-    SampleType b1 = SampleType(0.0);
-    SampleType b2 = SampleType(0.0);
-    SampleType a0 = SampleType(1.0);
-    SampleType a1 = SampleType(0.0);
-    SampleType a2 = SampleType(0.0);
+    SampleType b0 = one;
+    SampleType b1 = zero;
+    SampleType b2 = zero;
+    SampleType a0 = one;
+    SampleType a1 = zero;
+    SampleType a2 = zero;
 
     switch (filtType)
     {
         case filterType::lowPass:
 
-            b0 = (SampleType(1.0) - cos) / SampleType(2.0);
-            b1 = SampleType(1.0) - cos;
-            b2 = (SampleType(1.0) - cos) / SampleType(2.0);
-            a0 = alpha + SampleType(1.0);
-            a1 = cos * SampleType(-2.0);
-            a2 = SampleType(1.0) - alpha;
+            b0 = (one - cos) / two;
+            b1 = one - cos;
+            b2 = (one - cos) / two;
+            a0 = one + alpha;
+            a1 = minusTwo * cos;
+            a2 = one - alpha;
 
             break;
 
 
         case filterType::highPass:
 
-            b0 = (SampleType(1.0) + cos) / SampleType(2.0);
-            b1 = (SampleType(1.0) + cos) * SampleType(-1.0);
-            b2 = (SampleType(1.0) + cos) / SampleType(2.0);
-            a0 = alpha + SampleType(1.0);
-            a1 = cos * SampleType(-2.0);
-            a2 = SampleType(1.0) - alpha;
+            b0 = (one + cos) / two;
+            b1 = (one + cos) * minusOne;
+            b2 = (one + cos) / two;
+            a0 = alpha + one;
+            a1 = cos * minusTwo;
+            a2 = one - alpha;
 
             break;
 
         case filterType::bandPass:
 
-            b0 = sin / SampleType(2.0);
-            b1 = SampleType(0.0);
-            b2 = (sin / SampleType(2.0)) * SampleType(-1.0);
-            a0 = alpha + SampleType(1.0);
-            a1 = cos * SampleType(-2.0);
-            a2 = SampleType(1.0) - alpha;
+            b0 = sin / two;
+            b1 = zero;
+            b2 = (sin / two) * minusOne;
+            a0 = alpha + one;
+            a1 = cos * minusTwo;
+            a2 = one - alpha;
 
             break;
 
         case filterType::peak:
 
-            b0 = SampleType(1.0) + (alpha * a);
-            b1 = SampleType(-2.0) * cos;
-            b2 = SampleType(1.0) - (alpha * a);
-            a0 = SampleType(1.0) + (alpha / a);
-            a1 = SampleType(-2.0) * cos;
-            a2 = SampleType(1.0) - (alpha / a);
+            b0 = one + (alpha * a);
+            b1 = minusTwo * cos;
+            b2 = one - (alpha * a);
+            a0 = one + (alpha / a);
+            a1 = minusTwo * cos;
+            a2 = one - (alpha / a);
 
             break;
 
         case filterType::notch:
 
-            b0 = SampleType(1.0);
-            b1 = SampleType(-2.0) * cos;
-            b2 = SampleType(1.0);
-            a0 = SampleType(1.0) + alpha;
-            a1 = SampleType(-2.0) * cos;
-            a2 = SampleType(1.0) - alpha;
+            b0 = one;
+            b1 = minusTwo * cos;
+            b2 = one;
+            a0 = one + alpha;
+            a1 = minusTwo * cos;
+            a2 = one - alpha;
 
             break;
 
         case filterType::allPass:
 
-            b0 = SampleType(1.0) - alpha;
-            b1 = SampleType(-2.0) * cos;
-            b2 = SampleType(1.0) + alpha;
-            a0 = SampleType(1.0) + alpha;
-            a1 = SampleType(-2.0) * cos;
-            a2 = SampleType(1.0) - alpha;
+            b0 = one - alpha;
+            b1 = minusTwo * cos;
+            b2 = one + alpha;
+            a0 = one + alpha;
+            a1 = minusTwo * cos;
+            a2 = one - alpha;
 
             break;
 
         case filterType::lowShelf:
 
-            b0 = SampleType(1.0);
-            b1 = SampleType(0.0);
-            b2 = SampleType(0.0);
-            a0 = SampleType(1.0);
-            a1 = SampleType(0.0);
-            a2 = SampleType(0.0);
+            b0 = one;
+            b1 = zero;
+            b2 = zero;
+            a0 = one;
+            a1 = zero;
+            a2 = zero;
 
             break;
 
         case filterType::highShelf:
 
-            b0 = SampleType(1.0);
-            b1 = SampleType(0.0);
-            b2 = SampleType(0.0);
-            a0 = SampleType(1.0);
-            a1 = SampleType(0.0);
-            a2 = SampleType(0.0);
+            b0 = one;
+            b1 = zero;
+            b2 = zero;
+            a0 = one;
+            a1 = zero;
+            a2 = zero;
 
             break;
 
         case filterType::bandPass1:
 
             b0 = alpha;
-            b1 = SampleType(0.0);
-            b2 = SampleType(-1.0) * alpha;
-            a0 = SampleType(1.0) + alpha;
-            a1 = SampleType(-2.0) * cos;
-            a2 = SampleType(1.0) - alpha;
+            b1 = zero;
+            b2 = minusOne * alpha;
+            a0 = one + alpha;
+            a1 = minusTwo * cos;
+            a2 = one - alpha;
 
             break;
 
         default:
 
-            b0 = SampleType(1.0);
-            b1 = SampleType(0.0);
-            b2 = SampleType(0.0);
-            a0 = SampleType(1.0);
-            a1 = SampleType(0.0);
-            a2 = SampleType(0.0);
+            b0 = one;
+            b1 = zero;
+            b2 = zero;
+            a0 = one;
+            a1 = zero;
+            a2 = zero;
 
             break;
 
     }
 
-    a0_ = (static_cast <SampleType>(1.0) / a0);
-    a1_ = (static_cast <SampleType>((a1 * a0_) * SampleType(-1.0)));
-    a2_ = (static_cast <SampleType>((a2 * a0_) * SampleType(-1.0)));
-    b0_ = (static_cast <SampleType>(b0 * a0_));
-    b1_ = (static_cast <SampleType>(b1 * a0_));
-    b2_ = (static_cast <SampleType>(b2 * a0_));
+    a0_ = static_cast <SampleType>(one / a0);
+    a1_ = static_cast <SampleType>((a1 * a0_) * minusOne);
+    a2_ = static_cast <SampleType>((a2 * a0_) * minusOne);
+    b0_ = static_cast <SampleType>(b0 * a0_);
+    b1_ = static_cast <SampleType>(b1 * a0_);
+    b2_ = static_cast <SampleType>(b2 * a0_);
 }
 
 template <typename SampleType>
