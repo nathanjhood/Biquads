@@ -50,6 +50,13 @@ private:
     //BiquadsAudioProcessor& audioProcessor;
 
     //==============================================================================
+    /** Sets the oversampling factor. */
+    void setOversampling();
+
+    //==============================================================================
+    std::unique_ptr<juce::dsp::Oversampling<SampleType>> overSample[5];
+
+    //==============================================================================
     /** Instantiate objects. */
     juce::dsp::ProcessSpec spec;
     Biquads<SampleType> biquad;
@@ -62,6 +69,12 @@ private:
     juce::AudioParameterFloat*      gainPtr         { nullptr };
     juce::AudioParameterChoice*     typePtr         { nullptr };
     juce::AudioParameterChoice*     transformPtr    { nullptr };
+    juce::AudioParameterChoice*     osPtr           { nullptr };
+
+    //==============================================================================
+    /** Init variables. */
+    double sr = 44100.0;
+    int curOS = 0, prevOS = 0, overSamplingFactor = 1;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ProcessWrapper)
 };
