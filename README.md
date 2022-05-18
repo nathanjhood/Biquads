@@ -6,3 +6,5 @@ Multi-mode Biquad filter for audio analysis purposes
 + This filter is subject to amplitude and phase warping of the frequency spectrum approaching the Nyquist frequency.
 
 Please see my "Orfanidis Biquad" repository for further information meanwhile.
+
+![Biquads](https://github.com/StoneyDSP/Biquads/blob/b96cfa63046e2122e3c016f16a318ab9aa8c5e13/Res/Biquads.png)
