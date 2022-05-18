@@ -201,19 +201,18 @@ SampleType Biquads<SampleType>::directFormIITransposed(int channel, SampleType i
 template <typename SampleType>
 void Biquads<SampleType>::coefficients()
 {
-    SampleType omega = static_cast <SampleType>(hz * ((pi * static_cast <SampleType>(2.0)) / sampleRate));
+    const SampleType zero = static_cast <SampleType>(0.0);
+    const SampleType one = static_cast <SampleType>(1.0);
+    const SampleType two = static_cast <SampleType>(2.0);
+    const SampleType minusOne = static_cast <SampleType>(-1.0);
+    const SampleType minusTwo = static_cast <SampleType>(-2.0);
+
+    SampleType omega = static_cast <SampleType>(hz * ((pi * two) / sampleRate));
     SampleType cos = static_cast <SampleType>(std::cos(omega));
     SampleType sin = static_cast <SampleType>(std::sin(omega));
     SampleType tan = static_cast <SampleType>(sin / cos);
-    SampleType alpha = static_cast <SampleType>(sin * (static_cast <SampleType>(1.0) - q));
+    SampleType alpha = static_cast <SampleType>(sin * (one - q));
     SampleType a = static_cast <SampleType>(std::pow(static_cast <SampleType>(10.0), (g / static_cast <SampleType>(40.0))));
-
-    const SampleType zero = SampleType(0.0);
-    const SampleType one = SampleType(1.0);
-    const SampleType two = SampleType(2.0);
-
-    const SampleType minusOne = SampleType(-1.0);
-    const SampleType minusTwo = SampleType(-2.0);
 
     juce::ignoreUnused(tan);
 
