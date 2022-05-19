@@ -205,6 +205,7 @@ void Biquads<SampleType>::coefficients()
     const SampleType two = static_cast <SampleType>(2.0);
     const SampleType minusOne = static_cast <SampleType>(-1.0);
     const SampleType minusTwo = static_cast <SampleType>(-2.0);
+    const SampleType pi = static_cast<SampleType>(juce::MathConstants<SampleType>::pi);
 
     SampleType omega = static_cast <SampleType>(hz * ((pi * two) / sampleRate));
     SampleType cos = static_cast <SampleType>(std::cos(omega));
@@ -212,8 +213,6 @@ void Biquads<SampleType>::coefficients()
     SampleType tan = static_cast <SampleType>(sin / cos);
     SampleType alpha = static_cast <SampleType>(sin * (one - q));
     SampleType a = static_cast <SampleType>(juce::Decibels::decibelsToGain(g * static_cast <SampleType>(0.5)));
-    
-    //SampleType a = static_cast <SampleType>(std::pow(static_cast <SampleType>(10.0), (g / static_cast <SampleType>(40.0))));
 
     juce::ignoreUnused(tan);
 
@@ -298,37 +297,6 @@ void Biquads<SampleType>::coefficients()
             break;
 
 
-        case filterType::lowShelf:
-
-            /*b0 = a * (((a + one) - (cos * (a - one)) ) + );
-            b1 = a * (two * ((a - one) - (cos * (a + one))));
-            b2 = a * (((a + one) - (cos * (a - one)) ) - );
-            a0 = one;
-            a1 = minusTwo * ((cos * (a + one)) + (a - one));
-            a2 = zero;*/
-
-            b0 = one;
-            b1 = zero;
-            b2 = zero;
-            a0 = one;
-            a1 = zero;
-            a2 = zero;
-
-            break;
-
-
-        case filterType::highShelf:
-
-            b0 = one;
-            b1 = zero;
-            b2 = zero;
-            a0 = one;
-            a1 = zero;
-            a2 = zero;
-
-            break;
-
-
         case filterType::bandPass1:
 
             b0 = alpha;
@@ -360,30 +328,6 @@ void Biquads<SampleType>::coefficients()
             b2 = zero;
             a0 = minusOne;
             a1 = (one - omega) / (omega + one);
-            a2 = zero;
-
-            break;
-
-
-        case filterType::lowShelf1:
-
-            b0 = one;
-            b1 = zero;
-            b2 = zero;
-            a0 = one;
-            a1 = zero;
-            a2 = zero;
-
-            break;
-
-
-        case filterType::highShelf1:
-
-            b0 = one;
-            b1 = zero;
-            b2 = zero;
-            a0 = one;
-            a1 = zero;
             a2 = zero;
 
             break;
