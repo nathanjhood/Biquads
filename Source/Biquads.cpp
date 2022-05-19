@@ -205,6 +205,7 @@ void Biquads<SampleType>::coefficients()
     const SampleType two = static_cast <SampleType>(2.0);
     const SampleType minusOne = static_cast <SampleType>(-1.0);
     const SampleType minusTwo = static_cast <SampleType>(-2.0);
+    const SampleType pi = static_cast<SampleType>(juce::MathConstants<SampleType>::pi);
 
     SampleType omega = static_cast <SampleType>(hz * ((pi * two) / sampleRate));
     SampleType cos = static_cast <SampleType>(std::cos(omega));
@@ -212,8 +213,9 @@ void Biquads<SampleType>::coefficients()
     SampleType tan = static_cast <SampleType>(sin / cos);
     SampleType alpha = static_cast <SampleType>(sin * (one - q));
     SampleType a = static_cast <SampleType>(juce::Decibels::decibelsToGain(g * static_cast <SampleType>(0.5)));
-    
-    //SampleType a = static_cast <SampleType>(std::pow(static_cast <SampleType>(10.0), (g / static_cast <SampleType>(40.0))));
+
+    SampleType onePlusOmega = one + omega;
+    SampleType oneMinusOmega = one - omega;
 
     juce::ignoreUnused(tan);
 
@@ -367,6 +369,24 @@ void Biquads<SampleType>::coefficients()
 
         case filterType::lowShelf1:
 
+            b0 = one + ((a + minusOne) / onePlusOmega);
+            b1 = (((oneMinusOmega) / (onePlusOmega)) + ((a + minusOne) / onePlusOmega)) * minusOne;
+            //b2 = zero;
+            //a0 = minusOne;
+            a1 = (oneMinusOmega) / (onePlusOmega);
+            //a2 = zero;
+
+            break;
+
+        case filterType::lowShelf1C:
+
+            //b0 = one;
+            //b1 = zero;
+            ////b2 = zero;
+            ////a0 = minusOne;
+            //a1 = (one - (omega / a)) / ((omega / a) + one);
+            ////a2 = zero;
+
             b0 = one;
             b1 = zero;
             b2 = zero;
@@ -378,6 +398,17 @@ void Biquads<SampleType>::coefficients()
 
 
         case filterType::highShelf1:
+
+            b0 = one;
+            b1 = zero;
+            b2 = zero;
+            a0 = one;
+            a1 = zero;
+            a2 = zero;
+
+            break;
+
+        case filterType::highShelf1C:
 
             b0 = one;
             b1 = zero;
