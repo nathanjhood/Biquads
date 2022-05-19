@@ -23,13 +23,9 @@ enum class FilterType
     peak,
     notch,
     allPass,
-    lowShelf,
-    highShelf,
     bandPass1,
     lowPass1,
-    highPass1,
-    lowShelf1,
-    highShelf1
+    highPass1
 };
 
 enum class TransformationType
@@ -172,8 +168,6 @@ private:
 
     filterType filtType = filterType::lowPass;
     transformationType transformType = transformationType::directFormIItransposed;
-    
-    const SampleType pi = static_cast<SampleType>(juce::MathConstants<SampleType>::pi);
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Biquads)
