@@ -235,8 +235,8 @@ void Biquads<SampleType>::coefficients()
             b0 = omega / (omega + one);
             b1 = omega / (omega + one);
             b2 = zero;
-            a0 = minusOne;
-            a1 = (one - omega) / (omega + one);
+            a0 = one;
+            a1 = ((one - omega) / (omega + one)) * minusOne;
             a2 = zero;
 
             break;
@@ -259,8 +259,8 @@ void Biquads<SampleType>::coefficients()
             b0 = one / (omega + one);
             b1 = (one / (omega + one)) * minusOne;
             b2 = zero;
-            a0 = minusOne;
-            a1 = (one - omega) / (omega + one);
+            a0 = one;
+            a1 = ((one - omega) / (omega + one)) * minusOne;
             a2 = zero;
 
             break;
