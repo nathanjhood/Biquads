@@ -229,6 +229,7 @@ void Biquads<SampleType>::coefficients()
 
             break;
 
+
         case filterType::lowPass1:
 
             b0 = omega / (omega + one);
