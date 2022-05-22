@@ -34,6 +34,9 @@ ProcessWrapper<SampleType>::ProcessWrapper(AudioProcessorValueTreeState& apvts)
     osPtr = dynamic_cast                <juce::AudioParameterChoice*>       (apvts.getParameter("osID"));
     jassert(osPtr != nullptr);
 
+    mixPtr = dynamic_cast              <juce::AudioParameterFloat*>        (apvts.getParameter("mixID"));
+    jassert(mixPtr != nullptr);
+
     auto osFilter = juce::dsp::Oversampling<SampleType>::filterHalfBandPolyphaseIIR;
 
     for (int i = 0; i < 5; ++i)
@@ -46,6 +49,7 @@ void ProcessWrapper<SampleType>::createParameterLayout(std::vector<std::unique_p
 {
     auto freqRange = juce::NormalisableRange<float>(20.00f, 20000.00f, 0.01f, 00.198894f);
     auto gainRange = juce::NormalisableRange<float>(-30.00f, 30.00f, 0.01f, 1.00f);
+    auto mixRange = juce::NormalisableRange<float>(00.00f, 100.00f, 0.01f, 1.00f);
 
     auto fString = juce::StringArray({ "Low Pass (2)", "Low Pass (1)", "High Pass (2)", "High Pass (1)" , "Band Pass", "Band Pass (Q)", "Low Shelf (2)", "Low Shelf (1)", "Low Shelf (1c)", "High Shelf (2)", "High Shelf (1)", "High Shelf (1c)", "Peak", "Notch", "All Pass" });
     auto tString = juce::StringArray({ "Direct Form I", "Direct Form II", "Direct Form I (t)", "Direct Form II (t)" });
@@ -58,6 +62,7 @@ void ProcessWrapper<SampleType>::createParameterLayout(std::vector<std::unique_p
     params.push_back(std::make_unique<juce::AudioParameterChoice>("typeID", "Type", fString, 0));
     params.push_back(std::make_unique<juce::AudioParameterChoice>("transformID", "Transform", tString, 3));
     params.push_back(std::make_unique<juce::AudioParameterChoice>("osID", "Oversampling", osString, 0));
+    params.push_back(std::make_unique<juce::AudioParameterFloat>("mixID", "Mix", mixRange, 100.00f));
 }
 
 template <typename SampleType>
@@ -90,6 +95,7 @@ void ProcessWrapper<SampleType>::prepare(double sampleRate, int samplesPerBlock,
 
     prevOS = curOS;
 
+    mixer.prepare(spec);
     biquad.prepare(spec);
     setOversampling();
 }
@@ -97,6 +103,7 @@ void ProcessWrapper<SampleType>::prepare(double sampleRate, int samplesPerBlock,
 template <typename SampleType>
 void ProcessWrapper<SampleType>::reset()
 {
+    mixer.reset();
     biquad.reset(static_cast<SampleType>(0.0));
 
     for (int i = 0; i < 5; ++i)
@@ -155,6 +162,8 @@ void ProcessWrapper<SampleType>::update()
         biquad.setTransformType(TransformationType::directFormIItransposed);
     else
         biquad.setTransformType(TransformationType::directFormIItransposed);
+
+    mixer.setWetMixProportion(mixPtr->get() * 0.01f);
 }
 
 //==============================================================================
@@ -166,6 +175,8 @@ void ProcessWrapper<SampleType>::process(juce::AudioBuffer<SampleType>& buffer, 
     update();
 
     juce::dsp::AudioBlock<SampleType> block(buffer);
+
+    mixer.pushDrySamples(block);
 
     juce::dsp::AudioBlock<SampleType> osBlock = overSample[curOS]->processSamplesUp(block);
 
@@ -179,6 +190,8 @@ void ProcessWrapper<SampleType>::process(juce::AudioBuffer<SampleType>& buffer, 
     biquad.process(context);
 
     overSample[curOS]->processSamplesDown(block);
+
+    mixer.mixWetSamples(block);
 }
 
 //==============================================================================
