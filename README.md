@@ -1,4 +1,4 @@
-Current: v1.0.4b
+Current: v1.0.5b
 
 # Biquads
 Multi-mode Biquad filter for audio analysis purposes using variable BiLinear transforms, processing precision, and oversampling to achieve high-quality results (under construction)
