@@ -290,42 +290,6 @@ void Biquads<SampleType>::coefficients()
             break;
 
 
-        case filterType::peak:
-
-            b0 = one + (alpha * a);
-            b1 = minusTwo * cos;
-            b2 = one - (alpha * a);
-            a0 = one + (alpha / a);
-            a1 = minusTwo * cos;
-            a2 = one - (alpha / a);
-
-            break;
-
-
-        case filterType::notch:
-
-            b0 = one;
-            b1 = minusTwo * cos;
-            b2 = one;
-            a0 = one + alpha;
-            a1 = minusTwo * cos;
-            a2 = one - alpha;
-
-            break;
-
-
-        case filterType::allPass:
-
-            b0 = one - alpha;
-            b1 = minusTwo * cos;
-            b2 = one + alpha;
-            a0 = one + alpha;
-            a1 = minusTwo * cos;
-            a2 = one - alpha;
-
-            break;
-
-
         case filterType::lowShelf2:
 
             b0 = one;
@@ -396,8 +360,43 @@ void Biquads<SampleType>::coefficients()
             a2 = zero;
 
             break;
+        
+        case filterType::peak:
+
+            b0 = one + (alpha * a);
+            b1 = minusTwo * cos;
+            b2 = one - (alpha * a);
+            a0 = one + (alpha / a);
+            a1 = minusTwo * cos;
+            a2 = one - (alpha / a);
+
+            break;
 
 
+        case filterType::notch:
+
+            b0 = one;
+            b1 = minusTwo * cos;
+            b2 = one;
+            a0 = one + alpha;
+            a1 = minusTwo * cos;
+            a2 = one - alpha;
+
+            break;
+
+
+        case filterType::allPass:
+
+            b0 = one - alpha;
+            b1 = minusTwo * cos;
+            b2 = one + alpha;
+            a0 = one + alpha;
+            a1 = minusTwo * cos;
+            a2 = one - alpha;
+
+            break;
+
+        
         default:
 
             b0 = one;
