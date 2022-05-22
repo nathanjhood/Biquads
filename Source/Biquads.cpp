@@ -270,9 +270,9 @@ void Biquads<SampleType>::coefficients()
 
             b0 = sin / two;
             b1 = zero;
-            b2 = (sin / two) * minusOne;
-            a0 = alpha + one;
-            a1 = cos * minusTwo;
+            b2 = minusOne * (sin / two);
+            a0 = one + alpha;
+            a1 = minusTwo * cos;
             a2 = one - alpha;
 
             break;
@@ -304,11 +304,11 @@ void Biquads<SampleType>::coefficients()
 
         case filterType::lowShelf1:
 
-            b0 = one;
-            b1 = zero;
+            b0 = one + ((omega / (one + omega)) * (minusOne + (a * a)));
+            b1 = (((omega / (one + omega)) * ((a * a) + minusOne)) - ((one - omega) / (one + omega)));
             b2 = zero;
             a0 = one;
-            a1 = zero;
+            a1 = ((one - omega) / (one + omega)) * minusOne;
             a2 = zero;
 
             break;
@@ -316,11 +316,11 @@ void Biquads<SampleType>::coefficients()
 
         case filterType::lowShelf1C:
 
-            b0 = one;
-            b1 = zero;
+            b0 = one + ((omega / a) / (one + (omega / a)) * (minusOne + (a * a)));
+            b1 = ((((omega / a) / (one + (omega / a))) * ((a * a) + minusOne)) - ((one - (omega / a)) / (one + (omega / a))));
             b2 = zero;
             a0 = one;
-            a1 = zero;
+            a1 = ((one - (omega / a)) / (one + (omega / a))) * minusOne;
             a2 = zero;
 
             break;
@@ -340,11 +340,11 @@ void Biquads<SampleType>::coefficients()
 
         case filterType::highShelf1:
 
-            b0 = one;
-            b1 = zero;
+            b0 = one + ((minusOne + (a * a)) / (one + omega));
+            b1 = minusOne * (((one - omega) / (one + omega)) + ((minusOne + (a * a)) / (one + omega)));
             b2 = zero;
             a0 = one;
-            a1 = zero;
+            a1 = ((one - omega) / (one + omega)) * minusOne;
             a2 = zero;
 
             break;
@@ -352,11 +352,11 @@ void Biquads<SampleType>::coefficients()
 
         case filterType::highShelf1C:
 
-            b0 = one;
-            b1 = zero;
+            b0 = one + ((minusOne + (a * a)) / (one + (omega * a)));
+            b1 = minusOne * (((one - (omega * a)) / (one + (omega * a))) + ((minusOne + (a * a)) / (one + (omega * a))));
             b2 = zero;
             a0 = one;
-            a1 = zero;
+            a1 = ((one - (omega * a)) / (one + (omega * a))) * minusOne;
             a2 = zero;
 
             break;
