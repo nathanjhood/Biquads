@@ -47,7 +47,7 @@ void ProcessWrapper<SampleType>::createParameterLayout(std::vector<std::unique_p
     auto freqRange = juce::NormalisableRange<float>(20.00f, 20000.00f, 0.01f, 00.198894f);
     auto gainRange = juce::NormalisableRange<float>(-30.00f, 30.00f, 0.01f, 1.00f);
 
-    auto fString = juce::StringArray({ "Low Pass", "High Pass", "Band Pass", "Peak", "Notch", "All Pass", "Band Pass (g)", "Low Pass (1)", "High Pass (1)"});
+    auto fString = juce::StringArray({ "Low Pass (2)", "Low Pass (1)", "High Pass (2)", "High Pass (1)" , "Band Pass", "Band Pass (Q)", "Low Shelf (2)", "Low Shelf (1)", "Low Shelf (1c)", "High Shelf (2)", "High Shelf (1)", "High Shelf (1c)", "Peak", "Notch", "All Pass" });
     auto tString = juce::StringArray({ "Direct Form I", "Direct Form II", "Direct Form I (t)", "Direct Form II (t)" });
     auto osString = juce::StringArray({ "1x", "2x", "4x", "8x", "16x" });
 
@@ -113,25 +113,37 @@ void ProcessWrapper<SampleType>::update()
     biquad.setGain(gainPtr->get());
 
     if (typePtr->getIndex() == 0)
-        biquad.setFilterType(FilterType::lowPass);
+        biquad.setFilterType(FilterType::lowPass2);
     else if (typePtr->getIndex() == 1)
-        biquad.setFilterType(FilterType::highPass);
-    else if (typePtr->getIndex() == 2)
-        biquad.setFilterType(FilterType::bandPass);
-    else if (typePtr->getIndex() == 3)
-        biquad.setFilterType(FilterType::peak);
-    else if (typePtr->getIndex() == 4)
-        biquad.setFilterType(FilterType::notch);
-    else if (typePtr->getIndex() == 5)
-        biquad.setFilterType(FilterType::allPass);
-    else if (typePtr->getIndex() == 6)
-        biquad.setFilterType(FilterType::bandPass1);
-    else if (typePtr->getIndex() == 7)
         biquad.setFilterType(FilterType::lowPass1);
-    else if (typePtr->getIndex() == 8)
+    else if (typePtr->getIndex() == 2)
+        biquad.setFilterType(FilterType::highPass2);
+    else if (typePtr->getIndex() == 3)
         biquad.setFilterType(FilterType::highPass1);
+    else if (typePtr->getIndex() == 4)
+        biquad.setFilterType(FilterType::bandPass);
+    else if (typePtr->getIndex() == 5)
+        biquad.setFilterType(FilterType::bandPassQ);
+    else if (typePtr->getIndex() == 6)
+        biquad.setFilterType(FilterType::lowShelf2);
+    else if (typePtr->getIndex() == 7)
+        biquad.setFilterType(FilterType::lowShelf1);
+    else if (typePtr->getIndex() == 8)
+        biquad.setFilterType(FilterType::lowShelf1C);
+    else if (typePtr->getIndex() == 9)
+        biquad.setFilterType(FilterType::highShelf2);
+    else if (typePtr->getIndex() == 10)
+        biquad.setFilterType(FilterType::highShelf1);
+    else if (typePtr->getIndex() == 11)
+        biquad.setFilterType(FilterType::highShelf1C);
+    else if (typePtr->getIndex() == 12)
+        biquad.setFilterType(FilterType::peak);
+    else if (typePtr->getIndex() == 13)
+        biquad.setFilterType(FilterType::notch);
+    else if (typePtr->getIndex() == 14)
+        biquad.setFilterType(FilterType::allPass);
     else
-        biquad.setFilterType(FilterType::lowPass);
+        biquad.setFilterType(FilterType::lowPass2);
 
     if (transformPtr->getIndex() == 0)
         biquad.setTransformType(TransformationType::directFormI);
