@@ -34,6 +34,9 @@ ProcessWrapper<SampleType>::ProcessWrapper(AudioProcessorValueTreeState& apvts)
     osPtr = dynamic_cast                <juce::AudioParameterChoice*>       (apvts.getParameter("osID"));
     jassert(osPtr != nullptr);
 
+    outputPtr = dynamic_cast            <juce::AudioParameterFloat*>        (apvts.getParameter("outputID"));
+    jassert(outputPtr != nullptr);
+
     mixPtr = dynamic_cast              <juce::AudioParameterFloat*>        (apvts.getParameter("mixID"));
     jassert(mixPtr != nullptr);
 
@@ -48,7 +51,7 @@ template <typename SampleType>
 void ProcessWrapper<SampleType>::createParameterLayout(std::vector<std::unique_ptr<RangedAudioParameter>>& params)
 {
     auto dBMax = juce::Decibels::gainToDecibels(16.0f);
-    auto dBMin = juce::Decibels::gainToDecibels(16.0f) * -1.0f;
+    auto dBMin = juce::Decibels::gainToDecibels(0.0625f);
 
     auto freqRange = juce::NormalisableRange<float>(20.00f, 20000.00f, 0.01f, 00.198894f);
     auto gainRange = juce::NormalisableRange<float>(dBMin, dBMax, 0.01f, 1.00f);
@@ -65,6 +68,7 @@ void ProcessWrapper<SampleType>::createParameterLayout(std::vector<std::unique_p
     params.push_back(std::make_unique<juce::AudioParameterChoice>("typeID", "Type", fString, 0));
     params.push_back(std::make_unique<juce::AudioParameterChoice>("transformID", "Transform", tString, 3));
     params.push_back(std::make_unique<juce::AudioParameterChoice>("osID", "Oversampling", osString, 0));
+    params.push_back(std::make_unique<juce::AudioParameterFloat>("outputID", "Output", gainRange, 00.00f));
     params.push_back(std::make_unique<juce::AudioParameterFloat>("mixID", "Mix", mixRange, 100.00f));
 }
 
@@ -76,6 +80,7 @@ void ProcessWrapper<SampleType>::setOversampling()
     {
         overSamplingFactor = 1 << curOS;
         prevOS = curOS;
+        mixer.reset();
         biquad.reset(static_cast<SampleType>(0.0));
         biquad.sampleRate = spec.sampleRate * overSamplingFactor;
     }
@@ -93,13 +98,14 @@ void ProcessWrapper<SampleType>::prepare(double sampleRate, int samplesPerBlock,
     for (int i = 0; i < 5; ++i)
         overSample[i]->initProcessing(spec.maximumBlockSize);
 
-    /*for (int i = 0; i < 5; ++i)
-        overSample[i]->numChannels(spec.numChannels);*/
+    for (int i = 0; i < 5; ++i)
+        overSample[i]->numChannels = (size_t)spec.numChannels;
 
     prevOS = curOS;
 
     mixer.prepare(spec);
     biquad.prepare(spec);
+
     setOversampling();
 }
 
@@ -118,55 +124,13 @@ void ProcessWrapper<SampleType>::update()
 {
     setOversampling();
 
+    mixer.setWetMixProportion(mixPtr->get() * 0.01f);
+
     biquad.setFrequency(frequencyPtr->get());
     biquad.setResonance(resonancePtr->get());
     biquad.setGain(gainPtr->get());
-
-    if (typePtr->getIndex() == 0)
-        biquad.setFilterType(FilterType::lowPass2);
-    else if (typePtr->getIndex() == 1)
-        biquad.setFilterType(FilterType::lowPass1);
-    else if (typePtr->getIndex() == 2)
-        biquad.setFilterType(FilterType::highPass2);
-    else if (typePtr->getIndex() == 3)
-        biquad.setFilterType(FilterType::highPass1);
-    else if (typePtr->getIndex() == 4)
-        biquad.setFilterType(FilterType::bandPass);
-    else if (typePtr->getIndex() == 5)
-        biquad.setFilterType(FilterType::bandPassQ);
-    else if (typePtr->getIndex() == 6)
-        biquad.setFilterType(FilterType::lowShelf2);
-    else if (typePtr->getIndex() == 7)
-        biquad.setFilterType(FilterType::lowShelf1);
-    else if (typePtr->getIndex() == 8)
-        biquad.setFilterType(FilterType::lowShelf1C);
-    else if (typePtr->getIndex() == 9)
-        biquad.setFilterType(FilterType::highShelf2);
-    else if (typePtr->getIndex() == 10)
-        biquad.setFilterType(FilterType::highShelf1);
-    else if (typePtr->getIndex() == 11)
-        biquad.setFilterType(FilterType::highShelf1C);
-    else if (typePtr->getIndex() == 12)
-        biquad.setFilterType(FilterType::peak);
-    else if (typePtr->getIndex() == 13)
-        biquad.setFilterType(FilterType::notch);
-    else if (typePtr->getIndex() == 14)
-        biquad.setFilterType(FilterType::allPass);
-    else
-        biquad.setFilterType(FilterType::lowPass2);
-
-    if (transformPtr->getIndex() == 0)
-        biquad.setTransformType(TransformationType::directFormI);
-    else if (transformPtr->getIndex() == 1)
-        biquad.setTransformType(TransformationType::directFormII);
-    else if (transformPtr->getIndex() == 2)
-        biquad.setTransformType(TransformationType::directFormItransposed);
-    else if (transformPtr->getIndex() == 3)
-        biquad.setTransformType(TransformationType::directFormIItransposed);
-    else
-        biquad.setTransformType(TransformationType::directFormIItransposed);
-
-    mixer.setWetMixProportion(mixPtr->get() * 0.01f);
+    biquad.setFilterType(static_cast<FilterType>(typePtr->getIndex()));
+    biquad.setTransformType(static_cast<TransformationType>(transformPtr->getIndex()));
 }
 
 //==============================================================================
