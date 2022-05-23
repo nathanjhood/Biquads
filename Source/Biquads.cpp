@@ -144,7 +144,6 @@ SampleType Biquads<SampleType>::directFormI(int channel, SampleType inputValue)
 
     SampleType Yn = ((Xn * b0_) + (Xn_1[(size_t)channel] * b1_) + (Xn_2[(size_t)channel] * b2_) + (Yn_1[(size_t)channel] * a1_) + (Yn_2[(size_t)channel] * a2_));
 
-
     Xn_2[(size_t)channel] = Xn_1[(size_t)channel];
     Xn_1[(size_t)channel] = Xn;
 
@@ -232,11 +231,11 @@ void Biquads<SampleType>::coefficients()
 
         case filterType::lowPass1:
 
-            b0 = omega / (omega + one);
-            b1 = omega / (omega + one);
+            b0 = omega / (one + omega);
+            b1 = omega / (one + omega);
             b2 = zero;
             a0 = one;
-            a1 = ((one - omega) / (omega + one)) * minusOne;
+            a1 = minusOne * ((one - omega) / (one + omega));
             a2 = zero;
 
             break;
@@ -245,10 +244,10 @@ void Biquads<SampleType>::coefficients()
         case filterType::highPass2:
 
             b0 = (one + cos) / two;
-            b1 = (one + cos) * minusOne;
+            b1 = minusOne * (one + cos);
             b2 = (one + cos) / two;
-            a0 = alpha + one;
-            a1 = cos * minusTwo;
+            a0 = one + alpha;
+            a1 = minusTwo * cos;
             a2 = one - alpha;
 
             break;
@@ -256,11 +255,11 @@ void Biquads<SampleType>::coefficients()
 
         case filterType::highPass1:
 
-            b0 = one / (omega + one);
-            b1 = (one / (omega + one)) * minusOne;
+            b0 = one / (one + omega);
+            b1 = (one / (one + omega)) * minusOne;
             b2 = zero;
             a0 = one;
-            a1 = ((one - omega) / (omega + one)) * minusOne;
+            a1 = ((one - omega) / (one + omega)) * minusOne;
             a2 = zero;
 
             break;
@@ -305,10 +304,10 @@ void Biquads<SampleType>::coefficients()
         case filterType::lowShelf1:
 
             b0 = one + ((omega / (one + omega)) * (minusOne + (a * a)));
-            b1 = (((omega / (one + omega)) * ((a * a) + minusOne)) - ((one - omega) / (one + omega)));
+            b1 = (((omega / (one + omega)) * (minusOne + (a * a))) - ((one - omega) / (one + omega)));
             b2 = zero;
             a0 = one;
-            a1 = ((one - omega) / (one + omega)) * minusOne;
+            a1 = minusOne * ((one - omega) / (one + omega));
             a2 = zero;
 
             break;
@@ -317,10 +316,10 @@ void Biquads<SampleType>::coefficients()
         case filterType::lowShelf1C:
 
             b0 = one + ((omega / a) / (one + (omega / a)) * (minusOne + (a * a)));
-            b1 = ((((omega / a) / (one + (omega / a))) * ((a * a) + minusOne)) - ((one - (omega / a)) / (one + (omega / a))));
+            b1 = ((((omega / a) / (one + (omega / a))) * (minusOne + (a * a))) - ((one - (omega / a)) / (one + (omega / a))));
             b2 = zero;
             a0 = one;
-            a1 = ((one - (omega / a)) / (one + (omega / a))) * minusOne;
+            a1 = minusOne * ((one - (omega / a)) / (one + (omega / a)));
             a2 = zero;
 
             break;
@@ -344,7 +343,7 @@ void Biquads<SampleType>::coefficients()
             b1 = minusOne * (((one - omega) / (one + omega)) + ((minusOne + (a * a)) / (one + omega)));
             b2 = zero;
             a0 = one;
-            a1 = ((one - omega) / (one + omega)) * minusOne;
+            a1 = minusOne * ((one - omega) / (one + omega));
             a2 = zero;
 
             break;
@@ -356,11 +355,12 @@ void Biquads<SampleType>::coefficients()
             b1 = minusOne * (((one - (omega * a)) / (one + (omega * a))) + ((minusOne + (a * a)) / (one + (omega * a))));
             b2 = zero;
             a0 = one;
-            a1 = ((one - (omega * a)) / (one + (omega * a))) * minusOne;
+            a1 = minusOne * ((one - (omega * a)) / (one + (omega * a)));
             a2 = zero;
 
             break;
         
+
         case filterType::peak:
 
             b0 = one + (alpha * a);
