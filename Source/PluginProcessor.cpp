@@ -46,7 +46,6 @@ juce::AudioProcessorValueTreeState::ParameterLayout BiquadsAudioProcessor::creat
 
     auto pString = juce::StringArray({ "Floats", "Doubles" });
 
-    //params.push_back(std::make_unique<juce::AudioParameterBool>("doublesID", "Doubles", false));
     params.push_back(std::make_unique<juce::AudioParameterChoice>("precisionID", "Precision", pString, 0));
     params.push_back(std::make_unique<juce::AudioParameterBool>("bypassID", "Bypass", false));
 
@@ -62,6 +61,22 @@ juce::AudioProcessorParameter* BiquadsAudioProcessor::getBypassParameter() const
 bool BiquadsAudioProcessor::supportsDoublePrecisionProcessing() const
 {
     return false;
+}
+
+void BiquadsAudioProcessor::setProcessingPrecision(ProcessingPrecision newPrecision) noexcept
+{
+    if (processingPrecision != newPrecision)
+    {
+        processingPrecision = newPrecision;
+        releaseResources();
+        reset();
+    }
+}
+
+juce::AudioProcessor::ProcessingPrecision BiquadsAudioProcessor::getProcessingPrecision() const noexcept
+{ 
+    //return processingPrecision;
+    return static_cast<ProcessingPrecision>(doublesPtr->getIndex());
 }
 
 //==============================================================================
@@ -144,16 +159,9 @@ void BiquadsAudioProcessor::releaseResources()
     processor.reset();
 }
 
-void BiquadsAudioProcessor::update()
+void BiquadsAudioProcessor::numChannelsChanged()
 {
-    bypassPtr->get();
-    doublesPtr->getIndex();
-    //setProcessingPrecision();
-
-    /*if (doublesPtr->getIndex() == 0)
-        setProcessingPrecision(ProcessingPrecision::singlePrecision);
-    else if (doublesPtr->getIndex() == 1)
-        setProcessingPrecision(ProcessingPrecision::doublePrecision);*/
+    processor.reset();
 }
 
 #ifndef JucePlugin_PreferredChannelConfigurations
@@ -180,39 +188,40 @@ bool BiquadsAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) 
 
 void BiquadsAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
-    if (bypassPtr->get() == false)
+    if (doublesPtr->getIndex() == 0)
 
-    {
-        juce::ScopedNoDenormals noDenormals;
+        if (bypassPtr->get() == false)
 
-        update();
+        {
+            juce::ScopedNoDenormals noDenormals;
 
-        processor.process(buffer, midiMessages);
-    }
+            juce::ignoreUnused(buffer);
+            juce::ignoreUnused(midiMessages);
+            processor.process(buffer, midiMessages);
+        }
 
-    else
-    {
-        processBlockBypassed(buffer, midiMessages);
-    }
+        else
+        {
+            processBlockBypassed(buffer, midiMessages);
+        }
 }
 
 void BiquadsAudioProcessor::processBlock(juce::AudioBuffer<double>& buffer, juce::MidiBuffer& midiMessages)
 {
-    if (bypassPtr->get() == false)
+    if (doublesPtr->getIndex() == 1)
 
-    {
-        juce::ScopedNoDenormals noDenormals;
+        if (bypassPtr->get() == false)
 
-        update();
+        {
+            juce::ScopedNoDenormals noDenormals;
 
-        juce::ignoreUnused(buffer);
-        juce::ignoreUnused(midiMessages);
-    }
+            //processor.process(buffer, midiMessages);
+        }
 
-    else
-    {
-        processBlockBypassed(buffer, midiMessages);
-    }
+        else
+        {
+            processBlockBypassed(buffer, midiMessages);
+        }
 }
 
 void BiquadsAudioProcessor::processBlockBypassed(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
