@@ -246,6 +246,8 @@ void Biquads<SampleType>::coefficients()
 
     juce::ignoreUnused(tan);
 
+    auto sqrtA = (std::sqrt(a) * two) * alpha;
+
     SampleType b0 = one;
     SampleType b1 = zero;
     SampleType b2 = zero;
@@ -329,12 +331,19 @@ void Biquads<SampleType>::coefficients()
 
         case filterType::lowShelf2:
 
-            b0 = one;
-            b1 = zero;
-            b2 = zero;
-            a0 = one;
-            a1 = zero;
-            a2 = zero;
+            b0 = (((a + one) - ((a - one) * cos)) + sqrtA) * a;
+            b1 = (((a - one) - ((a + one) * cos)) * two) * a;
+            b2 = (((a + one) - ((a - one) * cos)) - sqrtA) * a;
+            a0 = ((a + one) + ((a - one) * cos)) + sqrtA;
+            a1 = ((a - one) + ((a + one) * cos)) * minusTwo;
+            a2 = ((a + one) + ((a - one) * cos)) - sqrtA;
+
+            //b0 = one;
+            //b1 = zero;
+            //b2 = zero;
+            //a0 = one;
+            //a1 = zero;
+            //a2 = zero;
 
             break;
 
