@@ -169,7 +169,7 @@ SampleType Biquads<SampleType>::processSample(int channel, SampleType inputValue
         inputValue = directFormII(channel, inputValue);
     else if (transformType == TransformationType::directFormItransposed)
         inputValue = directFormITransposed(channel, inputValue);
-    else if (transformType == TransformationType::directFormIItransposed)
+    else
         inputValue = directFormIITransposed(channel, inputValue);
 
     return inputValue;
