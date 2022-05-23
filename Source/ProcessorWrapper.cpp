@@ -47,8 +47,11 @@ ProcessWrapper<SampleType>::ProcessWrapper(AudioProcessorValueTreeState& apvts)
 template <typename SampleType>
 void ProcessWrapper<SampleType>::createParameterLayout(std::vector<std::unique_ptr<RangedAudioParameter>>& params)
 {
+    auto dBMax = juce::Decibels::gainToDecibels(16.0f);
+    auto dBMin = juce::Decibels::gainToDecibels(16.0f) * -1.0f;
+
     auto freqRange = juce::NormalisableRange<float>(20.00f, 20000.00f, 0.01f, 00.198894f);
-    auto gainRange = juce::NormalisableRange<float>(-30.00f, 30.00f, 0.01f, 1.00f);
+    auto gainRange = juce::NormalisableRange<float>(dBMin, dBMax, 0.01f, 1.00f);
     auto mixRange = juce::NormalisableRange<float>(00.00f, 100.00f, 0.01f, 1.00f);
 
     auto fString = juce::StringArray({ "Low Pass (2)", "Low Pass (1)", "High Pass (2)", "High Pass (1)" , "Band Pass", "Band Pass (Q)", "Low Shelf (2)", "Low Shelf (1)", "Low Shelf (1c)", "High Shelf (2)", "High Shelf (1)", "High Shelf (1c)", "Peak", "Notch", "All Pass" });
