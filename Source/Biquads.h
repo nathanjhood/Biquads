@@ -75,6 +75,16 @@ public:
     void setTransformType(transformationType newTransformType);
 
     //==============================================================================
+    /** Sets the length of the ramp used for smoothing parameter changes. */
+    void setRampDurationSeconds(double newDurationSeconds) noexcept;
+
+    /** Returns the ramp duration in seconds. */
+    double getRampDurationSeconds() const noexcept;
+
+    /** Returns true if the current value is currently being interpolated. */
+    bool isSmoothing() const noexcept;
+
+    //==============================================================================
     /** Initialises the processor. */
     void prepare(juce::dsp::ProcessSpec& spec);
 
@@ -95,13 +105,17 @@ public:
         auto& outputBlock = context.getOutputBlock();
         const auto numChannels = outputBlock.getNumChannels();
         const auto numSamples = outputBlock.getNumSamples();
-        //const auto len = inputBlock.getNumSamples();
+        const auto len = inputBlock.getNumSamples();
 
         jassert(inputBlock.getNumChannels() == numChannels);
         jassert(inputBlock.getNumSamples() == numSamples);
 
         if (context.isBypassed)
         {
+            frq.skip(static_cast<int> (len));
+            res.skip(static_cast<int> (len));
+            lev.skip(static_cast<int> (len));
+
             outputBlock.copyFrom(inputBlock);
             return;
         }
@@ -124,7 +138,7 @@ public:
     /** Processes one sample at a time on a given channel. */
     SampleType processSample(int channel, SampleType inputValue);
 
-    double sampleRate = 44100.0;
+    double sampleRate = 44100.0, rampDurationSeconds = 0.00005;
 
 private:
     //==============================================================================
@@ -165,7 +179,13 @@ private:
     SampleType a2_ = 0.0;
 
     //==============================================================================
-    
+    /** Parameter Smoothers. */
+    juce::SmoothedValue<SampleType, juce::ValueSmoothingTypes::Multiplicative> frq;
+    juce::SmoothedValue<SampleType, juce::ValueSmoothingTypes::Linear> res;
+    juce::SmoothedValue<SampleType, juce::ValueSmoothingTypes::Linear> lev;
+
+    //==============================================================================
+    /** Initialise the parameters. */
     SampleType minFreq = 20.0;
     SampleType maxFreq = 20000.0;
     SampleType hz = 1000.0;
@@ -176,7 +196,7 @@ private:
     transformationType transformType = transformationType::directFormIItransposed;
     
     //==============================================================================
-
+    /** Initialise constants. */
     const SampleType zero = (0.0);
     const SampleType one = (1.0);
     const SampleType two = (2.0);
