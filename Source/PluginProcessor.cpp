@@ -60,7 +60,7 @@ juce::AudioProcessorParameter* BiquadsAudioProcessor::getBypassParameter() const
 
 bool BiquadsAudioProcessor::supportsDoublePrecisionProcessing() const
 {
-    return false;
+    return true;
 }
 
 void BiquadsAudioProcessor::setProcessingPrecision(ProcessingPrecision newPrecision) noexcept
@@ -195,9 +195,7 @@ void BiquadsAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce:
         {
             juce::ScopedNoDenormals noDenormals;
 
-            juce::ignoreUnused(buffer);
-            juce::ignoreUnused(midiMessages);
-            processor.process(buffer, midiMessages);
+            //processor.process(buffer, midiMessages);
         }
 
         else
@@ -215,7 +213,7 @@ void BiquadsAudioProcessor::processBlock(juce::AudioBuffer<double>& buffer, juce
         {
             juce::ScopedNoDenormals noDenormals;
 
-            //processor.process(buffer, midiMessages);
+            processor.process(buffer, midiMessages);
         }
 
         else
