@@ -17,6 +17,7 @@
 class BiquadsAudioProcessor  : public juce::AudioProcessor
 {
 public:
+    using precisionType = ProcessingPrecision;
     //==============================================================================
     BiquadsAudioProcessor();
     ~BiquadsAudioProcessor() override;
@@ -24,6 +25,8 @@ public:
     //==============================================================================
     juce::AudioProcessorParameter* getBypassParameter() const;
     bool supportsDoublePrecisionProcessing() const;
+    void setProcessingPrecision(ProcessingPrecision newPrecision) noexcept;
+    ProcessingPrecision getProcessingPrecision() const noexcept;
 
     //==============================================================================
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
@@ -74,7 +77,7 @@ private:
 
     //==============================================================================
     /** Audio processor members. */
-    ProcessWrapper<float> processor{ apvts };
+    ProcessWrapper<double> processor{ apvts };
 
     //==============================================================================
     /** Parameter pointers. */
@@ -84,6 +87,8 @@ private:
     //==============================================================================
     /** Init variables. */
     double ramp = 0.0001;
+
+    precisionType processingPrecision = precisionType::singlePrecision;
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BiquadsAudioProcessor)

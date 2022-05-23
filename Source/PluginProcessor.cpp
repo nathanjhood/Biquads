@@ -46,7 +46,6 @@ juce::AudioProcessorValueTreeState::ParameterLayout BiquadsAudioProcessor::creat
 
     auto pString = juce::StringArray({ "Floats", "Doubles" });
 
-    //params.push_back(std::make_unique<juce::AudioParameterBool>("doublesID", "Doubles", false));
     params.push_back(std::make_unique<juce::AudioParameterChoice>("precisionID", "Precision", pString, 0));
     params.push_back(std::make_unique<juce::AudioParameterBool>("bypassID", "Bypass", false));
 
@@ -61,7 +60,22 @@ juce::AudioProcessorParameter* BiquadsAudioProcessor::getBypassParameter() const
 
 bool BiquadsAudioProcessor::supportsDoublePrecisionProcessing() const
 {
-    return false;
+    return true;
+}
+
+void BiquadsAudioProcessor::setProcessingPrecision(ProcessingPrecision newPrecision) noexcept
+{
+    if (processingPrecision != newPrecision)
+    {
+        processingPrecision = newPrecision;
+        releaseResources();
+        reset();
+    }
+}
+
+juce::AudioProcessor::ProcessingPrecision BiquadsAudioProcessor::getProcessingPrecision() const noexcept
+{ 
+    return processingPrecision; 
 }
 
 //==============================================================================
@@ -147,13 +161,11 @@ void BiquadsAudioProcessor::releaseResources()
 void BiquadsAudioProcessor::update()
 {
     bypassPtr->get();
-    doublesPtr->getIndex();
-    //setProcessingPrecision();
 
-    /*if (doublesPtr->getIndex() == 0)
+    if (doublesPtr->getIndex() == 0)
         setProcessingPrecision(ProcessingPrecision::singlePrecision);
-    else if (doublesPtr->getIndex() == 1)
-        setProcessingPrecision(ProcessingPrecision::doublePrecision);*/
+    else
+        setProcessingPrecision(ProcessingPrecision::doublePrecision);
 }
 
 #ifndef JucePlugin_PreferredChannelConfigurations
@@ -187,7 +199,9 @@ void BiquadsAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce:
 
         update();
 
-        processor.process(buffer, midiMessages);
+        juce::ignoreUnused(buffer);
+        juce::ignoreUnused(midiMessages);
+        //processor.process(buffer, midiMessages);
     }
 
     else
@@ -205,8 +219,7 @@ void BiquadsAudioProcessor::processBlock(juce::AudioBuffer<double>& buffer, juce
 
         update();
 
-        juce::ignoreUnused(buffer);
-        juce::ignoreUnused(midiMessages);
+        processor.process(buffer, midiMessages);
     }
 
     else
