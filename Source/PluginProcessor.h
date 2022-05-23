@@ -31,6 +31,7 @@ public:
     //==============================================================================
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
     void releaseResources() override;
+    void numChannelsChanged();
 
    #ifndef JucePlugin_PreferredChannelConfigurations
     bool isBusesLayoutSupported (const BusesLayout& layouts) const override;
@@ -73,11 +74,11 @@ public:
 private:
     //==============================================================================
     /** Updates the internal state variables of the processor. */
-    void update();
+    //void update();
 
     //==============================================================================
     /** Audio processor members. */
-    ProcessWrapper<double> processor{ apvts };
+    ProcessWrapper<float> processor{ apvts };
 
     //==============================================================================
     /** Parameter pointers. */

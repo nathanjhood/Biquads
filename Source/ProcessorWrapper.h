@@ -71,6 +71,7 @@ private:
     juce::AudioParameterChoice*     typePtr         { nullptr };
     juce::AudioParameterChoice*     transformPtr    { nullptr };
     juce::AudioParameterChoice*     osPtr           { nullptr };
+    juce::AudioParameterFloat*      outputPtr       { nullptr };
     juce::AudioParameterFloat*      mixPtr          { nullptr };
 
     //==============================================================================
