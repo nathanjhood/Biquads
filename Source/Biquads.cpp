@@ -338,13 +338,6 @@ void Biquads<SampleType>::coefficients()
             a1 = ((a - one) + ((a + one) * cos)) * minusTwo;
             a2 = ((a + one) + ((a - one) * cos)) - sqrtA;
 
-            //b0 = one;
-            //b1 = zero;
-            //b2 = zero;
-            //a0 = one;
-            //a1 = zero;
-            //a2 = zero;
-
             break;
 
 
@@ -374,12 +367,12 @@ void Biquads<SampleType>::coefficients()
 
         case filterType::highShelf2:
 
-            b0 = one;
-            b1 = zero;
-            b2 = zero;
-            a0 = one;
-            a1 = zero;
-            a2 = zero;
+            b0 = (((a + one) + ((a - one) * cos)) + sqrtA) * a;
+            b1 = (((a - one) + ((a + one) * cos)) * minusTwo) * a;
+            b2 = (((a + one) + ((a - one) * cos)) - sqrtA) * a;
+            a0 = ((a + one) - ((a - one) * cos)) + sqrtA;
+            a1 = ((a - one) - ((a + one) * cos)) * two;
+            a2 = ((a + one) - ((a - one) * cos)) - sqrtA;
 
             break;
 
