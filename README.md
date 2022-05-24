@@ -1,4 +1,4 @@
-Current: v1.0.8b
+Current: v1.0.9b
 
 # Biquads
 Multi-mode Biquad filter for audio analysis purposes using variable BiLinear transforms, processing precision, and oversampling to achieve high-quality results (under construction)
@@ -6,13 +6,13 @@ Multi-mode Biquad filter for audio analysis purposes using variable BiLinear tra
 + Under construction (almost finished - please see "issues")!
 + Implementing various 6dB- and 12dB- filter types (such as low pass, high pass, band pass, shelves, plus many more) using variable BiLinear transforms, switchable processing precision, and oversampling to achieve high-quality results (much more to come)!
 + This filter is subject to amplitude and phase warping of the frequency spectrum approaching the Nyquist frequency when oversampling is not used.
-+ There is parameter smoothing om the Frequency, Resonance, and Gain controls - however, BE AWARE that modulating parameters in real-time WILL create loud clicks and pops while passing audio under certain settings, such as Direct Form I (read on for more).
++ There is parameter smoothing on the Frequency, Resonance, and Gain controls - however, BE AWARE that modulating parameters in real-time WILL create loud clicks and pops while passing audio under certain settings, such as Direct Form I (read on for more).
 
 Please see my "Orfanidis Biquad" repository for further information meanwhile.
 
-(Shown below; a resonant 2-pole Low Pass filter with high oversampling, performed on a harmonic-rich 20Hz band-limited Impulse Response in Reaper)
+(Shown below; a resonant 2-pole Low Shelf filter with high oversampling, performed on a harmonic-rich 20Hz band-limited Impulse Response in Reaper)
 
-![Biquads](https://github.com/StoneyDSP/Biquads/blob/a6b7b8bace59c063c1c416526af7fb526302715e/Res/Biquads.png)
+![Biquads](https://github.com/StoneyDSP/Biquads/blob/8da7b5a8809ee99a6de84d82b16768026389b64e/Res/Biquads%201-0-9b.png)
 
 # Transformations
 Determining an output transfer function (Y(n)), given an input value (X(n)) and six multiplier coefficients within an audio feedback path (b0, b1, b2, a1, and a2 - all of which are pre-scaled by 1/a0) - please note that each feedback term requires a delay of one audio sample;
