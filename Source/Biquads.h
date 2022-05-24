@@ -153,12 +153,12 @@ private:
     SampleType directFormIITransposed(int channel, SampleType inputValue);
 
     //==============================================================================
-    SampleType b0() { return static_cast<SampleType>(b0_); };
-    SampleType b1() { return static_cast<SampleType>(b1_); };
-    SampleType b2() { return static_cast<SampleType>(b2_); };
-    SampleType a0() { return static_cast<SampleType>(a0_); };
-    SampleType a1() { return static_cast<SampleType>(a1_); };
-    SampleType a2() { return static_cast<SampleType>(a2_); };
+    SampleType b0() { return static_cast<SampleType>(b0_); }
+    SampleType b1() { return static_cast<SampleType>(b1_); }
+    SampleType b2() { return static_cast<SampleType>(b2_); }
+    SampleType a0() { return static_cast<SampleType>(a0_); }
+    SampleType a1() { return static_cast<SampleType>(a1_); }
+    SampleType a2() { return static_cast<SampleType>(a2_); }
 
     //==============================================================================
     /** Unit-delay objects. */

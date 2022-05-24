@@ -34,8 +34,8 @@ ProcessWrapper<SampleType>::ProcessWrapper(AudioProcessorValueTreeState& apvts)
     osPtr = dynamic_cast                <juce::AudioParameterChoice*>       (apvts.getParameter("osID"));
     jassert(osPtr != nullptr);
 
-    outputPtr = dynamic_cast            <juce::AudioParameterFloat*>        (apvts.getParameter("outputID"));
-    jassert(outputPtr != nullptr);
+    /*outputPtr = dynamic_cast            <juce::AudioParameterFloat*>        (apvts.getParameter("outputID"));
+    jassert(outputPtr != nullptr);*/
 
     mixPtr = dynamic_cast              <juce::AudioParameterFloat*>        (apvts.getParameter("mixID"));
     jassert(mixPtr != nullptr);
@@ -68,7 +68,7 @@ void ProcessWrapper<SampleType>::createParameterLayout(std::vector<std::unique_p
     params.push_back(std::make_unique<juce::AudioParameterChoice>("typeID", "Type", fString, 0));
     params.push_back(std::make_unique<juce::AudioParameterChoice>("transformID", "Transform", tString, 3));
     params.push_back(std::make_unique<juce::AudioParameterChoice>("osID", "Oversampling", osString, 0));
-    params.push_back(std::make_unique<juce::AudioParameterFloat>("outputID", "Output", gainRange, 00.00f));
+    /*params.push_back(std::make_unique<juce::AudioParameterFloat>("outputID", "Output", gainRange, 00.00f));*/
     params.push_back(std::make_unique<juce::AudioParameterFloat>("mixID", "Mix", mixRange, 100.00f));
 }
 

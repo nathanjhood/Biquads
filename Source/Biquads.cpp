@@ -169,7 +169,7 @@ SampleType Biquads<SampleType>::processSample(int channel, SampleType inputValue
         inputValue = directFormII(channel, inputValue);
     else if (transformType == TransformationType::directFormItransposed)
         inputValue = directFormITransposed(channel, inputValue);
-    else if (transformType == TransformationType::directFormIItransposed)
+    else
         inputValue = directFormIITransposed(channel, inputValue);
 
     return inputValue;
@@ -245,6 +245,8 @@ void Biquads<SampleType>::coefficients()
     SampleType a = static_cast <SampleType>(juce::Decibels::decibelsToGain(static_cast<SampleType>(lev.getNextValue() * static_cast <SampleType>(0.5))));
 
     juce::ignoreUnused(tan);
+
+    auto sqrtA = (std::sqrt(a) * two) * alpha;
 
     SampleType b0 = one;
     SampleType b1 = zero;
@@ -329,12 +331,12 @@ void Biquads<SampleType>::coefficients()
 
         case filterType::lowShelf2:
 
-            b0 = one;
-            b1 = zero;
-            b2 = zero;
-            a0 = one;
-            a1 = zero;
-            a2 = zero;
+            b0 = (((a + one) - ((a - one) * cos)) + sqrtA) * a;
+            b1 = (((a - one) - ((a + one) * cos)) * two) * a;
+            b2 = (((a + one) - ((a - one) * cos)) - sqrtA) * a;
+            a0 = ((a + one) + ((a - one) * cos)) + sqrtA;
+            a1 = ((a - one) + ((a + one) * cos)) * minusTwo;
+            a2 = ((a + one) + ((a - one) * cos)) - sqrtA;
 
             break;
 
@@ -365,12 +367,12 @@ void Biquads<SampleType>::coefficients()
 
         case filterType::highShelf2:
 
-            b0 = one;
-            b1 = zero;
-            b2 = zero;
-            a0 = one;
-            a1 = zero;
-            a2 = zero;
+            b0 = (((a + one) + ((a - one) * cos)) + sqrtA) * a;
+            b1 = (((a - one) + ((a + one) * cos)) * minusTwo) * a;
+            b2 = (((a + one) + ((a - one) * cos)) - sqrtA) * a;
+            a0 = ((a + one) - ((a - one) * cos)) + sqrtA;
+            a1 = ((a - one) - ((a + one) * cos)) * two;
+            a2 = ((a + one) - ((a - one) * cos)) - sqrtA;
 
             break;
 

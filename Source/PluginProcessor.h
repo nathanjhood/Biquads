@@ -78,7 +78,7 @@ private:
 
     //==============================================================================
     /** Audio processor members. */
-    ProcessWrapper<float> processor{ apvts };
+    ProcessWrapper<double> processor{ apvts };
 
     //==============================================================================
     /** Parameter pointers. */

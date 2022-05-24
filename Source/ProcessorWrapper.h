@@ -14,6 +14,7 @@
 #define PROCESSORWRAPPER_H_INCLUDED
 
 #include "../JuceLibraryCode/JuceHeader.h"
+//#include "PluginProcessor.h"
 #include "Biquads.h"
 
 
