@@ -14,6 +14,19 @@ Please see my "Orfanidis Biquad" repository for further information meanwhile.
 
 ![Biquads](https://github.com/StoneyDSP/Biquads/blob/8da7b5a8809ee99a6de84d82b16768026389b64e/Res/Biquads%201-0-9b.png)
 
+# Calculating the parameters
+
+    {
+        ⍵ = frequencyParameter * (2π / sampleRate);
+        sin(θ) = sin(⍵);
+        cos(θ) = cos(⍵);
+        tan(θ) = sin(⍵) / cos(⍵);
+        ⍺ = sin(⍵) * (1 - resonanceParameter);
+    }
+
+https://en.wikipedia.org/wiki/Sine_and_cosine#Unit_circle_definitions
+https://en.wikipedia.org/wiki/Unit_circle
+
 # Transformations
 Determining an output transfer function (Y(n)), given an input value (X(n)) and six multiplier coefficients within an audio feedback path (b0, b1, b2, a1, and a2 - all of which are pre-scaled by 1/a0) - please note that each feedback term requires a delay of one audio sample;
 
@@ -36,9 +49,9 @@ Determining an output transfer function (Y(n)), given an input value (X(n)) and 
 ![DF II](https://github.com/StoneyDSP/OrfanidisBiquad/blob/0a9c1168752616b455d68b52a2b0b841102dfa16/Res/Biquad_filter_DF-IIx.svg.png)
 
 
-# Creating the coefficients;
+# Applying the coefficients;
 
-First, we need to create an input (Xn), and output (Yn), and our 6 coefficients for gain multiplication, the results of which are summed together using linear addition. We can start with an arrangement that simply passes the audio sample from input to output unchanged.
+First, we need to create an input (Xn), and output (Yn), and our 6 gain multiplication coefficients, the results of which are summed together using linear addition. We can start with an arrangement that simply passes the audio sample from input to output unchanged.
 
 Here's some pseudo-code to get us started with a template;
 
