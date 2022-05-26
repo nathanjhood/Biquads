@@ -1,5 +1,7 @@
 Current: v1.0.9b
 
+![biquad-1-0-9b](https://github.com/StoneyDSP/Biquads/blob/be3e1121a5b12c96f6c9da5786191f466f4be13e/Res/biquad-1-0-9b.png)
+
 # Biquads
 Multi-mode Biquad filter for audio analysis purposes using variable BiLinear transforms, processing precision, and oversampling to achieve high-quality results (under construction)
 
