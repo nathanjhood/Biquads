@@ -178,11 +178,15 @@ In order to include "more degrees of freedom" in our system, we can consider usi
 We shall expand our system's current parameter set, the coefficients, by double. Let's introduce numbers:
 
 b0 = gain of input signal (exactly as our previous "b")
+
 a0 = scalar of coefficients (to be used 1/a0, exactly as our previous "a")
+
 
 And the new terms:
 
+
 b1 = positive feedback path
+
 a1 = negative feedback path
 
 Giving us a total of four "degrees of freedom" with which to manipulate our input signal.
@@ -205,25 +209,36 @@ We can still start off by passing our audio directly, but with the new coefficie
 
 So, if;
 
+
 a0 = 1
+
 1/a0 = 1 (hence often left out of the literature)
+
 
 Therefore;
 
+
 b0 = 1 (input signal multiplier)
 
+
 a1 = 0
+
 b1 = 0
+
 
 Thus for "y";
 
+
 y = (x * 1) + 0 + 0
+
 
 Or rather:
 
 y = x;
 
+
 So, nothing has so far changed, except we've now got two more potentiometers on the front of our metal box; one labelled "b1", and another labelled "a1".
+
 
 I have some very interesting experiments in which I have exposed these coefficients on the GUI of an audio plugin, allowing the user to play with them directly. The results are certainly interesting, and do in fact sometimes go beyond typically-expected filter shapes (for a one-pole system) - however, the main take-away from testing that plugin, is that the results are entirely unpredictable (being a feedback system) and that a typical filter implementation, even a most basic one (read on), will instead use a more generic parameter (such as a "frequency" knob) to update *several* coefficients simultaneously.
 
@@ -239,12 +254,14 @@ For now, however, let's begin at the beginning.
 
 + 1st-order Low Pass Filter
 
-    {
+        {
+    
         b0 = ⍵ / (1 + ⍵);
         b1 = ⍵ / (1 + ⍵);
         a0 = 1;
         a1 = -1 * ((1 - ⍵) / (1 + ⍵));
-    }
+        
+        }
 
 In the above pseudo-code, we are shown a formula for manipulating our coefficients to provide us a simple 1st-order (i.e., 1 pole, 1 zero) Low Pass Filter. The writer shall assume the reader is familiar with this filter concept in usage terms, and is more interested in the DSP.
 
@@ -258,12 +275,14 @@ To deonstrate that we have infact retained (and exponentially increased) our "de
 
 + 1st-order High Pass Filter
 
-    {
+        {
+        
         b0 = 1 / (1 + ⍵);
         b1 = (1 / (1 + ⍵)) * -1;
         a0 = 1;
         a1 = ((1 - ⍵) / (1 + ⍵)) * -1;
-    }
+    
+        }
 
 We can notice, even at a glance, that these two formulas are effectively the inverse of one another - as are the filter responses! Our Low Pass is transformed into a High Pass by this numerical inversion.
 
@@ -275,14 +294,16 @@ As with our transition from a simple "in-gain-out" system to now a one-pole filt
 
 Compare the below with the 1st-order counterpart:
 
-    {
+        {
+    
         b0 = (1 - cos(⍵)) / 2;
         b1 = 1 - cos(⍵);
         b2 = (1 - cos(⍵)) / 2;
         a0 = 1 + ⍺;
         a1 = -2 * cos(⍵);
         a2 = 1 - ⍺;
-    }
+        
+        }
 
 In our above example, we have added two further "degrees" - coefficients - with which to manipulate our signal; we have also added an additional parameter "⍺" ("alpha"), which in this forumula provides us with the typical "resonance" control that we ususally see on 2nd-order (or higher) filters.
 
