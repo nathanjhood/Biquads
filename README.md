@@ -322,9 +322,9 @@ Here is the total solution for a 1st-order Low Pass Filter:
         // create coefficients from parameters
         
         a0 = 1;
-        a1 = -1 * ((-1 * ((1 - ⍵) / (1 + ⍵))) * (1/a));
-        b0 = ((⍵ / (1 + ⍵)) * (1/a));
-        b1 = ((⍵ / (1 + ⍵)) * (1/a));
+        a1 = -1 * ((-1 * ((1 - ⍵) / (1 + ⍵))) * (1/a0));
+        b0 = ((⍵ / (1 + ⍵)) * (1/a0));
+        b1 = ((⍵ / (1 + ⍵)) * (1/a0));
         
         
         // input...
@@ -347,7 +347,7 @@ You will notice in this expression, that coeff "a1" is inverted ("-1 * (x)..."),
 
 The expression "(z-1)" represents that this sample is *delayed by exactly one audio sample*. 
 
-One thing this does tell us, is that one of the components of "y" is a copy of itself, delayed by one sample. One of it's other components is "x" directly, and the final component is "x" but again delayed by a single sample.
+One thing this does tell us, is that one of the components of "y" is a copy of itself, delayed by one sample. One of it's other components is "x" directly, and the final component is "x" but again delayed by one sample.
 
 These three components are each scaled by three of our coefficients - with the remaining coefficient scaling those, in turn. So, three "degrees of freedom" acting directly upon the audio signal are currently in place. Another, somewhat hidden degree - a0 - is acting as a sort of "strength" factor on those other three "degrees".
 
