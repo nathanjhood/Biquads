@@ -119,6 +119,7 @@ At this point we introduce the traditional concepts of "feedback" into our syste
 This is of course a notorious way to introduce chaos, near-unpredictability, and deafening/damaging results to an audio system. Let's call such a case "positive feedback" - the changed output is being fed back into it's own input, thus the system iterates over itself infinitely (until some part of the chain reaches it's operating limit and explodes).
 
 Here's a very simplified pseudo-version of the "positive feedback" idea:
+
     {
         x = input sample;
         
