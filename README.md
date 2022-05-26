@@ -102,12 +102,14 @@ So, for all of the above, we've *still* only got a crude metal box containing a 
 
 We've also stuck a second potentiometer on the front, this one labelled "a", and which controls the gain of "b", and is wired in an inverse fashion.
 
-Actually, both of these pots are infact *bi-polar*. That is, at centre detent, each one outputs a voltage of 0v.
+Actually, both of these pots are infact *bi-polar*. That is, at centre detent, each potentiometer outputs a voltage of 0v. And;
 
 + When fully clockwise, "b" outputs a voltage of 1v. When fully counter-clockwise, it's output is -1v. 
 + The pot labelled "a" is the opposite; clockwise gives -1v, and counter-clockwise gives us 1v. (this inversion is the result of the 1/a in it's path).
 
-In our metal-box-with-two-pots "system" so far, we already know that "b" is actually = (b * (1/a)). Pot "a" does not touch the input signal itself, it's just connected to the "b" pot. 
+In our metal-box-with-two-pots "system" so far, we already know that "b" is actually = b * (1/a). 
+
+Potentiometer "a" does not touch the input signal itself, it's just connected to the "b" pot, as above. 
 
 And yet it's *still* just a simple volume control overall, now with a silly interface; not really anything approaching our desired equalizer system. We only have one connection (input-to-output) to interact with, so how can we add more?
 
