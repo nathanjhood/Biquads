@@ -208,31 +208,30 @@ We can still start off by passing our audio directly, but with the new coefficie
 So, if;
 
 
-a0 = 1
-
-1/a0 = 1 (hence often left out of the literature)
+        a0 = 1;
+        
+        1/a0 = 1;   // hence often left out of the literature...
 
 
 Therefore;
 
 
-b0 = 1 (input signal multiplier)
+        b0 = 1;     // input signal multiplier...
 
+        a1 = 0;     // negative feedback signal multiplier...
 
-a1 = 0 (negative feedback signal multiplier) 
-
-b1 = 0 (positive feedback signal multiplier) 
+        b1 = 0;     // positive feedback signal multiplier...
 
 
 Thus for "y";
 
 
-y = (x * 1) + 0 + 0
+        y = (x * 1) + 0 + 0;
 
 
 Or rather:
 
-y = x;
+        y = x;
 
 
 So, nothing has so far changed, except we've now got two more potentiometers on the front of our metal box; one labelled "b1", and another labelled "a1".
