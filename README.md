@@ -14,7 +14,286 @@ Please see my "Orfanidis Biquad" repository for further information meanwhile.
 
 ![Biquads](https://github.com/StoneyDSP/Biquads/blob/8da7b5a8809ee99a6de84d82b16768026389b64e/Res/Biquads%201-0-9b.png)
 
+In realising this digital biquad equalizer design, we shall come to see that the entire equalizer system is really just a "gain" system - the audio enters, gets split into several "copies", and these copies are all re-applied back to the original audio stream at variying levels of gain - and, in many cases, with their sign flipped (i.e., polarity inversed). The output of our system will be the final product of these calculations.
+
+Before we look at these so-say "simple" gain functions that happen inside the system more closely, first, let's familiarize ourselves with some terminology and core concepts.
+
+# Passing audio
+
+In the system we described above, we mentioned that our frequency equalizer is internally really just a system of various "gains" applied to the input signal. How so?
+
+Let's start by thinking of our audio stream entering our "system" and coming out the other side, unchanged. Here's some basic pseudo-code describing this scenario: 
+
+    {
+        x = input sample;
+        
+        y = x;
+        
+        output sample = y;
+    }
+    
+In the above, "x" represents our entry point into our system, and "y" is the output point. The operator "y = x" tells us, in other words, that "output sample = input sample". In the analogue world, the above example is equivalent to a metal box with hole on either side (input and output), with a simple copper wire connecting one hole to the other. In other words, the audio sample data is copied directly from the input to the output, completely unchanged. 
+
+# Coefficients
+
+Since the system described above doesn't actually "do anything", it isn't currently useful. Let's build toward the "gain system" described earlier, by introducing the idea of "coefficients" - these coefficient objects are just simple numerical values that represent the amount of gain to apply at a particular point in our system.
+
+Traditionally speaking, we have two types of "coefficient" objects;
+
++ Numerator
++ Denominator
+
+Furthermore, we shall refer to our "Numerator" coefficient object as "b", while our "Denonimator" shall be "a". *Please note: these labels are occasionally swapped over in some literatures!*
+
+Let's take our crude metal-box-with-wire system, and begin applying the gains, i.e., our "coefficient" objects, in a simple fashion. As stated above, we have one "numerator" coefficient named "b", and a "denominator" coefficient named "a". Here is a simple expression to give you the idea of what these two initial coefficients do for our input audio sample:
+
+    {
+        x = input sample;
+        
+        b = 1;
+        a = 1;
+        
+        y = x * b;
+        
+        output sample = y;
+    }
+
+Coefficient "b" is used as a gain multiplier for our direct signal (i.e., the level of our input signal to appear at the output).
+
+But first, our "a" is used to scale (multiply) our "b" like so:
+
+    {
+        x = input sample;
+        
+        a = 1;
+        b = 1;
+        
+        y = x * (b * (1/a));
+        
+        output sample = y;
+    }
+
+In fact, what we shall see moving forward, is that our *initial* coefficient "a" is something of a special case; it is used as a gain multiplier for *all coefficients except for itself*. That is, all other coefficients *except for* a, are multiplied by 1/a = 1.
+
+So that the above pseudo-code and the below are equivalent:
+
+    {
+        x = input sample;
+        
+        a = 1;
+        b = 1/a;
+        
+        y = x * b;
+        
+        output sample = y;
+    }
+
+The key difference in the above example, is that we see how "a" *only* works directly on "b", and thus only ever *indirectly* on "x". 
+
+The expressions are of course  mathematically equivalent, but the above version explicitly demomstrates the concept that "all other coefficients *except for* a, are multiplied by 1/a = 1" that we'd just outlined previously.
+
+*note: It is extremely common to see this initial "denominator" coefficient, "a", "normalised" to a value of 1, or even disregarded entirely, in most literature and implementations (since it is assumed that we *always* want our coefficients to be their *actual* values, instead of being scaled by 1/something else). This does help to keep things more simple. Doing so, however, does close down some potentially worthwhile experiments for much later on when addressing the topic of "de-cramping" a digital equalizer.*
+
+Our implementations shall maintain that "b" = numerator, "a" = denominator, and that our intial "a" is a valid parameter in our calculations, while still keeping things as simple as possible.
+
+# Encapsulation
+
+So, for all of the above, we've *still* only got a crude metal box containing a single wire... except, we've now stuck a potentiometer on the front, which controls the gain of said wire; this pot has a label saying "b".
+
+We've also stuck a second potentiometer on the front, this one labelled "a", and which controls the gain of "b", and is wired in an inverse fashion.
+
+Actually, both of these pots are infact *bi-polar*. That is, at centre detent, each one outputs a voltage of 0v.
+
+When fully clockwise, "b" outputs a voltage of 1v. When fully counter-clockwise, it's output is -1v. 
+
+The pot labelled "a" is the opposite; clockwise gives -1v, and counter-clockwise gives us 1v. (this inversion is the result of the 1/a in it's path).
+
+In our metal-box-with-two-pots "system" so far, we already know that "b" is actually = (b * (1/a)). "a" does not touch the input signal itself, it's just connect to the "b" pot.
+
+And it's *still* just a volume control, now with a silly interface; not really anything approaching our desired equalizer system. We only have one connection (input-to-output) to interact with, so how can we add more?
+
+# About feedback
+
+At this point we introduce the traditional concepts of "feedback" into our system. We likely all know what this means in at least some context: the input of a system is fed some amount of it's own output. 
+
+This is of course a notorious way to introduce chaos, near-unpredictability, and deafening/damaging results to an audio system. Let's call such a case "positive feedback" - the changed output is being fed back into it's own input, thus the system iterates over itself infinitely (until some part of the chain reaches it's operating limit and explodes).
+
+Here's a very simplified pseudo-version of the "positive feedback" idea:
+    {
+        x = input sample;
+        
+        y = x + y;
+        
+        output sample = y;
+    }
+    
+That's right - we're adding "y" to *itself*. So that if "x" = 0.7, and "y" = 0.9, technically "y" would *also* be equal to x + y = 1.6, but if that were the case then "y" would *also* be equal to x + y = 2.5, and so on... all in the same instant. Potentially, our signal could grow indefinitely... and dangerously.
+
+And what of "negative feedback"? What's the difference?
+
+    {
+        x = input sample;
+        
+        y = x - y;
+        
+        output sample = y;
+    }
+
+So now, if as before "x" = 0.7, and "y" = 0.9, "y" should *also* be equal to -0.2, but *also* 0.9, and thus equal to -0.2... and so on. The subtraction in this case produces a stable system, that we can see "oscillates" from one value to another and back.
+
+Due to the bi-polar nature of both our input signal *and* our coefficients, it is also worth considering an additional case; Adding a negative number to a positive number.
+
+For example, if "y" = -0.9, and were added to "x" = 0.7, the resultant addition is equivalant to subtracting "y" - if "y" were a positive number.
+
+Thus, we can always invert the sign of any of our coefficients (or input signal), and *always* sum our results (addition) instead of having to chain additions and subtractions together, later on.
+
+But, how can this be? How can "y" know itself instantaneously, if it is continually changing based on it's own input-output relationship?
+
+Such is the case when working with feedback. Fortunately (at least for this write up), our digital system is bound by the sampling theorem, in which the closest thing we have to "near-instant" in such a calculation is one audio sample. This will be investigated - utilized, even - later on in our design.
+
+# Adding positive and negative feedback paths
+
+Let's revert to allowing our input signal to pass to the output, scaled by b * (1/a) as before:
+
+    {
+        x = input sample;
+        
+        a = 1;
+        b = 1/a;
+        
+        y = x * b;
+        
+        output sample = y;
+    }
+    
+As we know, the above is a just crude metal box with two holes, one wire, and two labelled pots; literally a "gain multiplier of a gain multiplier", nothing more.
+
+In order to do anything more interesting with it, we will need more "degrees of freedom" to work with.
+  
+We also know that beyond a basic gain multiplication, we can also manipulate the signal via the use of feedback - wherein the system's input is detecting it's own output.
+  
+In order to include "more degrees of freedom" in our system, we can consider using combinations of gain and feedback - both in both positive, and negative, applications.
+
+We shall expand our system's current parameter set, the coefficients, by double. Let's introduce numbers:
+
+b0 = gain of input signal (exactly as our previous "b")
+a0 = scalar of coefficients (to be used 1/a0, exactly as our previous "a")
+
+And the new terms:
+
+b1 = positive feedback path
+a1 = negative feedback path
+
+Giving us a total of four "degrees of freedom" with which to manipulate our input signal.
+
+We can still start off by passing our audio directly, but with the new coefficients wired into place - we simply set them to 0 for now:
+
+    {
+        x = input sample;
+        
+        a0 = 1;
+        b0 = 1/a0;
+        
+        a1 = 0/a0;
+        b1 = 0/a0;
+        
+        y = ((x * b0) + (x * b1) + (x * a1));    
+        
+        output sample = y;
+    }
+
+So, if;
+
+a0 = 1
+1/a0 = 1 (hence often left out of the literature)
+
+Therefore;
+
+b0 = 1 (input signal multiplier)
+
+a1 = 0
+b1 = 0
+
+Thus for "y";
+
+y = (x * 1) + 0 + 0
+
+Or rather:
+
+y = x;
+
+So, nothing has so far changed, except we've now got two more potentiometers on the front of our metal box; one labelled "b1", and another labelled "a1".
+
+I have some very interesting experiments in which I have exposed these coefficients on the GUI of an audio plugin, allowing the user to play with them directly. The results are certainly interesting, and do in fact sometimes go beyond typically-expected filter shapes (for a one-pole system) - however, the main take-away from testing that plugin, is that the results are entirely unpredictable (being a feedback system) and that a typical filter implementation, even a most basic one (read on), will instead use a more generic parameter (such as a "frequency" knob) to update *several* coefficients simultaneously.
+
+The test plugin described above, and concurrent write-up, may appear on the writers' Github at some point in the near future - this section will updated with links if so.
+
+For now, we have described a system that has an input, an output, and four pots that behave and interact in unpredictable and potentially hazardous ways.
+
+Meanwhile, how can we utilize our system's new "degrees of freedom" to create something greater than a volume control? And how to do so in a controlled, and controllable, fashion?
+
+For now, however, let's begin at the beginning.
+
+# Building blocks
+
++ 1st-order Low Pass Filter
+
+    {
+        b0 = ⍵ / (1 + ⍵);
+        b1 = ⍵ / (1 + ⍵);
+        a0 = 1;
+        a1 = -1 * ((1 - ⍵) / (1 + ⍵));
+    }
+
+In the above pseudo-code, we are shown a formula for manipulating our coefficients to provide us a simple 1st-order (i.e., 1 pole, 1 zero) Low Pass Filter. The writer shall assume the reader is familiar with this filter concept in usage terms, and is more interested in the DSP.
+
+At this point, we have reasonably concluded that our system itself required more "degrees of freedom" in order to produce interesting and useful results, but that user exposure to all of this freedom leads to screeching feedback or complete silence at literally every turn of it's four pots.
+
+Instead of this array of potential disasters, the above formula presents a classical way to manipulate three out of four coefficients, all at the same time, by using just a single parameter acting them all.
+
+Our value "⍵" ("omega"), *is* this new parameter. As the value of "⍵" changes, so does the centre frequency (the writer refers to the -3dB point as centre frequency) of the filter. So with this formula, we have infact retained our "degrees of freedom", yet restricted user input to a much more simple, sensible, singular control parameter; the pot turns clockwise, the centre frequency increases.
+
+To deonstrate that we have infact retained (and exponentially increased) our "degrees of freedom, let's perform a sort of inversion of this formula but retain the simple one-control function of it:
+
++ 1st-order High Pass Filter
+
+    {
+        b0 = 1 / (1 + ⍵);
+        b1 = (1 / (1 + ⍵)) * -1;
+        a0 = 1;
+        a1 = ((1 - ⍵) / (1 + ⍵)) * -1;
+    }
+
+We can notice, even at a glance, that these two formulas are effectively the inverse of one another - as are the filter responses! Our Low Pass is transformed into a High Pass by this numerical inversion.
+
+Here is the total solution for a 1st-order Low Pass Filter:
+
+# Adding higher filter orders
+
+As with our transition from a simple "in-gain-out" system to now a one-pole filter, in which we added a second round of coefficients *sepcifically to affect feedback levels*, we can again add another round of coefficients, b2 and a2, to increase the "degrees of freedom" even further, and create some rather drastic filter shapes.
+
+Compare the below with the 1st-order counterpart:
+
+    {
+        b0 = (1 - cos(⍵)) / 2;
+        b1 = 1 - cos(⍵);
+        b2 = (1 - cos(⍵)) / 2;
+        a0 = 1 + ⍺;
+        a1 = -2 * cos(⍵);
+        a2 = 1 - ⍺;
+    }
+
+In our above example, we have added two further "degrees" - coefficients - with which to manipulate our signal; we have also added an additional parameter "⍺" ("alpha"), which in this forumula provides us with the typical "resonance" control that we ususally see on 2nd-order (or higher) filters.
+
+You will have also noted a cosine math operation being performed on "⍵", expressed as "cos(⍵)".
+
+As we explore further filter types and orders, we will want to formalize a control system that correctly maps as few user-parameters as possible, to the coefficients, using corrected scaling (for Sample Rate changes, as an example) to provide a predictable result under all settings.
+
 # Calculating the parameters
+
++ ⍵ = omega
++ ⍺ = alpha
++ A = gain (*only* used in peaking and shelving filter calculations!)
 
     {
         ⍵ = frequencyParameter * (2π / sampleRate);
@@ -22,10 +301,17 @@ Please see my "Orfanidis Biquad" repository for further information meanwhile.
         cos(θ) = cos(⍵);
         tan(θ) = sin(⍵) / cos(⍵);
         ⍺ = sin(⍵) * (1 - resonanceParameter);
+        A = 
     }
 
 https://en.wikipedia.org/wiki/Sine_and_cosine#Unit_circle_definitions
 https://en.wikipedia.org/wiki/Unit_circle
+
+
+# Calculating the coefficients
+
+Now that we have scaled and mapped our parameters "frequency", "resonance", and "gain", we can use these transformed values to control the gain (just a simple multiplication) at various points in our signal path, including feedback channels. 
+
 
 # Transformations
 Determining an output transfer function (Y(n)), given an input value (X(n)) and six multiplier coefficients within an audio feedback path (b0, b1, b2, a1, and a2 - all of which are pre-scaled by 1/a0) - please note that each feedback term requires a delay of one audio sample;
