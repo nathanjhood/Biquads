@@ -283,16 +283,42 @@ To demonstrate that we have infact retained (and exponentially increased) our "d
 
 We can notice, even at a glance, that these two formulas are effectively the inverse of one another - as are the filter responses! Our Low Pass is transformed into a High Pass by this numerical inversion.
 
+# Calculating the parameters
+
+As we explore further filter types and orders, we will want to formalize a control system that correctly maps as few user-parameters as possible, to the coefficients, using corrected scaling (for Sample Rate changes, as an example) to provide a predictable result under all settings.
+
++ ⍵ = omega
++ ⍺ = alpha
++ A = gain (*only* used in peaking and shelving filter calculations!)
+
+
+    {
+    
+        ⍵ = frequencyParameter * (2π / sampleRate);
+        sin(θ) = sin(⍵);
+        cos(θ) = cos(⍵);
+        tan(θ) = sin(⍵) / cos(⍵);
+        ⍺ = sin(⍵) * (1 - resonanceParameter);
+        A = log10(gainParameter * 0.05)
+        
+    }
+
+https://en.wikipedia.org/wiki/Sine_and_cosine#Unit_circle_definitions
+https://en.wikipedia.org/wiki/Unit_circle
+
+
+Now that we have scaled and mapped our parameters "frequency", "resonance", and "gain", we can use these transformed values to control the gain (just a simple multiplication) at various points in our signal path, including feedback channels. 
+
 Here is the total solution for a 1st-order Low Pass Filter:
 
         {
         
         // create coefficients from parameters
         
-        b0 = ⍵ / (1 + ⍵);
-        b1 = ⍵ / (1 + ⍵);
         a0 = 1;
-        a1 = -1 * ((1 - ⍵) / (1 + ⍵));
+        a1 = -1 * ((-1 * ((1 - ⍵) / (1 + ⍵))) * (1/a));
+        b0 = ((⍵ / (1 + ⍵)) * (1/a));
+        b1 = ((⍵ / (1 + ⍵)) * (1/a));
         
         // input...
         
@@ -300,7 +326,7 @@ Here is the total solution for a 1st-order Low Pass Filter:
         
         // apply coefficients
         
-        Y = ((X * (b0 * (1/a0))) + (X(z-1) * (b1 * (1/a0))) + (Y(z-1) * (-1 * (a1 * (1/a0))));
+        Y = (X * b0) + (X(z-1) * b1) + (Y(z-1) * a1);
         
         // feedback loop
         
@@ -313,7 +339,7 @@ Here is the total solution for a 1st-order Low Pass Filter:
         
         }
 
-You will notice in this expression, that coeff "a1" is inverted ("-1 * x"), which provides us with our negative feedback path.
+You will notice in this expression, that coeff "a1" is inverted ("-1 * (x)..."), which provides us with our negative feedback path.
 
 The element of applying the coefficient calculations to a feedback loop shall be revisited shortly.
 
@@ -326,47 +352,22 @@ Compare the below with the 1st-order counterpart:
 
         {
     
-        b0 = (1 - cos(⍵)) / 2;
-        b1 = 1 - cos(⍵);
-        b2 = (1 - cos(⍵)) / 2;
+        b0 = (1 - cos(θ)) / 2;
+        b1 = 1 - cos(θ);
+        b2 = (1 - cos(θ)) / 2;
         a0 = 1 + ⍺;
-        a1 = -2 * cos(⍵);
+        a1 = -2 * cos(θ);
         a2 = 1 - ⍺;
         
         }
 
 In our above example, we have added two further "degrees" - coefficients - with which to manipulate our signal; we have also added an additional parameter "⍺" ("alpha"), which in this forumula provides us with the typical "resonance" control that we ususally see on 2nd-order (or higher) filters.
 
-You will have also noted a cosine math operation being performed on "⍵", expressed as "cos(⍵)".
-
-As we explore further filter types and orders, we will want to formalize a control system that correctly maps as few user-parameters as possible, to the coefficients, using corrected scaling (for Sample Rate changes, as an example) to provide a predictable result under all settings.
-
-# Calculating the parameters
-
-+ ⍵ = omega
-+ ⍺ = alpha
-+ A = gain (*only* used in peaking and shelving filter calculations!)
-
-    {
-        ⍵ = frequencyParameter * (2π / sampleRate);
-        sin(θ) = sin(⍵);
-        cos(θ) = cos(⍵);
-        tan(θ) = sin(⍵) / cos(⍵);
-        ⍺ = sin(⍵) * (1 - resonanceParameter);
-        A = 
-    }
-
-https://en.wikipedia.org/wiki/Sine_and_cosine#Unit_circle_definitions
-https://en.wikipedia.org/wiki/Unit_circle
-
-
-# Calculating the coefficients
-
-Now that we have scaled and mapped our parameters "frequency", "resonance", and "gain", we can use these transformed values to control the gain (just a simple multiplication) at various points in our signal path, including feedback channels. 
-
+You will have also noted a cosine math operation being performed on "⍵", expressed as "cos(θ)". This was calculated previously, in our Parameters chapter. It is equivalent to "cos(⍵)".
 
 # Transformations
-Determining an output transfer function (Y(n)), given an input value (X(n)) and six multiplier coefficients within an audio feedback path (b0, b1, b2, a1, and a2 - all of which are pre-scaled by 1/a0) - please note that each feedback term requires a delay of one audio sample;
+
+Now, we are determining an output transfer function (Y(n)), given an input value (X(n)) and our six multiplier coefficients ("degrees of freesom") within an audio feedback path (b0, b1, b2, a1, and a2 - all of which are pre-scaled by 1/a0) - please note that each feedback term requires a delay of one audio sample ("z-1");
 
 + X(n) = input sample
 
