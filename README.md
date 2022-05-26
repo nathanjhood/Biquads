@@ -177,17 +177,14 @@ In order to include "more degrees of freedom" in our system, we can consider usi
 
 We shall expand our system's current parameter set, the coefficients, by double. Let's introduce numbers:
 
-b0 = gain of input signal (exactly as our previous "b")
-
-a0 = scalar of coefficients (to be used 1/a0, exactly as our previous "a")
-
++ b0 = gain of input signal (exactly as our previous "b")
++ a0 = scalar of coefficients (to be used as 1/a0, exactly as our previous "a")
 
 And the new terms:
 
 
-b1 = positive feedback path
-
-a1 = negative feedback path
++ b1 = positive feedback path
++ a1 = negative feedback path
 
 Giving us a total of four "degrees of freedom" with which to manipulate our input signal.
 
@@ -221,9 +218,9 @@ Therefore;
 b0 = 1 (input signal multiplier)
 
 
-a1 = 0
+a1 = 0 (negative feedback signal multiplier) 
 
-b1 = 0
+b1 = 0 (positive feedback signal multiplier) 
 
 
 Thus for "y";
@@ -246,9 +243,9 @@ The test plugin described above, and concurrent write-up, may appear on the writ
 
 For now, we have described a system that has an input, an output, and four pots that behave and interact in unpredictable and potentially hazardous ways.
 
-Meanwhile, how can we utilize our system's new "degrees of freedom" to create something greater than a volume control? And how to do so in a controlled, and controllable, fashion?
+Meanwhile, how can we utilize our system's new "degrees of freedom" to create something greater than a volume control? And how to do this in a controlled, and controllable, fashion?
 
-For now, however, let's begin at the beginning.
+For now, let's begin at the beginning.
 
 # Building blocks
 
@@ -269,9 +266,9 @@ At this point, we have reasonably concluded that our system itself required more
 
 Instead of this array of potential disasters, the above formula presents a classical way to manipulate three out of four coefficients, all at the same time, by using just a single parameter acting them all.
 
-Our value "⍵" ("omega"), *is* this new parameter. As the value of "⍵" changes, so does the centre frequency (the writer refers to the -3dB point as centre frequency) of the filter. So with this formula, we have infact retained our "degrees of freedom", yet restricted user input to a much more simple, sensible, singular control parameter; the pot turns clockwise, the centre frequency increases.
+Our value "⍵" ("omega"), *is* this new parameter. As the value of "⍵" changes, so does the centre frequency (the writer refers to the -3dB point as centre frequency) of the filter. So with this formula, we have infact retained our "degrees of freedom", yet restricted user input to a much more simple, sensible, singular control parameter; one pot which, as it turns clockwise, the centre frequency increases.
 
-To deonstrate that we have infact retained (and exponentially increased) our "degrees of freedom, let's perform a sort of inversion of this formula but retain the simple one-control function of it:
+To demonstrate that we have infact retained (and exponentially increased) our "degrees of freedom", let's perform a sort of inversion of this formula but retain the simple one-control function of it:
 
 + 1st-order High Pass Filter
 
@@ -287,6 +284,39 @@ To deonstrate that we have infact retained (and exponentially increased) our "de
 We can notice, even at a glance, that these two formulas are effectively the inverse of one another - as are the filter responses! Our Low Pass is transformed into a High Pass by this numerical inversion.
 
 Here is the total solution for a 1st-order Low Pass Filter:
+
+        {
+        
+        // create coefficients from parameters
+        
+        b0 = ⍵ / (1 + ⍵);
+        b1 = ⍵ / (1 + ⍵);
+        a0 = 1;
+        a1 = -1 * ((1 - ⍵) / (1 + ⍵));
+        
+        // input...
+        
+        X = input sample;
+        
+        // apply coefficients
+        
+        Y = ((X * (b0 * (1/a0))) + (X(z-1) * (b1 * (1/a0))) + (Y(z-1) * (-1 * (a1 * (1/a0))));
+        
+        // feedback loop
+        
+        X(z-1) = X;
+        Y(z-1) = Y;
+        
+        // output
+        
+        output sample = Y;
+        
+        }
+
+You will notice in this expression, that coeff "a1" is inverted ("-1 * x"), which provides us with our negative feedback path.
+
+The element of applying the coefficient calculations to a feedback loop shall be revisited shortly.
+
 
 # Adding higher filter orders
 
