@@ -260,6 +260,8 @@ For now, let's begin at the beginning.
         
         }
 
+![LP1](https://github.com/StoneyDSP/Biquads/blob/b65a9b5622afdb831e3b4cb6fc78a626e701cf06/Res/LP1.png)
+
 In the above pseudo-code, we are shown a formula for manipulating our coefficients to provide us a simple 1st-order (i.e., 1 pole, 1 zero) Low Pass Filter. The writer shall assume the reader is familiar with this filter concept in usage terms, and is more interested in the DSP.
 
 At this point, we have reasonably concluded that our system itself required more "degrees of freedom" in order to produce interesting and useful results, but that user exposure to all of this freedom leads to screeching feedback or complete silence at literally every turn of it's four pots.
@@ -280,6 +282,8 @@ To demonstrate that we have infact retained (and exponentially increased) our "d
         a1 = ((1 - ⍵) / (1 + ⍵)) * -1;
     
         }
+
+![HP1](https://github.com/StoneyDSP/Biquads/blob/b65a9b5622afdb831e3b4cb6fc78a626e701cf06/Res/HP1.png)
 
 We can notice, even at a glance, that these two formulas are effectively the inverse of one another - as are the filter responses! Our Low Pass is transformed into a High Pass by this numerical inversion.
 
@@ -363,8 +367,10 @@ Compare the below with the 1st-order counterpart:
         a2 = 1 - ⍺;
         
         }
+        
+![LP2res](https://github.com/StoneyDSP/Biquads/blob/b65a9b5622afdb831e3b4cb6fc78a626e701cf06/Res/LP2res.png)
 
-In our above example, we have added two further "degrees" - coefficients - with which to manipulate our signal; we have also added an additional parameter "⍺" ("alpha"), which in this forumula provides us with the typical "resonance" control that we ususally see on 2nd-order (or higher) filters.
+In our above example, we have added two further "degrees" - coefficients - with which to manipulate our signal; we have also added an additional parameter "⍺" ("alpha"), which in this forumula provides us with the typical "resonance" control that we ususally see on 2nd-order (or higher) filters. This "resonance" parameter is directly (and solely) responsible for the "bump" seen around the centre frequency of the filter, and can be increased or decreased as desired. 
 
 You will have also noted a cosine math operation being performed on "⍵", expressed as "cos(θ)". This was calculated previously, in our Parameters chapter. It is equivalent to "cos(⍵)".
 
