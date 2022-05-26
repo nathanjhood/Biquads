@@ -370,7 +370,7 @@ Compare the below with the 1st-order counterpart:
         
 ![LP2res](https://github.com/StoneyDSP/Biquads/blob/b65a9b5622afdb831e3b4cb6fc78a626e701cf06/Res/LP2res.png)
 
-In our above example, we have added two further "degrees" - coefficients - with which to manipulate our signal; we have also added an additional parameter "⍺" ("alpha"), which in this forumula provides us with the typical "resonance" control that we ususally see on 2nd-order (or higher) filters. This "resonance" parameter is directly (and solely) responsible for the "bump" seen around the centre frequency of the filter, and can be increased or decreased as desired. 
+In our above example, we have added two further "degrees" - coefficients - with which to manipulate our signal; we have also added an additional parameter "⍺" ("alpha"), which in this forumula provides us with the typical "resonance" control that we ususally see on 2nd-order (or higher) filters. This "resonance" parameter is directly (and solely) responsible for the "bump" seen around the centre frequency of the filter, and can be increased or decreased as desired. Higher resonance can be reminiscent of a wah-wah pedal or synthesizer effect, while lower resonance is more like a trumpet-mute.
 
 You will have also noted a cosine math operation being performed on "⍵", expressed as "cos(θ)". This was calculated previously, in our Parameters chapter. It is equivalent to "cos(⍵)".
 
