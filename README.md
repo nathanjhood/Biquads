@@ -15,6 +15,16 @@ Please see my "Orfanidis Biquad" repository for further information meanwhile.
 (Shown below; a resonant 2-pole Low Shelf filter with high oversampling, performed on a harmonic-rich 20Hz band-limited Impulse Response in Reaper)
 
 ![Biquads](https://github.com/StoneyDSP/Biquads/blob/8da7b5a8809ee99a6de84d82b16768026389b64e/Res/Biquads%201-0-9b.png)
+   
+Coffee! That's how I get things done :)
+
+If you might like to see me get more things done, please kindly consider buying me a coffee ;)
+
+patreon: StoneyDSP
+
+<a href="https://www.patreon.com/bePatron?u=8549187" data-patreon-widget-type="become-patron-button">Become a Patron!</a>
+
+# The digital Biquad Equalizer
 
 In realising this digital biquad equalizer design, we shall come to see that the entire equalizer system is really just a "gain" system - the audio enters, gets split into several "copies", and these copies are all re-applied back to the original audio stream at variying levels of gain - and, in many cases, with their sign flipped (i.e., polarity inversed). The output of our system will be the final product of these calculations.
 
@@ -750,6 +760,18 @@ Likewise, the quantization noise created by the feedback network's computational
 However, out of sight and out of mind does not mean out the window; we are able to produce several very pronounced audible artefacts in three of the four structures when processing in Floats (commonly deemed to be a beyond acceptable processing precision for audio purposes, to be debated elsewhere). Indeed only the Transposed Direct Form II manages favourably in all cases, and thus appears to be the prime candidate transformation for Biquad-based Equalizers in all audio application contexts at the time of writing. It stands to reason that these differences in quality shall also hold true (to some degree) for processing in Doubles, although we'd be extremely unlikely to encounter these differences when processing at that level of precision, seemingly well beyond the scope of measurement of our analysis tools - especially, and most critically, our ears. 
 
 - Nathan Hood (StoneyDSP), May 2022.
+
+# Before you go...
+
+Coffee! That's how I get things done :)
+
+If you might like to see me get more things done, please kindly consider buying me a coffee ;)
+
+patreon: StoneyDSP
+
+<a href="https://www.patreon.com/bePatron?u=8549187" data-patreon-widget-type="become-patron-button">Become a Patron!</a>
+
+# Credits
 
 ^ Credit: Native Instruments for the Direct Form I code (taken from Reaktor 5's Core "Static Filter" library - go figure!) as well as the Core library unit delay, audio thread, and math modulation macros used here (I programmed the three other forms myself; both in Core and in C++).
 
