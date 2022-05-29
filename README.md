@@ -30,6 +30,50 @@ Coffee! That's how I get things done!! If you'd like to see me get more things d
  <a href= "https://www.facebook.com/StoneyDSP.Audio/"><img src="https://github.com/StoneyDSP/StoneyDSP/blob/9608562b09ee2708affd0c31117fc25a235672d9/Assets/facebook.png"/></a>
 </p>
 
+# Manual - v1.0.9b
+
++ IO - Toggles the filter band on or off.
++ Frequency - Sets the centre frequency of the equalizer filter.
++ Resonance - Increases the amount of "emphasis" of the corner frequency
++ Gain - Boost/cut the audio at the centre frequency (affects only the Peak and Shelf modes!)
++ Type* - Chooses the type of filter to use. See below for more.
++ Transform** - Chooses the type of bilinear transform to use. See below for more.
++ Oversampling - Increasing the oversampling will improve performance at high frequencies - at the cost of more CPU!
++ Mix - Blend between the filter affect (100%) and the dry signal (0%).
++ Precision - Switch between Float precision (High Quality) and Double precision (beyond High Quality) in the audio path
++ Bypass - Toggles the entire plugin on or off.
+
+Type*;
+
+Available filter types -
+
++ Low Pass (2) - 2nd order Low Pass filter with variable resonance
++ Low Pass (1) - 1st order Low Pass filter
++ High Pass (2) - 2nd order High Pass filter with variable resonance
++ High Pass (1) - 1st order Low Pass filter
++ Band Pass (2) - 2nd order Band Pass filter with variable resonance
++ Band Pass (2c) - 2nd order Band Pass filter with variable resonance and compensated gain
++ Peak (2) - 2nd order Peak filter
++ Notch (2) - 2nd order Notch filter
++ All Pass (2) - 2nd order All Pass filter
++ Low Shelf (2) -  2nd order Low Shelf filter with variable resonance
++ Low Shelf (1) - 1st order Low Shelf filter with compensated corner frequency
++ Low Shelf (1c) - 1st order Low Shelf filter
++ High Shelf (2) -  2nd order High Shelf filter with variable resonance
++ High Shelf (1) - 1st order High Shelf filter with compensated corner frequency
++ High Shelf (1c) - 1st order High Shelf filter
+
+Transform**;
+
+Four different ways of applying the filter to the audio.
+
++ Direct Form I
++ Direct Form II
++ Direct Form I transposed
++ Direct Form II transposed
+
+For further information, please continue reading. 
+
 # The digital Biquad Equalizer
 
 In realising this digital biquad equalizer design, we shall come to see that the entire equalizer system is really just a "gain" system - the audio enters, gets split into several "copies", and these copies are all re-applied back to the original audio stream at variying levels of gain - and, in many cases, with their sign flipped (i.e., polarity inversed). The output of our system will be the final product of these calculations.
