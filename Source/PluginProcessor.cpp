@@ -151,17 +151,20 @@ void BiquadsAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBloc
     getProcessingPrecision();
     auto numChannels = getMainBusNumInputChannels();
 
-    processor.prepare(sampleRate, samplesPerBlock, numChannels);
+    processorFloat.prepare(sampleRate, samplesPerBlock, numChannels);
+    processorDouble.prepare(sampleRate, samplesPerBlock, numChannels);
 }
 
 void BiquadsAudioProcessor::releaseResources()
 {
-    processor.reset();
+    processorFloat.reset();
+    processorDouble.reset();
 }
 
 void BiquadsAudioProcessor::numChannelsChanged()
 {
-    processor.reset();
+    processorFloat.reset();
+    processorDouble.reset();
 }
 
 #ifndef JucePlugin_PreferredChannelConfigurations
@@ -195,7 +198,7 @@ void BiquadsAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce:
         {
             juce::ScopedNoDenormals noDenormals;
 
-            //processor.process(buffer, midiMessages);
+            processorFloat.process(buffer, midiMessages);
         }
 
         else
@@ -213,7 +216,7 @@ void BiquadsAudioProcessor::processBlock(juce::AudioBuffer<double>& buffer, juce
         {
             juce::ScopedNoDenormals noDenormals;
 
-            processor.process(buffer, midiMessages);
+            processorDouble.process(buffer, midiMessages);
         }
 
         else

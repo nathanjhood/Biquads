@@ -1,7 +1,7 @@
 /*
   ==============================================================================
 
-    ProcessorWrapper.h
+    PluginWrapper.h
     Created: 8 May 2022 9:38:17pm
     Author:  StoneyDSP
 
@@ -10,13 +10,13 @@
 
 #pragma once
 
-#ifndef PROCESSORWRAPPER_H_INCLUDED
-#define PROCESSORWRAPPER_H_INCLUDED
+#ifndef PLUGINWRAPPER_H_INCLUDED
+#define PLUGINWRAPPER_H_INCLUDED
 
 #include "../JuceLibraryCode/JuceHeader.h"
-//#include "PluginProcessor.h"
 #include "Biquads.h"
 
+class BiquadsAudioProcessor;
 
 template <typename SampleType>
 class ProcessWrapper
@@ -24,7 +24,7 @@ class ProcessWrapper
 public:
     //==============================================================================
     /** Constructor. */
-    ProcessWrapper(AudioProcessorValueTreeState& apvts);
+    ProcessWrapper(BiquadsAudioProcessor& p, juce::AudioProcessorValueTreeState& apvts);
 
     //==============================================================================
     /** Create Parameter Layout. */
@@ -48,7 +48,7 @@ private:
     //==============================================================================
     // This reference is provided as a quick way for the wrapper to
     // access the processor object that created it.
-    //BiquadsAudioProcessor& audioProcessor;
+    BiquadsAudioProcessor& audioProcessor;
 
     //==============================================================================
     /** Sets the oversampling factor. */
@@ -82,4 +82,4 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ProcessWrapper)
 };
 
-#endif //  PROCESSORWRAPPER_H_INCLUDED
+#endif //  PLUGINWRAPPER_H_INCLUDED

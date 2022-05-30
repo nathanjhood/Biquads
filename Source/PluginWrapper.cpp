@@ -1,17 +1,18 @@
 /*
   ==============================================================================
 
-    ProcessorWrapper.cpp
+    PluginWrapper.cpp
     Created: 8 May 2022 9:38:17pm
     Author:  StoneyDSP
 
   ==============================================================================
 */
 
-#include "ProcessorWrapper.h"
+#include "PluginWrapper.h"
+#include "PluginProcessor.h"
 
 template <typename SampleType>
-ProcessWrapper<SampleType>::ProcessWrapper(AudioProcessorValueTreeState& apvts)
+ProcessWrapper<SampleType>::ProcessWrapper(BiquadsAudioProcessor& p, AudioProcessorValueTreeState& apvts) : audioProcessor(p)
 {
     ioPtr = dynamic_cast                <juce::AudioParameterBool*>         (apvts.getParameter("ioID"));
     jassert(ioPtr != nullptr);
