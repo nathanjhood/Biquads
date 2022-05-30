@@ -30,10 +30,11 @@ public:
 
     //==============================================================================
     juce::AudioProcessorParameter* getBypassParameter() const;
-    bool supportsDoublePrecisionProcessing() const;
-    void setProcessingPrecision(ProcessingPrecision newPrecision) noexcept;
+    bool supportsDoublePrecisionProcessing() const override;
     ProcessingPrecision getProcessingPrecision() const noexcept;
-
+    bool isUsingDoublePrecision() const noexcept;
+    void setProcessingPrecision(ProcessingPrecision newPrecision) noexcept;
+    
     //==============================================================================
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
     void releaseResources() override;
