@@ -6,6 +6,11 @@
               version="1.0.9b">
   <MAINGROUP id="butqEA" name="Biquads">
     <GROUP id="{B7BEB523-13AE-DC81-1072-78BF4CC3A396}" name="Source">
+      <GROUP id="{9CCA4E58-A6DF-778D-0E47-615CE5201735}" name="Modules">
+        <FILE id="bE0Zsg" name="Biquads.cpp" compile="1" resource="0" file="Source/Biquads.cpp"/>
+        <FILE id="RJglFA" name="Biquads.h" compile="0" resource="0" file="Source/Biquads.h"/>
+        <FILE id="ihxrrI" name="MathFunctions.h" compile="0" resource="0" file="../MathFunctions/MathFunctions.h"/>
+      </GROUP>
       <FILE id="VST2bi" name="PluginParameters.cpp" compile="1" resource="0"
             file="Source/PluginParameters.cpp"/>
       <FILE id="wSuuDB" name="PluginParameters.h" compile="0" resource="0"
@@ -20,9 +25,6 @@
       <FILE id="TI9DHC" name="PluginEditor.cpp" compile="1" resource="0"
             file="Source/PluginEditor.cpp"/>
       <FILE id="fgFCra" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
-      <FILE id="bE0Zsg" name="Biquads.cpp" compile="1" resource="0" file="Source/Biquads.cpp"/>
-      <FILE id="RJglFA" name="Biquads.h" compile="0" resource="0" file="Source/Biquads.h"/>
-      <FILE id="ihxrrI" name="MathFunctions.h" compile="0" resource="0" file="../MathFunctions/MathFunctions.h"/>
     </GROUP>
   </MAINGROUP>
   <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1" JUCE_VST3_CAN_REPLACE_VST2="0"/>
