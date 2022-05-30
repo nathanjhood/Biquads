@@ -9,7 +9,7 @@
 #pragma once
 
 #include "../JuceLibraryCode/JuceHeader.h"
-#include "ProcessorWrapper.h"
+#include "PluginWrapper.h"
 
 //==============================================================================
 /**
@@ -78,7 +78,8 @@ private:
 
     //==============================================================================
     /** Audio processor members. */
-    ProcessWrapper<double> processor{ apvts };
+    ProcessWrapper<float> processorFloat{ *this, apvts };
+    ProcessWrapper<double> processorDouble{ *this, apvts };
 
     //==============================================================================
     /** Parameter pointers. */

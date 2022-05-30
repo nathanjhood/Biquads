@@ -6,10 +6,13 @@
               version="1.0.9b">
   <MAINGROUP id="butqEA" name="Biquads">
     <GROUP id="{B7BEB523-13AE-DC81-1072-78BF4CC3A396}" name="Source">
-      <FILE id="pvZewN" name="ProcessorWrapper.cpp" compile="1" resource="0"
-            file="Source/ProcessorWrapper.cpp"/>
-      <FILE id="irQxwW" name="ProcessorWrapper.h" compile="0" resource="0"
-            file="Source/ProcessorWrapper.h"/>
+      <FILE id="VST2bi" name="PluginParameters.cpp" compile="1" resource="0"
+            file="Source/PluginParameters.cpp"/>
+      <FILE id="wSuuDB" name="PluginParameters.h" compile="0" resource="0"
+            file="Source/PluginParameters.h"/>
+      <FILE id="pvZewN" name="PluginWrapper.cpp" compile="1" resource="0"
+            file="Source/PluginWrapper.cpp"/>
+      <FILE id="irQxwW" name="PluginWrapper.h" compile="0" resource="0" file="Source/PluginWrapper.h"/>
       <FILE id="vmXpNV" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
       <FILE id="qN9OPw" name="PluginProcessor.h" compile="0" resource="0"
@@ -19,6 +22,7 @@
       <FILE id="fgFCra" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
       <FILE id="bE0Zsg" name="Biquads.cpp" compile="1" resource="0" file="Source/Biquads.cpp"/>
       <FILE id="RJglFA" name="Biquads.h" compile="0" resource="0" file="Source/Biquads.h"/>
+      <FILE id="ihxrrI" name="MathFunctions.h" compile="0" resource="0" file="../MathFunctions/MathFunctions.h"/>
     </GROUP>
   </MAINGROUP>
   <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1" JUCE_VST3_CAN_REPLACE_VST2="0"/>
