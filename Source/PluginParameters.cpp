@@ -9,35 +9,42 @@
 */
 
 #include "PluginParameters.h"
+#include "PluginProcessor.h"
 
-Parameters::Parameters(juce::AudioProcessorValueTreeState& apvts)
+Parameters::Parameters(BiquadsAudioProcessor& p, juce::AudioProcessorValueTreeState& apvts) : audioProcessor (p)
 {
-    frequencyPtr = dynamic_cast         <juce::AudioParameterFloat*>        (apvts.getParameter("frequencyID"));
+    ioPtr = static_cast                <juce::AudioParameterBool*>         (apvts.getParameter("ioID"));
+    jassert(ioPtr != nullptr);
+
+    frequencyPtr = static_cast         <juce::AudioParameterFloat*>        (apvts.getParameter("frequencyID"));
     jassert(frequencyPtr != nullptr);
-    
-    resonancePtr = dynamic_cast         <juce::AudioParameterFloat*>        (apvts.getParameter("resonanceID"));
+
+    resonancePtr = static_cast         <juce::AudioParameterFloat*>        (apvts.getParameter("resonanceID"));
     jassert(resonancePtr != nullptr);
-    
-    gainPtr = dynamic_cast              <juce::AudioParameterFloat*>        (apvts.getParameter("gainID"));
+
+    gainPtr = static_cast              <juce::AudioParameterFloat*>        (apvts.getParameter("gainID"));
     jassert(gainPtr != nullptr);
-    
-    typePtr = dynamic_cast              <juce::AudioParameterChoice*>       (apvts.getParameter("typeID"));
+
+    typePtr = static_cast              <juce::AudioParameterChoice*>       (apvts.getParameter("typeID"));
     jassert(typePtr != nullptr);
-    
-    transformPtr = dynamic_cast         <juce::AudioParameterChoice*>       (apvts.getParameter("transformID"));
+
+    transformPtr = static_cast         <juce::AudioParameterChoice*>       (apvts.getParameter("transformID"));
     jassert(transformPtr != nullptr);
 
-    outputPtr = dynamic_cast            <juce::AudioParameterFloat*>        (apvts.getParameter("outputID"));
+    osPtr = static_cast                <juce::AudioParameterChoice*>       (apvts.getParameter("osID"));
+    jassert(osPtr != nullptr);
+
+    outputPtr = static_cast            <juce::AudioParameterFloat*>        (apvts.getParameter("outputID"));
     jassert(outputPtr != nullptr);
 
-    osPtr = dynamic_cast                <juce::AudioParameterChoice*>       (apvts.getParameter("osID"));
-    jassert(osPtr != nullptr);
+    mixPtr = static_cast              <juce::AudioParameterFloat*>        (apvts.getParameter("mixID"));
+    jassert(mixPtr != nullptr);
 }
 
-void Parameters::createParameterLayout(Params& params)
+void Parameters::setParameterLayout(Params& params)
 {
-    auto dBMax = juce::Decibels::gainToDecibels(4.0f);
-    auto dBMin = juce::Decibels::gainToDecibels(0.0f, -120.0f);
+    auto dBMax = juce::Decibels::gainToDecibels(16.0f);
+    auto dBMin = juce::Decibels::gainToDecibels(0.0625f);
 
     auto freqRange = juce::NormalisableRange<float>(20.00f, 20000.00f, 0.01f, 00.198894f);
     auto gainRange = juce::NormalisableRange<float>(dBMin, dBMax, 0.01f, 1.00f);
@@ -47,49 +54,13 @@ void Parameters::createParameterLayout(Params& params)
     auto tString = juce::StringArray({ "Direct Form I", "Direct Form II", "Direct Form I (t)", "Direct Form II (t)" });
     auto osString = juce::StringArray({ "1x", "2x", "4x", "8x", "16x" });
 
+    params.push_back(std::make_unique<juce::AudioParameterBool>("ioID", "IO", false));
     params.push_back(std::make_unique<juce::AudioParameterFloat>("frequencyID", "Frequency", freqRange, 632.45f));
     params.push_back(std::make_unique<juce::AudioParameterFloat>("resonanceID", "Resonance", 00.00f, 01.00f, 00.10f));
     params.push_back(std::make_unique<juce::AudioParameterFloat>("gainID", "Gain", gainRange, 00.00f));
     params.push_back(std::make_unique<juce::AudioParameterChoice>("typeID", "Type", fString, 0));
     params.push_back(std::make_unique<juce::AudioParameterChoice>("transformID", "Transform", tString, 3));
-    params.push_back(std::make_unique<juce::AudioParameterFloat>("outputID", "Output", gainRange, 00.00f));
     params.push_back(std::make_unique<juce::AudioParameterChoice>("osID", "Oversampling", osString, 0));
-
-}
-
-//==============================================================================
-void Parameters::setRampDurationSeconds(double newDurationSeconds) noexcept
-{
-    if (rampDurationSeconds != newDurationSeconds)
-    {
-        rampDurationSeconds = newDurationSeconds;
-        reset();
-    }
-}
-
-double Parameters::getRampDurationSeconds() const noexcept
-{
-    return rampDurationSeconds;
-}
-
-bool Parameters::isSmoothing() const noexcept
-{
-    bool paramSmoothing;
-
-    return paramSmoothing;
-}
-
-//==============================================================================
-void Parameters::prepare(juce::dsp::ProcessSpec& spec)
-{
-    jassert(spec.sampleRate > 0);
-    jassert(spec.numChannels > 0);
-
-    sampleRate = spec.sampleRate;
-
-    reset();
-}
-
-void Parameters::reset()
-{
+    params.push_back(std::make_unique<juce::AudioParameterFloat>("outputID", "Output", gainRange, 00.00f));
+    params.push_back(std::make_unique<juce::AudioParameterFloat>("mixID", "Mix", mixRange, 100.00f));
 }
