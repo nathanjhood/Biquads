@@ -23,7 +23,7 @@ void Biquads<SampleType>::setFrequency(SampleType newFreq)
 {
     jassert(static_cast<SampleType>(20.0) <= newFreq && newFreq <= static_cast<SampleType>(20000.0));
 
-    hz = static_cast<SampleType>(jlimit(minFreq, maxFreq, newFreq));
+    hz = static_cast<SampleType>(juce::jlimit(minFreq, maxFreq, newFreq));
     frq.setTargetValue(hz);
     coefficients();
 }
@@ -33,7 +33,7 @@ void Biquads<SampleType>::setResonance(SampleType newRes)
 {
     jassert(static_cast<SampleType>(0.0) <= newRes && newRes <= static_cast<SampleType>(1.0));
 
-    q = static_cast<SampleType>(jlimit(SampleType(0.0), SampleType(1.0), newRes));
+    q = static_cast<SampleType>(juce::jlimit(SampleType(0.0), SampleType(1.0), newRes));
     res.setTargetValue(q);
     coefficients();
 }
