@@ -26,7 +26,7 @@ public:
 
     //==============================================================================
     APVTS& getAPVTS();
-    static juce::AudioProcessorValueTreeState::ParameterLayout getParameterLayout();
+    static APVTS::ParameterLayout getParameterLayout();
 
     //==============================================================================
     juce::AudioProcessorParameter* getBypassParameter() const;
@@ -88,8 +88,6 @@ private:
 
     //==============================================================================
     /** Init variables. */
-    double ramp = 0.0001;
-
     precisionType processingPrecision = precisionType::singlePrecision;
 
     //==============================================================================

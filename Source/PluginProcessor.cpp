@@ -70,7 +70,6 @@ void BiquadsAudioProcessor::setProcessingPrecision(ProcessingPrecision newPrecis
 juce::AudioProcessor::ProcessingPrecision BiquadsAudioProcessor::getProcessingPrecision() const noexcept
 { 
     return processingPrecision;
-    //return static_cast<ProcessingPrecision>(doublesPtr->getIndex());
 }
 
 //==============================================================================
@@ -81,11 +80,7 @@ const juce::String BiquadsAudioProcessor::getName() const
 
 bool BiquadsAudioProcessor::acceptsMidi() const
 {
-   #if JucePlugin_WantsMidiInput
-    return true;
-   #else
     return false;
-   #endif
 }
 
 bool BiquadsAudioProcessor::producesMidi() const
