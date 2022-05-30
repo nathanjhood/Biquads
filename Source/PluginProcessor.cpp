@@ -57,6 +57,16 @@ bool BiquadsAudioProcessor::supportsDoublePrecisionProcessing() const
     return true;
 }
 
+juce::AudioProcessor::ProcessingPrecision BiquadsAudioProcessor::getProcessingPrecision() const noexcept
+{
+    return processingPrecision;
+}
+
+bool BiquadsAudioProcessor::isUsingDoublePrecision() const noexcept
+{ 
+    return processingPrecision == doublePrecision; 
+}
+
 void BiquadsAudioProcessor::setProcessingPrecision(ProcessingPrecision newPrecision) noexcept
 {
     if (processingPrecision != newPrecision)
@@ -65,11 +75,6 @@ void BiquadsAudioProcessor::setProcessingPrecision(ProcessingPrecision newPrecis
         releaseResources();
         reset();
     }
-}
-
-juce::AudioProcessor::ProcessingPrecision BiquadsAudioProcessor::getProcessingPrecision() const noexcept
-{ 
-    return processingPrecision;
 }
 
 //==============================================================================
@@ -166,6 +171,8 @@ bool BiquadsAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) 
 
 void BiquadsAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
+    isUsingDoublePrecision();
+
     if (doublesPtr->getIndex() == 0)
 
         if (bypassPtr->get() == false)
@@ -184,6 +191,8 @@ void BiquadsAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce:
 
 void BiquadsAudioProcessor::processBlock(juce::AudioBuffer<double>& buffer, juce::MidiBuffer& midiMessages)
 {
+    isUsingDoublePrecision();
+
     if (doublesPtr->getIndex() == 1)
 
         if (bypassPtr->get() == false)

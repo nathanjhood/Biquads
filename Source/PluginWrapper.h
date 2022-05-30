@@ -58,6 +58,7 @@ private:
     juce::dsp::ProcessSpec spec;
     juce::dsp::DryWetMixer<SampleType> mixer;
     Biquads<SampleType> biquad;
+    juce::dsp::Gain<SampleType> output;
 
     //==========================================================================
     /** Parameter pointers. */
