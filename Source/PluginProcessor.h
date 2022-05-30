@@ -9,6 +9,7 @@
 #pragma once
 
 #include "../JuceLibraryCode/JuceHeader.h"
+#include "PluginParameters.h"
 #include "PluginWrapper.h"
 
 //==============================================================================
@@ -17,10 +18,15 @@
 class BiquadsAudioProcessor  : public juce::AudioProcessor
 {
 public:
+    using APVTS = juce::AudioProcessorValueTreeState;
     using precisionType = ProcessingPrecision;
     //==============================================================================
     BiquadsAudioProcessor();
     ~BiquadsAudioProcessor() override;
+
+    //==============================================================================
+    APVTS& getAPVTS();
+    static APVTS::ParameterLayout getParameterLayout();
 
     //==============================================================================
     juce::AudioProcessorParameter* getBypassParameter() const;
@@ -32,10 +38,7 @@ public:
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
     void releaseResources() override;
     void numChannelsChanged();
-
-   #ifndef JucePlugin_PreferredChannelConfigurations
     bool isBusesLayoutSupported (const BusesLayout& layouts) const override;
-   #endif
 
     //==============================================================================
     void processBlock(juce::AudioBuffer<float>&, juce::MidiBuffer&) override;
@@ -66,30 +69,25 @@ public:
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
+protected:
     //==============================================================================
-    juce::AudioProcessorValueTreeState& getAPVTS();
-    static juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
-    juce::AudioProcessorValueTreeState apvts{ *this, nullptr, "Parameters", createParameterLayout() };
+    /** Audio processor value tree. */
+    APVTS apvts     { *this, nullptr, "Parameters", getParameterLayout() };
 
 private:
     //==============================================================================
-    /** Updates the internal state variables of the processor. */
-    //void update();
-
-    //==============================================================================
     /** Audio processor members. */
-    ProcessWrapper<float> processorFloat{ *this, apvts };
-    ProcessWrapper<double> processorDouble{ *this, apvts };
+    Parameters                      parameters          { *this, getAPVTS() };
+    ProcessWrapper<float>           processorFloat      { *this, getAPVTS() };
+    ProcessWrapper<double>          processorDouble     { *this, getAPVTS() };
 
     //==============================================================================
     /** Parameter pointers. */
-    juce::AudioParameterChoice* doublesPtr    { nullptr };
-    juce::AudioParameterBool* bypassPtr     { nullptr };
+    juce::AudioParameterChoice*     doublesPtr          { nullptr };
+    juce::AudioParameterBool*       bypassPtr           { nullptr };
 
     //==============================================================================
     /** Init variables. */
-    double ramp = 0.0001;
-
     precisionType processingPrecision = precisionType::singlePrecision;
 
     //==============================================================================

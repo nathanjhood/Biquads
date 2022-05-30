@@ -15,46 +15,37 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 
+class BiquadsAudioProcessor;
+
 class Parameters
 {
 public:
     using Params = std::vector<std::unique_ptr<juce::RangedAudioParameter>>;
-    //==============================================================================
+    //==========================================================================
     /** Constructor. */
-    Parameters(juce::AudioProcessorValueTreeState& apvts);
+    Parameters(BiquadsAudioProcessor& p, juce::AudioProcessorValueTreeState& apvts);
 
-    //==============================================================================
+    //==========================================================================
     /** Create Parameter Layout. */
-    static void createParameterLayout(Params& params);
-
-    //==============================================================================
-    /** Sets the length of the ramp used for smoothing parameter changes. */
-    void setRampDurationSeconds(double newDurationSeconds) noexcept;
-
-    /** Returns the ramp duration in seconds. */
-    double getRampDurationSeconds() const noexcept;
-
-    /** Returns true if the current value is currently being interpolated. */
-    bool isSmoothing() const noexcept;
-
-    //==============================================================================
-    /** Initialises the processor. */
-    void prepare(juce::dsp::ProcessSpec& spec);
-
-    /** Resets the internal state variables of the processor. */
-    void reset();
+    static void setParameterLayout(Params& params);
 
 private:
-    //==============================================================================
-    juce::AudioParameterFloat* frequencyPtr{ nullptr };
-    juce::AudioParameterFloat* resonancePtr{ nullptr };
-    juce::AudioParameterFloat* gainPtr{ nullptr };
-    juce::AudioParameterChoice* typePtr{ nullptr };
-    juce::AudioParameterChoice* transformPtr{ nullptr };
-    juce::AudioParameterFloat* outputPtr { nullptr };
-    juce::AudioParameterChoice* osPtr{ nullptr };
+    //==========================================================================
+    // This reference is provided as a quick way for the wrapper to
+    // access the processor object that created it.
+    BiquadsAudioProcessor& audioProcessor;
 
-    double sampleRate = 44100.0, rampDurationSeconds = 0.00005;
+    //==========================================================================
+    /** Parameter pointers. */
+    juce::AudioParameterBool*               ioPtr                   { nullptr };
+    juce::AudioParameterFloat*              frequencyPtr            { nullptr };
+    juce::AudioParameterFloat*              resonancePtr            { nullptr };
+    juce::AudioParameterFloat*              gainPtr                 { nullptr };
+    juce::AudioParameterChoice*             typePtr                 { nullptr };
+    juce::AudioParameterChoice*             transformPtr            { nullptr };
+    juce::AudioParameterChoice*             osPtr                   { nullptr };
+    juce::AudioParameterFloat*              outputPtr               { nullptr };
+    juce::AudioParameterFloat*              mixPtr                  { nullptr };
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Parameters)
 };

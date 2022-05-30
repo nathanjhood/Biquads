@@ -11,16 +11,10 @@
 
 //==============================================================================
 BiquadsAudioProcessor::BiquadsAudioProcessor()
-#ifndef JucePlugin_PreferredChannelConfigurations
      : AudioProcessor (BusesProperties()
-                     #if ! JucePlugin_IsMidiEffect
-                      #if ! JucePlugin_IsSynth
                        .withInput  ("Input",  juce::AudioChannelSet::stereo(), true)
-                      #endif
                        .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
-                     #endif
                        )
-#endif
 {
     doublesPtr = dynamic_cast       <juce::AudioParameterChoice*>    (apvts.getParameter("precisionID"));
     jassert(doublesPtr != nullptr);
@@ -38,11 +32,11 @@ juce::AudioProcessorValueTreeState& BiquadsAudioProcessor::getAPVTS()
     return apvts;
 }
 
-juce::AudioProcessorValueTreeState::ParameterLayout BiquadsAudioProcessor::createParameterLayout()
+juce::AudioProcessorValueTreeState::ParameterLayout BiquadsAudioProcessor::getParameterLayout()
 {
     std::vector<std::unique_ptr<juce::RangedAudioParameter>> params;
 
-    ProcessWrapper<float>::createParameterLayout(params);
+    Parameters::setParameterLayout(params);
 
     auto pString = juce::StringArray({ "Floats", "Doubles" });
 
@@ -75,8 +69,7 @@ void BiquadsAudioProcessor::setProcessingPrecision(ProcessingPrecision newPrecis
 
 juce::AudioProcessor::ProcessingPrecision BiquadsAudioProcessor::getProcessingPrecision() const noexcept
 { 
-    //return processingPrecision;
-    return static_cast<ProcessingPrecision>(doublesPtr->getIndex());
+    return processingPrecision;
 }
 
 //==============================================================================
@@ -87,11 +80,7 @@ const juce::String BiquadsAudioProcessor::getName() const
 
 bool BiquadsAudioProcessor::acceptsMidi() const
 {
-   #if JucePlugin_WantsMidiInput
-    return true;
-   #else
     return false;
-   #endif
 }
 
 bool BiquadsAudioProcessor::producesMidi() const
@@ -149,10 +138,10 @@ void BiquadsAudioProcessor::changeProgramName (int index, const juce::String& ne
 void BiquadsAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
     getProcessingPrecision();
-    auto numChannels = getMainBusNumInputChannels();
 
-    processorFloat.prepare(sampleRate, samplesPerBlock, numChannels);
-    processorDouble.prepare(sampleRate, samplesPerBlock, numChannels);
+
+    processorFloat.prepare(sampleRate, samplesPerBlock);
+    processorDouble.prepare(sampleRate, samplesPerBlock);
 }
 
 void BiquadsAudioProcessor::releaseResources()
@@ -167,27 +156,13 @@ void BiquadsAudioProcessor::numChannelsChanged()
     processorDouble.reset();
 }
 
-#ifndef JucePlugin_PreferredChannelConfigurations
 bool BiquadsAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
 {
-  #if JucePlugin_IsMidiEffect
-    juce::ignoreUnused (layouts);
-    return true;
-  #else
-
-    if (layouts.getMainOutputChannelSet() != juce::AudioChannelSet::mono()
-     && layouts.getMainOutputChannelSet() != juce::AudioChannelSet::stereo())
-        return false;
-
-   #if ! JucePlugin_IsSynth
     if (layouts.getMainOutputChannelSet() != layouts.getMainInputChannelSet())
         return false;
-   #endif
 
     return true;
-  #endif
 }
-#endif
 
 void BiquadsAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {

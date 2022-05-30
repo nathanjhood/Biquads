@@ -49,31 +49,6 @@ ProcessWrapper<SampleType>::ProcessWrapper(BiquadsAudioProcessor& p, AudioProces
 }
 
 template <typename SampleType>
-void ProcessWrapper<SampleType>::createParameterLayout(std::vector<std::unique_ptr<RangedAudioParameter>>& params)
-{
-    auto dBMax = juce::Decibels::gainToDecibels(16.0f);
-    auto dBMin = juce::Decibels::gainToDecibels(0.0625f);
-
-    auto freqRange = juce::NormalisableRange<float>(20.00f, 20000.00f, 0.01f, 00.198894f);
-    auto gainRange = juce::NormalisableRange<float>(dBMin, dBMax, 0.01f, 1.00f);
-    auto mixRange = juce::NormalisableRange<float>(00.00f, 100.00f, 0.01f, 1.00f);
-
-    auto fString = juce::StringArray({ "Low Pass (2)", "Low Pass (1)", "High Pass (2)", "High Pass (1)" , "Band Pass", "Band Pass (Q)", "Low Shelf (2)", "Low Shelf (1)", "Low Shelf (1c)", "High Shelf (2)", "High Shelf (1)", "High Shelf (1c)", "Peak", "Notch", "All Pass" });
-    auto tString = juce::StringArray({ "Direct Form I", "Direct Form II", "Direct Form I (t)", "Direct Form II (t)" });
-    auto osString = juce::StringArray({ "1x", "2x", "4x", "8x", "16x" });
-
-    params.push_back(std::make_unique<juce::AudioParameterBool>("ioID", "IO", false));
-    params.push_back(std::make_unique<juce::AudioParameterFloat>("frequencyID", "Frequency", freqRange, 632.45f));
-    params.push_back(std::make_unique<juce::AudioParameterFloat>("resonanceID", "Resonance", 00.00f, 01.00f, 00.10f));
-    params.push_back(std::make_unique<juce::AudioParameterFloat>("gainID", "Gain", gainRange, 00.00f));
-    params.push_back(std::make_unique<juce::AudioParameterChoice>("typeID", "Type", fString, 0));
-    params.push_back(std::make_unique<juce::AudioParameterChoice>("transformID", "Transform", tString, 3));
-    params.push_back(std::make_unique<juce::AudioParameterChoice>("osID", "Oversampling", osString, 0));
-    /*params.push_back(std::make_unique<juce::AudioParameterFloat>("outputID", "Output", gainRange, 00.00f));*/
-    params.push_back(std::make_unique<juce::AudioParameterFloat>("mixID", "Mix", mixRange, 100.00f));
-}
-
-template <typename SampleType>
 void ProcessWrapper<SampleType>::setOversampling()
 {
     curOS = (int)osPtr->getIndex();
@@ -88,13 +63,14 @@ void ProcessWrapper<SampleType>::setOversampling()
 }
 
 template <typename SampleType>
-void ProcessWrapper<SampleType>::prepare(double sampleRate, int samplesPerBlock, int numChannels)
+void ProcessWrapper<SampleType>::prepare(double sampleRate, int samplesPerBlock)
 {
     overSamplingFactor = 1 << curOS;
+    prevOS = curOS;
 
     spec.sampleRate = sampleRate;
     spec.maximumBlockSize = samplesPerBlock;
-    spec.numChannels = numChannels;
+    spec.numChannels = audioProcessor.getTotalNumInputChannels();
 
     for (int i = 0; i < 5; ++i)
         overSample[i]->initProcessing(spec.maximumBlockSize);
@@ -102,12 +78,13 @@ void ProcessWrapper<SampleType>::prepare(double sampleRate, int samplesPerBlock,
     for (int i = 0; i < 5; ++i)
         overSample[i]->numChannels = (size_t)spec.numChannels;
 
-    prevOS = curOS;
+    audioProcessor.getTotalNumInputChannels();
 
     mixer.prepare(spec);
     biquad.prepare(spec);
 
-    setOversampling();
+    reset();
+    update();
 }
 
 template <typename SampleType>
@@ -115,6 +92,9 @@ void ProcessWrapper<SampleType>::reset()
 {
     mixer.reset();
     biquad.reset(static_cast<SampleType>(0.0));
+
+    for (int i = 0; i < 5; ++i)
+        overSample[i]->numChannels = (size_t)spec.numChannels;
 
     for (int i = 0; i < 5; ++i)
         overSample[i]->reset();
@@ -126,7 +106,7 @@ void ProcessWrapper<SampleType>::update()
     setOversampling();
 
     mixer.setWetMixProportion(mixPtr->get() * 0.01f);
-
+   
     biquad.setFrequency(frequencyPtr->get());
     biquad.setResonance(resonancePtr->get());
     biquad.setGain(gainPtr->get());
