@@ -27,12 +27,8 @@ public:
     ProcessWrapper(BiquadsAudioProcessor& p, juce::AudioProcessorValueTreeState& apvts);
 
     //==============================================================================
-    /** Create Parameter Layout. */
-    static void createParameterLayout(std::vector<std::unique_ptr<RangedAudioParameter>>& params);
-
-    //==============================================================================
     /** Initialises the processor. */
-    void prepare(double sampleRate, int samplesPerBlock, int numChannels);
+    void prepare(double sampleRate, int samplesPerBlock);
 
     /** Resets the internal state variables of the processor. */
     void reset();
@@ -62,18 +58,6 @@ private:
     juce::dsp::ProcessSpec spec;
     juce::dsp::DryWetMixer<SampleType> mixer;
     Biquads<SampleType> biquad;
-
-    //==============================================================================
-    /** Parameter pointers. */
-    juce::AudioParameterBool*       ioPtr           { nullptr };
-    juce::AudioParameterFloat*      frequencyPtr    { nullptr };
-    juce::AudioParameterFloat*      resonancePtr    { nullptr };
-    juce::AudioParameterFloat*      gainPtr         { nullptr };
-    juce::AudioParameterChoice*     typePtr         { nullptr };
-    juce::AudioParameterChoice*     transformPtr    { nullptr };
-    juce::AudioParameterChoice*     osPtr           { nullptr };
-    juce::AudioParameterFloat*      outputPtr       { nullptr };
-    juce::AudioParameterFloat*      mixPtr          { nullptr };
 
     //==============================================================================
     /** Init variables. */
