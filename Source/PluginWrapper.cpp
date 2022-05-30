@@ -76,14 +76,15 @@ void ProcessWrapper<SampleType>::prepare(double sampleRate, int samplesPerBlock)
         overSample[i]->initProcessing(spec.maximumBlockSize);
 
     for (int i = 0; i < 5; ++i)
-        overSample[i]->numChannels((size_t)spec.numChannels);
+        overSample[i]->numChannels = (size_t)spec.numChannels;
 
     audioProcessor.getTotalNumInputChannels();
 
     mixer.prepare(spec);
     biquad.prepare(spec);
 
-    setOversampling();
+    reset();
+    update();
 }
 
 template <typename SampleType>
@@ -93,7 +94,7 @@ void ProcessWrapper<SampleType>::reset()
     biquad.reset(static_cast<SampleType>(0.0));
 
     for (int i = 0; i < 5; ++i)
-        overSample[i]->numChannels((size_t)spec.numChannels);
+        overSample[i]->numChannels = (size_t)spec.numChannels;
 
     for (int i = 0; i < 5; ++i)
         overSample[i]->reset();
