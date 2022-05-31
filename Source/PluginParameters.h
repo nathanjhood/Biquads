@@ -20,10 +20,11 @@ class BiquadsAudioProcessor;
 class Parameters
 {
 public:
+    using APVTS = juce::AudioProcessorValueTreeState;
     using Params = std::vector<std::unique_ptr<juce::RangedAudioParameter>>;
     //==========================================================================
     /** Constructor. */
-    Parameters(BiquadsAudioProcessor& p, juce::AudioProcessorValueTreeState& apvts);
+    Parameters(BiquadsAudioProcessor& p, APVTS& apvts);
 
     //==========================================================================
     /** Create Parameter Layout. */
