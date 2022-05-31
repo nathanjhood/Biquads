@@ -1,18 +1,16 @@
-Current: v1.0.9b
+Current: v1.0.12b
 
-![biquad-1-0-9b](https://github.com/StoneyDSP/Biquads/blob/be3e1121a5b12c96f6c9da5786191f466f4be13e/Res/biquad-1-0-9b.png)
-
-# Biquads
+## Biquads
 Multi-mode Biquad filter for audio analysis purposes using variable BiLinear transforms, processing precision, and oversampling to achieve high-quality results
+
+(Shown below; a resonant 2-pole Low Shelf filter with high oversampling, performed on a harmonic-rich 20Hz band-limited Impulse Response in Reaper)
+
+![Biquads](https://github.com/StoneyDSP/Biquads/blob/acc33bd3273e250dda6735a9c2d97bda19f8055d/Res/Biquads%201%200%2012b.png)
 
 + Implementing various 6dB- and 12dB- filter types (such as low pass, high pass, band pass, shelves, plus many more) using variable BiLinear transforms, switchable processing precision, and oversampling to achieve high-quality results (much more to come)!
 + This filter is subject to amplitude and phase warping of the frequency spectrum approaching the Nyquist frequency when oversampling is not used.
 + There is parameter smoothing on the Frequency, Resonance, and Gain controls - however, BE AWARE that modulating parameters in real-time WILL create loud clicks and pops while passing audio under certain settings, such as Direct Form I (read on for more).
-
-(Shown below; a resonant 2-pole Low Shelf filter with high oversampling, performed on a harmonic-rich 20Hz band-limited Impulse Response in Reaper)
-
-![Biquads](https://github.com/StoneyDSP/Biquads/blob/8da7b5a8809ee99a6de84d82b16768026389b64e/Res/Biquads%201-0-9b.png)
-   
+ 
 # Before we begin...
 
 Coffee! That's how I get things done!! If you'd like to see me get more things done, please kindly consider <a href="https://www.patreon.com/bePatron?u=8549187" data-patreon-widget-type="become-patron-button">buying me a coffee</a> or two ;)
