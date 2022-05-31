@@ -11,7 +11,7 @@
 #include "PluginParameters.h"
 #include "PluginProcessor.h"
 
-Parameters::Parameters(BiquadsAudioProcessor& p, juce::AudioProcessorValueTreeState& apvts) : audioProcessor (p)
+Parameters::Parameters(BiquadsAudioProcessor& p, APVTS& apvts) : audioProcessor (p)
 {
     ioPtr = static_cast                <juce::AudioParameterBool*>         (apvts.getParameter("ioID"));
     jassert(ioPtr != nullptr);
@@ -43,12 +43,12 @@ Parameters::Parameters(BiquadsAudioProcessor& p, juce::AudioProcessorValueTreeSt
 
 void Parameters::setParameterLayout(Params& params)
 {
-    auto dBMax = juce::Decibels::gainToDecibels(16.0f);
-    auto dBMin = juce::Decibels::gainToDecibels(0.0625f);
+    const auto dBMax = juce::Decibels::gainToDecibels(16.0f);
+    const auto dBMin = juce::Decibels::gainToDecibels(0.0625f);
 
-    auto freqRange = juce::NormalisableRange<float>(20.00f, 20000.00f, 0.01f, 00.198894f);
+    const auto freqRange = juce::NormalisableRange<float>(20.00f, 20000.00f, 0.001f, 00.198894f);
     auto gainRange = juce::NormalisableRange<float>(dBMin, dBMax, 0.01f, 1.00f);
-    auto mixRange = juce::NormalisableRange<float>(00.00f, 100.00f, 0.01f, 1.00f);
+    const auto mixRange = juce::NormalisableRange<float>(00.00f, 100.00f, 0.01f, 1.00f);
 
     auto fString = juce::StringArray({ "Low Pass (2)", "Low Pass (1)", "High Pass (2)", "High Pass (1)" , "Band Pass", "Band Pass (Q)", "Low Shelf (2)", "Low Shelf (1)", "Low Shelf (1c)", "High Shelf (2)", "High Shelf (1)", "High Shelf (1c)", "Peak", "Notch", "All Pass" });
     auto tString = juce::StringArray({ "Direct Form I", "Direct Form II", "Direct Form I (t)", "Direct Form II (t)" });
