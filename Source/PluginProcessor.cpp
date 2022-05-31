@@ -21,6 +21,9 @@ BiquadsAudioProcessor::BiquadsAudioProcessor()
 
     bypassPtr = dynamic_cast       <juce::AudioParameterBool*>    (apvts.getParameter("bypassID"));
     jassert(bypassPtr != nullptr);
+
+    panelPtr = dynamic_cast       <juce::AudioParameterBool*>    (apvts.getParameter("panelID"));
+    jassert(panelPtr != nullptr);
 }
 
 BiquadsAudioProcessor::~BiquadsAudioProcessor()
@@ -42,6 +45,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout BiquadsAudioProcessor::getPa
 
     params.push_back(std::make_unique<juce::AudioParameterChoice>("precisionID", "Precision", pString, 0));
     params.push_back(std::make_unique<juce::AudioParameterBool>("bypassID", "Bypass", false));
+    params.push_back(std::make_unique<juce::AudioParameterBool>("panelID", "GUI", true));
 
     return { params.begin(), params.end() };
 }
@@ -54,7 +58,11 @@ juce::AudioProcessorParameter* BiquadsAudioProcessor::getBypassParameter() const
 
 bool BiquadsAudioProcessor::supportsDoublePrecisionProcessing() const
 {
-    return true;
+    if (processingPrecision == doublePrecision)
+        return true;
+    else
+        return false;
+    //return true;
 }
 
 juce::AudioProcessor::ProcessingPrecision BiquadsAudioProcessor::getProcessingPrecision() const noexcept
@@ -90,20 +98,12 @@ bool BiquadsAudioProcessor::acceptsMidi() const
 
 bool BiquadsAudioProcessor::producesMidi() const
 {
-   #if JucePlugin_ProducesMidiOutput
-    return true;
-   #else
     return false;
-   #endif
 }
 
 bool BiquadsAudioProcessor::isMidiEffect() const
 {
-   #if JucePlugin_IsMidiEffect
-    return true;
-   #else
     return false;
-   #endif
 }
 
 double BiquadsAudioProcessor::getTailLengthSeconds() const
@@ -155,6 +155,12 @@ void BiquadsAudioProcessor::releaseResources()
     processorDouble.reset();
 }
 
+void BiquadsAudioProcessor::numBusesChanged()
+{
+    processorFloat.reset();
+    processorDouble.reset();
+}
+
 void BiquadsAudioProcessor::numChannelsChanged()
 {
     processorFloat.reset();
@@ -163,6 +169,14 @@ void BiquadsAudioProcessor::numChannelsChanged()
 
 bool BiquadsAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
 {
+    if (layouts.getMainInputChannelSet() == juce::AudioChannelSet::disabled()
+        || layouts.getMainOutputChannelSet() == juce::AudioChannelSet::disabled())
+        return false;
+
+    if (layouts.getMainOutputChannelSet() != juce::AudioChannelSet::mono()
+        && layouts.getMainOutputChannelSet() != juce::AudioChannelSet::stereo())
+        return false;
+
     if (layouts.getMainOutputChannelSet() != layouts.getMainInputChannelSet())
         return false;
 
@@ -229,8 +243,10 @@ bool BiquadsAudioProcessor::hasEditor() const
 
 juce::AudioProcessorEditor* BiquadsAudioProcessor::createEditor()
 {
-    //return new BiquadsAudioProcessorEditor (*this);
-    return new juce::GenericAudioProcessorEditor(*this);
+    if (panelPtr->get() == true)
+        return new BiquadsAudioProcessorEditor(*this, apvts);
+    else
+        return new juce::GenericAudioProcessorEditor(*this);
 }
 
 //==============================================================================
