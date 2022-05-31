@@ -17,10 +17,13 @@
 class BiquadsAudioProcessorEditor  : public juce::AudioProcessorEditor
 {
 public:
-    BiquadsAudioProcessorEditor (BiquadsAudioProcessor&);
+    using APVTS = juce::AudioProcessorValueTreeState;
+
+    //==========================================================================
+    BiquadsAudioProcessorEditor (BiquadsAudioProcessor& p, APVTS& apvts);
     ~BiquadsAudioProcessorEditor() override;
 
-    //==============================================================================
+    //==========================================================================
     void paint (juce::Graphics&) override;
     void resized() override;
 
@@ -28,6 +31,16 @@ private:
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
     BiquadsAudioProcessor& audioProcessor;
+    APVTS& state;
+
+    juce::Slider freqSlider;
+    juce::Slider resSlider;
+    juce::Slider gainSlider;
+
+    std::unique_ptr<APVTS::SliderAttachment> freqAttach;
+    std::unique_ptr<APVTS::SliderAttachment> resAttach;
+    std::unique_ptr<APVTS::SliderAttachment> gainAttach;
+
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BiquadsAudioProcessorEditor)
 };
