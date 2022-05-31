@@ -2,8 +2,8 @@
 
 <JUCERPROJECT id="jER3fq" name="Biquads" projectType="audioplug" useAppConfig="1"
               addUsingNamespaceToJuceHeader="1" displaySplashScreen="1" jucerFormatVersion="1"
-              pluginFormats="buildVST3" companyName="StoneyDSP" cppLanguageStandard="latest"
-              version="1.0.11b">
+              companyName="StoneyDSP" cppLanguageStandard="latest" version="1.0.12b"
+              pluginAUMainType="'aufx'" pluginVST3Category="Fx" pluginFormats="buildVST3">
   <MAINGROUP id="butqEA" name="Biquads">
     <GROUP id="{B7BEB523-13AE-DC81-1072-78BF4CC3A396}" name="Source">
       <GROUP id="{9CCA4E58-A6DF-778D-0E47-615CE5201735}" name="Modules">
