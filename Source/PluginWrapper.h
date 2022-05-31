@@ -22,9 +22,10 @@ template <typename SampleType>
 class ProcessWrapper
 {
 public:
+    using APVTS = juce::AudioProcessorValueTreeState;
     //==========================================================================
     /** Constructor. */
-    ProcessWrapper(BiquadsAudioProcessor& p, juce::AudioProcessorValueTreeState& apvts);
+    ProcessWrapper(BiquadsAudioProcessor& p, APVTS& apvts);
 
     //==========================================================================
     /** Initialises the processor. */
