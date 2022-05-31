@@ -3,9 +3,8 @@ Current: v1.0.9b
 ![biquad-1-0-9b](https://github.com/StoneyDSP/Biquads/blob/be3e1121a5b12c96f6c9da5786191f466f4be13e/Res/biquad-1-0-9b.png)
 
 # Biquads
-Multi-mode Biquad filter for audio analysis purposes using variable BiLinear transforms, processing precision, and oversampling to achieve high-quality results (under construction)
+Multi-mode Biquad filter for audio analysis purposes using variable BiLinear transforms, processing precision, and oversampling to achieve high-quality results
 
-+ Under construction (almost finished - please see "issues")!
 + Implementing various 6dB- and 12dB- filter types (such as low pass, high pass, band pass, shelves, plus many more) using variable BiLinear transforms, switchable processing precision, and oversampling to achieve high-quality results (much more to come)!
 + This filter is subject to amplitude and phase warping of the frequency spectrum approaching the Nyquist frequency when oversampling is not used.
 + There is parameter smoothing on the Frequency, Resonance, and Gain controls - however, BE AWARE that modulating parameters in real-time WILL create loud clicks and pops while passing audio under certain settings, such as Direct Form I (read on for more).
