@@ -822,6 +822,10 @@ Coffee! That's how I get things done!! If you'd like to see me get more things d
 
 # Credits
 
+^ Credit: Smith, J.O. Introduction to Digital Filters with Audio Applications,
+http://ccrma.stanford.edu/~jos/filters/, online book, 2007 edition,
+accessed 02/06/2022.
+
 ^ Credit: Native Instruments for the Direct Form I code (taken from Reaktor 5's Core "Static Filter" library - go figure!) as well as the Core library unit delay, audio thread, and math modulation macros used here (I programmed the three other forms myself; both in Core and in C++).
 
 ^^ Reference: "Transformations" and "Calculus" images taken from: https://en.wikipedia.org/wiki/Digital_biquad_filter
