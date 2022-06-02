@@ -150,10 +150,13 @@ SampleType Biquads<SampleType>::processSample(int channel, SampleType inputValue
 
     if (transformType == TransformationType::directFormI)
         inputValue = directFormI(channel, inputValue);
+
     else if (transformType == TransformationType::directFormII)
         inputValue = directFormII(channel, inputValue);
+
     else if (transformType == TransformationType::directFormItransposed)
         inputValue = directFormITransposed(channel, inputValue);
+    
     else
         inputValue = directFormIITransposed(channel, inputValue);
 
@@ -170,10 +173,12 @@ SampleType Biquads<SampleType>::directFormI(int channel, SampleType inputValue)
 
     SampleType Xn = inputValue;
 
-    SampleType Yn = ((Xn * b0_) + ((Xn1)*b1_) + (Xn2 * b2_) + (Yn1 * a1_) + (Yn2 * a2_)); 
-    Xn2 = Xn1, Xn1 = Xn, Yn2 = Yn1, Yn1 = Yn;
+    SampleType Yn = ((Xn * b0) + (Xn1 * b1) + (Xn2 * b2) + (Yn1 * a1) + (Yn2 * a2)); 
+    
+    Xn2 = Xn1, Yn2 = Yn1;
+    Xn1 = Xn, Yn1 = Yn;
 
-    return Yn;
+    return Yn; 
 }
 
 template <typename SampleType>
@@ -184,10 +189,11 @@ SampleType Biquads<SampleType>::directFormII(int channel, SampleType inputValue)
 
     SampleType Xn = inputValue;
 
-    SampleType Wn = (Xn + ((Wn1 * a1_) + (Wn2 * a2_)));
-    SampleType Yn = ((Wn * b0_) + (Wn1 * b1_) + (Wn2 * b2_));
+    SampleType Wn = (Xn + ((Wn1 * a1) + (Wn2 * a2)));
+    SampleType Yn = ((Wn * b0) + (Wn1 * b1) + (Wn2 * b2));
 
-    Wn2 = Wn1, Wn1 = Wn;
+    Wn2 = Wn1;
+    Wn1 = Wn;
 
     return Yn;
 }
@@ -203,11 +209,10 @@ SampleType Biquads<SampleType>::directFormITransposed(int channel, SampleType in
     SampleType Xn = inputValue;
 
     SampleType Wn = (Xn + Wn2);
-    SampleType Yn = ((Wn * b0_) + Xn2);
+    SampleType Yn = ((Wn * b0) + Xn2);
 
-    Xn2 = ((Wn * b1_) + Xn1), Xn1 = (Wn * b2_);
-
-    Wn2 = ((Wn * a1_) + Wn1), Wn1 = (Wn * a2_);
+    Xn2 = ((Wn * b1) + Xn1), Wn2 = ((Wn * a1) + Wn1);
+    Xn1 = (Wn * b2), Wn1 = (Wn * a2);
 
     return Yn;
 }
@@ -220,10 +225,10 @@ SampleType Biquads<SampleType>::directFormIITransposed(int channel, SampleType i
 
     SampleType Xn = inputValue;
 
-    SampleType Yn = ((Xn * b0_) + (Xn2));
+    SampleType Yn = ((Xn * b0) + (Xn2));
 
-    Xn2 = ((Xn * b1_) + (Xn1) + (Yn * a1_));
-    Xn1 = ((Xn * b2_) + (Yn * a2_));
+    Xn2 = ((Xn * b1) + (Xn1) + (Yn * a1));
+    Xn1 = ((Xn * b2) + (Yn * a2));
 
     return Yn;
 }
@@ -242,213 +247,213 @@ void Biquads<SampleType>::coefficients()
 
     auto sqrtA = (std::sqrt(a) * two) * alpha;
 
-    SampleType b0 = one;
-    SampleType b1 = zero;
-    SampleType b2 = zero;
-    SampleType a0 = one;
-    SampleType a1 = zero;
-    SampleType a2 = zero;
+    SampleType b_0 = one;
+    SampleType b_1 = zero;
+    SampleType b_2 = zero;
+    SampleType a_0 = one;
+    SampleType a_1 = zero;
+    SampleType a_2 = zero;
 
     switch (filtType)
     {
         case filterType::lowPass2:
 
-            b0 = (one - cos) / two;
-            b1 = one - cos;
-            b2 = (one - cos) / two;
-            a0 = one + alpha;
-            a1 = minusTwo * cos;
-            a2 = one - alpha;
+            b_0 = (one - cos) / two;
+            b_1 = one - cos;
+            b_2 = (one - cos) / two;
+            a_0 = one + alpha;
+            a_1 = minusTwo * cos;
+            a_2 = one - alpha;
 
             break;
 
 
         case filterType::lowPass1:
 
-            b0 = omega / (one + omega);
-            b1 = omega / (one + omega);
-            b2 = zero;
-            a0 = one;
-            a1 = minusOne * ((one - omega) / (one + omega));
-            a2 = zero;
+            b_0 = omega / (one + omega);
+            b_1 = omega / (one + omega);
+            b_2 = zero;
+            a_0 = one;
+            a_1 = minusOne * ((one - omega) / (one + omega));
+            a_2 = zero;
 
             break;
 
 
         case filterType::highPass2:
 
-            b0 = (one + cos) / two;
-            b1 = minusOne * (one + cos);
-            b2 = (one + cos) / two;
-            a0 = one + alpha;
-            a1 = minusTwo * cos;
-            a2 = one - alpha;
+            b_0 = (one + cos) / two;
+            b_1 = minusOne * (one + cos);
+            b_2 = (one + cos) / two;
+            a_0 = one + alpha;
+            a_1 = minusTwo * cos;
+            a_2 = one - alpha;
 
             break;
 
 
         case filterType::highPass1:
 
-            b0 = one / (one + omega);
-            b1 = (one / (one + omega)) * minusOne;
-            b2 = zero;
-            a0 = one;
-            a1 = ((one - omega) / (one + omega)) * minusOne;
-            a2 = zero;
+            b_0 = one / (one + omega);
+            b_1 = (one / (one + omega)) * minusOne;
+            b_2 = zero;
+            a_0 = one;
+            a_1 = ((one - omega) / (one + omega)) * minusOne;
+            a_2 = zero;
 
             break;
 
 
         case filterType::bandPass:
 
-            b0 = sin / two;
-            b1 = zero;
-            b2 = minusOne * (sin / two);
-            a0 = one + alpha;
-            a1 = minusTwo * cos;
-            a2 = one - alpha;
+            b_0 = sin / two;
+            b_1 = zero;
+            b_2 = minusOne * (sin / two);
+            a_0 = one + alpha;
+            a_1 = minusTwo * cos;
+            a_2 = one - alpha;
 
             break;
 
 
         case filterType::bandPassQ:
 
-            b0 = alpha;
-            b1 = zero;
-            b2 = minusOne * alpha;
-            a0 = one + alpha;
-            a1 = minusTwo * cos;
-            a2 = one - alpha;
+            b_0 = alpha;
+            b_1 = zero;
+            b_2 = minusOne * alpha;
+            a_0 = one + alpha;
+            a_1 = minusTwo * cos;
+            a_2 = one - alpha;
 
             break;
 
 
         case filterType::lowShelf2:
 
-            b0 = (((a + one) - ((a - one) * cos)) + sqrtA) * a;
-            b1 = (((a - one) - ((a + one) * cos)) * two) * a;
-            b2 = (((a + one) - ((a - one) * cos)) - sqrtA) * a;
-            a0 = ((a + one) + ((a - one) * cos)) + sqrtA;
-            a1 = ((a - one) + ((a + one) * cos)) * minusTwo;
-            a2 = ((a + one) + ((a - one) * cos)) - sqrtA;
+            b_0 = (((a + one) - ((a - one) * cos)) + sqrtA) * a;
+            b_1 = (((a - one) - ((a + one) * cos)) * two) * a;
+            b_2 = (((a + one) - ((a - one) * cos)) - sqrtA) * a;
+            a_0 = ((a + one) + ((a - one) * cos)) + sqrtA;
+            a_1 = ((a - one) + ((a + one) * cos)) * minusTwo;
+            a_2 = ((a + one) + ((a - one) * cos)) - sqrtA;
 
             break;
 
 
         case filterType::lowShelf1:
 
-            b0 = one + ((omega / (one + omega)) * (minusOne + (a * a)));
-            b1 = (((omega / (one + omega)) * (minusOne + (a * a))) - ((one - omega) / (one + omega)));
-            b2 = zero;
-            a0 = one;
-            a1 = minusOne * ((one - omega) / (one + omega));
-            a2 = zero;
+            b_0 = one + ((omega / (one + omega)) * (minusOne + (a * a)));
+            b_1 = (((omega / (one + omega)) * (minusOne + (a * a))) - ((one - omega) / (one + omega)));
+            b_2 = zero;
+            a_0 = one;
+            a_1 = minusOne * ((one - omega) / (one + omega));
+            a_2 = zero;
 
             break;
 
 
         case filterType::lowShelf1C:
 
-            b0 = one + ((omega / a) / (one + (omega / a)) * (minusOne + (a * a)));
-            b1 = ((((omega / a) / (one + (omega / a))) * (minusOne + (a * a))) - ((one - (omega / a)) / (one + (omega / a))));
-            b2 = zero;
-            a0 = one;
-            a1 = minusOne * ((one - (omega / a)) / (one + (omega / a)));
-            a2 = zero;
+            b_0 = one + ((omega / a) / (one + (omega / a)) * (minusOne + (a * a)));
+            b_1 = ((((omega / a) / (one + (omega / a))) * (minusOne + (a * a))) - ((one - (omega / a)) / (one + (omega / a))));
+            b_2 = zero;
+            a_0 = one;
+            a_1 = minusOne * ((one - (omega / a)) / (one + (omega / a)));
+            a_2 = zero;
 
             break;
 
 
         case filterType::highShelf2:
 
-            b0 = (((a + one) + ((a - one) * cos)) + sqrtA) * a;
-            b1 = (((a - one) + ((a + one) * cos)) * minusTwo) * a;
-            b2 = (((a + one) + ((a - one) * cos)) - sqrtA) * a;
-            a0 = ((a + one) - ((a - one) * cos)) + sqrtA;
-            a1 = ((a - one) - ((a + one) * cos)) * two;
-            a2 = ((a + one) - ((a - one) * cos)) - sqrtA;
+            b_0 = (((a + one) + ((a - one) * cos)) + sqrtA) * a;
+            b_1 = (((a - one) + ((a + one) * cos)) * minusTwo) * a;
+            b_2 = (((a + one) + ((a - one) * cos)) - sqrtA) * a;
+            a_0 = ((a + one) - ((a - one) * cos)) + sqrtA;
+            a_1 = ((a - one) - ((a + one) * cos)) * two;
+            a_2 = ((a + one) - ((a - one) * cos)) - sqrtA;
 
             break;
 
 
         case filterType::highShelf1:
 
-            b0 = one + ((minusOne + (a * a)) / (one + omega));
-            b1 = minusOne * (((one - omega) / (one + omega)) + ((minusOne + (a * a)) / (one + omega)));
-            b2 = zero;
-            a0 = one;
-            a1 = minusOne * ((one - omega) / (one + omega));
-            a2 = zero;
+            b_0 = one + ((minusOne + (a * a)) / (one + omega));
+            b_1 = minusOne * (((one - omega) / (one + omega)) + ((minusOne + (a * a)) / (one + omega)));
+            b_2 = zero;
+            a_0 = one;
+            a_1 = minusOne * ((one - omega) / (one + omega));
+            a_2 = zero;
 
             break;
 
 
         case filterType::highShelf1C:
 
-            b0 = one + ((minusOne + (a * a)) / (one + (omega * a)));
-            b1 = minusOne * (((one - (omega * a)) / (one + (omega * a))) + ((minusOne + (a * a)) / (one + (omega * a))));
-            b2 = zero;
-            a0 = one;
-            a1 = minusOne * ((one - (omega * a)) / (one + (omega * a)));
-            a2 = zero;
+            b_0 = one + ((minusOne + (a * a)) / (one + (omega * a)));
+            b_1 = minusOne * (((one - (omega * a)) / (one + (omega * a))) + ((minusOne + (a * a)) / (one + (omega * a))));
+            b_2 = zero;
+            a_0 = one;
+            a_1 = minusOne * ((one - (omega * a)) / (one + (omega * a)));
+            a_2 = zero;
 
             break;
         
 
         case filterType::peak:
 
-            b0 = one + (alpha * a);
-            b1 = minusTwo * cos;
-            b2 = one - (alpha * a);
-            a0 = one + (alpha / a);
-            a1 = minusTwo * cos;
-            a2 = one - (alpha / a);
+            b_0 = one + (alpha * a);
+            b_1 = minusTwo * cos;
+            b_2 = one - (alpha * a);
+            a_0 = one + (alpha / a);
+            a_1 = minusTwo * cos;
+            a_2 = one - (alpha / a);
 
             break;
 
 
         case filterType::notch:
 
-            b0 = one;
-            b1 = minusTwo * cos;
-            b2 = one;
-            a0 = one + alpha;
-            a1 = minusTwo * cos;
-            a2 = one - alpha;
+            b_0 = one;
+            b_1 = minusTwo * cos;
+            b_2 = one;
+            a_0 = one + alpha;
+            a_1 = minusTwo * cos;
+            a_2 = one - alpha;
 
             break;
 
 
         case filterType::allPass:
 
-            b0 = one - alpha;
-            b1 = minusTwo * cos;
-            b2 = one + alpha;
-            a0 = one + alpha;
-            a1 = minusTwo * cos;
-            a2 = one - alpha;
+            b_0 = one - alpha;
+            b_1 = minusTwo * cos;
+            b_2 = one + alpha;
+            a_0 = one + alpha;
+            a_1 = minusTwo * cos;
+            a_2 = one - alpha;
 
             break;
 
         
         default:
 
-            b0 = one;
-            b1 = zero;
-            b2 = zero;
-            a0 = one;
-            a1 = zero;
-            a2 = zero;
+            b_0 = one;
+            b_1 = zero;
+            b_2 = zero;
+            a_0 = one;
+            a_1 = zero;
+            a_2 = zero;
 
             break;
     }
 
-    a0_ = static_cast <SampleType>(one / a0);
-    a1_ = static_cast <SampleType>((a1 * a0_) * minusOne);
-    a2_ = static_cast <SampleType>((a2 * a0_) * minusOne);
-    b0_ = static_cast <SampleType>(b0 * a0_);
-    b1_ = static_cast <SampleType>(b1 * a0_);
-    b2_ = static_cast <SampleType>(b2 * a0_);
+    a0 = static_cast <SampleType>(one / a_0);
+    a1 = static_cast <SampleType>((a_1 * a0) * minusOne);
+    a2 = static_cast <SampleType>((a_2 * a0) * minusOne);
+    b0 = static_cast <SampleType>(b_0 * a0);
+    b1 = static_cast <SampleType>(b_1 * a0);
+    b2 = static_cast <SampleType>(b_2 * a0);
 }
 
 template <typename SampleType>

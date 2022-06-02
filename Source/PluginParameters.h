@@ -21,10 +21,10 @@ class Parameters
 {
 public:
     using APVTS = juce::AudioProcessorValueTreeState;
-    using Params = std::vector<std::unique_ptr<juce::RangedAudioParameter>>;
+    using Params = juce::AudioProcessorValueTreeState::ParameterLayout;
     //==========================================================================
     /** Constructor. */
-    Parameters(BiquadsAudioProcessor& p, APVTS& apvts);
+    Parameters(BiquadsAudioProcessor& p/*, APVTS& apvts*/);
 
     //==========================================================================
     /** Create Parameter Layout. */
@@ -35,10 +35,11 @@ private:
     // This reference is provided as a quick way for the wrapper to
     // access the processor object that created it.
     BiquadsAudioProcessor& audioProcessor;
+    APVTS& apvts;
 
     //==========================================================================
     /** Parameter pointers. */
-    juce::AudioParameterBool*               ioPtr                   { nullptr };
+    //juce::AudioParameterBool*               ioPtr                   { nullptr };
     juce::AudioParameterFloat*              frequencyPtr            { nullptr };
     juce::AudioParameterFloat*              resonancePtr            { nullptr };
     juce::AudioParameterFloat*              gainPtr                 { nullptr };

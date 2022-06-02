@@ -153,12 +153,12 @@ private:
     SampleType directFormIITransposed(int channel, SampleType inputValue);
 
     //==============================================================================
-    SampleType b0() { return static_cast<SampleType>(b0_); }
-    SampleType b1() { return static_cast<SampleType>(b1_); }
-    SampleType b2() { return static_cast<SampleType>(b2_); }
-    SampleType a0() { return static_cast<SampleType>(a0_); }
-    SampleType a1() { return static_cast<SampleType>(a1_); }
-    SampleType a2() { return static_cast<SampleType>(a2_); }
+    SampleType getb0() { return static_cast<SampleType>(b0); }
+    SampleType getb1() { return static_cast<SampleType>(b1); }
+    SampleType getb2() { return static_cast<SampleType>(b2); }
+    SampleType geta0() { return static_cast<SampleType>(a0); }
+    SampleType geta1() { return static_cast<SampleType>(a1); }
+    SampleType geta2() { return static_cast<SampleType>(a2); }
 
     //==============================================================================
     /** Unit-delay objects. */
@@ -171,12 +171,12 @@ private:
 
     //==============================================================================
     /** Initialise the coefficient gains. */
-    SampleType b0_ = 1.0;
-    SampleType b1_ = 0.0;
-    SampleType b2_ = 0.0;
-    SampleType a0_ = 1.0;
-    SampleType a1_ = 0.0;
-    SampleType a2_ = 0.0;
+    SampleType b0 = 1.0;
+    SampleType b1 = 0.0;
+    SampleType b2 = 0.0;
+    SampleType a0 = 1.0;
+    SampleType a1 = 0.0;
+    SampleType a2 = 0.0;
 
     //==============================================================================
     /** Parameter Smoothers. */

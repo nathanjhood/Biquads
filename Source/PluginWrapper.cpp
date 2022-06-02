@@ -12,7 +12,7 @@
 #include "PluginProcessor.h"
 
 template <typename SampleType>
-ProcessWrapper<SampleType>::ProcessWrapper(BiquadsAudioProcessor& p, APVTS& apvts) : audioProcessor(p)
+ProcessWrapper<SampleType>::ProcessWrapper(BiquadsAudioProcessor& p/*, APVTS& apvts*/) : audioProcessor(p), apvts(p.getAPVTS())
 {
     ioPtr = dynamic_cast                <juce::AudioParameterBool*>         (apvts.getParameter("ioID"));
     jassert(ioPtr != nullptr);
