@@ -25,7 +25,7 @@ public:
     using APVTS = juce::AudioProcessorValueTreeState;
     //==========================================================================
     /** Constructor. */
-    ProcessWrapper(BiquadsAudioProcessor& p, APVTS& apvts);
+    ProcessWrapper(BiquadsAudioProcessor& p/*, APVTS& apvts*/);
 
     //==========================================================================
     /** Initialises the processor. */
@@ -46,6 +46,7 @@ private:
     // This reference is provided as a quick way for the wrapper to
     // access the processor object that created it.
     BiquadsAudioProcessor& audioProcessor;
+    APVTS& apvts;
 
     //==========================================================================
     /** Sets the oversampling factor. */

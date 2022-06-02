@@ -8,6 +8,7 @@
 
 #pragma once
 
+
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "PluginParameters.h"
 #include "PluginWrapper.h"
@@ -79,15 +80,14 @@ protected:
 private:
     //==========================================================================
     /** Audio processor members. */
-    Parameters                      parameters          { *this, getAPVTS() };
-    ProcessWrapper<float>           processorFloat      { *this, getAPVTS() };
-    ProcessWrapper<double>          processorDouble     { *this, getAPVTS() };
+    Parameters                      parameters          { *this };
+    ProcessWrapper<float>           processorFloat      { *this };
+    ProcessWrapper<double>          processorDouble     { *this };
 
     //==========================================================================
     /** Parameter pointers. */
     juce::AudioParameterChoice*     doublesPtr          { nullptr };
     juce::AudioParameterBool*       bypassPtr           { nullptr };
-    juce::AudioParameterBool*       panelPtr            { nullptr };
 
     //==========================================================================
     /** Init variables. */

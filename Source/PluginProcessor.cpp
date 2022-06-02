@@ -21,9 +21,6 @@ BiquadsAudioProcessor::BiquadsAudioProcessor()
 
     bypassPtr = dynamic_cast       <juce::AudioParameterBool*>    (apvts.getParameter("bypassID"));
     jassert(bypassPtr != nullptr);
-
-    panelPtr = dynamic_cast       <juce::AudioParameterBool*>    (apvts.getParameter("panelID"));
-    jassert(panelPtr != nullptr);
 }
 
 BiquadsAudioProcessor::~BiquadsAudioProcessor()
@@ -37,17 +34,16 @@ juce::AudioProcessorValueTreeState& BiquadsAudioProcessor::getAPVTS()
 
 juce::AudioProcessorValueTreeState::ParameterLayout BiquadsAudioProcessor::getParameterLayout()
 {
-    std::vector<std::unique_ptr<juce::RangedAudioParameter>> params;
+    APVTS::ParameterLayout params;
 
     Parameters::setParameterLayout(params);
 
     auto pString = juce::StringArray({ "Floats", "Doubles" });
 
-    params.push_back(std::make_unique<juce::AudioParameterChoice>("precisionID", "Precision", pString, 0));
-    params.push_back(std::make_unique<juce::AudioParameterBool>("bypassID", "Bypass", false));
-    params.push_back(std::make_unique<juce::AudioParameterBool>("panelID", "GUI", true));
+    params.add(std::make_unique<juce::AudioParameterChoice>("precisionID", "Precision", pString, 0));
+    params.add(std::make_unique<juce::AudioParameterBool>("bypassID", "Bypass", false));
 
-    return { params.begin(), params.end() };
+    return params;
 }
 
 //==============================================================================
@@ -58,11 +54,7 @@ juce::AudioProcessorParameter* BiquadsAudioProcessor::getBypassParameter() const
 
 bool BiquadsAudioProcessor::supportsDoublePrecisionProcessing() const
 {
-    if (processingPrecision == doublePrecision)
-        return true;
-    else
-        return false;
-    //return true;
+    return false;
 }
 
 juce::AudioProcessor::ProcessingPrecision BiquadsAudioProcessor::getProcessingPrecision() const noexcept
@@ -185,42 +177,32 @@ bool BiquadsAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) 
 
 void BiquadsAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
-    isUsingDoublePrecision();
+    if (bypassPtr->get() == false)
+    {
+        juce::ScopedNoDenormals noDenormals;
 
-    if (doublesPtr->getIndex() == 0)
+        processorFloat.process(buffer, midiMessages);
+    }
 
-        if (bypassPtr->get() == false)
-
-        {
-            juce::ScopedNoDenormals noDenormals;
-
-            processorFloat.process(buffer, midiMessages);
-        }
-
-        else
-        {
-            processBlockBypassed(buffer, midiMessages);
-        }
+    else
+    {
+        processBlockBypassed(buffer, midiMessages);
+    }
 }
 
 void BiquadsAudioProcessor::processBlock(juce::AudioBuffer<double>& buffer, juce::MidiBuffer& midiMessages)
 {
-    isUsingDoublePrecision();
+    if (bypassPtr->get() == false)
+    {
+        juce::ScopedNoDenormals noDenormals;
 
-    if (doublesPtr->getIndex() == 1)
+        processorDouble.process(buffer, midiMessages);
+    }
 
-        if (bypassPtr->get() == false)
-
-        {
-            juce::ScopedNoDenormals noDenormals;
-
-            processorDouble.process(buffer, midiMessages);
-        }
-
-        else
-        {
-            processBlockBypassed(buffer, midiMessages);
-        }
+    else
+    {
+        processBlockBypassed(buffer, midiMessages);
+    }
 }
 
 void BiquadsAudioProcessor::processBlockBypassed(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
@@ -243,10 +225,7 @@ bool BiquadsAudioProcessor::hasEditor() const
 
 juce::AudioProcessorEditor* BiquadsAudioProcessor::createEditor()
 {
-    if (panelPtr->get() == true)
-        return new BiquadsAudioProcessorEditor(*this, apvts);
-    else
-        return new juce::GenericAudioProcessorEditor(*this);
+    return new BiquadsAudioProcessorEditor(*this);
 }
 
 //==============================================================================
