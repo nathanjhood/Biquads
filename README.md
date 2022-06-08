@@ -5,7 +5,7 @@ Multi-mode Biquad filter for audio analysis purposes using variable BiLinear tra
 
 (Shown below; a resonant 2-pole Low Shelf filter with high oversampling, performed on a harmonic-rich 20Hz band-limited Impulse Response in Reaper)
 
-![Biquads](https://github.com/StoneyDSP/Biquads/blob/acc33bd3273e250dda6735a9c2d97bda19f8055d/Res/Biquads%201%200%2012b.png)
+![Biquads](https://github.com/StoneyDSP/Biquads/blob/6cccdb2ec332ae277d62fae106b3278f07e22b39/Res/Biquad-AutoGUI.png)
 
 + Implementing various 6dB- and 12dB- filter types (such as low pass, high pass, band pass, shelves, plus many more) using variable BiLinear transforms, switchable processing precision, and oversampling to achieve high-quality results (much more to come)!
 + This filter is subject to amplitude and phase warping of the frequency spectrum approaching the Nyquist frequency when oversampling is not used.
