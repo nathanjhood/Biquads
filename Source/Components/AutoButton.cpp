@@ -33,7 +33,7 @@ AutoButtonLookAndFeel::AutoButtonLookAndFeel()
 
     ///* Text Button style */
     //setColour(TextButton::buttonColourId, juce::Colours::grey);
-    setColour(juce::TextButton::buttonOnColourId, juce::Colours::orangered);
+    setColour(juce::TextButton::buttonOnColourId, juce::Colours::hotpink);
     setColour(juce::TextButton::buttonNormal, juce::Colours::darkgrey);
     setColour(juce::TextButton::buttonOver, juce::Colours::lightslategrey);
     //setColour(TextButton::buttonDown, juce::Colours::green);
@@ -97,13 +97,13 @@ void AutoButton::paint (juce::Graphics& g)
     //==========================================================================
     /** Paint Knob border. */
 
-    g.setColour(juce::Colours::lightslategrey);
-    g.drawRect(getLocalBounds(), 5);
+    /*g.setColour(juce::Colours::lightslategrey);
+    g.drawRect(getLocalBounds(), 5);*/
 
     // Add project info text to background here
-    g.setColour(juce::Colours::antiquewhite);
+    /*g.setColour(juce::Colours::antiquewhite);
     g.setFont(15.0f);
-    g.drawFittedText("Buttons", getLocalBounds(), juce::Justification::centredTop, 1);
+    g.drawFittedText("Buttons", getLocalBounds(), juce::Justification::centredTop, 1);*/
 
     //==========================================================================
     /** Apply local Look and Feel. */

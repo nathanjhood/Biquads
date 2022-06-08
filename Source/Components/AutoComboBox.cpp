@@ -27,13 +27,13 @@ AutoComboBoxLookAndFeel::AutoComboBoxLookAndFeel()
     LookAndFeel_V4::getMidnightColourScheme();*/
 
     //* Button style */
-    setColour(juce::Button::buttonDown, juce::Colours::orangered);
+    setColour(juce::Button::buttonDown, juce::Colours::hotpink);
     setColour(juce::Button::buttonNormal, juce::Colours::darkgrey);
     setColour(juce::Button::buttonOver, juce::Colours::lightslategrey);
 
     ///* Text Button style */
     setColour(juce::TextButton::buttonColourId, juce::Colours::grey);
-    setColour(juce::TextButton::buttonOnColourId, juce::Colours::orangered);
+    setColour(juce::TextButton::buttonOnColourId, juce::Colours::hotpink);
     setColour(juce::TextButton::buttonNormal, juce::Colours::darkgrey);
     setColour(juce::TextButton::buttonOver, juce::Colours::lightgrey);
     //setColour(TextButton::buttonDown, juce::Colours::green);
@@ -124,13 +124,13 @@ void AutoComboBox::paint(juce::Graphics& g)
     for (auto* b : boxes)
         applyLookAndFeel(b->box);
 
-    g.setColour(juce::Colours::lightslategrey);
-    g.drawRect(getLocalBounds(), 5);
+    //g.setColour(juce::Colours::lightslategrey);
+    //g.drawRect(getLocalBounds(), 5);
 
-    // Add parameter info text to background here
-    g.setColour(juce::Colours::antiquewhite);
-    g.setFont(15.0f);
-    g.drawFittedText("Boxes", getLocalBounds(), juce::Justification::centredBottom, 1);
+    //// Add parameter info text to background here
+    //g.setColour(juce::Colours::antiquewhite);
+    //g.setFont(15.0f);
+    //g.drawFittedText("Boxes", getLocalBounds(), juce::Justification::centredBottom, 1);
 }
 
 //==============================================================================

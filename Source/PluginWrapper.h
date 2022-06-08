@@ -64,14 +64,15 @@ private:
 
     //==========================================================================
     /** Parameter pointers. */
-    juce::AudioParameterFloat*              frequencyPtr            { nullptr };
-    juce::AudioParameterFloat*              resonancePtr            { nullptr };
-    juce::AudioParameterFloat*              gainPtr                 { nullptr };
-    juce::AudioParameterChoice*             typePtr                 { nullptr };
-    juce::AudioParameterChoice*             osPtr                   { nullptr };
-    juce::AudioParameterFloat*              outputPtr               { nullptr };
-    juce::AudioParameterFloat*              mixPtr                  { nullptr };
-    juce::AudioParameterBool*               bypassPtr               { nullptr };
+    juce::AudioParameterFloat* frequencyPtr { nullptr };
+    juce::AudioParameterFloat* resonancePtr { nullptr };
+    juce::AudioParameterFloat* gainPtr { nullptr };
+    juce::AudioParameterChoice* typePtr { nullptr };
+    juce::AudioParameterChoice* transformPtr {nullptr};
+    juce::AudioParameterChoice* osPtr { nullptr };
+    juce::AudioParameterFloat* outputPtr { nullptr };
+    juce::AudioParameterFloat* mixPtr { nullptr };
+    juce::AudioParameterBool* bypassPtr { nullptr };
 
     //==========================================================================
     /** Init variables. */

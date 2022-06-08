@@ -24,7 +24,7 @@ AutoKnobLookAndFeel::AutoKnobLookAndFeel()
     setColour(juce::Slider::rotarySliderOutlineColourId, juce::Colours::darkgrey);
     setColour(juce::Slider::rotarySliderFillColourId, juce::Colours::lightslategrey);
     setColour(juce::Slider::backgroundColourId, juce::Colours::brown);
-    setColour(juce::Slider::thumbColourId, juce::Colours::orangered);
+    setColour(juce::Slider::thumbColourId, juce::Colours::hotpink);
     setColour(juce::Slider::trackColourId, juce::Colours::black);
     setColour(juce::Slider::textBoxTextColourId, juce::Colours::white);
     setColour(juce::Slider::textBoxBackgroundColourId, juce::Colours::grey);
@@ -91,13 +91,13 @@ void AutoKnob::paint(juce::Graphics& g)
     //==========================================================================
     /** Paint Knob border. */
 
-    g.setColour(juce::Colours::lightslategrey);
-    g.drawRect(getLocalBounds(), 5);
+    /*g.setColour(juce::Colours::lightslategrey);
+    g.drawRect(getLocalBounds(), 5);*/
 
-    // Add project info text to background here
-    g.setColour(juce::Colours::antiquewhite);
-    g.setFont(15.0f);
-    g.drawFittedText("Knobs", getLocalBounds(), juce::Justification::centredTop, 1);
+    //// Add project info text to background here
+    //g.setColour(juce::Colours::antiquewhite);
+    //g.setFont(15.0f);
+    //g.drawFittedText("Knobs", getLocalBounds(), juce::Justification::centredTop, 1);
 
     //==========================================================================
     /** Paint Slider name. */
