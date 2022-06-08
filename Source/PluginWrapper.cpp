@@ -31,6 +31,7 @@ ProcessWrapper<SampleType>::ProcessWrapper(BiquadsAudioProcessor& p, APVTS& apvt
     resonancePtr = dynamic_cast <juce::AudioParameterFloat*> (state.getParameter("resonanceID"));
     gainPtr = dynamic_cast <juce::AudioParameterFloat*> (state.getParameter("gainID"));
     typePtr = dynamic_cast <juce::AudioParameterChoice*>(state.getParameter("typeID"));
+    transformPtr = dynamic_cast <juce::AudioParameterChoice*>(state.getParameter("transformID"));
     osPtr = dynamic_cast <juce::AudioParameterChoice*> (state.getParameter("osID"));
     outputPtr = dynamic_cast <juce::AudioParameterFloat*> (state.getParameter("outputID"));
     mixPtr = dynamic_cast <juce::AudioParameterFloat*> (state.getParameter("mixID"));
@@ -40,6 +41,7 @@ ProcessWrapper<SampleType>::ProcessWrapper(BiquadsAudioProcessor& p, APVTS& apvt
     jassert(resonancePtr != nullptr);
     jassert(gainPtr != nullptr);
     jassert(typePtr != nullptr);
+    jassert(transformPtr != nullptr);
     jassert(osPtr != nullptr);
     jassert(outputPtr != nullptr);
     jassert(mixPtr != nullptr);
@@ -123,6 +125,7 @@ void ProcessWrapper<SampleType>::update()
     biquad.setResonance(resonancePtr->get());
     biquad.setGain(gainPtr->get());
     biquad.setFilterType(static_cast<FilterType>(typePtr->getIndex()));
+    biquad.setTransformType(static_cast<TransformationType>(transformPtr->getIndex()));
 
     output.setGainLinear(juce::Decibels::decibelsToGain(outputPtr->get()));
 }
