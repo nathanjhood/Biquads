@@ -14,7 +14,7 @@
 #define PLUGINWRAPPER_H_INCLUDED
 
 #include "../JuceLibraryCode/JuceHeader.h"
-#include "Biquads.h"
+#include "Modules/Biquads.h"
 
 class BiquadsAudioProcessor;
 
@@ -25,7 +25,7 @@ public:
     using APVTS = juce::AudioProcessorValueTreeState;
     //==========================================================================
     /** Constructor. */
-    ProcessWrapper(BiquadsAudioProcessor& p/*, APVTS& apvts*/);
+    ProcessWrapper(BiquadsAudioProcessor& p, APVTS& apvts);
 
     //==========================================================================
     /** Initialises the processor. */
@@ -35,22 +35,22 @@ public:
     void reset();
 
     //==========================================================================
+    void process(juce::AudioBuffer<SampleType>& buffer, juce::MidiBuffer& midiMessages);
+
+    //==========================================================================
     /** Updates the internal state variables of the processor. */
     void update();
 
     //==========================================================================
-    void process(juce::AudioBuffer<SampleType>& buffer, juce::MidiBuffer& midiMessages);
+    /** Sets the oversampling factor. */
+    void setOversampling();
 
 private:
     //==========================================================================
     // This reference is provided as a quick way for the wrapper to
     // access the processor object that created it.
     BiquadsAudioProcessor& audioProcessor;
-    APVTS& apvts;
-
-    //==========================================================================
-    /** Sets the oversampling factor. */
-    void setOversampling();
+    APVTS& state;
 
     //==========================================================================
     std::unique_ptr<juce::dsp::Oversampling<SampleType>> overSample[5];
@@ -64,15 +64,14 @@ private:
 
     //==========================================================================
     /** Parameter pointers. */
-    juce::AudioParameterBool*               ioPtr                   { nullptr };
     juce::AudioParameterFloat*              frequencyPtr            { nullptr };
     juce::AudioParameterFloat*              resonancePtr            { nullptr };
     juce::AudioParameterFloat*              gainPtr                 { nullptr };
     juce::AudioParameterChoice*             typePtr                 { nullptr };
-    juce::AudioParameterChoice*             transformPtr            { nullptr };
     juce::AudioParameterChoice*             osPtr                   { nullptr };
     juce::AudioParameterFloat*              outputPtr               { nullptr };
     juce::AudioParameterFloat*              mixPtr                  { nullptr };
+    juce::AudioParameterBool*               bypassPtr               { nullptr };
 
     //==========================================================================
     /** Init variables. */
