@@ -8,23 +8,26 @@
 
 #pragma once
 
-#include <JuceHeader.h>
+#include "../JuceLibraryCode/JuceHeader.h"
 #include "PluginProcessor.h"
-#include "Components/AutoComponent.h"
+#include "Components/AutoKnob.h"
+#include "Components/AutoButton.h"
+#include "Components/AutoComboBox.h"
 
 //==============================================================================
 /**
 */
-class BiquadsAudioProcessorEditor  : public juce::AudioProcessorEditor
+class BiquadsAudioProcessorEditor  : public juce::AudioProcessorEditor, public juce::Timer
 {
 public:
     using APVTS = juce::AudioProcessorValueTreeState;
 
     //==========================================================================
-    BiquadsAudioProcessorEditor (BiquadsAudioProcessor& p);
+    BiquadsAudioProcessorEditor (BiquadsAudioProcessor& p, APVTS& apvts, juce::UndoManager& um);
     ~BiquadsAudioProcessorEditor() override;
 
     //==========================================================================
+    void timerCallback() override;
     void paint (juce::Graphics&) override;
     void resized() override;
 
@@ -32,9 +35,12 @@ private:
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
     BiquadsAudioProcessor& audioProcessor;
-    APVTS& apvts;
+    APVTS& state;
+    juce::UndoManager& undoManager;
 
-    AutoComponent subComponents;
+    AutoKnob knobComponents;
+    AutoButton buttonComponents;
+    AutoComboBox comboBoxComponents;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BiquadsAudioProcessorEditor)
 };
