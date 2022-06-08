@@ -20,7 +20,7 @@ BiquadsAudioProcessorEditor::BiquadsAudioProcessorEditor (BiquadsAudioProcessor&
     buttonComponents(p, apvts),
     comboBoxComponents(p, apvts)
 {
-    setSize(500, 600);
+    setSize(400, 300);
     addAndMakeVisible(buttonComponents);
     addAndMakeVisible(knobComponents);
     addAndMakeVisible(comboBoxComponents);
@@ -45,11 +45,11 @@ void BiquadsAudioProcessorEditor::timerCallback()
 void BiquadsAudioProcessorEditor::paint (juce::Graphics& g)
 {
     // (Our component is opaque, so we must completely fill the background with a solid colour)
-    g.fillAll(juce::Colours::darkslategrey);
+    g.fillAll(juce::Colours::black);
 
     //// draw an outline around the component
-    g.setColour(juce::Colours::black);
-    g.drawRect(getLocalBounds(), 5);
+    //g.setColour(juce::Colours::black);
+    //g.drawRect(getLocalBounds(), 5);
 
     // Add project info text to background here
     g.setColour(juce::Colours::antiquewhite);
@@ -90,7 +90,7 @@ void BiquadsAudioProcessorEditor::resized()
     auto thirdW = getWidth() / 3;
     auto thirdH = getHeight() / 3;
 
-    knobComponents.setBounds(left, absCentreY, wholeW, thirdH);
-    buttonComponents.setBounds(halfW, 1 / bottom, halfW, height / 4);
-    comboBoxComponents.setBounds(halfW, bottom - (halfH / 2), halfW, height / 4);
+    knobComponents.setBounds(0, absCentreY, wholeW, thirdH);
+    buttonComponents.setBounds(0, absTopY, wholeW, thirdH);
+    comboBoxComponents.setBounds(0, absCentreY * 2, wholeW, thirdH);
 }
