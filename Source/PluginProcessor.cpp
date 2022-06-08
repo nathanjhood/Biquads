@@ -14,36 +14,15 @@ BiquadsAudioProcessor::BiquadsAudioProcessor()
      : AudioProcessor (BusesProperties()
                        .withInput  ("Input",  juce::AudioChannelSet::stereo(), true)
                        .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
-                       )
+                       ), 
+    apvts( *this, &undoManager, "Parameters", createParameterLayout() )
 {
-    doublesPtr = dynamic_cast       <juce::AudioParameterChoice*>    (apvts.getParameter("precisionID"));
-    jassert(doublesPtr != nullptr);
-
-    bypassPtr = dynamic_cast       <juce::AudioParameterBool*>    (apvts.getParameter("bypassID"));
+    bypassPtr = static_cast <juce::AudioParameterBool*> (apvts.getParameter("bypassID"));
     jassert(bypassPtr != nullptr);
 }
 
 BiquadsAudioProcessor::~BiquadsAudioProcessor()
 {
-}
-
-juce::AudioProcessorValueTreeState& BiquadsAudioProcessor::getAPVTS()
-{
-    return apvts;
-}
-
-juce::AudioProcessorValueTreeState::ParameterLayout BiquadsAudioProcessor::getParameterLayout()
-{
-    APVTS::ParameterLayout params;
-
-    Parameters::setParameterLayout(params);
-
-    auto pString = juce::StringArray({ "Floats", "Doubles" });
-
-    params.add(std::make_unique<juce::AudioParameterChoice>("precisionID", "Precision", pString, 0));
-    params.add(std::make_unique<juce::AudioParameterBool>("bypassID", "Bypass", false));
-
-    return params;
 }
 
 //==============================================================================
@@ -54,7 +33,7 @@ juce::AudioProcessorParameter* BiquadsAudioProcessor::getBypassParameter() const
 
 bool BiquadsAudioProcessor::supportsDoublePrecisionProcessing() const
 {
-    return false;
+    return true;
 }
 
 juce::AudioProcessor::ProcessingPrecision BiquadsAudioProcessor::getProcessingPrecision() const noexcept
@@ -105,7 +84,7 @@ double BiquadsAudioProcessor::getTailLengthSeconds() const
 
 int BiquadsAudioProcessor::getNumPrograms()
 {
-    return 1;   // NB: some hosts don't cope very well if you tell them there are 0 programs,
+    return 127;   // NB: some hosts don't cope very well if you tell them there are 0 programs,
                 // so this should be at least 1, even if you're not really implementing programs.
 }
 
@@ -136,7 +115,6 @@ void BiquadsAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBloc
 {
     getProcessingPrecision();
 
-
     processorFloat.prepare(sampleRate, samplesPerBlock);
     processorDouble.prepare(sampleRate, samplesPerBlock);
 }
@@ -147,28 +125,32 @@ void BiquadsAudioProcessor::releaseResources()
     processorDouble.reset();
 }
 
-void BiquadsAudioProcessor::numBusesChanged()
-{
-    processorFloat.reset();
-    processorDouble.reset();
-}
-
 void BiquadsAudioProcessor::numChannelsChanged()
 {
-    processorFloat.reset();
-    processorDouble.reset();
+    releaseResources();
+}
+
+void BiquadsAudioProcessor::numBusesChanged()
+{
+    releaseResources();
+}
+
+void BiquadsAudioProcessor::processorLayoutsChanged()
+{
+    releaseResources();
 }
 
 bool BiquadsAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
 {
-    if (layouts.getMainInputChannelSet() == juce::AudioChannelSet::disabled()
-        || layouts.getMainOutputChannelSet() == juce::AudioChannelSet::disabled())
-        return false;
-
+    // This is the place where you check if the layout is supported.
+    // In this template code we only support mono or stereo.
+    // Some plugin hosts, such as certain GarageBand versions, will only
+    // load plugins that support stereo bus layouts.
     if (layouts.getMainOutputChannelSet() != juce::AudioChannelSet::mono()
         && layouts.getMainOutputChannelSet() != juce::AudioChannelSet::stereo())
         return false;
 
+    // This checks if the input layout matches the output layout
     if (layouts.getMainOutputChannelSet() != layouts.getMainInputChannelSet())
         return false;
 
@@ -177,31 +159,31 @@ bool BiquadsAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) 
 
 void BiquadsAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
-    if (bypassPtr->get() == false)
+    if (bypassPtr->get() == true)
+    {
+        processBlockBypassed(buffer, midiMessages);
+    }
+
+    else
     {
         juce::ScopedNoDenormals noDenormals;
 
         processorFloat.process(buffer, midiMessages);
     }
-
-    else
-    {
-        processBlockBypassed(buffer, midiMessages);
-    }
 }
 
 void BiquadsAudioProcessor::processBlock(juce::AudioBuffer<double>& buffer, juce::MidiBuffer& midiMessages)
 {
-    if (bypassPtr->get() == false)
+    if (bypassPtr->get() == true)
     {
-        juce::ScopedNoDenormals noDenormals;
-
-        processorDouble.process(buffer, midiMessages);
+        processBlockBypassed(buffer, midiMessages);
     }
 
     else
     {
-        processBlockBypassed(buffer, midiMessages);
+        juce::ScopedNoDenormals noDenormals;
+
+        processorDouble.process(buffer, midiMessages);
     }
 }
 
@@ -225,7 +207,16 @@ bool BiquadsAudioProcessor::hasEditor() const
 
 juce::AudioProcessorEditor* BiquadsAudioProcessor::createEditor()
 {
-    return new BiquadsAudioProcessorEditor(*this);
+    return new BiquadsAudioProcessorEditor(*this, getAPVTS(), undoManager);
+}
+
+juce::AudioProcessorValueTreeState::ParameterLayout BiquadsAudioProcessor::createParameterLayout()
+{
+    APVTS::ParameterLayout params;
+
+    Parameters::setParameterLayout(params);
+
+    return params;
 }
 
 //==============================================================================

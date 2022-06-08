@@ -6,10 +6,18 @@
               pluginAUMainType="'aufx'" pluginVST3Category="Fx" pluginFormats="buildVST3">
   <MAINGROUP id="butqEA" name="Biquads">
     <GROUP id="{B7BEB523-13AE-DC81-1072-78BF4CC3A396}" name="Source">
+      <GROUP id="{19BEE9C3-82E8-891C-7BCF-623477F38C0E}" name="Components">
+        <FILE id="h0YIS9" name="AutoButton.cpp" compile="1" resource="0" file="Source/Components/AutoButton.cpp"/>
+        <FILE id="q7DRwK" name="AutoButton.h" compile="0" resource="0" file="Source/Components/AutoButton.h"/>
+        <FILE id="SxVhBi" name="AutoComboBox.cpp" compile="1" resource="0"
+              file="Source/Components/AutoComboBox.cpp"/>
+        <FILE id="K6WQwE" name="AutoComboBox.h" compile="0" resource="0" file="Source/Components/AutoComboBox.h"/>
+        <FILE id="joRkxb" name="AutoKnob.cpp" compile="1" resource="0" file="Source/Components/AutoKnob.cpp"/>
+        <FILE id="LppB0p" name="AutoKnob.h" compile="0" resource="0" file="Source/Components/AutoKnob.h"/>
+      </GROUP>
       <GROUP id="{9CCA4E58-A6DF-778D-0E47-615CE5201735}" name="Modules">
-        <FILE id="bE0Zsg" name="Biquads.cpp" compile="1" resource="0" file="Source/Biquads.cpp"/>
-        <FILE id="RJglFA" name="Biquads.h" compile="0" resource="0" file="Source/Biquads.h"/>
-        <FILE id="ihxrrI" name="MathFunctions.h" compile="0" resource="0" file="../MathFunctions/MathFunctions.h"/>
+        <FILE id="gGkrgt" name="Biquads.cpp" compile="1" resource="0" file="Source/Modules/Biquads.cpp"/>
+        <FILE id="oXBA1H" name="Biquads.h" compile="0" resource="0" file="Source/Modules/Biquads.h"/>
       </GROUP>
       <FILE id="VST2bi" name="PluginParameters.cpp" compile="1" resource="0"
             file="Source/PluginParameters.cpp"/>

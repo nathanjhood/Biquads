@@ -12,57 +12,38 @@
 #include "PluginProcessor.h"
 
 template <typename SampleType>
-ProcessWrapper<SampleType>::ProcessWrapper(BiquadsAudioProcessor& p/*, APVTS& apvts*/) : audioProcessor(p), apvts(p.getAPVTS())
+ProcessWrapper<SampleType>::ProcessWrapper(BiquadsAudioProcessor& p, APVTS& apvts) 
+    : 
+    audioProcessor(p), 
+    state(apvts)
 {
-    ioPtr = dynamic_cast                <juce::AudioParameterBool*>         (apvts.getParameter("ioID"));
-    jassert(ioPtr != nullptr);
-
-    frequencyPtr = dynamic_cast         <juce::AudioParameterFloat*>        (apvts.getParameter("frequencyID"));
-    jassert(frequencyPtr != nullptr);
-
-    resonancePtr = dynamic_cast         <juce::AudioParameterFloat*>        (apvts.getParameter("resonanceID"));
-    jassert(resonancePtr != nullptr);
-
-    gainPtr = dynamic_cast              <juce::AudioParameterFloat*>        (apvts.getParameter("gainID"));
-    jassert(gainPtr != nullptr);
-
-    typePtr = dynamic_cast              <juce::AudioParameterChoice*>       (apvts.getParameter("typeID"));
-    jassert(typePtr != nullptr);
-
-    transformPtr = dynamic_cast         <juce::AudioParameterChoice*>       (apvts.getParameter("transformID"));
-    jassert(transformPtr != nullptr);
-
-    osPtr = dynamic_cast                <juce::AudioParameterChoice*>       (apvts.getParameter("osID"));
-    jassert(osPtr != nullptr);
-
-    outputPtr = dynamic_cast            <juce::AudioParameterFloat*>        (apvts.getParameter("outputID"));
-    jassert(outputPtr != nullptr);
-
-    mixPtr = dynamic_cast              <juce::AudioParameterFloat*>        (apvts.getParameter("mixID"));
-    jassert(mixPtr != nullptr);
-
-    auto osChannels = audioProcessor.getTotalNumInputChannels();
+    spec.sampleRate = audioProcessor.getSampleRate();
+    spec.maximumBlockSize = audioProcessor.getBlockSize();
+    spec.numChannels = audioProcessor.getTotalNumInputChannels();
 
     auto osFilter = juce::dsp::Oversampling<SampleType>::filterHalfBandPolyphaseIIR;
 
     for (int i = 0; i < 5; ++i)
         overSample[i] = std::make_unique<juce::dsp::Oversampling<SampleType>>
-        (osChannels, i, osFilter, true, false);
-}
+        (spec.numChannels, i, osFilter, true, false);
 
-template <typename SampleType>
-void ProcessWrapper<SampleType>::setOversampling()
-{
-    curOS = (int)osPtr->getIndex();
-    if (curOS != prevOS)
-    {
-        overSamplingFactor = 1 << curOS;
-        prevOS = curOS;
-        mixer.reset();
-        biquad.reset(static_cast<SampleType>(0.0));
-        biquad.sampleRate = spec.sampleRate * overSamplingFactor;
-        output.reset();
-    }
+    frequencyPtr = dynamic_cast <juce::AudioParameterFloat*> (state.getParameter("frequencyID"));
+    resonancePtr = dynamic_cast <juce::AudioParameterFloat*> (state.getParameter("resonanceID"));
+    gainPtr = dynamic_cast <juce::AudioParameterFloat*> (state.getParameter("gainID"));
+    typePtr = dynamic_cast <juce::AudioParameterChoice*>(state.getParameter("typeID"));
+    osPtr = dynamic_cast <juce::AudioParameterChoice*> (state.getParameter("osID"));
+    outputPtr = dynamic_cast <juce::AudioParameterFloat*> (state.getParameter("outputID"));
+    mixPtr = dynamic_cast <juce::AudioParameterFloat*> (state.getParameter("mixID"));
+    bypassPtr = dynamic_cast <juce::AudioParameterBool*> (state.getParameter("bypassID"));
+
+    jassert(frequencyPtr != nullptr);
+    jassert(resonancePtr != nullptr);
+    jassert(gainPtr != nullptr);
+    jassert(typePtr != nullptr);
+    jassert(osPtr != nullptr);
+    jassert(outputPtr != nullptr);
+    jassert(mixPtr != nullptr);
+    jassert(bypassPtr != nullptr);
 }
 
 template <typename SampleType>
@@ -97,33 +78,14 @@ void ProcessWrapper<SampleType>::reset()
     output.reset();
 
     for (int i = 0; i < 5; ++i)
-        overSample[i]->numChannels = (size_t)spec.numChannels;
-
-    for (int i = 0; i < 5; ++i)
         overSample[i]->reset();
-}
-
-template <typename SampleType>
-void ProcessWrapper<SampleType>::update()
-{
-    setOversampling();
-
-    mixer.setWetMixProportion(mixPtr->get() * 0.01f);
-   
-    biquad.setFrequency(frequencyPtr->get());
-    biquad.setResonance(resonancePtr->get());
-    biquad.setGain(gainPtr->get());
-    biquad.setFilterType(static_cast<FilterType>(typePtr->getIndex()));
-    biquad.setTransformType(static_cast<TransformationType>(transformPtr->getIndex()));
-
-    output.setGainLinear(juce::Decibels::decibelsToGain(outputPtr->get()));
 }
 
 //==============================================================================
 template <typename SampleType>
 void ProcessWrapper<SampleType>::process(juce::AudioBuffer<SampleType>& buffer, juce::MidiBuffer& midiMessages)
 {
-    juce::ignoreUnused(midiMessages);
+    midiMessages.clear();
 
     update();
 
@@ -135,10 +97,7 @@ void ProcessWrapper<SampleType>::process(juce::AudioBuffer<SampleType>& buffer, 
 
     auto context = juce::dsp::ProcessContextReplacing(osBlock);
 
-    if (ioPtr->get() == true)
-        context.isBypassed = true;
-    else
-        context.isBypassed = false;
+    context.isBypassed = bypassPtr->get();
 
     biquad.process(context);
 
@@ -149,6 +108,39 @@ void ProcessWrapper<SampleType>::process(juce::AudioBuffer<SampleType>& buffer, 
     mixer.mixWetSamples(block);
 }
 
+template <typename SampleType>
+void ProcessWrapper<SampleType>::update()
+{
+    spec.sampleRate = audioProcessor.getSampleRate();
+    spec.maximumBlockSize = audioProcessor.getBlockSize();
+    spec.numChannels = audioProcessor.getTotalNumInputChannels();
+
+    setOversampling();
+
+    mixer.setWetMixProportion(mixPtr->get() * 0.01f);
+
+    biquad.setFrequency(frequencyPtr->get());
+    biquad.setResonance(resonancePtr->get());
+    biquad.setGain(gainPtr->get());
+    biquad.setFilterType(static_cast<FilterType>(typePtr->getIndex()));
+
+    output.setGainLinear(juce::Decibels::decibelsToGain(outputPtr->get()));
+}
+
+template <typename SampleType>
+void ProcessWrapper<SampleType>::setOversampling()
+{
+    curOS = (int)osPtr->getIndex();
+    if (curOS != prevOS)
+    {
+        overSamplingFactor = 1 << curOS;
+        prevOS = curOS;
+        mixer.reset();
+        biquad.reset(static_cast<SampleType>(0.0));
+        biquad.sampleRate = spec.sampleRate * overSamplingFactor;
+        output.reset();
+    }
+}
 //==============================================================================
 template class ProcessWrapper<float>;
 template class ProcessWrapper<double>;
