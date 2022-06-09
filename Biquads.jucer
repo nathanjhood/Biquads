@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <JUCERPROJECT id="jER3fq" name="Biquads" projectType="audioplug" useAppConfig="1"
-              addUsingNamespaceToJuceHeader="1" displaySplashScreen="1" jucerFormatVersion="1"
-              companyName="StoneyDSP" cppLanguageStandard="latest" version="1.0.12b"
-              pluginAUMainType="'aufx'" pluginVST3Category="Fx" pluginFormats="buildVST3">
+              addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
+              companyName="StoneyDSP" cppLanguageStandard="latest" version="1.0.13b"
+              pluginAUMainType="'aufx'" pluginVST3Category="Fx" pluginFormats="buildVST3"
+              companyEmail="nathan@stoneydsp.com">
   <MAINGROUP id="butqEA" name="Biquads">
     <GROUP id="{B7BEB523-13AE-DC81-1072-78BF4CC3A396}" name="Source">
       <GROUP id="{19BEE9C3-82E8-891C-7BCF-623477F38C0E}" name="Components">
@@ -12,6 +13,9 @@
         <FILE id="SxVhBi" name="AutoComboBox.cpp" compile="1" resource="0"
               file="Source/Components/AutoComboBox.cpp"/>
         <FILE id="K6WQwE" name="AutoComboBox.h" compile="0" resource="0" file="Source/Components/AutoComboBox.h"/>
+        <FILE id="NxF6lP" name="AutoComponent.cpp" compile="1" resource="0"
+              file="Source/Components/AutoComponent.cpp"/>
+        <FILE id="oNSzMK" name="AutoComponent.h" compile="0" resource="0" file="Source/Components/AutoComponent.h"/>
         <FILE id="joRkxb" name="AutoKnob.cpp" compile="1" resource="0" file="Source/Components/AutoKnob.cpp"/>
         <FILE id="LppB0p" name="AutoKnob.h" compile="0" resource="0" file="Source/Components/AutoKnob.h"/>
       </GROUP>

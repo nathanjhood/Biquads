@@ -23,12 +23,12 @@ AutoKnobLookAndFeel::AutoKnobLookAndFeel()
     ///* Knob style */
     setColour(juce::Slider::rotarySliderOutlineColourId, juce::Colours::darkgrey);
     setColour(juce::Slider::rotarySliderFillColourId, juce::Colours::lightslategrey);
-    setColour(juce::Slider::backgroundColourId, juce::Colours::brown);
+    //setColour(juce::Slider::backgroundColourId, juce::Colours::brown);
     setColour(juce::Slider::thumbColourId, juce::Colours::hotpink);
     setColour(juce::Slider::trackColourId, juce::Colours::black);
     setColour(juce::Slider::textBoxTextColourId, juce::Colours::white);
-    setColour(juce::Slider::textBoxBackgroundColourId, juce::Colours::grey);
-    setColour(juce::Slider::textBoxHighlightColourId, juce::Colours::blue);
+    setColour(juce::Slider::textBoxBackgroundColourId, juce::Colours::darkgrey);
+    setColour(juce::Slider::textBoxHighlightColourId, juce::Colours::hotpink);
     setColour(juce::Slider::textBoxOutlineColourId, juce::Colours::lightgrey);
 }
 
