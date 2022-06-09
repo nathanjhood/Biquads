@@ -32,7 +32,7 @@ BiquadsAudioProcessorEditor::BiquadsAudioProcessorEditor (BiquadsAudioProcessor&
     addAndMakeVisible(redoButton);
     undoButton.onClick = [this] { undoManager.undo(); };
     redoButton.onClick = [this] { undoManager.redo(); };
-    setResizable(true, false);
+    setResizable(true, true);
 
     startTimerHz(24);
 }
@@ -65,7 +65,7 @@ void BiquadsAudioProcessorEditor::paint (juce::Graphics& g)
     g.setFont(15.0f);
     g.drawFittedText(ProjectInfo::companyName, getLocalBounds(), juce::Justification::topLeft, 1);
     g.drawFittedText(ProjectInfo::projectName, getLocalBounds(), juce::Justification::topRight, 1);
-    g.drawFittedText(ProjectInfo::versionString, getLocalBounds(), juce::Justification::bottomRight, 1);
+    g.drawFittedText(ProjectInfo::versionString, getLocalBounds(), juce::Justification::bottomLeft, 1);
 }
 
 void BiquadsAudioProcessorEditor::resized()
