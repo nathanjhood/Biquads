@@ -10,9 +10,6 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "PluginProcessor.h"
-//#include "Components/AutoKnob.h"
-//#include "Components/AutoButton.h"
-//#include "Components/AutoComboBox.h"
 #include "Components/AutoComponent.h"
 
 //==============================================================================
@@ -39,11 +36,10 @@ private:
     APVTS& state;
     juce::UndoManager& undoManager;
 
-    /*AutoKnob knobComponents;
-    AutoButton buttonComponents;
-    AutoComboBox comboBoxComponents;*/
     AutoComponent subComponents;
-    juce::TextButton undoButton, redoButton;
+
+    juce::ArrowButton undoButton{ "Undo", 0.5f , juce::Colours::white };
+    juce::ArrowButton redoButton{ "Redo", 0.0f , juce::Colours::white };
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BiquadsAudioProcessorEditor)
 };
