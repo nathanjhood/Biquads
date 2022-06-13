@@ -26,7 +26,7 @@ public:
     ~BiquadsAudioProcessor() override;
 
     //==========================================================================
-    juce::AudioProcessorParameter* getBypassParameter() const;
+    juce::AudioProcessorParameter* getBypassParameter() const override;
     bool supportsDoublePrecisionProcessing() const override;
     ProcessingPrecision getProcessingPrecision() const noexcept;
     bool isUsingDoublePrecision() const noexcept;
@@ -68,7 +68,9 @@ public:
 
     //==========================================================================
     void getStateInformation (juce::MemoryBlock& destData) override;
+    void getCurrentProgramStateInformation(juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
+    void setCurrentProgramStateInformation(const void* data, int sizeInBytes) override;
 
     //==========================================================================
     /** Audio processor value tree. */

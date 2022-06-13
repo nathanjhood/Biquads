@@ -49,13 +49,13 @@ ProcessWrapper<SampleType>::ProcessWrapper(BiquadsAudioProcessor& p, APVTS& apvt
 }
 
 template <typename SampleType>
-void ProcessWrapper<SampleType>::prepare(double sampleRate, int samplesPerBlock)
+void ProcessWrapper<SampleType>::prepare()
 {
     overSamplingFactor = 1 << curOS;
     prevOS = curOS;
 
-    spec.sampleRate = sampleRate;
-    spec.maximumBlockSize = samplesPerBlock;
+    spec.sampleRate = audioProcessor.getSampleRate() * overSamplingFactor;
+    spec.maximumBlockSize = audioProcessor.getBlockSize();
     spec.numChannels = audioProcessor.getTotalNumInputChannels();
 
     for (int i = 0; i < 5; ++i)
@@ -76,6 +76,7 @@ template <typename SampleType>
 void ProcessWrapper<SampleType>::reset()
 {
     mixer.reset();
+    mixer.setWetLatency(getLatencySamples());
     biquad.reset(static_cast<SampleType>(0.0));
     output.reset();
 
@@ -113,7 +114,7 @@ void ProcessWrapper<SampleType>::process(juce::AudioBuffer<SampleType>& buffer, 
 template <typename SampleType>
 void ProcessWrapper<SampleType>::update()
 {
-    spec.sampleRate = audioProcessor.getSampleRate();
+    spec.sampleRate = audioProcessor.getSampleRate() * overSamplingFactor;
     spec.maximumBlockSize = audioProcessor.getBlockSize();
     spec.numChannels = audioProcessor.getTotalNumInputChannels();
 
@@ -139,10 +140,18 @@ void ProcessWrapper<SampleType>::setOversampling()
         overSamplingFactor = 1 << curOS;
         prevOS = curOS;
         mixer.reset();
+        mixer.setWetLatency(getLatencySamples());
         biquad.reset(static_cast<SampleType>(0.0));
-        biquad.sampleRate = spec.sampleRate * overSamplingFactor;
+        //biquad.sampleRate = spec.sampleRate * overSamplingFactor;
         output.reset();
     }
+}
+
+template <typename SampleType>
+SampleType ProcessWrapper<SampleType>::getLatencySamples() const noexcept
+{
+    // latency of oversampling
+    return overSample[curOS]->getLatencyInSamples();
 }
 //==============================================================================
 template class ProcessWrapper<float>;

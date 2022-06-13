@@ -16,23 +16,15 @@ BiquadsAudioProcessorEditor::BiquadsAudioProcessorEditor (BiquadsAudioProcessor&
     audioProcessor (p), 
     state(apvts),
     undoManager(um),
-    /*knobComponents(p, apvts),
-    buttonComponents(p, apvts),
-    comboBoxComponents(p, apvts),*/
-    subComponents(p, apvts),
-    undoButton("Undo"),
-    redoButton("Redo")
+    subComponents(p, apvts)
 {
     setSize(400, 300);
-    /*addAndMakeVisible(buttonComponents);
-    addAndMakeVisible(knobComponents);
-    addAndMakeVisible(comboBoxComponents);*/
     addAndMakeVisible(subComponents);
     addAndMakeVisible(undoButton);
     addAndMakeVisible(redoButton);
     undoButton.onClick = [this] { undoManager.undo(); };
     redoButton.onClick = [this] { undoManager.redo(); };
-    setResizable(true, false);
+    setResizable(true, true);
 
     startTimerHz(24);
 }
@@ -44,10 +36,6 @@ BiquadsAudioProcessorEditor::~BiquadsAudioProcessorEditor()
 ////==============================================================================
 void BiquadsAudioProcessorEditor::timerCallback()
 {
-    /*knobComponents.resized();
-    buttonComponents.resized();
-    comboBoxComponents.resized();*/
-    undoManager.beginNewTransaction();
 }
 
 //==============================================================================
@@ -65,11 +53,15 @@ void BiquadsAudioProcessorEditor::paint (juce::Graphics& g)
     g.setFont(15.0f);
     g.drawFittedText(ProjectInfo::companyName, getLocalBounds(), juce::Justification::topLeft, 1);
     g.drawFittedText(ProjectInfo::projectName, getLocalBounds(), juce::Justification::topRight, 1);
-    g.drawFittedText(ProjectInfo::versionString, getLocalBounds(), juce::Justification::bottomRight, 1);
+    g.drawFittedText(ProjectInfo::versionString, getLocalBounds(), juce::Justification::bottomLeft, 1);
 }
 
 void BiquadsAudioProcessorEditor::resized()
 {
-    subComponents.resized();
     subComponents.setBounds(0, 0, getWidth(), getHeight());
+    undoButton.setBounds((getWidth() / 2) - 10, getHeight() - 20, 20, 20);
+    redoButton.setBounds((getWidth() / 2) + 10, getHeight() - 20, 20, 20);
+    subComponents.resized();
+    undoButton.resized();
+    redoButton.resized();
 }

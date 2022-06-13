@@ -115,8 +115,8 @@ void BiquadsAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBloc
 {
     getProcessingPrecision();
 
-    processorFloat.prepare(sampleRate, samplesPerBlock);
-    processorDouble.prepare(sampleRate, samplesPerBlock);
+    processorFloat.prepare();
+    processorDouble.prepare();
 }
 
 void BiquadsAudioProcessor::releaseResources()
@@ -127,17 +127,26 @@ void BiquadsAudioProcessor::releaseResources()
 
 void BiquadsAudioProcessor::numChannelsChanged()
 {
-    releaseResources();
+    processorFloat.reset();
+    processorDouble.reset();
+    processorFloat.prepare();
+    processorDouble.prepare();
 }
 
 void BiquadsAudioProcessor::numBusesChanged()
 {
-    releaseResources();
+    processorFloat.reset();
+    processorDouble.reset();
+    processorFloat.prepare();
+    processorDouble.prepare();
 }
 
 void BiquadsAudioProcessor::processorLayoutsChanged()
 {
-    releaseResources();
+    processorFloat.reset();
+    processorDouble.reset();
+    processorFloat.prepare();
+    processorDouble.prepare();
 }
 
 bool BiquadsAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
@@ -227,7 +236,24 @@ void BiquadsAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
     copyXmlToBinary(*xml, destData);
 }
 
+void BiquadsAudioProcessor::getCurrentProgramStateInformation(juce::MemoryBlock& destData)
+{
+    auto state = apvts.copyState();
+    std::unique_ptr<juce::XmlElement> xml(state.createXml());
+    copyXmlToBinary(*xml, destData);
+}
+
+
 void BiquadsAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
+{
+    std::unique_ptr<juce::XmlElement> xmlState(getXmlFromBinary(data, sizeInBytes));
+
+    if (xmlState.get() != nullptr)
+        if (xmlState->hasTagName(apvts.state.getType()))
+            apvts.replaceState(juce::ValueTree::fromXml(*xmlState));
+}
+
+void BiquadsAudioProcessor::setCurrentProgramStateInformation(const void* data, int sizeInBytes)
 {
     std::unique_ptr<juce::XmlElement> xmlState(getXmlFromBinary(data, sizeInBytes));
 
