@@ -25,11 +25,11 @@ public:
     using APVTS = juce::AudioProcessorValueTreeState;
     //==========================================================================
     /** Constructor. */
-    ProcessWrapper(BiquadsAudioProcessor& p, APVTS& apvts);
+    ProcessWrapper(BiquadsAudioProcessor& p, APVTS& apvts, juce::dsp::ProcessSpec& spec);
 
     //==========================================================================
     /** Initialises the processor. */
-    void prepare();
+    void prepare(juce::dsp::ProcessSpec& spec);
 
     /** Resets the internal state variables of the processor. */
     void reset();
@@ -53,13 +53,13 @@ private:
     // access the processor object that created it.
     BiquadsAudioProcessor& audioProcessor;
     APVTS& state;
+    juce::dsp::ProcessSpec& setup;
 
     //==========================================================================
-    std::unique_ptr<juce::dsp::Oversampling<SampleType>> overSample[5];
+    std::unique_ptr<juce::dsp::Oversampling<SampleType>> oversampler[5];
 
     //==========================================================================
     /** Instantiate objects. */
-    juce::dsp::ProcessSpec spec;
     juce::dsp::DryWetMixer<SampleType> mixer;
     Biquads<SampleType> biquad;
     juce::dsp::Gain<SampleType> output;
@@ -78,7 +78,7 @@ private:
 
     //==========================================================================
     /** Init variables. */
-    int curOS = 0, prevOS = 0, overSamplingFactor = 1;
+    int curOS = 0, prevOS = 0, oversamplingFactor = 1;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ProcessWrapper)
 };
