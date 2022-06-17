@@ -20,22 +20,26 @@ class BiquadsAudioProcessor  : public juce::AudioProcessor
 {
 public:
     using APVTS = juce::AudioProcessorValueTreeState;
-    using precisionType = ProcessingPrecision;
     //==========================================================================
     BiquadsAudioProcessor();
     ~BiquadsAudioProcessor() override;
 
     //==========================================================================
     juce::AudioProcessorParameter* getBypassParameter() const override;
+    bool isBypassed() const noexcept;
+    void setBypassParameter(juce::AudioParameterBool* newBypass) noexcept;
+
+    //==========================================================================
     bool supportsDoublePrecisionProcessing() const override;
     ProcessingPrecision getProcessingPrecision() const noexcept;
     bool isUsingDoublePrecision() const noexcept;
     void setProcessingPrecision(ProcessingPrecision newPrecision) noexcept;
-    
+
     //==========================================================================
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
     void releaseResources() override;
 
+    //==========================================================================
     void numChannelsChanged() override;
     void numBusesChanged() override;
     void processorLayoutsChanged() override;
@@ -78,22 +82,29 @@ public:
     APVTS apvts;
     APVTS& getAPVTS() { return apvts; };
     static APVTS::ParameterLayout createParameterLayout();
+
+    //==========================================================================
+    /** Audio processor specs. */
+    juce::dsp::ProcessSpec spec;
+    juce::dsp::ProcessSpec& getSpec() { return spec; };
     
 private:
     //==========================================================================
     /** Audio processor members. */
-    Parameters parameters { *this, getAPVTS() };
-    ProcessWrapper<float> processorFloat { *this, getAPVTS() };
-    ProcessWrapper<double> processorDouble { *this, getAPVTS() };
+    Parameters parameters;
+    ProcessWrapper<float> processorFloat;
+    ProcessWrapper<double> processorDouble;
 
     //==========================================================================
     /** Parameter pointers. */
     juce::AudioParameterInt* precisionPtr { nullptr };
-    juce::AudioParameterBool* bypassPtr { nullptr };
+    juce::AudioParameterBool* bypassState { nullptr };
 
     //==========================================================================
     /** Init variables. */
-    precisionType processingPrecision = precisionType::singlePrecision;
+    double currentSampleRate = 0;
+    int blockSize = 0, latencySamples = 0;
+    ProcessingPrecision processingPrecision = singlePrecision;
 
     //==========================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BiquadsAudioProcessor)
