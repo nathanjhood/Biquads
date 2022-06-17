@@ -27,19 +27,33 @@ public:
 
     //==========================================================================
     juce::AudioProcessorParameter* getBypassParameter() const override;
+    bool isBypassed() const noexcept;
+    void setBypassParameter(juce::AudioParameterBool* newBypass) noexcept;
+
+    //==========================================================================
     bool supportsDoublePrecisionProcessing() const override;
     ProcessingPrecision getProcessingPrecision() const noexcept;
     bool isUsingDoublePrecision() const noexcept;
     void setProcessingPrecision(ProcessingPrecision newPrecision) noexcept;
     
     //==========================================================================
+    void setRateAndBufferSizeDetails(double newSampleRate, int newBlockSize) noexcept;
+    double getSampleRate() const noexcept { return currentSampleRate; }
+    int getBlockSize() const noexcept { return blockSize; }
+
+    //==========================================================================
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
     void releaseResources() override;
 
+    //==========================================================================
     void numChannelsChanged() override;
     void numBusesChanged() override;
     void processorLayoutsChanged() override;
     bool isBusesLayoutSupported (const BusesLayout& layouts) const override;
+
+    //==========================================================================
+    void setLatencySamples(int newLatency);
+    int getLatencySamples() const noexcept { return latencySamples; }
 
     //==========================================================================
     void processBlock(juce::AudioBuffer<float>&, juce::MidiBuffer&) override;

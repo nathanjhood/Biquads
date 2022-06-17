@@ -29,7 +29,23 @@ BiquadsAudioProcessor::~BiquadsAudioProcessor()
 //==============================================================================
 juce::AudioProcessorParameter* BiquadsAudioProcessor::getBypassParameter() const
 {
-    return bypassPtr;
+    return bypassState;
+}
+
+bool BiquadsAudioProcessor::isBypassed() const noexcept
+{
+    return bypassState->get() == true;
+}
+
+void BiquadsAudioProcessor::setBypassParameter(juce::AudioParameterBool* newBypass) noexcept
+{
+    if (bypassState != newBypass)
+    {
+        bypassState = newBypass;
+        releaseResources();
+        reset();
+    }
+
 }
 
 bool BiquadsAudioProcessor::supportsDoublePrecisionProcessing() const
@@ -49,12 +65,22 @@ bool BiquadsAudioProcessor::isUsingDoublePrecision() const noexcept
 
 void BiquadsAudioProcessor::setProcessingPrecision(ProcessingPrecision newPrecision) noexcept
 {
+    // If you hit this assertion then you're trying to use double precision
+    // processing on a processor which does not support it!
+    jassert(newPrecision != doublePrecision || supportsDoublePrecisionProcessing());
+
     if (processingPrecision != newPrecision)
     {
         processingPrecision = newPrecision;
         releaseResources();
         reset();
     }
+}
+
+void BiquadsAudioProcessor::setRateAndBufferSizeDetails(double newSampleRate, int newBlockSize) noexcept
+{
+    currentSampleRate = newSampleRate;
+    blockSize = newBlockSize;
 }
 
 //==============================================================================
@@ -116,8 +142,8 @@ void BiquadsAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBloc
 {
     getProcessingPrecision();
 
-    processorFloat.prepare();
-    processorDouble.prepare();
+    processorFloat.prepare(getSpec());
+    processorDouble.prepare(getSpec());
 }
 
 void BiquadsAudioProcessor::releaseResources()
@@ -130,24 +156,24 @@ void BiquadsAudioProcessor::numChannelsChanged()
 {
     processorFloat.reset();
     processorDouble.reset();
-    processorFloat.prepare();
-    processorDouble.prepare();
+    processorFloat.prepare(getSpec());
+    processorDouble.prepare(getSpec());
 }
 
 void BiquadsAudioProcessor::numBusesChanged()
 {
     processorFloat.reset();
     processorDouble.reset();
-    processorFloat.prepare();
-    processorDouble.prepare();
+    processorFloat.prepare(getSpec());
+    processorDouble.prepare(getSpec());
 }
 
 void BiquadsAudioProcessor::processorLayoutsChanged()
 {
     processorFloat.reset();
     processorDouble.reset();
-    processorFloat.prepare();
-    processorDouble.prepare();
+    processorFloat.prepare(getSpec());
+    processorDouble.prepare(getSpec());
 }
 
 bool BiquadsAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
@@ -167,9 +193,19 @@ bool BiquadsAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) 
     return true;
 }
 
+void BiquadsAudioProcessor::setLatencySamples(int newLatency)
+{
+    if (latencySamples != newLatency)
+    {
+        latencySamples = newLatency;
+        updateHostDisplay(juce::AudioProcessorListener::ChangeDetails().withLatencyChanged(true));
+    }
+}
+
+
 void BiquadsAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
-    if (bypassPtr->get() == true)
+    if (bypassState->get() == true)
     {
         processBlockBypassed(buffer, midiMessages);
     }
@@ -184,7 +220,7 @@ void BiquadsAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce:
 
 void BiquadsAudioProcessor::processBlock(juce::AudioBuffer<double>& buffer, juce::MidiBuffer& midiMessages)
 {
-    if (bypassPtr->get() == true)
+    if (bypassState->get() == true)
     {
         processBlockBypassed(buffer, midiMessages);
     }
