@@ -20,7 +20,6 @@ class BiquadsAudioProcessor  : public juce::AudioProcessor
 {
 public:
     using APVTS = juce::AudioProcessorValueTreeState;
-    using precisionType = ProcessingPrecision;
     //==========================================================================
     BiquadsAudioProcessor();
     ~BiquadsAudioProcessor() override;
@@ -35,11 +34,6 @@ public:
     ProcessingPrecision getProcessingPrecision() const noexcept;
     bool isUsingDoublePrecision() const noexcept;
     void setProcessingPrecision(ProcessingPrecision newPrecision) noexcept;
-    
-    //==========================================================================
-    void setRateAndBufferSizeDetails(double newSampleRate, int newBlockSize) noexcept;
-    double getSampleRate() const noexcept { return currentSampleRate; }
-    int getBlockSize() const noexcept { return blockSize; }
 
     //==========================================================================
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
@@ -50,10 +44,6 @@ public:
     void numBusesChanged() override;
     void processorLayoutsChanged() override;
     bool isBusesLayoutSupported (const BusesLayout& layouts) const override;
-
-    //==========================================================================
-    void setLatencySamples(int newLatency);
-    int getLatencySamples() const noexcept { return latencySamples; }
 
     //==========================================================================
     void processBlock(juce::AudioBuffer<float>&, juce::MidiBuffer&) override;
@@ -112,17 +102,9 @@ private:
 
     //==========================================================================
     /** Init variables. */
-    juce::Array<juce::AudioProcessorListener*> listeners;
-    juce::Component::SafePointer<juce::AudioProcessorEditor> activeEditor;
     double currentSampleRate = 0;
     int blockSize = 0, latencySamples = 0;
-    bool suspended = false;
-    std::atomic<bool> nonRealtime{ false };
-    //precisionType processingPrecision = precisionType::singlePrecision;
-    juce::CriticalSection callbackLock, listenerLock, activeEditorLock;
-
     ProcessingPrecision processingPrecision = singlePrecision;
-
 
     //==========================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BiquadsAudioProcessor)

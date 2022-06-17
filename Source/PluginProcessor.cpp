@@ -16,6 +16,7 @@ BiquadsAudioProcessor::BiquadsAudioProcessor()
                        .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
                        ), 
     apvts ( *this, &undoManager, "Parameters", createParameterLayout() ),
+    spec (),
     parameters ( *this, getAPVTS() ),
     processorFloat ( *this, getAPVTS(), getSpec() ),
     processorDouble ( *this, getAPVTS(), getSpec() )
@@ -50,7 +51,7 @@ void BiquadsAudioProcessor::setBypassParameter(juce::AudioParameterBool* newBypa
 
 bool BiquadsAudioProcessor::supportsDoublePrecisionProcessing() const
 {
-    return true;
+    return false;
 }
 
 juce::AudioProcessor::ProcessingPrecision BiquadsAudioProcessor::getProcessingPrecision() const noexcept
@@ -75,12 +76,6 @@ void BiquadsAudioProcessor::setProcessingPrecision(ProcessingPrecision newPrecis
         releaseResources();
         reset();
     }
-}
-
-void BiquadsAudioProcessor::setRateAndBufferSizeDetails(double newSampleRate, int newBlockSize) noexcept
-{
-    currentSampleRate = newSampleRate;
-    blockSize = newBlockSize;
 }
 
 //==============================================================================
@@ -111,7 +106,7 @@ double BiquadsAudioProcessor::getTailLengthSeconds() const
 
 int BiquadsAudioProcessor::getNumPrograms()
 {
-    return 127;   // NB: some hosts don't cope very well if you tell them there are 0 programs,
+    return 1;   // NB: some hosts don't cope very well if you tell them there are 0 programs,
                 // so this should be at least 1, even if you're not really implementing programs.
 }
 
@@ -142,8 +137,8 @@ void BiquadsAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBloc
 {
     getProcessingPrecision();
 
-    processorFloat.prepare(getSpec());
-    processorDouble.prepare(getSpec());
+    processorFloat.prepare( getSpec() );
+    processorDouble.prepare( getSpec() );
 }
 
 void BiquadsAudioProcessor::releaseResources()
@@ -192,16 +187,6 @@ bool BiquadsAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) 
 
     return true;
 }
-
-void BiquadsAudioProcessor::setLatencySamples(int newLatency)
-{
-    if (latencySamples != newLatency)
-    {
-        latencySamples = newLatency;
-        updateHostDisplay(juce::AudioProcessorListener::ChangeDetails().withLatencyChanged(true));
-    }
-}
-
 
 void BiquadsAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
