@@ -15,10 +15,11 @@ BiquadsAudioProcessor::BiquadsAudioProcessor()
                        .withInput  ("Input",  juce::AudioChannelSet::stereo(), true)
                        .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
                        ), 
-    apvts( *this, &undoManager, "Parameters", createParameterLayout() )
+    apvts ( *this, &undoManager, "Parameters", createParameterLayout() ),
+    parameters ( *this, getAPVTS() ),
+    processorFloat ( *this, getAPVTS(), getSpec() ),
+    processorDouble ( *this, getAPVTS(), getSpec() )
 {
-    bypassPtr = static_cast <juce::AudioParameterBool*> (apvts.getParameter("bypassID"));
-    jassert(bypassPtr != nullptr);
 }
 
 BiquadsAudioProcessor::~BiquadsAudioProcessor()
