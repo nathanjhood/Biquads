@@ -12,7 +12,7 @@
 #include "PluginProcessor.h"
 
 template <typename SampleType>
-ProcessWrapper<SampleType>::ProcessWrapper(BiquadsAudioProcessor& p, APVTS& apvts, juce::dsp::ProcessSpec& spec)
+ProcessWrapper<SampleType>::ProcessWrapper(BiquadsAudioProcessor& p, APVTS& apvts, ProcessSpec& spec)
     : 
     audioProcessor(p), 
     state(apvts),
@@ -94,10 +94,11 @@ void ProcessWrapper<SampleType>::process(juce::AudioBuffer<SampleType>& buffer, 
     update();
 
     juce::dsp::AudioBlock<SampleType> block(buffer);
+    juce::dsp::AudioBlock<SampleType> osBlock(buffer);
 
     mixer.pushDrySamples(block);
 
-    juce::dsp::AudioBlock<SampleType> osBlock = oversampler[curOS]->processSamplesUp(block);
+    osBlock = oversampler[curOS]->processSamplesUp(block);
 
     auto context = juce::dsp::ProcessContextReplacing(osBlock);
 
@@ -115,7 +116,7 @@ void ProcessWrapper<SampleType>::process(juce::AudioBuffer<SampleType>& buffer, 
 template <typename SampleType>
 void ProcessWrapper<SampleType>::update()
 {
-    setup.sampleRate = audioProcessor.getSampleRate() * oversamplingFactor;
+    setup.sampleRate = audioProcessor.getSampleRate();
     setup.maximumBlockSize = audioProcessor.getBlockSize();
     setup.numChannels = audioProcessor.getTotalNumInputChannels();
 
@@ -145,7 +146,7 @@ void ProcessWrapper<SampleType>::setOversampling()
         mixer.reset();
         mixer.setWetLatency(getLatencySamples());
         biquad.reset(static_cast<SampleType>(0.0));
-        //biquad.sampleRate = spec.sampleRate * overSamplingFactor;
+        biquad.sampleRate = setup.sampleRate * oversamplingFactor;
         output.reset();
     }
 }

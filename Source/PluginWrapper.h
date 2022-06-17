@@ -23,9 +23,10 @@ class ProcessWrapper
 {
 public:
     using APVTS = juce::AudioProcessorValueTreeState;
+    using ProcessSpec = juce::dsp::ProcessSpec;
     //==========================================================================
     /** Constructor. */
-    ProcessWrapper(BiquadsAudioProcessor& p, APVTS& apvts, juce::dsp::ProcessSpec& spec);
+    ProcessWrapper(BiquadsAudioProcessor& p, APVTS& apvts, ProcessSpec& spec);
 
     //==========================================================================
     /** Initialises the processor. */
@@ -53,7 +54,7 @@ private:
     // access the processor object that created it.
     BiquadsAudioProcessor& audioProcessor;
     APVTS& state;
-    juce::dsp::ProcessSpec& setup;
+    ProcessSpec& setup;
 
     //==========================================================================
     std::unique_ptr<juce::dsp::Oversampling<SampleType>> oversampler[5];
