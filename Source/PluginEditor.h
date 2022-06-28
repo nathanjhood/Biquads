@@ -19,9 +19,8 @@ class BiquadsAudioProcessorEditor  : public juce::AudioProcessorEditor, public j
 {
 public:
     using APVTS = juce::AudioProcessorValueTreeState;
-
     //==========================================================================
-    BiquadsAudioProcessorEditor (BiquadsAudioProcessor& p, APVTS& apvts, juce::UndoManager& um);
+    BiquadsAudioProcessorEditor (BiquadsAudioProcessor& p);
     ~BiquadsAudioProcessorEditor() override;
 
     //==========================================================================
