@@ -140,11 +140,11 @@ void AutoKnob::resized()
     int x = 5;
     bool first = true;
 
-    auto width = getWidth();
-    auto height = getHeight();
+    //auto width = getWidth();
+    //auto height = getHeight();
     auto bounds = getBounds();
 
-    auto absCentreX = getWidth() / 3;
+    //auto absCentreX = getWidth() / 3;
     auto absCentreY = getHeight() / 3;
 
     for (auto* k : knobs)

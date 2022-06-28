@@ -11,15 +11,16 @@
 
 //==============================================================================
 BiquadsAudioProcessor::BiquadsAudioProcessor()
-     : AudioProcessor (BusesProperties()
+     : 
+    AudioProcessor (BusesProperties()
                        .withInput  ("Input",  juce::AudioChannelSet::stereo(), true)
-                       .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
-                       ), 
-    apvts ( *this, &undoManager, "Parameters", createParameterLayout() ),
+                       .withOutput ("Output", juce::AudioChannelSet::stereo(), true)), 
+    undoManager (),
+    apvts (*this, &undoManager, "Parameters", createParameterLayout()),
     spec (),
-    parameters ( *this, getAPVTS() ),
-    processorFloat ( *this, getAPVTS(), getSpec() ),
-    processorDouble ( *this, getAPVTS(), getSpec() )
+    parameters (*this),
+    processorFloat (*this),
+    processorDouble (*this)
 {
 }
 
@@ -135,6 +136,8 @@ void BiquadsAudioProcessor::changeProgramName (int index, const juce::String& ne
 //==============================================================================
 void BiquadsAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
+    juce::ignoreUnused(sampleRate, samplesPerBlock);
+
     getProcessingPrecision();
 
     processorFloat.prepare( getSpec() );
@@ -238,7 +241,7 @@ bool BiquadsAudioProcessor::hasEditor() const
 
 juce::AudioProcessorEditor* BiquadsAudioProcessor::createEditor()
 {
-    return new BiquadsAudioProcessorEditor(*this, getAPVTS(), undoManager);
+    return new BiquadsAudioProcessorEditor(*this);
 }
 
 juce::AudioProcessorValueTreeState::ParameterLayout BiquadsAudioProcessor::createParameterLayout()

@@ -24,7 +24,7 @@ public:
     using Params = juce::AudioProcessorValueTreeState::ParameterLayout;
     //==========================================================================
     /** Constructor. */
-    Parameters(BiquadsAudioProcessor& p, APVTS& apvts);
+    Parameters(BiquadsAudioProcessor& p);
 
     //==========================================================================
     /** Create Parameter Layout. */
@@ -35,7 +35,6 @@ private:
     // This reference is provided as a quick way for the wrapper to
     // access the processor object that created it.
     BiquadsAudioProcessor& audioProcessor;
-    APVTS& state;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Parameters)
 };

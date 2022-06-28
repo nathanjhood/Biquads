@@ -2,27 +2,17 @@
 
 <JUCERPROJECT id="jER3fq" name="Biquads" projectType="audioplug" useAppConfig="1"
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
-              companyName="StoneyDSP" cppLanguageStandard="latest" version="1.0.14b"
+              companyName="StoneyDSP" cppLanguageStandard="latest" version="1.0.16b"
               pluginAUMainType="'aufx'" pluginVST3Category="Fx" pluginFormats="buildVST3"
               companyEmail="nathan@stoneydsp.com">
   <MAINGROUP id="butqEA" name="Biquads">
     <GROUP id="{B7BEB523-13AE-DC81-1072-78BF4CC3A396}" name="Source">
       <GROUP id="{19BEE9C3-82E8-891C-7BCF-623477F38C0E}" name="Components">
-        <FILE id="h0YIS9" name="AutoButton.cpp" compile="1" resource="0" file="Source/Components/AutoButton.cpp"/>
-        <FILE id="q7DRwK" name="AutoButton.h" compile="0" resource="0" file="Source/Components/AutoButton.h"/>
-        <FILE id="SxVhBi" name="AutoComboBox.cpp" compile="1" resource="0"
-              file="Source/Components/AutoComboBox.cpp"/>
-        <FILE id="K6WQwE" name="AutoComboBox.h" compile="0" resource="0" file="Source/Components/AutoComboBox.h"/>
         <FILE id="NxF6lP" name="AutoComponent.cpp" compile="1" resource="0"
               file="Source/Components/AutoComponent.cpp"/>
         <FILE id="oNSzMK" name="AutoComponent.h" compile="0" resource="0" file="Source/Components/AutoComponent.h"/>
-        <FILE id="joRkxb" name="AutoKnob.cpp" compile="1" resource="0" file="Source/Components/AutoKnob.cpp"/>
-        <FILE id="LppB0p" name="AutoKnob.h" compile="0" resource="0" file="Source/Components/AutoKnob.h"/>
       </GROUP>
-      <GROUP id="{9CCA4E58-A6DF-778D-0E47-615CE5201735}" name="Modules">
-        <FILE id="gGkrgt" name="Biquads.cpp" compile="1" resource="0" file="Source/Modules/Biquads.cpp"/>
-        <FILE id="oXBA1H" name="Biquads.h" compile="0" resource="0" file="Source/Modules/Biquads.h"/>
-      </GROUP>
+      <GROUP id="{9CCA4E58-A6DF-778D-0E47-615CE5201735}" name="Modules"/>
       <FILE id="VST2bi" name="PluginParameters.cpp" compile="1" resource="0"
             file="Source/PluginParameters.cpp"/>
       <FILE id="wSuuDB" name="PluginParameters.h" compile="0" resource="0"
@@ -62,6 +52,8 @@
         <MODULEPATH id="juce_gui_basics" path="../../Users/Nathan/DSP/JUCE/modules"/>
         <MODULEPATH id="juce_gui_extra" path="../../Users/Nathan/DSP/JUCE/modules"/>
         <MODULEPATH id="juce_dsp" path="../../Users/Nathan/DSP/JUCE/modules"/>
+        <MODULEPATH id="stoneydsp_filters" path="../../Users/Nathan/DSP/StoneyDSP/modules"/>
+        <MODULEPATH id="stoneydsp_maths" path="../../Users/Nathan/DSP/StoneyDSP/modules"/>
       </MODULEPATHS>
     </VS2022>
   </EXPORTFORMATS>
@@ -80,5 +72,7 @@
     <MODULE id="juce_graphics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_gui_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_gui_extra" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="stoneydsp_filters" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="stoneydsp_maths" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
   </MODULES>
 </JUCERPROJECT>

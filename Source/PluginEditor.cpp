@@ -10,20 +10,20 @@
 #include "PluginEditor.h"
 
 //==============================================================================
-BiquadsAudioProcessorEditor::BiquadsAudioProcessorEditor (BiquadsAudioProcessor& p, APVTS& apvts, juce::UndoManager& um)
+BiquadsAudioProcessorEditor::BiquadsAudioProcessorEditor (BiquadsAudioProcessor& p)
     : 
     juce::AudioProcessorEditor (&p), 
     audioProcessor (p), 
-    state(apvts),
-    undoManager(um),
-    subComponents(p, apvts)
+    state(p.getAPVTS()),
+    undoManager(p.getUndoManager()),
+    subComponents(p, p.getAPVTS())
 {
     setSize(400, 300);
     addAndMakeVisible(subComponents);
     addAndMakeVisible(undoButton);
     addAndMakeVisible(redoButton);
-    undoButton.onClick = [this] { undoManager.undo(); };
-    redoButton.onClick = [this] { undoManager.redo(); };
+    undoButton.onClick = [this] { audioProcessor.getUndoManager().undo(); };
+    redoButton.onClick = [this] { audioProcessor.getUndoManager().redo(); };
     setResizable(true, true);
 
     startTimerHz(24);

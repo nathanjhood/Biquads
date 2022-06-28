@@ -11,7 +11,7 @@
 #include "PluginParameters.h"
 #include "PluginProcessor.h"
 
-Parameters::Parameters(BiquadsAudioProcessor& p, APVTS& apvts) : audioProcessor (p), state(apvts)
+Parameters::Parameters(BiquadsAudioProcessor& p) : audioProcessor (p)
 {
 }
 
@@ -44,14 +44,34 @@ void Parameters::setParameterLayout(Params& params)
     juce::ignoreUnused(inMeter);
     juce::ignoreUnused(outMeter);
 
+    auto freqAttributes = juce::AudioParameterFloatAttributes()
+        .withLabel(frequency)
+        .withCategory(genParam);
+
+    auto resoAttributes = juce::AudioParameterFloatAttributes()
+        .withLabel(reso)
+        .withCategory(genParam);
+
+    auto gainAttributes = juce::AudioParameterFloatAttributes()
+        .withLabel(decibels)
+        .withCategory(genParam);
+
+    auto mixAttributes = juce::AudioParameterFloatAttributes()
+        .withLabel(percentage)
+        .withCategory(genParam);
+
+    auto outputAttributes = juce::AudioParameterFloatAttributes()
+        .withLabel(decibels)
+        .withCategory(outParam);
+
     params.add
         //======================================================================
         (std::make_unique<juce::AudioProcessorParameterGroup>("masterID", "1", "seperatorA",
             //==================================================================
             std::make_unique<juce::AudioParameterChoice>("transformID", "Transform", tString, 3),
             std::make_unique<juce::AudioParameterChoice>("osID", "Oversampling", osString, 0),
-            std::make_unique<juce::AudioParameterFloat>("outputID", "Output", outputRange, 00.00f, decibels, outParam),
-            std::make_unique<juce::AudioParameterFloat>("mixID", "Mix", mixRange, 100.00f, percentage, genParam),
+            std::make_unique<juce::AudioParameterFloat>("outputID", "Output", outputRange, 00.00f, outputAttributes),
+            std::make_unique<juce::AudioParameterFloat>("mixID", "Mix", mixRange, 100.00f, mixAttributes),
             std::make_unique<juce::AudioParameterBool>("bypassID", "Bypass", false)
             //==================================================================
             ));
@@ -60,9 +80,9 @@ void Parameters::setParameterLayout(Params& params)
         //======================================================================
         (std::make_unique<juce::AudioProcessorParameterGroup>("BandOneID", "0", "seperatorB",
             //==================================================================
-            std::make_unique<juce::AudioParameterFloat>("frequencyID", "Frequency", freqRange, 632.455f, frequency, genParam),
-            std::make_unique<juce::AudioParameterFloat>("resonanceID", "Resonance", resRange, 00.10f, reso, genParam),
-            std::make_unique<juce::AudioParameterFloat>("gainID", "Gain", gainRange, 00.00f, decibels, genParam),
+            std::make_unique<juce::AudioParameterFloat>("frequencyID", "Frequency", freqRange, 632.455f, freqAttributes),
+            std::make_unique<juce::AudioParameterFloat>("resonanceID", "Resonance", resRange, 00.10f, resoAttributes),
+            std::make_unique<juce::AudioParameterFloat>("gainID", "Gain", gainRange, 00.00f, gainAttributes),
             std::make_unique<juce::AudioParameterChoice>("typeID", "Type", fString, 0)
             //==================================================================
             ));

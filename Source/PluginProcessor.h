@@ -77,8 +77,12 @@ public:
     void setCurrentProgramStateInformation(const void* data, int sizeInBytes) override;
 
     //==========================================================================
-    /** Audio processor value tree. */
+    /** Undo Manager. */
     juce::UndoManager undoManager;
+    juce::UndoManager& getUndoManager() { return undoManager; };
+
+    //==========================================================================
+    /** Audio processor value tree. */
     APVTS apvts;
     APVTS& getAPVTS() { return apvts; };
     static APVTS::ParameterLayout createParameterLayout();
