@@ -12,7 +12,12 @@
               file="Source/Components/AutoComponent.cpp"/>
         <FILE id="oNSzMK" name="AutoComponent.h" compile="0" resource="0" file="Source/Components/AutoComponent.h"/>
       </GROUP>
-      <GROUP id="{9CCA4E58-A6DF-778D-0E47-615CE5201735}" name="Modules"/>
+      <GROUP id="{9CCA4E58-A6DF-778D-0E47-615CE5201735}" name="Modules">
+        <FILE id="unuiPg" name="SecondOrderBiquads.cpp" compile="1" resource="0"
+              file="Source/Modules/SecondOrderBiquads.cpp"/>
+        <FILE id="fw6I4S" name="SecondOrderBiquads.h" compile="0" resource="0"
+              file="Source/Modules/SecondOrderBiquads.h"/>
+      </GROUP>
       <FILE id="VST2bi" name="PluginParameters.cpp" compile="1" resource="0"
             file="Source/PluginParameters.cpp"/>
       <FILE id="wSuuDB" name="PluginParameters.h" compile="0" resource="0"
@@ -54,6 +59,7 @@
         <MODULEPATH id="juce_dsp" path="../../Users/Nathan/DSP/JUCE/modules"/>
         <MODULEPATH id="stoneydsp_filters" path="../../Users/Nathan/DSP/StoneyDSP/modules"/>
         <MODULEPATH id="stoneydsp_maths" path="../../Users/Nathan/DSP/StoneyDSP/modules"/>
+        <MODULEPATH id="stoneydsp_graphics" path="../../Users/Nathan/DSP/StoneyDSP/modules"/>
       </MODULEPATHS>
     </VS2022>
   </EXPORTFORMATS>
@@ -73,6 +79,7 @@
     <MODULE id="juce_gui_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_gui_extra" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="stoneydsp_filters" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="stoneydsp_graphics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="stoneydsp_maths" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
   </MODULES>
 </JUCERPROJECT>
