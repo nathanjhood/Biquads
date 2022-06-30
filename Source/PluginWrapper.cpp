@@ -20,7 +20,7 @@ ProcessWrapper<SampleType>::ProcessWrapper(BiquadsAudioProcessor& p)
     mixer (),
     biquad (),
     output (), 
-    frq (), res (), lev (),
+    /*frq (), res (), lev (),*/
     frequencyPtr(dynamic_cast <juce::AudioParameterFloat*> (p.getAPVTS().getParameter("frequencyID"))),
     resonancePtr(dynamic_cast <juce::AudioParameterFloat*> (p.getAPVTS().getParameter("resonanceID"))),
     gainPtr(dynamic_cast <juce::AudioParameterFloat*> (p.getAPVTS().getParameter("gainID"))),
@@ -51,9 +51,9 @@ ProcessWrapper<SampleType>::ProcessWrapper(BiquadsAudioProcessor& p)
     jassert(mixPtr != nullptr);
     jassert(bypassPtr != nullptr);
 
-    frq.setTargetValue(frequencyPtr->get());
+    /*frq.setTargetValue(frequencyPtr->get());
     res.setTargetValue(resonancePtr->get());
-    lev.setTargetValue(gainPtr->get());
+    lev.setTargetValue(gainPtr->get());*/
 }
 
 //template <typename SampleType>
@@ -63,29 +63,29 @@ ProcessWrapper<SampleType>::ProcessWrapper(BiquadsAudioProcessor& p)
 //}
 
 //==============================================================================
-template <typename SampleType>
-void ProcessWrapper<SampleType>::setRampDurationSeconds(double newDurationSeconds) noexcept
-{
-    if (rampDurationSeconds != newDurationSeconds)
-    {
-        rampDurationSeconds = newDurationSeconds;
-        reset();
-    }
-}
-
-template <typename SampleType>
-double ProcessWrapper<SampleType>::getRampDurationSeconds() const noexcept
-{
-    return rampDurationSeconds;
-}
-
-template <typename SampleType>
-bool ProcessWrapper<SampleType>::isSmoothing() const noexcept
-{
-    bool smoothingActive = frq.isSmoothing() || res.isSmoothing() || lev.isSmoothing();
-
-    return smoothingActive;
-}
+//template <typename SampleType>
+//void ProcessWrapper<SampleType>::setRampDurationSeconds(double newDurationSeconds) noexcept
+//{
+//    if (rampDurationSeconds != newDurationSeconds)
+//    {
+//        rampDurationSeconds = newDurationSeconds;
+//        reset();
+//    }
+//}
+//
+//template <typename SampleType>
+//double ProcessWrapper<SampleType>::getRampDurationSeconds() const noexcept
+//{
+//    return rampDurationSeconds;
+//}
+//
+//template <typename SampleType>
+//bool ProcessWrapper<SampleType>::isSmoothing() const noexcept
+//{
+//    bool smoothingActive = frq.isSmoothing() || res.isSmoothing() || lev.isSmoothing();
+//
+//    return smoothingActive;
+//}
 
 
 template <typename SampleType>
@@ -105,7 +105,7 @@ void ProcessWrapper<SampleType>::prepare(juce::dsp::ProcessSpec& spec)
         oversampler[i]->numChannels = (size_t)spec.numChannels;
 
     mixer.prepare(spec);
-    biquad.prepare(spec.numChannels, spec.sampleRate);
+    biquad.prepare(spec);
     output.prepare(spec);
 
     reset();
@@ -116,12 +116,12 @@ void ProcessWrapper<SampleType>::prepare(juce::dsp::ProcessSpec& spec)
 
     mixer.setWetMixProportion(mixPtr->get() * 0.01f);
 
-    biquad.setFrequency(frq.getNextValue());
-    biquad.setResonance(res.getNextValue());
-    biquad.setGain(lev.getNextValue());
+    biquad.setFrequency(frequencyPtr->get());
+    biquad.setResonance(resonancePtr->get());
+    biquad.setGain(gainPtr->get());
 
-    biquad.setFilterType(static_cast<stoneydsp::filters::FilterType>(typePtr->getIndex()));
-    biquad.setTransformType(static_cast<stoneydsp::filters::TransformationType>(transformPtr->getIndex()));
+    biquad.setFilterType(static_cast<FilterType>(typePtr->getIndex()));
+    biquad.setTransformType(static_cast<TransformationType>(transformPtr->getIndex()));
 
     output.setGainLinear(juce::Decibels::decibelsToGain(outputPtr->get()));
 }
@@ -137,9 +137,9 @@ void ProcessWrapper<SampleType>::reset()
     for (int i = 0; i < 5; ++i)
         oversampler[i]->reset();
 
-    frq.reset(setup.sampleRate, rampDurationSeconds);
+    /*frq.reset(setup.sampleRate, rampDurationSeconds);
     res.reset(setup.sampleRate, rampDurationSeconds);
-    lev.reset(setup.sampleRate, rampDurationSeconds);
+    lev.reset(setup.sampleRate, rampDurationSeconds);*/
 }
 
 //==============================================================================
@@ -161,7 +161,7 @@ void ProcessWrapper<SampleType>::process(juce::AudioBuffer<SampleType>& buffer, 
 
     context.isBypassed = bypassPtr->get();
 
-    const auto& inputBlock = context.getInputBlock();
+    /*const auto& inputBlock = context.getInputBlock();
     auto& outputBlock = context.getOutputBlock();
     const auto numChannels = outputBlock.getNumChannels();
     const auto numSamples = outputBlock.getNumSamples();
@@ -180,7 +180,9 @@ void ProcessWrapper<SampleType>::process(juce::AudioBuffer<SampleType>& buffer, 
 
         for (size_t i = 0; i < numSamples; ++i)
             outputSamples[i] = biquad.processSample((int)channel, inputSamples[i]);
-    }
+    }*/
+
+    biquad.process(context);
 
     output.process(context);
 
@@ -202,19 +204,23 @@ void ProcessWrapper<SampleType>::update()
 
     mixer.setWetMixProportion(mixPtr->get() * 0.01f);
     
-    frq.setTargetValue(frequencyPtr->get());
+    /*frq.setTargetValue(frequencyPtr->get());
     res.setTargetValue(resonancePtr->get());
-    lev.setTargetValue(gainPtr->get());
+    lev.setTargetValue(gainPtr->get());*/
 
-    while (isSmoothing())
+    biquad.setFrequency(frequencyPtr->get());
+    biquad.setResonance(resonancePtr->get());
+    biquad.setGain(gainPtr->get());
+
+    /*while (isSmoothing())
     {
-        biquad.setFrequency(frq.getNextValue());
-        biquad.setResonance(res.getNextValue());
-        biquad.setGain(lev.getNextValue());
-    }
+        biquad.setFrequency(frequencyPtr->get());
+        biquad.setResonance(resonancePtr->get());
+        biquad.setGain(gainPtr->get());
+    }*/
 
-    biquad.setFilterType(static_cast<stoneydsp::filters::FilterType>(typePtr->getIndex()));
-    biquad.setTransformType(static_cast<stoneydsp::filters::TransformationType>(transformPtr->getIndex()));
+    biquad.setFilterType(static_cast<FilterType>(typePtr->getIndex()));
+    biquad.setTransformType(static_cast<TransformationType>(transformPtr->getIndex()));
 
     output.setGainLinear(juce::Decibels::decibelsToGain(outputPtr->get()));
 }

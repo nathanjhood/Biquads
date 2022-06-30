@@ -14,7 +14,7 @@
 #define PLUGINWRAPPER_H_INCLUDED
 
 #include "../JuceLibraryCode/JuceHeader.h"
-//#include "Modules/Biquads.h"
+#include "Modules/SecondOrderBiquads.h"
 
 class BiquadsAudioProcessor;
 
@@ -30,15 +30,15 @@ public:
 
     //static void call(Caller& clock);
 
-    //==============================================================================
-    /** Sets the length of the ramp used for smoothing parameter changes. */
-    void setRampDurationSeconds(double newDurationSeconds) noexcept;
+    ////==============================================================================
+    ///** Sets the length of the ramp used for smoothing parameter changes. */
+    //void setRampDurationSeconds(double newDurationSeconds) noexcept;
 
-    /** Returns the ramp duration in seconds. */
-    double getRampDurationSeconds() const noexcept;
+    ///** Returns the ramp duration in seconds. */
+    //double getRampDurationSeconds() const noexcept;
 
-    /** Returns true if the current value is currently being interpolated. */
-    bool isSmoothing() const noexcept;
+    ///** Returns true if the current value is currently being interpolated. */
+    //bool isSmoothing() const noexcept;
 
     //==========================================================================
     /** Initialises the processor. */
@@ -94,15 +94,15 @@ private:
     //==========================================================================
     /** Instantiate objects. */
     juce::dsp::DryWetMixer<SampleType> mixer;
-    //Biquads<SampleType> biquad;
-    stoneydsp::filters::Biquads<SampleType> biquad;
+    Biquads<SampleType> biquad;
+    //stoneydsp::filters::Biquads<SampleType> biquad;
     juce::dsp::Gain<SampleType> output;
     
     //==============================================================================
     /** Parameter Smoothers. */
-    juce::SmoothedValue<SampleType, juce::ValueSmoothingTypes::Multiplicative> frq;
+    /*juce::SmoothedValue<SampleType, juce::ValueSmoothingTypes::Multiplicative> frq;
     juce::SmoothedValue<SampleType, juce::ValueSmoothingTypes::Linear> res;
-    juce::SmoothedValue<SampleType, juce::ValueSmoothingTypes::Linear> lev;
+    juce::SmoothedValue<SampleType, juce::ValueSmoothingTypes::Linear> lev;*/
 
     //==========================================================================
     /** Parameter pointers. */
