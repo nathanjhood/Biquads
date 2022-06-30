@@ -13,7 +13,7 @@
 #ifndef PLUGINWRAPPER_H_INCLUDED
 #define PLUGINWRAPPER_H_INCLUDED
 
-#include "../JuceLibraryCode/JuceHeader.h"
+#include <JuceHeader.h>
 #include "Modules/SecondOrderBiquads.h"
 
 class BiquadsAudioProcessor;
@@ -23,56 +23,30 @@ class ProcessWrapper
 {
 public:
     using APVTS = juce::AudioProcessorValueTreeState;
-    using ProcessSpec = juce::dsp::ProcessSpec;
+    using Spec = juce::dsp::ProcessSpec;
+    using Audio = juce::AudioBuffer<SampleType>;
+    using Midi = juce::MidiBuffer;
     //==========================================================================
     /** Constructor. */
     ProcessWrapper(BiquadsAudioProcessor& p);
 
-    //static void call(Caller& clock);
-
-    ////==============================================================================
-    ///** Sets the length of the ramp used for smoothing parameter changes. */
-    //void setRampDurationSeconds(double newDurationSeconds) noexcept;
-
-    ///** Returns the ramp duration in seconds. */
-    //double getRampDurationSeconds() const noexcept;
-
-    ///** Returns true if the current value is currently being interpolated. */
-    //bool isSmoothing() const noexcept;
-
     //==========================================================================
     /** Initialises the processor. */
-    void prepare(juce::dsp::ProcessSpec& spec);
+    void prepare(Spec& spec);
 
     /** Resets the internal state variables of the processor. */
     void reset();
 
     //==========================================================================
-    void process(juce::AudioBuffer<SampleType>& buffer, juce::MidiBuffer& midiMessages);
+    void process(Audio& buffer, Midi& midiMessages);
+
+    void bypass(Audio& buffer, Midi& midiMessages);
+
+    void juce::dsp::ProcessContextReplacing::
 
     //==========================================================================
     /** Updates the internal state variables of the processor. */
     void update();
-
-    /*void timerCallback() override
-    {
-        while (true)
-        {
-            audioProcessor.setBypassParameter(bypassPtr);
-
-            setOversampling();
-
-            mixer.setWetMixProportion(mixPtr->get() * 0.01f);
-
-            biquad.setFrequency(frequencyPtr->get());
-            biquad.setResonance(resonancePtr->get());
-            biquad.setGain(gainPtr->get());
-            biquad.setFilterType(static_cast<stoneydsp::filters::FilterType>(typePtr->getIndex()));
-            biquad.setTransformType(static_cast<stoneydsp::filters::TransformationType>(transformPtr->getIndex()));
-
-            output.setGainLinear(juce::Decibels::decibelsToGain(outputPtr->get()));
-        }
-    }*/
 
     //==========================================================================
     /** Sets the oversampling factor. */
@@ -86,7 +60,7 @@ private:
     // access the processor object that created it.
     BiquadsAudioProcessor& audioProcessor;
     APVTS& state;
-    ProcessSpec& setup;
+    Spec& setup;
 
     //==========================================================================
     std::unique_ptr<juce::dsp::Oversampling<SampleType>> oversampler[5];
@@ -95,14 +69,9 @@ private:
     /** Instantiate objects. */
     juce::dsp::DryWetMixer<SampleType> mixer;
     Biquads<SampleType> biquad;
-    //stoneydsp::filters::Biquads<SampleType> biquad;
     juce::dsp::Gain<SampleType> output;
-    
-    //==============================================================================
-    /** Parameter Smoothers. */
-    /*juce::SmoothedValue<SampleType, juce::ValueSmoothingTypes::Multiplicative> frq;
-    juce::SmoothedValue<SampleType, juce::ValueSmoothingTypes::Linear> res;
-    juce::SmoothedValue<SampleType, juce::ValueSmoothingTypes::Linear> lev;*/
+
+    //stoneydsp::filters::Biquads<SampleType> biquad;
 
     //==========================================================================
     /** Parameter pointers. */
@@ -119,7 +88,6 @@ private:
     //==========================================================================
     /** Init variables. */
     int curOS = 0, prevOS = 0, oversamplingFactor = 1;
-    double rampDurationSeconds = 0.00005;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ProcessWrapper)
 };

@@ -2,27 +2,19 @@
 /*==============================================================================
 
    Biquads.cpp
-   Created: 16 May 2022 2:54:47am
-   Author:  StoneyDSP
+   Author:  Nathan J. Hood 
+   Website: github.com/StoneyDSP
+   email:   nathanjhood@googlemail.com
+   License: GNU v3
 
  ==============================================================================
 */
 
-#include "Biquads.h"
+#include "SecondOrderBiquads.h"
 
 //==============================================================================
 template <typename SampleType>
 Biquads<SampleType>::Biquads()
-    :
-    a0(1.0), b0(1.0), a1(0.0), b1(0.0), a2(0.0), b2(0.0),
-    a_0(1.0), b_0(1.0), a_1(0.0), b_1(0.0), a_2(0.0), b_2(0.0),
-    frq(), res(), lev(),
-    minFreq(20.0), maxFreq(20000.0),
-    loop(0.0),
-    outputSample(0.0),
-    hz(1000.0), q(0.5), g(0.0),
-    filtType(filterType::lowPass2),
-    transformType(transformationType::directFormIItransposed)
 {
     reset();
 }
@@ -31,38 +23,29 @@ Biquads<SampleType>::Biquads()
 template <typename SampleType>
 void Biquads<SampleType>::setFrequency(SampleType newFreq)
 {
-    jassert(static_cast<SampleType>(20.0) <= newFreq && newFreq <= static_cast<SampleType>(20000.0));
+    jassert(minFreq <= newFreq && newFreq <= maxFreq);
 
-    if (hz != newFreq)
-    {
-        hz = static_cast<SampleType>(juce::jlimit(minFreq, maxFreq, newFreq));
-        frq.setTargetValue(hz);
-        calculateCoefficients();
-    }
+    hz = static_cast<SampleType>(juce::jlimit(minFreq, maxFreq, newFreq));
+    frq.setTargetValue(hz);
+    calculateCoefficients();
 }
 
 template <typename SampleType>
 void Biquads<SampleType>::setResonance(SampleType newRes)
 {
-    jassert(static_cast<SampleType>(0.0) <= newRes && newRes <= static_cast<SampleType>(1.0));
+    jassert(zero <= newRes && newRes <= one);
 
-    if (q != newRes || static_cast<SampleType>(0.0) <= newRes && newRes <= static_cast<SampleType>(1.0))
-    {
-        q = static_cast<SampleType>(juce::jlimit(SampleType(0.0), SampleType(1.0), newRes));
-        res.setTargetValue(q);
-        calculateCoefficients();
-    }
+    q = static_cast<SampleType>(juce::jlimit(SampleType(0.0), SampleType(1.0), newRes));
+    res.setTargetValue(q);
+    calculateCoefficients();
 }
 
 template <typename SampleType>
 void Biquads<SampleType>::setGain(SampleType newGain)
 {
-    if (g != newGain)
-    {
-        g = newGain;
-        lev.setTargetValue(g);
-        calculateCoefficients();
-    }
+    g = static_cast<SampleType>(newGain);
+    lev.setTargetValue(g);
+    calculateCoefficients();
 }
 
 template <typename SampleType>
@@ -72,6 +55,7 @@ void Biquads<SampleType>::setFilterType(filterType newFiltType)
     {
         filtType = newFiltType;
         reset();
+        calculateCoefficients();
     }
 }
 
@@ -85,7 +69,6 @@ void Biquads<SampleType>::setTransformType(transformationType newTransformType)
     }
 }
 
-//==============================================================================
 template <typename SampleType>
 void Biquads<SampleType>::setRampDurationSeconds(double newDurationSeconds) noexcept
 {
@@ -105,11 +88,10 @@ double Biquads<SampleType>::getRampDurationSeconds() const noexcept
 template <typename SampleType>
 bool Biquads<SampleType>::isSmoothing() const noexcept
 {
-    bool isSmoothing = frq.isSmoothing() || res.isSmoothing() || lev.isSmoothing();
+    bool smoothingActive = frq.isSmoothing() || res.isSmoothing() || lev.isSmoothing();
 
-    return isSmoothing;
+    return smoothingActive;
 }
-
 
 //==============================================================================
 template <typename SampleType>
@@ -127,19 +109,17 @@ void Biquads<SampleType>::prepare(juce::dsp::ProcessSpec& spec)
     Yn_1.resize(spec.numChannels);
     Yn_2.resize(spec.numChannels);
 
-    reset();
-
-    minFreq = static_cast <SampleType> (sampleRate / 24576.0);
-    maxFreq = static_cast <SampleType> (sampleRate / 2.125);
+    minFreq = static_cast <SampleType>(sampleRate) / static_cast <SampleType>(24576.0);
+    maxFreq = static_cast <SampleType>(sampleRate) / static_cast <SampleType>(2.125);
 
     jassert(static_cast <SampleType>(20.0) >= minFreq && minFreq <= static_cast <SampleType>(20000.0));
     jassert(static_cast <SampleType>(20.0) <= maxFreq && maxFreq >= static_cast <SampleType>(20000.0));
 
+    reset();
+
     setFrequency(hz);
     setResonance(q);
     setGain(g);
-    setFilterType(filtType);
-    setTransformType(transformType);
 }
 
 template <typename SampleType>
@@ -162,7 +142,6 @@ SampleType Biquads<SampleType>::processSample(int channel, SampleType inputValue
     jassert(juce::isPositiveAndBelow(channel, Xn_2.size()));
     jassert(juce::isPositiveAndBelow(channel, Yn_1.size()));
     jassert(juce::isPositiveAndBelow(channel, Yn_1.size()));
-
 
     switch (transformType)
     {
@@ -264,13 +243,21 @@ SampleType Biquads<SampleType>::directFormIITransposed(int channel, SampleType i
 template <typename SampleType>
 void Biquads<SampleType>::calculateCoefficients()
 {
-    auto omega = (frq.getNextValue() * ((pi * two) / static_cast <SampleType>(sampleRate)));
+    auto omega = (hz * ((pi * two) / static_cast <SampleType>(sampleRate)));
     auto cos = (std::cos(omega));
     auto sin = (std::sin(omega));
     auto tan = (sin / cos);
-    auto alpha = (sin * (one - res.getNextValue()));
-    auto a = (std::pow(SampleType(10), (lev.getNextValue() * SampleType(0.05))));
-    auto sqrtA = (std::sqrt(a) * two) * alpha;
+    auto alpha = (sin * (one - q));
+    auto a = (std::pow(SampleType(10), (g * SampleType(0.05))));
+    auto sqrtA = ((std::sqrt(a) * two) * alpha);
+
+    /*SampleType omega = static_cast <SampleType>(hz * ((pi * two) / sampleRate));
+    SampleType cos = static_cast <SampleType>(std::cos(omega));
+    SampleType sin = static_cast <SampleType>(std::sin(omega));
+    SampleType tan = static_cast <SampleType>(sin / cos);
+    SampleType alpha = static_cast <SampleType>(sin * (one - q));
+    SampleType a = static_cast <SampleType>(juce::Decibels::decibelsToGain(static_cast<SampleType>(g * static_cast <SampleType>(0.05))));
+    SampleType sqrtA = static_cast <SampleType> (std::sqrt(a) * two) * alpha;*/
 
     juce::ignoreUnused(tan);
 
@@ -468,18 +455,12 @@ void Biquads<SampleType>::calculateCoefficients()
         break;
     }
 
-    updateCoefficients()
-}
-
-template <typename SampleType>
-void Biquads<SampleType>::updateCoefficients()
-{
-    a0 = (one / a_0);
-    b0 = (b_0 * a0);
-    a1 = ((a_1 * a0) * minusOne);
-    b1 = (b_1 * a0);
-    a2 = ((a_2 * a0) * minusOne);
-    b2 = (b_2 * a0);
+    a0 = static_cast <SampleType>(one / a_0);
+    a1 = static_cast <SampleType>((a_1 * a0) * minusOne);
+    a2 = static_cast <SampleType>((a_2 * a0) * minusOne);
+    b0 = static_cast <SampleType>(b_0 * a0);
+    b1 = static_cast <SampleType>(b_1 * a0);
+    b2 = static_cast <SampleType>(b_2 * a0);
 }
 
 template <typename SampleType>

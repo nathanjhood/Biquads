@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "../JuceLibraryCode/JuceHeader.h"
+#include <JuceHeader.h>
 #include "PluginProcessor.h"
 #include "Components/AutoComponent.h"
 
@@ -36,6 +36,8 @@ private:
     juce::UndoManager& undoManager;
 
     AutoComponent subComponents;
+
+    //stoneydsp::graphics::AutoComponent subComponents;
 
     juce::ArrowButton undoButton{ "Undo", 0.5f , juce::Colours::white };
     juce::ArrowButton redoButton{ "Redo", 0.0f , juce::Colours::white };

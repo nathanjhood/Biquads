@@ -20,6 +20,7 @@ class BiquadsAudioProcessor  : public juce::AudioProcessor
 {
 public:
     using APVTS = juce::AudioProcessorValueTreeState;
+    using Spec = juce::dsp::ProcessSpec;
     //==========================================================================
     BiquadsAudioProcessor();
     ~BiquadsAudioProcessor() override;
@@ -40,9 +41,9 @@ public:
     void releaseResources() override;
 
     //==========================================================================
-    void numChannelsChanged() override;
+    /*void numChannelsChanged() override;
     void numBusesChanged() override;
-    void processorLayoutsChanged() override;
+    void processorLayoutsChanged() override;*/
     bool isBusesLayoutSupported (const BusesLayout& layouts) const override;
 
     //==========================================================================
@@ -89,8 +90,8 @@ public:
 
     //==========================================================================
     /** Audio processor specs. */
-    juce::dsp::ProcessSpec spec;
-    juce::dsp::ProcessSpec& getSpec() { return spec; };
+    Spec spec;
+    Spec& getSpec() { return spec; };
     
 private:
     //==========================================================================
