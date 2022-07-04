@@ -27,8 +27,7 @@ ProcessWrapper<SampleType>::ProcessWrapper(BiquadsAudioProcessor& p)
     transformPtr (dynamic_cast <juce::AudioParameterChoice*> (p.getAPVTS().getParameter("transformID"))),
     osPtr (dynamic_cast <juce::AudioParameterChoice*> (p.getAPVTS().getParameter("osID"))),
     outputPtr (dynamic_cast <juce::AudioParameterFloat*> (p.getAPVTS().getParameter("outputID"))),
-    mixPtr (dynamic_cast <juce::AudioParameterFloat*> (p.getAPVTS().getParameter("mixID"))),
-    bypassPtr(dynamic_cast <juce::AudioParameterBool*> (p.getAPVTS().getParameter("bypassID")))
+    mixPtr (dynamic_cast <juce::AudioParameterFloat*> (p.getAPVTS().getParameter("mixID")))
 {
     jassert(frequencyPtr != nullptr);
     jassert(resonancePtr != nullptr);
@@ -38,7 +37,6 @@ ProcessWrapper<SampleType>::ProcessWrapper(BiquadsAudioProcessor& p)
     jassert(osPtr != nullptr);
     jassert(outputPtr != nullptr);
     jassert(mixPtr != nullptr);
-    jassert(bypassPtr != nullptr);
 
     auto osFilter = juce::dsp::Oversampling<SampleType>::filterHalfBandFIREquiripple;
 
@@ -49,6 +47,29 @@ ProcessWrapper<SampleType>::ProcessWrapper(BiquadsAudioProcessor& p)
     reset();
 }
 
+//template <typename SampleType>
+//void ProcessWrapper<SampleType>::setRampDurationSeconds(double newDurationSeconds) noexcept
+//{
+//    if (rampDurationSeconds != newDurationSeconds)
+//    {
+//        rampDurationSeconds = newDurationSeconds;
+//        reset();
+//    }
+//}
+//
+//template <typename SampleType>
+//double ProcessWrapper<SampleType>::getRampDurationSeconds() const noexcept
+//{
+//    return rampDurationSeconds;
+//}
+//
+//template <typename SampleType>
+//bool ProcessWrapper<SampleType>::isSmoothing() const noexcept
+//{
+//    bool smoothingActive = frq.isSmoothing() || res.isSmoothing() || lev.isSmoothing();
+//
+//    return smoothingActive;
+//}
 
 template <typename SampleType>
 void ProcessWrapper<SampleType>::prepare(Spec& spec)
@@ -63,7 +84,6 @@ void ProcessWrapper<SampleType>::prepare(Spec& spec)
         oversampler[i]->numChannels = (size_t)spec.numChannels;
 
     mixer.prepare(spec);
-    biquad.prepare(spec);
     output.prepare(spec);
 
     reset();
@@ -74,7 +94,6 @@ template <typename SampleType>
 void ProcessWrapper<SampleType>::reset()
 {
     mixer.reset();
-    biquad.reset();
     output.reset();
 
     for (int i = 0; i < 5; ++i)
@@ -83,10 +102,11 @@ void ProcessWrapper<SampleType>::reset()
 
 //==============================================================================
 template <typename SampleType>
-void ProcessWrapper<SampleType>::process(Audio& buffer, Midi& midiMessages)
+void ProcessWrapper<SampleType>::process(juce::AudioBuffer<SampleType>& buffer, juce::MidiBuffer& midiMessages)
 {
     midiMessages.clear();
 
+    setOversampling();
     update();
 
     juce::dsp::AudioBlock<SampleType> block(buffer);
@@ -96,9 +116,7 @@ void ProcessWrapper<SampleType>::process(Audio& buffer, Midi& midiMessages)
 
     osBlock = oversampler[curOS]->processSamplesUp(block);
 
-    auto context = juce::dsp::ProcessContextReplacing(osBlock);
-
-    biquad.process(context);
+    juce::dsp::ProcessContextReplacing context(osBlock);
 
     output.process(context);
 
@@ -108,27 +126,26 @@ void ProcessWrapper<SampleType>::process(Audio& buffer, Midi& midiMessages)
 }
 
 template <typename SampleType>
-void ProcessWrapper<SampleType>::bypass(Audio& buffer, Midi& midiMessages)
+void ProcessWrapper<SampleType>::bypass(juce::AudioBuffer<SampleType>& buffer, juce::MidiBuffer& midiMessages)
 {
-    juce::ignoreUnused(buffer);
     midiMessages.clear();
+
+    juce::dsp::AudioBlock<SampleType> block(buffer);
+    juce::dsp::ProcessContextReplacing context(block);
+
+    const auto& inputBlock = context.getInputBlock();
+    auto& outputBlock = context.getOutputBlock();
+    const auto numChannels = outputBlock.getNumChannels();
+    const auto numSamples = outputBlock.getNumSamples();
+
+    outputBlock.copyFrom(inputBlock);
 }
 
 template <typename SampleType>
 void ProcessWrapper<SampleType>::update()
 {
-    setOversampling();
-
     mixer.setWetMixProportion(mixPtr->get() * 0.01f);
-
-    biquad.setFrequency(frequencyPtr->get());
-    biquad.setResonance(resonancePtr->get());
-    biquad.setGain(gainPtr->get());
-
-    biquad.setFilterType(static_cast<FilterType>(typePtr->getIndex()));
-    biquad.setTransformType(static_cast<TransformationType>(transformPtr->getIndex()));
-
-    output.setGainLinear(juce::Decibels::decibelsToGain(outputPtr->get()));
+    output.setGainDecibels(outputPtr->get());
 }
 
 template <typename SampleType>
@@ -140,8 +157,6 @@ void ProcessWrapper<SampleType>::setOversampling()
         oversamplingFactor = 1 << curOS;
         prevOS = curOS;
         mixer.reset();
-        //mixer.setWetLatency(getLatencySamples());
-        biquad.reset();
         output.reset();
     }
 }

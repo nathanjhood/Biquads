@@ -24,11 +24,19 @@ class ProcessWrapper
 public:
     using APVTS = juce::AudioProcessorValueTreeState;
     using Spec = juce::dsp::ProcessSpec;
-    using Audio = juce::AudioBuffer<SampleType>;
-    using Midi = juce::MidiBuffer;
     //==========================================================================
     /** Constructor. */
     ProcessWrapper(BiquadsAudioProcessor& p);
+
+    //==============================================================================
+    ///** Sets the length of the ramp used for smoothing parameter changes. */
+    //void setRampDurationSeconds(double newDurationSeconds) noexcept;
+
+    ///** Returns the ramp duration in seconds. */
+    //double getRampDurationSeconds() const noexcept;
+
+    ///** Returns true if the current value is currently being interpolated. */
+    //bool isSmoothing() const noexcept;
 
     //==========================================================================
     /** Initialises the processor. */
@@ -38,11 +46,9 @@ public:
     void reset();
 
     //==========================================================================
-    void process(Audio& buffer, Midi& midiMessages);
+    void process(juce::AudioBuffer<SampleType>& buffer, juce::MidiBuffer& midiMessages);
 
-    void bypass(Audio& buffer, Midi& midiMessages);
-
-    void juce::dsp::ProcessContextReplacing::
+    void bypass(juce::AudioBuffer<SampleType>& buffer, juce::MidiBuffer& midiMessages);
 
     //==========================================================================
     /** Updates the internal state variables of the processor. */
@@ -68,7 +74,7 @@ private:
     //==========================================================================
     /** Instantiate objects. */
     juce::dsp::DryWetMixer<SampleType> mixer;
-    Biquads<SampleType> biquad;
+    //Biquads<SampleType> biquad;
     juce::dsp::Gain<SampleType> output;
 
     //stoneydsp::filters::Biquads<SampleType> biquad;
@@ -83,7 +89,6 @@ private:
     juce::AudioParameterChoice* osPtr;
     juce::AudioParameterFloat* outputPtr;
     juce::AudioParameterFloat* mixPtr;
-    juce::AudioParameterBool* bypassPtr;
 
     //==========================================================================
     /** Init variables. */
