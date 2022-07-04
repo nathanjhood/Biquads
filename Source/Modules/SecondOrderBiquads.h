@@ -71,21 +71,11 @@ public:
     /** Sets the centre Frequency gain of the filter. Peak and shelf modes only. */
     void setGain(SampleType newGain);
 
-    /** Sets the type of the filter. See enum for availa ble types. */
+    /** Sets the type of the filter. See enum for available types. */
     void setFilterType(filterType newFiltType);
 
-    /** Sets the BiLinear Transform for the filter to use. See enum for availa ble types. */
+    /** Sets the BiLinear Transform for the filter to use. See enum for available types. */
     void setTransformType(transformationType newTransformType);
-
-    //==============================================================================
-    /** Sets the length of the ramp used for smoothing parameter changes. */
-    void setRampDurationSeconds(double newDurationSeconds) noexcept;
-
-    /** Returns the ramp duration in seconds. */
-    double getRampDurationSeconds() const noexcept;
-
-    /** Returns true if the current value is currently being interpolated. */
-    bool isSmoothing() const noexcept;
 
     //==============================================================================
     /** Initialises the processor. */
@@ -108,16 +98,16 @@ public:
         auto& outputBlock = context.getOutputBlock();
         const auto numChannels = outputBlock.getNumChannels();
         const auto numSamples = outputBlock.getNumSamples();
-        const auto len = inputBlock.getNumSamples();
+        //const auto len = inputBlock.getNumSamples();
 
         jassert(inputBlock.getNumChannels() == numChannels);
         jassert(inputBlock.getNumSamples() == numSamples);
 
         if (context.isBypassed)
         {
-            frq.skip(static_cast<int> (len));
+            /*frq.skip(static_cast<int> (len));
             res.skip(static_cast<int> (len));
-            lev.skip(static_cast<int> (len));
+            lev.skip(static_cast<int> (len));*/
 
             outputBlock.copyFrom(inputBlock);
             return;
@@ -142,12 +132,12 @@ public:
     SampleType processSample(int channel, SampleType inputValue);
 
     //==============================================================================
-    SampleType geta0() { return a_0; }
-    SampleType getb0() { return b_0; }
-    SampleType geta1() { return a_1; }
-    SampleType getb1() { return b_1; }
-    SampleType geta2() { return a_2; }
-    SampleType getb2() { return b_2; }
+    /*SampleType geta0() { return a0; }
+    SampleType getb0() { return b0; }
+    SampleType geta1() { return a1; }
+    SampleType getb1() { return b1; }
+    SampleType geta2() { return a2; }
+    SampleType getb2() { return b2; }*/
 
 private:
     //==========================================================================
@@ -158,7 +148,7 @@ private:
     SampleType directFormITransposed(int channel, SampleType inputValue);
     SampleType directFormIITransposed(int channel, SampleType inputValue);
 
-    double sampleRate = 44100.0, rampDurationSeconds = 0.00005;
+    double sampleRate = 44100.0;
 
     //==========================================================================
     /** Unit-delay object */
@@ -173,18 +163,12 @@ private:
     std::atomic<SampleType> a1 = 0.0;
     std::atomic<SampleType> a2 = 0.0;
 
-    SampleType b_0 = 1.0;
-    SampleType b_1 = 0.0;
-    SampleType b_2 = 0.0;
-    SampleType a_0 = 1.0;
-    SampleType a_1 = 0.0;
-    SampleType a_2 = 0.0;
-
-    //==============================================================================
-    /** Smoothed Parameter. */
-    juce::SmoothedValue<SampleType, juce::ValueSmoothingTypes::Multiplicative> frq;
-    juce::SmoothedValue<SampleType, juce::ValueSmoothingTypes::Linear> res;
-    juce::SmoothedValue<SampleType, juce::ValueSmoothingTypes::Linear> lev;
+    std::atomic<SampleType> b_0 = 1.0;
+    std::atomic<SampleType> b_1 = 0.0;
+    std::atomic<SampleType> b_2 = 0.0;
+    std::atomic<SampleType> a_0 = 1.0;
+    std::atomic<SampleType> a_1 = 0.0;
+    std::atomic<SampleType> a_2 = 0.0;
 
     //==========================================================================
     /** Initialised parameter */
@@ -192,6 +176,8 @@ private:
     SampleType minFreq = 20.0, maxFreq = 20000.0, hz = 1000.0, q = 0.5, g = 0.0;
     filterType filtType = filterType::lowPass2;
     transformationType transformType = transformationType::directFormIItransposed;
+
+    SampleType omega, cos, sin, tan, alpha, a, sqrtA { 0.0 };
 
     //==========================================================================
     /** Initialised constant */
