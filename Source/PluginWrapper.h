@@ -14,6 +14,7 @@
 #define PLUGINWRAPPER_H_INCLUDED
 
 #include <JuceHeader.h>
+
 #include "Modules/SecondOrderBiquads.h"
 
 class BiquadsAudioProcessor;

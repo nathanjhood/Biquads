@@ -133,6 +133,11 @@ template <typename SampleType>
 void ProcessWrapper<SampleType>::update()
 {
     mixer.setWetMixProportion(mixPtr->get() * 0.01f);
+    biquad.setFrequency(frequencyPtr->get());
+    biquad.setResonance(resonancePtr->get());
+    biquad.setGain(gainPtr->get());
+    biquad.setFilterType(static_cast<FilterType>(typePtr->getIndex()));
+    biquad.setTransformType(static_cast<TransformationType>(transformPtr->getIndex()));
     output.setGainDecibels(outputPtr->get());
 }
 
@@ -145,6 +150,7 @@ void ProcessWrapper<SampleType>::setOversampling()
         oversamplingFactor = 1 << curOS;
         prevOS = curOS;
         mixer.reset();
+        biquad.reset();
         output.reset();
     }
 }
