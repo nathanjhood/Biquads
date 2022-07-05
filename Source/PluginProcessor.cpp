@@ -52,6 +52,9 @@ void BiquadsAudioProcessor::setBypassParameter(juce::AudioParameterBool* newBypa
 
 bool BiquadsAudioProcessor::supportsDoublePrecisionProcessing() const
 {
+    if (isUsingDoublePrecision() == true)
+        return true;
+
     return false;
 }
 
@@ -129,8 +132,7 @@ const juce::String BiquadsAudioProcessor::getProgramName (int index)
 
 void BiquadsAudioProcessor::changeProgramName (int index, const juce::String& newName)
 {
-    juce::ignoreUnused(index);
-    juce::ignoreUnused(newName);
+    juce::ignoreUnused(index, newName);
 }
 
 //==============================================================================
@@ -138,7 +140,11 @@ void BiquadsAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBloc
 {
     juce::ignoreUnused(sampleRate, samplesPerBlock);
 
-    getProcessingPrecision();
+    processingPrecision = getProcessingPrecision();
+
+    spec.sampleRate = getSampleRate();
+    spec.maximumBlockSize = getBlockSize();
+    spec.numChannels = getTotalNumInputChannels();
 
     processorFloat.prepare( getSpec() );
     processorDouble.prepare( getSpec() );
@@ -150,41 +156,12 @@ void BiquadsAudioProcessor::releaseResources()
     processorDouble.reset();
 }
 
-void BiquadsAudioProcessor::numChannelsChanged()
-{
-    processorFloat.reset();
-    processorDouble.reset();
-    processorFloat.prepare(getSpec());
-    processorDouble.prepare(getSpec());
-}
-
-void BiquadsAudioProcessor::numBusesChanged()
-{
-    processorFloat.reset();
-    processorDouble.reset();
-    processorFloat.prepare(getSpec());
-    processorDouble.prepare(getSpec());
-}
-
-void BiquadsAudioProcessor::processorLayoutsChanged()
-{
-    processorFloat.reset();
-    processorDouble.reset();
-    processorFloat.prepare(getSpec());
-    processorDouble.prepare(getSpec());
-}
-
 bool BiquadsAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
 {
-    // This is the place where you check if the layout is supported.
-    // In this template code we only support mono or stereo.
-    // Some plugin hosts, such as certain GarageBand versions, will only
-    // load plugins that support stereo bus layouts.
     if (layouts.getMainOutputChannelSet() != juce::AudioChannelSet::mono()
         && layouts.getMainOutputChannelSet() != juce::AudioChannelSet::stereo())
         return false;
 
-    // This checks if the input layout matches the output layout
     if (layouts.getMainOutputChannelSet() != layouts.getMainInputChannelSet())
         return false;
 
@@ -193,22 +170,26 @@ bool BiquadsAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) 
 
 void BiquadsAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
-    if (bypassState->get() == true)
-    {
-        processBlockBypassed(buffer, midiMessages);
-    }
+    //if (bypassState->get())
+    //{
+    //    processBlockBypassed(buffer, midiMessages);
+    //}
 
-    else
-    {
-        juce::ScopedNoDenormals noDenormals;
+    //else
+    //{
+    //    juce::ScopedNoDenormals noDenormals;
 
-        processorFloat.process(buffer, midiMessages);
-    }
+    //    processorFloat.process(buffer, midiMessages);
+    //}
+
+    juce::ScopedNoDenormals noDenormals;
+
+    processorFloat.process(buffer, midiMessages);
 }
 
 void BiquadsAudioProcessor::processBlock(juce::AudioBuffer<double>& buffer, juce::MidiBuffer& midiMessages)
 {
-    if (bypassState->get() == true)
+    /*if (bypassState->get())
     {
         processBlockBypassed(buffer, midiMessages);
     }
@@ -218,19 +199,37 @@ void BiquadsAudioProcessor::processBlock(juce::AudioBuffer<double>& buffer, juce
         juce::ScopedNoDenormals noDenormals;
 
         processorDouble.process(buffer, midiMessages);
-    }
+    }*/
+
+    juce::ScopedNoDenormals noDenormals;
+
+    processorDouble.process(buffer, midiMessages);
 }
 
 void BiquadsAudioProcessor::processBlockBypassed(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
-    juce::ignoreUnused(buffer);
-    juce::ignoreUnused(midiMessages);
+    midiMessages.clear();
+
+    juce::dsp::AudioBlock<float> block(buffer);
+    juce::dsp::ProcessContextReplacing context(block);
+
+    const auto& inputBlock = context.getInputBlock();
+    auto& outputBlock = context.getOutputBlock();
+
+    outputBlock.copyFrom(inputBlock);
 }
 
 void BiquadsAudioProcessor::processBlockBypassed(juce::AudioBuffer<double>& buffer, juce::MidiBuffer& midiMessages)
 {
-    juce::ignoreUnused(buffer);
-    juce::ignoreUnused(midiMessages);
+    midiMessages.clear();
+
+    juce::dsp::AudioBlock<double> block(buffer);
+    juce::dsp::ProcessContextReplacing context(block);
+
+    const auto& inputBlock = context.getInputBlock();
+    auto& outputBlock = context.getOutputBlock();
+
+    outputBlock.copyFrom(inputBlock);
 }
 
 //==============================================================================

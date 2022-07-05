@@ -12,7 +12,12 @@
               file="Source/Components/AutoComponent.cpp"/>
         <FILE id="oNSzMK" name="AutoComponent.h" compile="0" resource="0" file="Source/Components/AutoComponent.h"/>
       </GROUP>
-      <GROUP id="{9CCA4E58-A6DF-778D-0E47-615CE5201735}" name="Modules"/>
+      <GROUP id="{9CCA4E58-A6DF-778D-0E47-615CE5201735}" name="Modules">
+        <FILE id="unuiPg" name="SecondOrderBiquads.cpp" compile="1" resource="0"
+              file="Source/Modules/SecondOrderBiquads.cpp"/>
+        <FILE id="fw6I4S" name="SecondOrderBiquads.h" compile="0" resource="0"
+              file="Source/Modules/SecondOrderBiquads.h"/>
+      </GROUP>
       <FILE id="VST2bi" name="PluginParameters.cpp" compile="1" resource="0"
             file="Source/PluginParameters.cpp"/>
       <FILE id="wSuuDB" name="PluginParameters.h" compile="0" resource="0"

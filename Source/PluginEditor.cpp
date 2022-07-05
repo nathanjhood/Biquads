@@ -26,7 +26,7 @@ BiquadsAudioProcessorEditor::BiquadsAudioProcessorEditor (BiquadsAudioProcessor&
     redoButton.onClick = [this] { audioProcessor.getUndoManager().redo(); };
     setResizable(true, true);
 
-    startTimerHz(24);
+    startTimerHz(60);
 }
 
 BiquadsAudioProcessorEditor::~BiquadsAudioProcessorEditor()
