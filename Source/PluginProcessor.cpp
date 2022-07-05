@@ -170,26 +170,26 @@ bool BiquadsAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) 
 
 void BiquadsAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
+    //if (bypassState->get())
+    //{
+    //    processBlockBypassed(buffer, midiMessages);
+    //}
+
+    //else
+    //{
+    //    juce::ScopedNoDenormals noDenormals;
+
+    //    processorFloat.process(buffer, midiMessages);
+    //}
+
     juce::ScopedNoDenormals noDenormals;
 
-    if (bypassState->get() != false)
-    {
-        processBlockBypassed(buffer, midiMessages);
-    }
-
-    else
-    {
-        juce::ScopedNoDenormals noDenormals;
-
-        processorFloat.process(buffer, midiMessages);
-    }
+    processorFloat.process(buffer, midiMessages);
 }
 
 void BiquadsAudioProcessor::processBlock(juce::AudioBuffer<double>& buffer, juce::MidiBuffer& midiMessages)
 {
-    juce::ScopedNoDenormals noDenormals;
-
-    if (bypassState->get() != false)
+    /*if (bypassState->get())
     {
         processBlockBypassed(buffer, midiMessages);
     }
@@ -199,7 +199,11 @@ void BiquadsAudioProcessor::processBlock(juce::AudioBuffer<double>& buffer, juce
         juce::ScopedNoDenormals noDenormals;
 
         processorDouble.process(buffer, midiMessages);
-    }
+    }*/
+
+    juce::ScopedNoDenormals noDenormals;
+
+    processorDouble.process(buffer, midiMessages);
 }
 
 void BiquadsAudioProcessor::processBlockBypassed(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
