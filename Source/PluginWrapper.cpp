@@ -84,6 +84,7 @@ void ProcessWrapper<SampleType>::prepare(Spec& spec)
         oversampler[i]->numChannels = (size_t)spec.numChannels;
 
     mixer.prepare(spec);
+    biquad.prepare(spec);
     output.prepare(spec);
 
     reset();
@@ -94,6 +95,7 @@ template <typename SampleType>
 void ProcessWrapper<SampleType>::reset()
 {
     mixer.reset();
+    biquad.reset();
     output.reset();
 
     for (int i = 0; i < 5; ++i)
