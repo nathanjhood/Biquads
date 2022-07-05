@@ -437,8 +437,8 @@ void Biquads<SampleType>::calculateCoefficients()
     }
 
     a0 = (one / a_0);
-    a1 = ((-a_1) * a0);
-    a2 = ((-a_2) * a0);
+    a1 = ((a_1 * minusOne) * a0);
+    a2 = ((a_2 * minusOne) * a0);
     b0 = (b_0 * a0);
     b1 = (b_1 * a0);
     b2 = (b_2 * a0);
