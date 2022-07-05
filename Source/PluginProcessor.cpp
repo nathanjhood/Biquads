@@ -52,12 +52,6 @@ void BiquadsAudioProcessor::setBypassParameter(juce::AudioParameterBool* newBypa
 
 bool BiquadsAudioProcessor::supportsDoublePrecisionProcessing() const
 {
-//#ifndef PRECISIONTYPE_TO_USE
-//#define PRECISIONTYPE_TO_USE
-//    return true;
-//#else
-//    return false;
-//#endif
     if (isUsingDoublePrecision() == true)
         return true;
 
@@ -178,9 +172,7 @@ void BiquadsAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce:
 {
     juce::ScopedNoDenormals noDenormals;
 
-    processorFloat.process(buffer, midiMessages);
-
-    /*if (bypassState->get() != false)
+    if (bypassState->get() != false)
     {
         processBlockBypassed(buffer, midiMessages);
     }
@@ -190,16 +182,14 @@ void BiquadsAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce:
         juce::ScopedNoDenormals noDenormals;
 
         processorFloat.process(buffer, midiMessages);
-    }*/
+    }
 }
 
 void BiquadsAudioProcessor::processBlock(juce::AudioBuffer<double>& buffer, juce::MidiBuffer& midiMessages)
 {
     juce::ScopedNoDenormals noDenormals;
 
-    processorDouble.process(buffer, midiMessages);
-
-    /*if (bypassState->get() != false)
+    if (bypassState->get() != false)
     {
         processBlockBypassed(buffer, midiMessages);
     }
@@ -209,17 +199,33 @@ void BiquadsAudioProcessor::processBlock(juce::AudioBuffer<double>& buffer, juce
         juce::ScopedNoDenormals noDenormals;
 
         processorDouble.process(buffer, midiMessages);
-    }*/
+    }
 }
 
 void BiquadsAudioProcessor::processBlockBypassed(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
-    processorFloat.bypass(buffer, midiMessages);
+    midiMessages.clear();
+
+    juce::dsp::AudioBlock<float> block(buffer);
+    juce::dsp::ProcessContextReplacing context(block);
+
+    const auto& inputBlock = context.getInputBlock();
+    auto& outputBlock = context.getOutputBlock();
+
+    outputBlock.copyFrom(inputBlock);
 }
 
 void BiquadsAudioProcessor::processBlockBypassed(juce::AudioBuffer<double>& buffer, juce::MidiBuffer& midiMessages)
 {
-    processorDouble.bypass(buffer, midiMessages);
+    midiMessages.clear();
+
+    juce::dsp::AudioBlock<double> block(buffer);
+    juce::dsp::ProcessContextReplacing context(block);
+
+    const auto& inputBlock = context.getInputBlock();
+    auto& outputBlock = context.getOutputBlock();
+
+    outputBlock.copyFrom(inputBlock);
 }
 
 //==============================================================================

@@ -9,7 +9,8 @@
 #pragma once
 
 
-#include "../JuceLibraryCode/JuceHeader.h"
+#include <JuceHeader.h>
+
 #include "PluginParameters.h"
 #include "PluginWrapper.h"
 
