@@ -13,7 +13,7 @@
 #ifndef PLUGINPARAMETERS_H_INCLUDED
 #define PLUGINPARAMETERS_H_INCLUDED
 
-#include "../JuceLibraryCode/JuceHeader.h"
+#include <JuceHeader.h>
 
 class BiquadsAudioProcessor;
 
