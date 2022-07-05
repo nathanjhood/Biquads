@@ -17,7 +17,7 @@
 
 #include <JuceHeader.h>
 
-enum class FilterType
+enum struct FilterType
 {
     lowPass2 = 0,
     lowPass1 = 1,
@@ -36,7 +36,7 @@ enum class FilterType
     allPass = 14
 };
 
-enum class TransformationType
+enum struct TransformationType
 {
     directFormI = 0,
     directFormII = 1,
@@ -151,19 +151,19 @@ private:
 
     //==========================================================================
     /** Initialised coefficient gain */
-    std::atomic<SampleType> b0 = 1.0;
-    std::atomic<SampleType> b1 = 0.0;
-    std::atomic<SampleType> b2 = 0.0;
-    std::atomic<SampleType> a0 = 1.0;
-    std::atomic<SampleType> a1 = 0.0;
-    std::atomic<SampleType> a2 = 0.0;
+    SampleType b0 = 1.0;
+    SampleType b1 = 0.0;
+    SampleType b2 = 0.0;
+    SampleType a0 = 1.0;
+    SampleType a1 = 0.0;
+    SampleType a2 = 0.0;
 
-    std::atomic<SampleType> b_0 = 1.0;
-    std::atomic<SampleType> b_1 = 0.0;
-    std::atomic<SampleType> b_2 = 0.0;
-    std::atomic<SampleType> a_0 = 1.0;
-    std::atomic<SampleType> a_1 = 0.0;
-    std::atomic<SampleType> a_2 = 0.0;
+    SampleType b_0 = 1.0;
+    SampleType b_1 = 0.0;
+    SampleType b_2 = 0.0;
+    SampleType a_0 = 1.0;
+    SampleType a_1 = 0.0;
+    SampleType a_2 = 0.0;
 
     //==========================================================================
     /** Initialised parameter */
