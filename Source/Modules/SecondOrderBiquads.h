@@ -6,7 +6,6 @@
     Author:  Nathan J. Hood 
     Website: github.com/StoneyDSP
     email:   nathanjhood@googlemail.com
-    License: GNU v3
 
   ==============================================================================
 */
@@ -105,10 +104,6 @@ public:
 
         if (context.isBypassed)
         {
-            /*frq.skip(static_cast<int> (len));
-            res.skip(static_cast<int> (len));
-            lev.skip(static_cast<int> (len));*/
-
             outputBlock.copyFrom(inputBlock);
             return;
         }
@@ -182,7 +177,7 @@ private:
     //==========================================================================
     /** Initialised constant */
     const SampleType zero = 0.0, one = 1.0, two = 2.0, minusOne = -1.0, minusTwo = -2.0;
-    const SampleType pi = static_cast<SampleType>(3.1415926535897932384626433832795);
+    const SampleType pi = juce::MathConstants<SampleType>::pi;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Biquads)
 };

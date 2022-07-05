@@ -5,7 +5,6 @@
    Author:  Nathan J. Hood 
    Website: github.com/StoneyDSP
    email:   nathanjhood@googlemail.com
-   License: GNU v3
 
  ==============================================================================
 */
@@ -25,9 +24,9 @@ void Biquads<SampleType>::setFrequency(SampleType newFreq)
 {
     jassert(minFreq <= newFreq && newFreq <= maxFreq);
 
-    if (hz != newFreq)
+    if (hz != juce::jlimit(minFreq, maxFreq, newFreq))
     {
-        hz = static_cast<SampleType>(juce::jlimit(minFreq, maxFreq, newFreq));
+        hz = newFreq;
         calculateCoefficients();
     }
 }
@@ -37,9 +36,9 @@ void Biquads<SampleType>::setResonance(SampleType newRes)
 {
     jassert(zero <= newRes && newRes <= one);
 
-    if (q != newRes)
+    if (q != juce::jlimit(SampleType(0.0), SampleType(1.0), newRes))
     {
-        q = static_cast<SampleType>(juce::jlimit(SampleType(0.0), SampleType(1.0), newRes));
+        q = newRes;
         calculateCoefficients();
     }
 }
@@ -92,8 +91,8 @@ void Biquads<SampleType>::prepare(juce::dsp::ProcessSpec& spec)
     Yn_1.resize(spec.numChannels);
     Yn_2.resize(spec.numChannels);
 
-    minFreq = static_cast <SampleType>(sampleRate) / static_cast <SampleType>(24576.0);
-    maxFreq = static_cast <SampleType>(sampleRate) / static_cast <SampleType>(2.125);
+    minFreq = static_cast <SampleType>(sampleRate / 24576.0);
+    maxFreq = static_cast <SampleType>(sampleRate / 2.125);
 
     jassert(static_cast <SampleType>(20.0) >= minFreq && minFreq <= static_cast <SampleType>(20000.0));
     jassert(static_cast <SampleType>(20.0) <= maxFreq && maxFreq >= static_cast <SampleType>(20000.0));
@@ -112,10 +111,6 @@ void Biquads<SampleType>::reset(SampleType initialValue)
 {
     for (auto v : { &Wn_1, &Wn_2, &Xn_1, &Xn_2, &Yn_1, &Yn_2 })
         std::fill(v->begin(), v->end(), initialValue);
-
-    /*frq.reset(sampleRate, rampDurationSeconds);
-    res.reset(sampleRate, rampDurationSeconds);
-    lev.reset(sampleRate, rampDurationSeconds);*/
 }
 
 template <typename SampleType>
