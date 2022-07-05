@@ -48,8 +48,6 @@ public:
     //==========================================================================
     void process(juce::AudioBuffer<SampleType>& buffer, juce::MidiBuffer& midiMessages);
 
-    void bypass(juce::AudioBuffer<SampleType>& buffer, juce::MidiBuffer& midiMessages);
-
     //==========================================================================
     /** Updates the internal state variables of the processor. */
     void update();
@@ -74,7 +72,7 @@ private:
     //==========================================================================
     /** Instantiate objects. */
     juce::dsp::DryWetMixer<SampleType> mixer;
-    //Biquads<SampleType> biquad;
+    Biquads<SampleType> biquad;
     juce::dsp::Gain<SampleType> output;
 
     //stoneydsp::filters::Biquads<SampleType> biquad;

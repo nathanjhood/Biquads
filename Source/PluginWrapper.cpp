@@ -118,27 +118,13 @@ void ProcessWrapper<SampleType>::process(juce::AudioBuffer<SampleType>& buffer, 
 
     juce::dsp::ProcessContextReplacing context(osBlock);
 
+    biquad.process(context);
+
     output.process(context);
 
     oversampler[curOS]->processSamplesDown(block);
 
     mixer.mixWetSamples(block);
-}
-
-template <typename SampleType>
-void ProcessWrapper<SampleType>::bypass(juce::AudioBuffer<SampleType>& buffer, juce::MidiBuffer& midiMessages)
-{
-    midiMessages.clear();
-
-    juce::dsp::AudioBlock<SampleType> block(buffer);
-    juce::dsp::ProcessContextReplacing context(block);
-
-    const auto& inputBlock = context.getInputBlock();
-    auto& outputBlock = context.getOutputBlock();
-    const auto numChannels = outputBlock.getNumChannels();
-    const auto numSamples = outputBlock.getNumSamples();
-
-    outputBlock.copyFrom(inputBlock);
 }
 
 template <typename SampleType>
