@@ -29,7 +29,7 @@ public:
     /** Constructor. */
     ProcessWrapper(BiquadsAudioProcessor& p);
 
-    //==============================================================================
+    ////==============================================================================
     ///** Sets the length of the ramp used for smoothing parameter changes. */
     //void setRampDurationSeconds(double newDurationSeconds) noexcept;
 
@@ -75,8 +75,6 @@ private:
     juce::dsp::DryWetMixer<SampleType> mixer;
     Biquads<SampleType> biquad;
     juce::dsp::Gain<SampleType> output;
-
-    //stoneydsp::filters::Biquads<SampleType> biquad;
 
     //==========================================================================
     /** Parameter pointers. */

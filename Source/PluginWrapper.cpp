@@ -19,7 +19,7 @@ ProcessWrapper<SampleType>::ProcessWrapper(BiquadsAudioProcessor& p)
     setup (p.getSpec()),
     mixer (),
     biquad (),
-    output (), 
+    output (),
     frequencyPtr (dynamic_cast <juce::AudioParameterFloat*> (p.getAPVTS().getParameter("frequencyID"))),
     resonancePtr (dynamic_cast <juce::AudioParameterFloat*> (p.getAPVTS().getParameter("resonanceID"))),
     gainPtr (dynamic_cast <juce::AudioParameterFloat*> (p.getAPVTS().getParameter("gainID"))),
@@ -133,7 +133,7 @@ template <typename SampleType>
 void ProcessWrapper<SampleType>::update()
 {
     mixer.setWetMixProportion(mixPtr->get() * 0.01f);
-    biquad.setFrequency(frequencyPtr->get());
+    biquad.setFrequency(frequencyPtr->get() / oversamplingFactor);
     biquad.setResonance(resonancePtr->get());
     biquad.setGain(gainPtr->get());
     biquad.setFilterType(static_cast<FilterType>(typePtr->getIndex()));
@@ -150,7 +150,6 @@ void ProcessWrapper<SampleType>::setOversampling()
         oversamplingFactor = 1 << curOS;
         prevOS = curOS;
         mixer.reset();
-        biquad.sampleRate = setup.sampleRate * oversamplingFactor;
         biquad.reset();
         output.reset();
     }
