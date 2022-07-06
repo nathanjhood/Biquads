@@ -20,8 +20,11 @@ BiquadsAudioProcessor::BiquadsAudioProcessor()
     spec (),
     parameters (*this),
     processorFloat (*this),
-    processorDouble (*this)
+    processorDouble (*this),
+    bypassState (dynamic_cast<juce::AudioParameterBool*>(apvts.getParameter("bypassID"))),
+    processingPrecision(singlePrecision)
 {
+    jassert(bypassState != nullptr);
 }
 
 BiquadsAudioProcessor::~BiquadsAudioProcessor()
@@ -246,6 +249,8 @@ juce::AudioProcessorEditor* BiquadsAudioProcessor::createEditor()
 juce::AudioProcessorValueTreeState::ParameterLayout BiquadsAudioProcessor::createParameterLayout()
 {
     APVTS::ParameterLayout params;
+
+    params.add(std::make_unique<juce::AudioParameterBool>("bypassID", "Bypass", false));
 
     Parameters::setParameterLayout(params);
 

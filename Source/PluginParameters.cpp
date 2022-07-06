@@ -71,8 +71,7 @@ void Parameters::setParameterLayout(Params& params)
             std::make_unique<juce::AudioParameterChoice>("transformID", "Transform", tString, 3),
             std::make_unique<juce::AudioParameterChoice>("osID", "Oversampling", osString, 0),
             std::make_unique<juce::AudioParameterFloat>("outputID", "Output", outputRange, 00.00f, outputAttributes),
-            std::make_unique<juce::AudioParameterFloat>("mixID", "Mix", mixRange, 100.00f, mixAttributes),
-            std::make_unique<juce::AudioParameterBool>("bypassID", "Bypass", false)
+            std::make_unique<juce::AudioParameterFloat>("mixID", "Mix", mixRange, 100.00f, mixAttributes)
             //==================================================================
             ));
 
