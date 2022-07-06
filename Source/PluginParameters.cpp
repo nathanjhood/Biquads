@@ -66,23 +66,23 @@ void Parameters::setParameterLayout(Params& params)
 
     params.add
         //======================================================================
-        (std::make_unique<juce::AudioProcessorParameterGroup>("masterID", "1", "seperatorA",
-            //==================================================================
-            std::make_unique<juce::AudioParameterChoice>("transformID", "Transform", tString, 3),
-            std::make_unique<juce::AudioParameterChoice>("osID", "Oversampling", osString, 0),
-            std::make_unique<juce::AudioParameterFloat>("outputID", "Output", outputRange, 00.00f, outputAttributes),
-            std::make_unique<juce::AudioParameterFloat>("mixID", "Mix", mixRange, 100.00f, mixAttributes)
-            //==================================================================
-            ));
-
-    params.add
-        //======================================================================
-        (std::make_unique<juce::AudioProcessorParameterGroup>("BandOneID", "0", "seperatorB",
+        (std::make_unique<juce::AudioProcessorParameterGroup>("BandOneID", "0", "seperatorA",
             //==================================================================
             std::make_unique<juce::AudioParameterFloat>("frequencyID", "Frequency", freqRange, 632.455f, freqAttributes),
             std::make_unique<juce::AudioParameterFloat>("resonanceID", "Resonance", resRange, 00.10f, resoAttributes),
             std::make_unique<juce::AudioParameterFloat>("gainID", "Gain", gainRange, 00.00f, gainAttributes),
             std::make_unique<juce::AudioParameterChoice>("typeID", "Type", fString, 0)
+            //==================================================================
+            ));
+
+    params.add
+        //======================================================================
+        (std::make_unique<juce::AudioProcessorParameterGroup>("masterID", "1", "seperatorB",
+            //==================================================================
+            std::make_unique<juce::AudioParameterChoice>("transformID", "Transform", tString, 3),
+            std::make_unique<juce::AudioParameterChoice>("osID", "Oversampling", osString, 0),
+            std::make_unique<juce::AudioParameterFloat>("outputID", "Output", outputRange, 00.00f, outputAttributes),
+            std::make_unique<juce::AudioParameterFloat>("mixID", "Mix", mixRange, 100.00f, mixAttributes)
             //==================================================================
             ));
 }

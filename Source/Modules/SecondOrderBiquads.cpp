@@ -233,12 +233,6 @@ SampleType Biquads<SampleType>::directFormIITransposed(int channel, SampleType i
 template <typename SampleType>
 void Biquads<SampleType>::calculateCoefficients()
 {
-    /*omega = (hz * ((pi * two) / static_cast <SampleType>(sampleRate)));
-    cos = (std::cos(omega));
-    sin = (std::sin(omega));
-    tan = (sin / cos);
-    juce::ignoreUnused(tan);*/
-
     alpha = (sin * (one - q));
     a = (std::pow(SampleType(10), (g * SampleType(0.05))));
     sqrtA = ((std::sqrt(a) * two) * alpha);
