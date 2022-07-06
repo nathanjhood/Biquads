@@ -150,6 +150,7 @@ void ProcessWrapper<SampleType>::setOversampling()
         oversamplingFactor = 1 << curOS;
         prevOS = curOS;
         mixer.reset();
+        biquad.sampleRate = setup.sampleRate * oversamplingFactor;
         biquad.reset();
         output.reset();
     }
