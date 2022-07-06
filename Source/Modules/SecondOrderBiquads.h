@@ -136,8 +136,6 @@ public:
     SampleType geta2() { return a2; }
     SampleType getb2() { return b2; }
 
-    double sampleRate = 44100.0;
-
 private:
     //==========================================================================
     void calculateCoefficients();
@@ -171,6 +169,7 @@ private:
     /** Initialised constant */
     const SampleType zero = 0.0, one = 1.0, two = 2.0, minusOne = -1.0, minusTwo = -2.0;
     const SampleType pi = juce::MathConstants<SampleType>::pi;
+    double sampleRate = 44100.0;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Biquads)
 };
