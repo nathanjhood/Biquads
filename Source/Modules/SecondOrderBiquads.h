@@ -17,6 +17,8 @@
 
 #include <JuceHeader.h>
 
+#include "Coefficient.h"
+
 enum struct FilterType
 {
     lowPass2 = 0,
@@ -127,12 +129,14 @@ public:
     SampleType processSample(int channel, SampleType inputValue);
 
     //==============================================================================
-    /*SampleType geta0() { return a0; }
+    SampleType geta0() { return a0; }
     SampleType getb0() { return b0; }
     SampleType geta1() { return a1; }
     SampleType getb1() { return b1; }
     SampleType geta2() { return a2; }
-    SampleType getb2() { return b2; }*/
+    SampleType getb2() { return b2; }
+
+    double sampleRate = 44100.0;
 
 private:
     //==========================================================================
@@ -143,27 +147,16 @@ private:
     SampleType directFormITransposed(int channel, SampleType inputValue);
     SampleType directFormIITransposed(int channel, SampleType inputValue);
 
-    double sampleRate = 44100.0;
-
     //==========================================================================
     /** Unit-delay object */
     std::vector<SampleType> Wn_1, Wn_2, Xn_1, Xn_2, Yn_1, Yn_2;
 
     //==========================================================================
-    /** Initialised coefficient gain */
-    SampleType b0 = 1.0;
-    SampleType b1 = 0.0;
-    SampleType b2 = 0.0;
-    SampleType a0 = 1.0;
-    SampleType a1 = 0.0;
-    SampleType a2 = 0.0;
+    /** Coefficient gain */
+    Coefficient<SampleType> b0, b1, b2, a0, a1, a2;
 
-    SampleType b_0 = 1.0;
-    SampleType b_1 = 0.0;
-    SampleType b_2 = 0.0;
-    SampleType a_0 = 1.0;
-    SampleType a_1 = 0.0;
-    SampleType a_2 = 0.0;
+    /** Coefficient calculation */
+    Coefficient<SampleType> b_0, b_1, b_2, a_0, a_1, a_2;
 
     //==========================================================================
     /** Initialised parameter */

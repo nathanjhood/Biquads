@@ -13,7 +13,10 @@
 
 //==============================================================================
 template <typename SampleType>
-Biquads<SampleType>::Biquads()
+Biquads<SampleType>::Biquads() 
+    : 
+    b0(one), b1(zero), b2(zero), a0(one), a1(zero), a2(zero), 
+    b_0(one), b_1(zero), b_2(zero), a_0(one), a_1(zero), a_2(zero)
 {
     reset();
 }
@@ -24,13 +27,14 @@ void Biquads<SampleType>::setFrequency(SampleType newFreq)
 {
     jassert(minFreq <= newFreq && newFreq <= maxFreq);
 
-    if (hz != juce::jlimit(minFreq, maxFreq, newFreq))
+    if (hz != newFreq)
     {
-        hz = newFreq;
+        hz = juce::jlimit(minFreq, maxFreq, newFreq);
 
         omega = (hz * ((pi * two) / static_cast <SampleType>(sampleRate)));
         cos = (std::cos(omega));
         sin = (std::sin(omega));
+
         calculateCoefficients();
     }
 }
@@ -40,11 +44,10 @@ void Biquads<SampleType>::setResonance(SampleType newRes)
 {
     jassert(zero <= newRes && newRes <= one);
 
-    if (q != juce::jlimit(SampleType(0.0), SampleType(1.0), newRes))
+    if (q != newRes)
     {
-        q = newRes;
+        q = juce::jlimit(SampleType(0.0), SampleType(1.0), newRes);
 
-        alpha = (sin * (one - q));
         calculateCoefficients();
     }
 }
@@ -56,8 +59,6 @@ void Biquads<SampleType>::setGain(SampleType newGain)
     {
         g = newGain;
 
-        a = (std::pow(SampleType(10), (g * SampleType(0.05))));
-        sqrtA = ((std::sqrt(a) * two) * alpha);
         calculateCoefficients();
     }
 }
@@ -223,7 +224,7 @@ SampleType Biquads<SampleType>::directFormIITransposed(int channel, SampleType i
 
     Yn = ((Xn * b0) + (Xn2));
 
-    Xn2 = ((Xn * b1) + (Xn1)+(Yn * a1));
+    Xn2 = ((Xn * b1) + (Xn1) + (Yn * a1));
     Xn1 = ((Xn * b2) + (Yn * a2));
 
     return Yn;
@@ -236,11 +237,12 @@ void Biquads<SampleType>::calculateCoefficients()
     cos = (std::cos(omega));
     sin = (std::sin(omega));
     tan = (sin / cos);
+    juce::ignoreUnused(tan);*/
+
     alpha = (sin * (one - q));
     a = (std::pow(SampleType(10), (g * SampleType(0.05))));
     sqrtA = ((std::sqrt(a) * two) * alpha);
 
-    juce::ignoreUnused(tan);*/
 
     switch (filtType)
     {
@@ -437,8 +439,8 @@ void Biquads<SampleType>::calculateCoefficients()
     }
 
     a0 = (one / a_0);
-    a1 = ((a_1 * minusOne) * a0);
-    a2 = ((a_2 * minusOne) * a0);
+    a1 = ((-a_1) * a0);
+    a2 = ((-a_2) * a0);
     b0 = (b_0 * a0);
     b1 = (b_1 * a0);
     b2 = (b_2 * a0);
