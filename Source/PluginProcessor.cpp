@@ -20,8 +20,11 @@ BiquadsAudioProcessor::BiquadsAudioProcessor()
     spec (),
     parameters (*this),
     processorFloat (*this),
-    processorDouble (*this)
+    processorDouble (*this),
+    bypassState (dynamic_cast<juce::AudioParameterBool*>(apvts.getParameter("bypassID"))),
+    processingPrecision(singlePrecision)
 {
+    jassert(bypassState != nullptr);
 }
 
 BiquadsAudioProcessor::~BiquadsAudioProcessor()
@@ -170,26 +173,26 @@ bool BiquadsAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) 
 
 void BiquadsAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
-    //if (bypassState->get())
-    //{
-    //    processBlockBypassed(buffer, midiMessages);
-    //}
+    if (bypassState->get())
+    {
+        processBlockBypassed(buffer, midiMessages);
+    }
 
-    //else
-    //{
-    //    juce::ScopedNoDenormals noDenormals;
+    else
+    {
+        juce::ScopedNoDenormals noDenormals;
 
-    //    processorFloat.process(buffer, midiMessages);
-    //}
+        processorFloat.process(buffer, midiMessages);
+    }
 
-    juce::ScopedNoDenormals noDenormals;
+    /*juce::ScopedNoDenormals noDenormals;
 
-    processorFloat.process(buffer, midiMessages);
+    processorFloat.process(buffer, midiMessages);*/
 }
 
 void BiquadsAudioProcessor::processBlock(juce::AudioBuffer<double>& buffer, juce::MidiBuffer& midiMessages)
 {
-    /*if (bypassState->get())
+    if (bypassState->get())
     {
         processBlockBypassed(buffer, midiMessages);
     }
@@ -199,11 +202,11 @@ void BiquadsAudioProcessor::processBlock(juce::AudioBuffer<double>& buffer, juce
         juce::ScopedNoDenormals noDenormals;
 
         processorDouble.process(buffer, midiMessages);
-    }*/
+    }
 
-    juce::ScopedNoDenormals noDenormals;
+    /*juce::ScopedNoDenormals noDenormals;
 
-    processorDouble.process(buffer, midiMessages);
+    processorDouble.process(buffer, midiMessages);*/
 }
 
 void BiquadsAudioProcessor::processBlockBypassed(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
@@ -246,6 +249,8 @@ juce::AudioProcessorEditor* BiquadsAudioProcessor::createEditor()
 juce::AudioProcessorValueTreeState::ParameterLayout BiquadsAudioProcessor::createParameterLayout()
 {
     APVTS::ParameterLayout params;
+
+    params.add(std::make_unique<juce::AudioParameterBool>("bypassID", "Bypass", false));
 
     Parameters::setParameterLayout(params);
 

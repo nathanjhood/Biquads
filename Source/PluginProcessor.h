@@ -108,9 +108,7 @@ private:
 
     //==========================================================================
     /** Init variables. */
-    double currentSampleRate = 0;
-    int blockSize = 0, latencySamples = 0;
-    ProcessingPrecision processingPrecision = singlePrecision;
+    ProcessingPrecision processingPrecision;
 
     //==========================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BiquadsAudioProcessor)

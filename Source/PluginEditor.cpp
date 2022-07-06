@@ -18,7 +18,7 @@ BiquadsAudioProcessorEditor::BiquadsAudioProcessorEditor (BiquadsAudioProcessor&
     undoManager(p.getUndoManager()),
     subComponents(p, p.getAPVTS())
 {
-    setSize(400, 300);
+    setSize(430, 300);
     addAndMakeVisible(subComponents);
     addAndMakeVisible(undoButton);
     addAndMakeVisible(redoButton);
