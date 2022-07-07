@@ -237,7 +237,6 @@ void Biquads<SampleType>::calculateCoefficients()
     a = (std::pow(SampleType(10), (g * SampleType(0.05))));
     sqrtA = ((std::sqrt(a) * two) * alpha);
 
-
     switch (filtType)
     {
     case filterType::lowPass2:

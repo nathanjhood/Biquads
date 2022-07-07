@@ -58,11 +58,11 @@ public:
     using filterType = FilterType;
     using transformationType = TransformationType;
 
-    //==============================================================================
+    //==========================================================================
     /** Constructor. */
     Biquads();
 
-    //==============================================================================
+    //==========================================================================
     /** Sets the centre Frequency of the filter. Range = 20..20000 */
     void setFrequency(SampleType newFreq);
 
@@ -78,7 +78,7 @@ public:
     /** Sets the BiLinear Transform for the filter to use. See enum for available types. */
     void setTransformType(transformationType newTransformType);
 
-    //==============================================================================
+    //==========================================================================
     /** Initialises the processor. */
     void prepare(juce::dsp::ProcessSpec& spec);
 
@@ -90,7 +90,7 @@ public:
     by sample processing.*/
     void snapToZero() noexcept;
 
-    //==============================================================================
+    //==========================================================================
     /** Processes the input and output samples supplied in the processing context. */
     template <typename ProcessContext>
     void process(const ProcessContext& context) noexcept
@@ -124,17 +124,18 @@ public:
 #endif
     }
 
-    //==============================================================================
+    //==========================================================================
     /** Processes one sample at a time on a given channel. */
     SampleType processSample(int channel, SampleType inputValue);
 
-    //==============================================================================
-    SampleType geta0() { return a0; }
-    SampleType getb0() { return b0; }
-    SampleType geta1() { return a1; }
-    SampleType getb1() { return b1; }
-    SampleType geta2() { return a2; }
-    SampleType getb2() { return b2; }
+    //==========================================================================
+    /** Coefficient current value. Safe to pass i.e. to the display thread */
+    SampleType geta0() { return a0.get(); }
+    SampleType getb0() { return b0.get(); }
+    SampleType geta1() { return a1.get(); }
+    SampleType getb1() { return b1.get(); }
+    SampleType geta2() { return a2.get(); }
+    SampleType getb2() { return b2.get(); }
 
 private:
     //==========================================================================
@@ -169,7 +170,7 @@ private:
     /** Initialised constant */
     const SampleType zero = 0.0, one = 1.0, two = 2.0, minusOne = -1.0, minusTwo = -2.0;
     const SampleType pi = juce::MathConstants<SampleType>::pi;
-    double sampleRate = 44100.0;
+    double sampleRate = 48000.0;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Biquads)
 };
