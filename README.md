@@ -27,7 +27,7 @@ Coffee! That's how I get things done!! If you'd like to see me get more things d
  <a href= "https://www.facebook.com/StoneyDSP.Audio/"><img src="https://github.com/StoneyDSP/StoneyDSP/blob/9608562b09ee2708affd0c31117fc25a235672d9/Assets/facebook.png"/></a>
 </p>
 
-# Manual - v1.0.9b
+# Manual - v1.1.0b
 
 + IO - Toggles the filter band on or off.
 + Frequency - Sets the centre frequency of the equalizer filter.
