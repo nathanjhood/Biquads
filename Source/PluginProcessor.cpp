@@ -184,10 +184,6 @@ void BiquadsAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce:
 
         processorFloat.process(buffer, midiMessages);
     }
-
-    /*juce::ScopedNoDenormals noDenormals;
-
-    processorFloat.process(buffer, midiMessages);*/
 }
 
 void BiquadsAudioProcessor::processBlock(juce::AudioBuffer<double>& buffer, juce::MidiBuffer& midiMessages)
@@ -203,10 +199,6 @@ void BiquadsAudioProcessor::processBlock(juce::AudioBuffer<double>& buffer, juce
 
         processorDouble.process(buffer, midiMessages);
     }
-
-    /*juce::ScopedNoDenormals noDenormals;
-
-    processorDouble.process(buffer, midiMessages);*/
 }
 
 void BiquadsAudioProcessor::processBlockBypassed(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
