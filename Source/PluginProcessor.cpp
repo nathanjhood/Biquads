@@ -18,6 +18,7 @@ BiquadsAudioProcessor::BiquadsAudioProcessor()
     undoManager (),
     apvts (*this, &undoManager, "Parameters", createParameterLayout()),
     spec (),
+    rmsLeft(), rmsRight(),
     parameters (*this),
     processorFloat (*this),
     processorDouble (*this),
