@@ -14,7 +14,7 @@
 //==============================================================================
 template <typename SampleType>
 Biquads<SampleType>::Biquads() 
-    : 
+    :
     b0(one), b1(zero), b2(zero), a0(one), a1(zero), a2(zero), 
     b_0(one), b_1(zero), b_2(zero), a_0(one), a_1(zero), a_2(zero)
 {
