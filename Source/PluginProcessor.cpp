@@ -149,6 +149,12 @@ void BiquadsAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBloc
     spec.maximumBlockSize = getBlockSize();
     spec.numChannels = getTotalNumInputChannels();
 
+    rmsLeft.reset(sampleRate, rampDurationSeconds);
+    rmsRight.reset(sampleRate, rampDurationSeconds);
+
+    rmsLeft.setCurrentAndTargetValue(-100.0f);
+    rmsRight.setCurrentAndTargetValue(-100.0f);
+
     processorFloat.prepare( getSpec() );
     processorDouble.prepare( getSpec() );
 }
@@ -183,6 +189,25 @@ void BiquadsAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce:
         juce::ScopedNoDenormals noDenormals;
 
         processorFloat.process(buffer, midiMessages);
+
+        rmsLeft.skip(buffer.getNumSamples());
+        rmsRight.skip(buffer.getNumSamples());
+
+        {
+            const auto value = juce::Decibels::gainToDecibels(buffer.getRMSLevel(0, 0, buffer.getNumSamples()));
+            if (value < rmsLeft.getCurrentValue())
+                rmsLeft.setTargetValue(value);
+            else
+                rmsLeft.setCurrentAndTargetValue(value);
+        }
+
+        {
+            const auto value = juce::Decibels::gainToDecibels(buffer.getRMSLevel(1, 0, buffer.getNumSamples()));
+            if (value < rmsRight.getCurrentValue())
+                rmsRight.setTargetValue(value);
+            else
+                rmsRight.setCurrentAndTargetValue(value);
+        }
     }
 }
 
@@ -198,6 +223,25 @@ void BiquadsAudioProcessor::processBlock(juce::AudioBuffer<double>& buffer, juce
         juce::ScopedNoDenormals noDenormals;
 
         processorDouble.process(buffer, midiMessages);
+
+        rmsLeft.skip(buffer.getNumSamples());
+        rmsRight.skip(buffer.getNumSamples());
+
+        {
+            const auto value = juce::Decibels::gainToDecibels(buffer.getRMSLevel(0, 0, buffer.getNumSamples()));
+            if (value < rmsLeft.getCurrentValue())
+                rmsLeft.setTargetValue(value);
+            else
+                rmsLeft.setCurrentAndTargetValue(value);
+        }
+
+        {
+            const auto value = juce::Decibels::gainToDecibels(buffer.getRMSLevel(1, 0, buffer.getNumSamples()));
+            if (value < rmsRight.getCurrentValue())
+                rmsRight.setTargetValue(value);
+            else
+                rmsRight.setCurrentAndTargetValue(value);
+        }
     }
 }
 
@@ -281,6 +325,16 @@ void BiquadsAudioProcessor::setCurrentProgramStateInformation(const void* data, 
     if (xmlState.get() != nullptr)
         if (xmlState->hasTagName(apvts.state.getType()))
             apvts.replaceState(juce::ValueTree::fromXml(*xmlState));
+}
+
+float BiquadsAudioProcessor::getRMSLevel(const int channel) const
+{
+    jassert(channel == 0 || channel == 1);
+    if (channel == 0)
+        return rmsLeft.getCurrentValue();
+    if (channel == 1)
+        return rmsRight.getCurrentValue();
+    return 0.0f;
 }
 
 //==============================================================================
