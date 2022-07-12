@@ -1,11 +1,13 @@
-Current: v1.0.12b
+Current: v1.1.0b
+
+![Biquads-1-1-0b](https://github.com/StoneyDSP/Biquads/blob/27760cae425b2305498b493c6f63896a1b2c3d56/Res/biquad-1-1-0.png)
 
 ## Biquads
 Multi-mode Biquad filter for audio analysis purposes using variable BiLinear transforms, processing precision, and oversampling to achieve high-quality results
 
 (Shown below; a resonant 2-pole Low Shelf filter with high oversampling, performed on a harmonic-rich 20Hz band-limited Impulse Response in Reaper)
 
-![Biquads](https://github.com/StoneyDSP/Biquads/blob/acc33bd3273e250dda6735a9c2d97bda19f8055d/Res/Biquads%201%200%2012b.png)
+![Biquads](https://github.com/StoneyDSP/Biquads/blob/6cccdb2ec332ae277d62fae106b3278f07e22b39/Res/Biquad-AutoGUI.png)
 
 + Implementing various 6dB- and 12dB- filter types (such as low pass, high pass, band pass, shelves, plus many more) using variable BiLinear transforms, switchable processing precision, and oversampling to achieve high-quality results (much more to come)!
 + This filter is subject to amplitude and phase warping of the frequency spectrum approaching the Nyquist frequency when oversampling is not used.
@@ -21,11 +23,11 @@ Coffee! That's how I get things done!! If you'd like to see me get more things d
 
 <p align="center">
  <a href= "https://twitter.com/Stoney_DSP/"><img src="https://github.com/StoneyDSP/StoneyDSP/blob/a075caeedffe23b2733ee38b12f9800f62aab9c2/Assets/twitter.png"/></a>
- <a href= "https://www.instagram.com/stoney_dsp/"><img src="https://github.com/StoneyDSP/StoneyDSP/blob/2253d684ba99e6c072353a94b49315162c381406/Assets/instagram.png"/></a>
+ <a href= "https://www.instagram.com/stoney.d.s.p/"><img src="https://github.com/StoneyDSP/StoneyDSP/blob/2253d684ba99e6c072353a94b49315162c381406/Assets/instagram.png"/></a>
  <a href= "https://www.facebook.com/StoneyDSP.Audio/"><img src="https://github.com/StoneyDSP/StoneyDSP/blob/9608562b09ee2708affd0c31117fc25a235672d9/Assets/facebook.png"/></a>
 </p>
 
-# Manual - v1.0.9b
+# Manual - v1.1.0b
 
 + IO - Toggles the filter band on or off.
 + Frequency - Sets the centre frequency of the equalizer filter.
@@ -816,7 +818,7 @@ Coffee! That's how I get things done!! If you'd like to see me get more things d
 
 <p align="center">
  <a href= "https://twitter.com/Stoney_DSP/"><img src="https://github.com/StoneyDSP/StoneyDSP/blob/a075caeedffe23b2733ee38b12f9800f62aab9c2/Assets/twitter.png"/></a>
- <a href= "https://www.instagram.com/stoney_dsp/"><img src="https://github.com/StoneyDSP/StoneyDSP/blob/2253d684ba99e6c072353a94b49315162c381406/Assets/instagram.png"/></a>
+ <a href= "https://www.instagram.com/stoney.d.s.p/"><img src="https://github.com/StoneyDSP/StoneyDSP/blob/2253d684ba99e6c072353a94b49315162c381406/Assets/instagram.png"/></a>
  <a href= "https://www.facebook.com/StoneyDSP.Audio/"><img src="https://github.com/StoneyDSP/StoneyDSP/blob/9608562b09ee2708affd0c31117fc25a235672d9/Assets/facebook.png"/></a>
 </p>
 
