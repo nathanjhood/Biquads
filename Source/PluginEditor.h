@@ -12,6 +12,7 @@
 
 #include "PluginProcessor.h"
 #include "Components/AutoComponent.h"
+#include "Components/Viewer.h"
 
 //==============================================================================
 /**
@@ -39,6 +40,8 @@ private:
     AutoComponent subComponents;
 
     //stoneydsp::graphics::AutoComponent subComponents;
+
+    stoneydsp::graphics::VerticalMeter meterLeft, meterRight;
 
     juce::ArrowButton undoButton{ "Undo", 0.5f , juce::Colours::white };
     juce::ArrowButton redoButton{ "Redo", 0.0f , juce::Colours::white };

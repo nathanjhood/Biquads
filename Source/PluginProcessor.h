@@ -93,8 +93,12 @@ public:
     /** Audio processor specs. */
     Spec spec;
     Spec& getSpec() { return spec; };
+
+    float getRMSLevel(const int channel) const;
     
 private:
+    juce::LinearSmoothedValue<float> rmsLeft, rmsRight;
+
     //==========================================================================
     /** Audio processor members. */
     Parameters parameters;
@@ -108,6 +112,7 @@ private:
 
     //==========================================================================
     /** Init variables. */
+    double rampDurationSeconds = 0.05;
     ProcessingPrecision processingPrecision;
 
     //==========================================================================
