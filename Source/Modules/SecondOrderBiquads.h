@@ -17,7 +17,8 @@
 
 #include <JuceHeader.h>
 
-#include "Coefficient.h"
+//#include "Transforms.h"
+#include "Coeff.h"
 
 enum struct FilterType
 {

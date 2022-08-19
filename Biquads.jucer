@@ -2,7 +2,7 @@
 
 <JUCERPROJECT id="jER3fq" name="Biquads" projectType="audioplug" useAppConfig="1"
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
-              companyName="StoneyDSP" cppLanguageStandard="latest" version="1.1.0b"
+              companyName="StoneyDSP" cppLanguageStandard="latest" version="1.2.0b"
               pluginAUMainType="'aufx'" pluginVST3Category="Fx" pluginFormats="buildVST3"
               companyEmail="nathan@stoneydsp.com">
   <MAINGROUP id="butqEA" name="Biquads">
@@ -13,12 +13,15 @@
         <FILE id="oNSzMK" name="AutoComponent.h" compile="0" resource="0" file="Source/Components/AutoComponent.h"/>
       </GROUP>
       <GROUP id="{9CCA4E58-A6DF-778D-0E47-615CE5201735}" name="Modules">
+        <FILE id="jFVDgA" name="Coeff.h" compile="0" resource="0" file="Source/Modules/Coeff.h"/>
         <FILE id="CkmJBA" name="Coefficient.cpp" compile="1" resource="0" file="Source/Modules/Coefficient.cpp"/>
         <FILE id="cfbQWO" name="Coefficient.h" compile="0" resource="0" file="Source/Modules/Coefficient.h"/>
         <FILE id="unuiPg" name="SecondOrderBiquads.cpp" compile="1" resource="0"
               file="Source/Modules/SecondOrderBiquads.cpp"/>
         <FILE id="fw6I4S" name="SecondOrderBiquads.h" compile="0" resource="0"
               file="Source/Modules/SecondOrderBiquads.h"/>
+        <FILE id="ADq6zj" name="Transforms.cpp" compile="1" resource="0" file="Source/Modules/Transforms.cpp"/>
+        <FILE id="AQ8DFD" name="Transforms.h" compile="0" resource="0" file="Source/Modules/Transforms.h"/>
       </GROUP>
       <FILE id="VST2bi" name="PluginParameters.cpp" compile="1" resource="0"
             file="Source/PluginParameters.cpp"/>

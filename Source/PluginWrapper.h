@@ -15,7 +15,7 @@
 
 #include <JuceHeader.h>
 
-#include "Modules/SecondOrderBiquads.h"
+#include "./Modules/Coefficient.h"
 
 class BiquadsAudioProcessor;
 
@@ -28,6 +28,10 @@ public:
     //==========================================================================
     /** Constructor. */
     ProcessWrapper(BiquadsAudioProcessor& p);
+    ~ProcessWrapper();
+
+    void assertions();
+    void ptrKill(juce::RangedAudioParameter* paramPtr);
 
     ////==============================================================================
     ///** Sets the length of the ramp used for smoothing parameter changes. */
@@ -64,8 +68,6 @@ private:
     // This reference is provided as a quick way for the wrapper to
     // access the processor object that created it.
     BiquadsAudioProcessor& audioProcessor;
-    APVTS& state;
-    Spec& setup;
 
     //==========================================================================
     std::unique_ptr<juce::dsp::Oversampling<SampleType>> oversampler[5];

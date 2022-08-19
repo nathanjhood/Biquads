@@ -15,8 +15,6 @@ template <typename SampleType>
 ProcessWrapper<SampleType>::ProcessWrapper(BiquadsAudioProcessor& p)
     : 
     audioProcessor (p), 
-    state (p.getAPVTS()),
-    setup (p.getSpec()),
     mixer (),
     biquad (),
     output (),
@@ -29,6 +27,33 @@ ProcessWrapper<SampleType>::ProcessWrapper(BiquadsAudioProcessor& p)
     outputPtr (dynamic_cast <juce::AudioParameterFloat*> (p.getAPVTS().getParameter("outputID"))),
     mixPtr (dynamic_cast <juce::AudioParameterFloat*> (p.getAPVTS().getParameter("mixID")))
 {
+    assertions();
+
+    auto osFilter = juce::dsp::Oversampling<SampleType>::filterHalfBandFIREquiripple;
+
+    for (int i = 0; i < 5; ++i)
+        oversampler[i] = std::make_unique<juce::dsp::Oversampling<SampleType>>
+        (p.getTotalNumInputChannels(), i, osFilter, true, false);
+
+    reset();
+}
+
+template <typename SampleType>
+ProcessWrapper<SampleType>::~ProcessWrapper()
+{
+    ptrKill(frequencyPtr);
+    ptrKill(resonancePtr);
+    ptrKill(gainPtr);
+    ptrKill(typePtr);
+    ptrKill(transformPtr);
+    ptrKill(osPtr);
+    ptrKill(outputPtr);
+    ptrKill(mixPtr);
+}
+
+template <typename SampleType>
+void ProcessWrapper<SampleType>::assertions()
+{
     jassert(frequencyPtr != nullptr);
     jassert(resonancePtr != nullptr);
     jassert(gainPtr != nullptr);
@@ -37,14 +62,14 @@ ProcessWrapper<SampleType>::ProcessWrapper(BiquadsAudioProcessor& p)
     jassert(osPtr != nullptr);
     jassert(outputPtr != nullptr);
     jassert(mixPtr != nullptr);
+}
 
-    auto osFilter = juce::dsp::Oversampling<SampleType>::filterHalfBandFIREquiripple;
-
-    for (int i = 0; i < 5; ++i)
-        oversampler[i] = std::make_unique<juce::dsp::Oversampling<SampleType>>
-        (audioProcessor.getTotalNumInputChannels(), i, osFilter, true, false);
-
-    reset();
+template <typename SampleType>
+void ProcessWrapper<SampleType>::ptrKill(juce::RangedAudioParameter* paramPtr)
+{
+    paramPtr = nullptr;
+    delete paramPtr;
+    jassert(paramPtr == nullptr);
 }
 
 //template <typename SampleType>
