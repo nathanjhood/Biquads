@@ -5,3 +5,6 @@ build
 
 Builds
 JuceLibraryCode
+
+!*.svg
+!*.png

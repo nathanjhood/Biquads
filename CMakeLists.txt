@@ -30,7 +30,7 @@ file (COPY
 
 file (COPY
     "${CMAKE_CURRENT_SOURCE_DIR}/include/${PROJECT_NAME}/Modules/Biquads.h"
-    "${CMAKE_CURRENT_SOURCE_DIR}/include/${PROJECT_NAME}/Modules/Coefficient.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/${PROJECT_NAME}/Modules/Coefficient.hpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/include/${PROJECT_NAME}/Modules/SecondOrderBiquads.h"
     DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/include/${PROJECT_NAME}/Modules"
 )
@@ -142,9 +142,9 @@ target_sources (Biquads
             $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include/${PROJECT_NAME}/Modules/Biquads.h>
             $<INSTALL_INTERFACE:include/${PROJECT_NAME}/Modules/Biquads.h>
 
-            # include/${PROJECT_NAME}/Modules/Coefficient.h
-            $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include/${PROJECT_NAME}/Modules/Coefficient.h>
-            $<INSTALL_INTERFACE:include/${PROJECT_NAME}/Modules/Coefficient.h>
+            # include/${PROJECT_NAME}/Modules/Coefficient.hpp
+            $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include/${PROJECT_NAME}/Modules/Coefficient.hpp>
+            $<INSTALL_INTERFACE:include/${PROJECT_NAME}/Modules/Coefficient.hpp>
 
             # include/${PROJECT_NAME}/Modules/SecondOrderBiquads.h
             $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include/${PROJECT_NAME}/Modules/SecondOrderBiquads.h>
