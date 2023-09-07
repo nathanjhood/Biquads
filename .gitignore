@@ -1,2 +1,10 @@
-﻿Builds
+﻿.cache
+.vscode
+
+build
+
+Builds
 JuceLibraryCode
+
+!*.svg
+!*.png

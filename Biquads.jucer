@@ -4,64 +4,31 @@
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
               companyName="StoneyDSP" cppLanguageStandard="latest" version="1.1.0b"
               pluginAUMainType="'aufx'" pluginVST3Category="Fx" pluginFormats="buildVST3"
-              companyEmail="nathan@stoneydsp.com">
+              companyEmail="nathanjhood@googlemail.com">
   <MAINGROUP id="butqEA" name="Biquads">
     <GROUP id="{B7BEB523-13AE-DC81-1072-78BF4CC3A396}" name="Source">
       <GROUP id="{19BEE9C3-82E8-891C-7BCF-623477F38C0E}" name="Components">
-        <FILE id="NxF6lP" name="AutoComponent.cpp" compile="1" resource="0"
-              file="Source/Components/AutoComponent.cpp"/>
-        <FILE id="oNSzMK" name="AutoComponent.h" compile="0" resource="0" file="Source/Components/AutoComponent.h"/>
+        <FILE id="NxF6lP" name="AutoComponent.cpp" compile="1" resource="0" file="include/Biquads/Components/AutoComponent.cpp"/>
+        <FILE id="oNSzMK" name="AutoComponent.h" compile="0" resource="0" file="include/Biquads/Components/AutoComponent.h"/>
       </GROUP>
       <GROUP id="{9CCA4E58-A6DF-778D-0E47-615CE5201735}" name="Modules">
-        <FILE id="CkmJBA" name="Coefficient.cpp" compile="1" resource="0" file="Source/Modules/Coefficient.cpp"/>
-        <FILE id="cfbQWO" name="Coefficient.h" compile="0" resource="0" file="Source/Modules/Coefficient.h"/>
-        <FILE id="unuiPg" name="SecondOrderBiquads.cpp" compile="1" resource="0"
-              file="Source/Modules/SecondOrderBiquads.cpp"/>
-        <FILE id="fw6I4S" name="SecondOrderBiquads.h" compile="0" resource="0"
-              file="Source/Modules/SecondOrderBiquads.h"/>
+        <FILE id="CkmJBA" name="Coefficient.cpp" compile="1" resource="0" file="include/Biquads/Modules/Coefficient.cpp"/>
+        <FILE id="cfbQWO" name="Coefficient.h" compile="0" resource="0" file="include/Biquads/Modules/Coefficient.h"/>
+        <FILE id="unuiPg" name="SecondOrderBiquads.cpp" compile="1" resource="0" file="include/Biquads/Modules/SecondOrderBiquads.cpp"/>
+        <FILE id="fw6I4S" name="SecondOrderBiquads.h" compile="0" resource="0" file="include/Biquads/Modules/SecondOrderBiquads.h"/>
       </GROUP>
-      <FILE id="VST2bi" name="PluginParameters.cpp" compile="1" resource="0"
-            file="Source/PluginParameters.cpp"/>
-      <FILE id="wSuuDB" name="PluginParameters.h" compile="0" resource="0"
-            file="Source/PluginParameters.h"/>
-      <FILE id="pvZewN" name="PluginWrapper.cpp" compile="1" resource="0"
-            file="Source/PluginWrapper.cpp"/>
-      <FILE id="irQxwW" name="PluginWrapper.h" compile="0" resource="0" file="Source/PluginWrapper.h"/>
-      <FILE id="vmXpNV" name="PluginProcessor.cpp" compile="1" resource="0"
-            file="Source/PluginProcessor.cpp"/>
-      <FILE id="qN9OPw" name="PluginProcessor.h" compile="0" resource="0"
-            file="Source/PluginProcessor.h"/>
-      <FILE id="TI9DHC" name="PluginEditor.cpp" compile="1" resource="0"
-            file="Source/PluginEditor.cpp"/>
-      <FILE id="fgFCra" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
+      <FILE id="VST2bi" name="PluginParameters.cpp" compile="1" resource="0" file="include/Biquads/PluginParameters.cpp"/>
+      <FILE id="wSuuDB" name="PluginParameters.h" compile="0" resource="0" file="include/Biquads/PluginParameters.h"/>
+      <FILE id="pvZewN" name="PluginWrapper.cpp" compile="1" resource="0" file="include/Biquads/PluginWrapper.cpp"/>
+      <FILE id="irQxwW" name="PluginWrapper.h" compile="0" resource="0" file="include/Biquads/PluginWrapper.h"/>
+      <FILE id="vmXpNV" name="PluginProcessor.cpp" compile="1" resource="0" file="include/Biquads/PluginProcessor.cpp"/>
+      <FILE id="qN9OPw" name="PluginProcessor.h" compile="0" resource="0" file="include/Biquads/PluginProcessor.h"/>
+      <FILE id="TI9DHC" name="PluginEditor.cpp" compile="1" resource="0" file="include/Biquads/PluginEditor.cpp"/>
+      <FILE id="fgFCra" name="PluginEditor.h" compile="0" resource="0" file="include/Biquads/PluginEditor.h"/>
     </GROUP>
   </MAINGROUP>
   <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1" JUCE_VST3_CAN_REPLACE_VST2="0"/>
   <EXPORTFORMATS>
-    <VS2022 targetFolder="Builds/VisualStudio2022">
-      <CONFIGURATIONS>
-        <CONFIGURATION isDebug="1" name="Debug" targetName="Biquads" enablePluginBinaryCopyStep="1"
-                       vst3BinaryLocation="C:\Program Files\Common Files\VST3\StoneyDSP"/>
-        <CONFIGURATION isDebug="0" name="Release" targetName="Biquads" enablePluginBinaryCopyStep="1"
-                       vst3BinaryLocation="C:\Program Files\Common Files\VST3\StoneyDSP"/>
-      </CONFIGURATIONS>
-      <MODULEPATHS>
-        <MODULEPATH id="juce_audio_basics" path="../../Users/Nathan/DSP/JUCE/modules"/>
-        <MODULEPATH id="juce_audio_devices" path="../../Users/Nathan/DSP/JUCE/modules"/>
-        <MODULEPATH id="juce_audio_formats" path="../../Users/Nathan/DSP/JUCE/modules"/>
-        <MODULEPATH id="juce_audio_plugin_client" path="../../Users/Nathan/DSP/JUCE/modules"/>
-        <MODULEPATH id="juce_audio_processors" path="../../Users/Nathan/DSP/JUCE/modules"/>
-        <MODULEPATH id="juce_audio_utils" path="../../Users/Nathan/DSP/JUCE/modules"/>
-        <MODULEPATH id="juce_core" path="../../Users/Nathan/DSP/JUCE/modules"/>
-        <MODULEPATH id="juce_data_structures" path="../../Users/Nathan/DSP/JUCE/modules"/>
-        <MODULEPATH id="juce_events" path="../../Users/Nathan/DSP/JUCE/modules"/>
-        <MODULEPATH id="juce_graphics" path="../../Users/Nathan/DSP/JUCE/modules"/>
-        <MODULEPATH id="juce_gui_basics" path="../../Users/Nathan/DSP/JUCE/modules"/>
-        <MODULEPATH id="juce_gui_extra" path="../../Users/Nathan/DSP/JUCE/modules"/>
-        <MODULEPATH id="juce_dsp" path="../../Users/Nathan/DSP/JUCE/modules"/>
-        <MODULEPATH id="stoneydsp_graphics" path="../../Users/Nathan/DSP/StoneyDSP/modules"/>
-      </MODULEPATHS>
-    </VS2022>
   </EXPORTFORMATS>
   <MODULES>
     <MODULE id="juce_audio_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
