@@ -1,2 +1,7 @@
-﻿Builds
+﻿.cache
+.vscode
+
+build
+
+Builds
 JuceLibraryCode
