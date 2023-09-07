@@ -1,22 +1,15 @@
-/*
-  ==============================================================================
+/**
+ * @file AutoComponent.cpp
+ * @author StoneyDSP (nathanjhood@googlemail.com)
+ * @brief
+ * @version 0.1
+ * @date 2023-09-07
+ *
+ * @copyright Copyright (c) 2023
+ *
+ */
 
-    AutoComponent.cpp
-    Created: 30 May 2022 2:54:47pm
-    Author:  (?) & StoneyDSP
-
-  ==============================================================================
-*/
- 
 #include "AutoComponent.h"
-
-/*
-  ==============================================================================
-
-    Look and Feel.
-
-  ==============================================================================
-*/
 
 AutoComponentLookAndFeel::AutoComponentLookAndFeel()
 {
@@ -24,9 +17,9 @@ AutoComponentLookAndFeel::AutoComponentLookAndFeel()
     //LookAndFeel_V4::getLightColourScheme();
     //LookAndFeel_V4::getDarkColourScheme();
     //LookAndFeel_V4::getGreyColourScheme();
-    //LookAndFeel_V4::getMidnightColourScheme();*/
+    //LookAndFeel_V4::getMidnightColourScheme();
 
-    ///* Knob style */
+    // Knob style
     setColour(juce::Slider::rotarySliderOutlineColourId, juce::Colours::darkgrey);
     setColour(juce::Slider::rotarySliderFillColourId, juce::Colours::lightslategrey);
     setColour(juce::Slider::backgroundColourId, juce::Colours::green);
@@ -37,12 +30,12 @@ AutoComponentLookAndFeel::AutoComponentLookAndFeel()
     setColour(juce::Slider::textBoxHighlightColourId, juce::Colours::hotpink);
     setColour(juce::Slider::textBoxOutlineColourId, juce::Colours::lightgrey);
 
-    //* Button style */
+    // Button style
     setColour(juce::Button::buttonDown, juce::Colours::orangered);
     setColour(juce::Button::buttonNormal, juce::Colours::darkgrey);
     setColour(juce::Button::buttonOver, juce::Colours::lightslategrey);
 
-    ///* Text Button style */
+    // Text Button style
     //setColour(TextButton::buttonColourId, juce::Colours::grey);
     setColour(juce::TextButton::buttonOnColourId, juce::Colours::hotpink);
     setColour(juce::TextButton::buttonNormal, juce::Colours::darkgrey);
@@ -51,14 +44,6 @@ AutoComponentLookAndFeel::AutoComponentLookAndFeel()
     //setColour(TextButton::textColourOnId, juce::Colours::white);
     //setColour(TextButton::textColourOffId, juce::Colours::transparentWhite);
 }
-
-/*
-  ==============================================================================
-
-    AutoComponent.
-
-  ==============================================================================
-*/
 
 AutoComponent::AutoComponent(juce::AudioProcessor& p, APVTS& apvts, Lambda& paramLambda) : lambda(paramLambda)
 {
@@ -117,27 +102,21 @@ AutoComponent::AutoComponent(juce::AudioProcessor& p, APVTS& apvts, Lambda& para
 
     for (auto* param : params)
     {
-        //======================================================================
-        /** If = ParameterFloat, make new Rotary Slider with Attachment */
-
+        // If = ParameterFloat, make new Rotary Slider with Attachment
         if (auto* paramFloat = dynamic_cast<juce::AudioParameterFloat*> (param))
         {
             addSlider (paramFloat);
             continue;
         }
 
-        //======================================================================
-        /** If = ParameterChoice, make new Box with Attachment */
-
+        // If = ParameterChoice, make new Box with Attachment */
         if (auto* paramChoice = dynamic_cast<juce::AudioParameterChoice*> (param))
         {
             addBox (paramChoice);
             continue;
         }
-        
-        //======================================================================
-        /** If = ParameterBool, make new Button with Attachment */
 
+        // If = ParameterBool, make new Button with Attachment */
         if (auto* paramBool = dynamic_cast<juce::AudioParameterBool*> (param))
         {
             addButton (paramBool);
@@ -148,13 +127,9 @@ AutoComponent::AutoComponent(juce::AudioProcessor& p, APVTS& apvts, Lambda& para
     setSize (getWidth(), getHeight());
 }
 
-//==============================================================================
-
 void AutoComponent::paint (juce::Graphics& g)
 {
-    //==========================================================================
-    /** Paint Slider/Box name. */
-
+    // Paint Slider/Box name.
     auto paintName = [this, &g] (juce::Component& comp, juce::String name)
     {
         const int height = 20;
@@ -170,8 +145,7 @@ void AutoComponent::paint (juce::Graphics& g)
     for (auto* b : boxes)
         paintName (b->box, b->box.getName());
 
-    //==========================================================================
-    /** Apply local Look and Feel. */
+    // Apply local Look and Feel.
 
     auto applyLookAndFeel = [this, &g] (juce::Component& comp)
     {
@@ -188,14 +162,11 @@ void AutoComponent::paint (juce::Graphics& g)
         applyLookAndFeel(b->button);
 }
 
-//==============================================================================
-
 void AutoComponent::resized()
 {
-    //==========================================================================
-    /** This is generally where you'll want to lay out the positions of any
-    /** subcomponents in your editor... */
-    
+    // This is generally where you'll want to lay out the positions of any
+    // subcomponents in your editor...
+
     int x = 20;
     bool first = true;
 
@@ -236,4 +207,3 @@ void AutoComponent::resized()
         first = false;
     }
 }
-//==============================================================================

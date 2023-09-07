@@ -1,12 +1,13 @@
-/*
-  ==============================================================================
-
-    PluginParameters.cpp
-    Created: 29 May 2022 7:58:00pm
-    Author:  Nathan J. Hood
-
-  ==============================================================================
-*/
+/**
+ * @file PluginParameters.cpp
+ * @author StoneyDSP (nathanjhood@googlemail.com)
+ * @brief
+ * @version 0.1
+ * @date 2023-09-07
+ *
+ * @copyright Copyright (c) 2023
+ *
+ */
 
 #include "PluginParameters.h"
 #include "PluginProcessor.h"

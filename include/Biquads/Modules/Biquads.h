@@ -1,17 +1,17 @@
-/*
-  ==============================================================================
-
-    Biquads.h
-    Created: 16 May 2022 2:54:47am
-    Author:  StoneyDSP
-
-  ==============================================================================
-*/
+/**
+ * @file Biquads.h
+ * @author StoneyDSP (nathanjhood@googlemail.com)
+ * @brief
+ * @version 0.1
+ * @date 2023-09-07
+ *
+ * @copyright Copyright (c) 2023
+ *
+ */
 
 #pragma once
 
-#ifndef BIQUADS_H_INCLUDED
-#define BIQUADS_H_INCLUDED
+#define __STONEYDSP_BIQUADS_MODULES_BIQUADS_H__
 
 #include "../JuceLibraryCode/JuceHeader.h"
 
@@ -193,5 +193,3 @@ private:
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Biquads)
 };
-
-#endif //BIQUADS_H_INCLUDED

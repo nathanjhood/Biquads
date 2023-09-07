@@ -1,19 +1,17 @@
-/*
-  ==============================================================================
-
-    Coefficient.h
-    Created: 6 Jul 2022 12:58:03am
-    Author:  Nathan J. Hood
-    Website: github.com/StoneyDSP
-    email:   nathanjhood@googlemail.com
-
-  ==============================================================================
-*/
+/**
+ * @file Coefficient.h
+ * @author StoneyDSP (nathanjhood@googlemail.com)
+ * @brief
+ * @version 0.1
+ * @date 2023-09-07
+ *
+ * @copyright Copyright (c) 2023
+ *
+ */
 
 #pragma once
 
-#ifndef COEFFICIENT_H_INCLUDED
-#define COEFFICIENT_H_INCLUDED
+#define __STONEYDSP_BIQUADS_MODULES_COEFFICIENT_H__
 
 #include <atomic>
 
@@ -46,5 +44,3 @@ private:
 
     std::atomic<SampleType> value;
 };
-
-#endif //COEFFICIENT_H_INCLUDED

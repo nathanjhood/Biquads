@@ -1,13 +1,17 @@
-/*
-  ==============================================================================
-
-    This file contains the basic framework code for a JUCE plugin processor.
-
-  ==============================================================================
-*/
+/**
+ * @file PluginProcessor.h
+ * @author StoneyDSP (nathanjhood@googlemail.com)
+ * @brief
+ * @version 0.1
+ * @date 2023-09-07
+ *
+ * @copyright Copyright (c) 2023
+ *
+ */
 
 #pragma once
 
+#define __STONEYDSP_BIQUADS_PLUGINPROCESSOR_H__
 
 #include <JuceHeader.h>
 
@@ -95,7 +99,7 @@ public:
     Spec& getSpec() { return spec; };
 
     float getRMSLevel(const int channel) const;
-    
+
 private:
     juce::LinearSmoothedValue<float> rmsLeft, rmsRight;
 

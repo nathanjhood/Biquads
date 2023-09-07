@@ -1,24 +1,26 @@
-/*
-  ==============================================================================
-
-    SecondOrderBiquads.h
-    Created: 30 Jun 2022 2:43:43am
-    Author:  Nathan J. Hood 
-    Website: github.com/StoneyDSP
-    email:   nathanjhood@googlemail.com
-
-  ==============================================================================
-*/
+/**
+ * @file SecondOrderBiquads.hpp
+ * @author StoneyDSP (nathanjhood@googlemail.com)
+ * @brief
+ * @version 0.1
+ * @date 2023-09-07
+ *
+ * @copyright Copyright (c) 2023
+ *
+ */
 
 #pragma once
 
-#ifndef SECONDORDERBIQUADS_H_INCLUDED
-#define SECONDORDERBIQUADS_H_INCLUDED
+#define __STONEYDSP_BIQUADS_MODULES_SECONDORDERBIQUADS_H__
 
 #include <JuceHeader.h>
 
 #include "Coefficient.h"
 
+/**
+ * @brief A list of the types of the filter.
+ *
+ */
 enum struct FilterType
 {
     lowPass2 = 0,
@@ -47,9 +49,10 @@ enum struct TransformationType
 };
 
 /**
-    A handy 2-pole Biquad multi-mode equalizer.
-*/
-
+ * @brief The 'Biquads' class.
+ *
+ * @tparam SampleType
+ */
 template <typename SampleType>
 class Biquads
 {
@@ -58,40 +61,25 @@ public:
     using filterType = FilterType;
     using transformationType = TransformationType;
 
-    //==========================================================================
-    /** Constructor. */
     Biquads();
 
-    //==========================================================================
-    /** Sets the centre Frequency of the filter. Range = 20..20000 */
     void setFrequency(SampleType newFreq);
-
-    /** Sets the resonance of the filter. Range = 0..1 */
     void setResonance(SampleType newRes);
-
-    /** Sets the centre Frequency gain of the filter. Peak and shelf modes only. */
     void setGain(SampleType newGain);
-
-    /** Sets the type of the filter. See enum for available types. */
     void setFilterType(filterType newFiltType);
-
-    /** Sets the BiLinear Transform for the filter to use. See enum for available types. */
     void setTransformType(transformationType newTransformType);
 
-    //==========================================================================
-    /** Initialises the processor. */
     void prepare(juce::dsp::ProcessSpec& spec);
-
-    /** Resets the internal state variables of the processor. */
     void reset(SampleType initialValue = { 0.0 });
-
-    /** Ensure that the state variables are rounded to zero if the state
-    variables are denormals. This is only needed if you are doing sample
-    by sample processing.*/
     void snapToZero() noexcept;
 
-    //==========================================================================
-    /** Processes the input and output samples supplied in the processing context. */
+    /**
+     * @brief  Processes the input and output samples supplied in the
+     * processing context.
+     *
+     * @tparam ProcessContext
+     * @param context
+     */
     template <typename ProcessContext>
     void process(const ProcessContext& context) noexcept
     {
@@ -124,21 +112,48 @@ public:
 #endif
     }
 
-    //==========================================================================
-    /** Processes one sample at a time on a given channel. */
     SampleType processSample(int channel, SampleType inputValue);
 
     //==========================================================================
-    /** Coefficient current value. Safe to pass i.e. to the display thread */
+    /**
+     * @brief Coefficient current value. Safe to pass i.e. to the display thread.
+     *
+     * @return SampleType
+     */
     SampleType geta0() { return a0.get(); }
+    /**
+     * @brief Coefficient current value. Safe to pass i.e. to the display thread.
+     *
+     * @return SampleType
+     */
     SampleType getb0() { return b0.get(); }
+    /**
+     * @brief Coefficient current value. Safe to pass i.e. to the display thread.
+     *
+     * @return SampleType
+     */
     SampleType geta1() { return a1.get(); }
+    /**
+     * @brief Coefficient current value. Safe to pass i.e. to the display thread.
+     *
+     * @return SampleType
+     */
     SampleType getb1() { return b1.get(); }
+    /**
+     * @brief Coefficient current value. Safe to pass i.e. to the display thread.
+     *
+     * @return SampleType
+     */
     SampleType geta2() { return a2.get(); }
+    /**
+     * @brief Coefficient current value. Safe to pass i.e. to the display thread.
+     *
+     * @return SampleType
+     */
     SampleType getb2() { return b2.get(); }
 
 private:
-    //==========================================================================
+
     void calculateCoefficients();
 
     SampleType directFormI(int channel, SampleType inputValue);
@@ -146,21 +161,32 @@ private:
     SampleType directFormITransposed(int channel, SampleType inputValue);
     SampleType directFormIITransposed(int channel, SampleType inputValue);
 
-    //==========================================================================
-    /** Unit-delay object */
+    /**
+     * @brief Unit-delay object(s).
+     *
+     */
     std::vector<SampleType> Wn_1, Wn_2, Xn_1, Xn_2, Yn_1, Yn_2;
 
-    //==========================================================================
-    /** Coefficient gain */
+    /**
+     * @brief Coefficient gain(s).
+     *
+     */
     Coefficient<SampleType> b0, b1, b2, a0, a1, a2;
 
-    /** Coefficient calculation */
+    /** Coefficient calculation(s). */
     Coefficient<SampleType> b_0, b_1, b_2, a_0, a_1, a_2;
 
-    //==========================================================================
-    /** Initialised parameter */
-    SampleType loop = 0.0, outputSample = 0.0;
-    SampleType minFreq = 20.0, maxFreq = 20000.0, hz = 1000.0, q = 0.5, g = 0.0;
+    /** Initialised parameter(s) */
+    SampleType
+        loop = 0.0
+        , outputSample = 0.0
+        , minFreq = 20.0
+        , maxFreq = 20000.0
+        , hz = 1000.0
+        , q = 0.5
+        , g = 0.0
+    ;
+
     filterType filtType = filterType::lowPass2;
     transformationType transformType = transformationType::directFormIItransposed;
 
@@ -174,5 +200,3 @@ private:
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Biquads)
 };
-
-#endif //SECONDORDERBIQUADS_H_INCLUDED

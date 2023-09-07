@@ -1,38 +1,31 @@
-/*
-  ==============================================================================
-
-    AutoButton.cpp
-    Created: 5 Jun 2022 3:21:48am
-    Author:  natha
-
-  ==============================================================================
-*/
+/**
+ * @file AutoButton.cpp
+ * @author StoneyDSP (nathanjhood@googlemail.com)
+ * @brief
+ * @version 0.1
+ * @date 2023-09-07
+ *
+ * @copyright Copyright (c) 2023
+ *
+ */
 
 #include "AutoButton.h"
-
-/*
-  ==============================================================================
-
-    Look and Feel.
-
-  ==============================================================================
-*/
 
 AutoButtonLookAndFeel::AutoButtonLookAndFeel()
 {
     //setColourScheme(LookAndFeel_V4::getMidnightColourScheme());
-    /*LookAndFeel_V4::getLightColourScheme();
+    LookAndFeel_V4::getLightColourScheme();
     LookAndFeel_V4::getDarkColourScheme();
     LookAndFeel_V4::getGreyColourScheme();
-    LookAndFeel_V4::getMidnightColourScheme();*/
+    LookAndFeel_V4::getMidnightColourScheme();
 
-    //* Button style */
-    /*setColour(juce::Button::buttonDown, juce::Colours::orangered);
+    // Button style
+    setColour(juce::Button::buttonDown, juce::Colours::orangered);
     setColour(juce::Button::buttonNormal, juce::Colours::darkgrey);
-    setColour(juce::Button::buttonOver, juce::Colours::lightslategrey);*/
+    setColour(juce::Button::buttonOver, juce::Colours::lightslategrey);
 
-    ///* Text Button style */
-    //setColour(TextButton::buttonColourId, juce::Colours::grey);
+    // Text Button style
+    // setColour(TextButton::buttonColourId, juce::Colours::grey);
     setColour(juce::TextButton::buttonOnColourId, juce::Colours::hotpink);
     setColour(juce::TextButton::buttonNormal, juce::Colours::darkgrey);
     setColour(juce::TextButton::buttonOver, juce::Colours::lightslategrey);
@@ -41,15 +34,7 @@ AutoButtonLookAndFeel::AutoButtonLookAndFeel()
     //setColour(TextButton::textColourOffId, juce::Colours::transparentWhite);
 }
 
-/*
-  ==============================================================================
 
-    AutoComponent.
-
-  ==============================================================================
-*/
-
-//==============================================================================
 AutoButton::AutoButton(juce::AudioProcessor& p, APVTS& apvts, Lambda& paramLambda) : lambdaSupplier(paramLambda)
 {
     // In your constructor, you should add any child components, and
@@ -73,8 +58,7 @@ AutoButton::AutoButton(juce::AudioProcessor& p, APVTS& apvts, Lambda& paramLambd
 
     for (auto* param : params)
     {
-        //======================================================================
-        /** If = ParameterBool, make new Button with Attachment */
+        // If = ParameterBool, make new Button with Attachment
 
         if (auto* paramBool = dynamic_cast<juce::AudioParameterBool*> (param))
         {
@@ -83,7 +67,7 @@ AutoButton::AutoButton(juce::AudioProcessor& p, APVTS& apvts, Lambda& paramLambd
         }
     }
 
-    //setSize(getWidth(), 100);
+    // setSize(getWidth(), 100);
     setSize(getWidth(), getHeight());
 
 }
@@ -94,19 +78,17 @@ AutoButton::~AutoButton()
 
 void AutoButton::paint (juce::Graphics& g)
 {
-    //==========================================================================
-    /** Paint Knob border. */
+    // Paint Knob border.
 
-    /*g.setColour(juce::Colours::lightslategrey);
-    g.drawRect(getLocalBounds(), 5);*/
+    // g.setColour(juce::Colours::lightslategrey);
+    // g.drawRect(getLocalBounds(), 5);
 
     // Add project info text to background here
-    /*g.setColour(juce::Colours::antiquewhite);
-    g.setFont(15.0f);
-    g.drawFittedText("Buttons", getLocalBounds(), juce::Justification::centredTop, 1);*/
+    // g.setColour(juce::Colours::antiquewhite);
+    // g.setFont(15.0f);
+    // g.drawFittedText("Buttons", getLocalBounds(), juce::Justification::centredTop, 1);
 
-    //==========================================================================
-    /** Apply local Look and Feel. */
+    // Apply local Look and Feel.
 
     auto applyLookAndFeel = [this, &g](juce::Component& comp)
     {
@@ -119,9 +101,8 @@ void AutoButton::paint (juce::Graphics& g)
 
 void AutoButton::resized()
 {
-    //==========================================================================
-    /** This is generally where you'll want to lay out the positions of any
-    /** subcomponents in your editor... */
+    // This is generally where you'll want to lay out the positions of any
+    // subcomponents in your editor...
 
     int x = 20;
     bool first = true;
@@ -141,12 +122,11 @@ void AutoButton::resized()
         first = false;
     }
 
-    /*for (auto* b : buttons)
-    {
-        int offset = first ? 0 : 0;
-        b->button.setBounds(x - offset, 40, 70, 20);
-        x = b->button.getRight();
-        first = false;
-    }*/
+    // for (auto* b : buttons)
+    // {
+    //     int offset = first ? 0 : 0;
+    //     b->button.setBounds(x - offset, 40, 70, 20);
+    //     x = b->button.getRight();
+    //     first = false;
+    // }
 }
-//==============================================================================

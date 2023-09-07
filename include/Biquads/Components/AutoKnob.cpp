@@ -1,26 +1,20 @@
-/*
-  ==============================================================================
-
-    AutoKnob.cpp
-    Created: 30 May 2022 2:54:47pm
-    Author: StoneyDSP
-
-  ==============================================================================
-*/
+/**
+ * @file AutoKnob.cpp
+ * @author StoneyDSP (nathanjhood@googlemail.com)
+ * @brief
+ * @version 0.1
+ * @date 2023-09-07
+ *
+ * @copyright Copyright (c) 2023
+ *
+ */
 
 #include "AutoKnob.h"
 
-/*
-  ==============================================================================
-
-    Look and Feel.
-
-  ==============================================================================
-*/
 
 AutoKnobLookAndFeel::AutoKnobLookAndFeel()
 {
-    ///* Knob style */
+    // Knob style
     setColour(juce::Slider::rotarySliderOutlineColourId, juce::Colours::darkgrey);
     setColour(juce::Slider::rotarySliderFillColourId, juce::Colours::lightslategrey);
     //setColour(juce::Slider::backgroundColourId, juce::Colours::brown);
@@ -32,20 +26,12 @@ AutoKnobLookAndFeel::AutoKnobLookAndFeel()
     setColour(juce::Slider::textBoxOutlineColourId, juce::Colours::lightgrey);
 }
 
-/*
-  ==============================================================================
-
-    AutoKnob.
-
-  ==============================================================================
-*/
-
 AutoKnob::AutoKnob(juce::AudioProcessor& p, APVTS& apvts, Lambda& paramLambda) : lambdaSupplier(paramLambda)
 {
     auto addKnob = [=, &apvts] (juce::AudioParameterFloat* param)
     {
         KnobWithAttachment* newKnob = new KnobWithAttachment;
-        
+
         addAndMakeVisible(newKnob->knob);
         newKnob->attachment.reset(new KnobAttachment(apvts, param->paramID, newKnob->knob));
 
@@ -67,8 +53,7 @@ AutoKnob::AutoKnob(juce::AudioProcessor& p, APVTS& apvts, Lambda& paramLambda) :
 
     for (auto* param : params)
     {
-        //======================================================================
-        /** If = ParameterFloat, make new Rotary Slider with Attachment */
+        // If = ParameterFloat, make new Rotary Slider with Attachment
 
         if (auto* paramFloat = dynamic_cast<juce::AudioParameterFloat*> (param))
         {
@@ -78,36 +63,34 @@ AutoKnob::AutoKnob(juce::AudioProcessor& p, APVTS& apvts, Lambda& paramLambda) :
     }
 
     setSize(getWidth(), getHeight());
-    
+
 }
 
 AutoKnob::~AutoKnob()
 {
 }
 
-//==============================================================================
 void AutoKnob::paint(juce::Graphics& g)
 {
-    //==========================================================================
-    /** Paint Knob border. */
+    // Paint Knob border.
 
-    /*g.setColour(juce::Colours::lightslategrey);
-    g.drawRect(getLocalBounds(), 5);*/
+    // g.setColour(juce::Colours::lightslategrey);
+    // g.drawRect(getLocalBounds(), 5);
 
-    //// Add project info text to background here
+    // Add project info text to background here
+
     //g.setColour(juce::Colours::antiquewhite);
     //g.setFont(15.0f);
     //g.drawFittedText("Knobs", getLocalBounds(), juce::Justification::centredTop, 1);
 
-    //==========================================================================
-    /** Paint Slider name. */
+    // Paint Slider name.
 
     auto paintName = [this, &g](juce::Component& comp, juce::String name)
     {
         const int height = 20;
         const int initialY = 2;
 
-        juce::Rectangle<int> nameBox(comp.getX(), comp.getY() / 2 /*initialY*/, comp.getWidth(), height);
+        juce::Rectangle<int> nameBox(comp.getX(), comp.getY() / 2 /** initialY */, comp.getWidth(), height);
 
         g.setColour(juce::Colours::antiquewhite);
         g.setFont(15.0f);
@@ -117,8 +100,7 @@ void AutoKnob::paint(juce::Graphics& g)
     for (auto* k : knobs)
         paintName(k->knob, k->knob.getName());
 
-    //==========================================================================
-    /** Apply local Look and Feel. */
+    // Apply local Look and Feel.
 
     auto applyLookAndFeel = [this, &g](juce::Component& comp)
     {
@@ -129,14 +111,11 @@ void AutoKnob::paint(juce::Graphics& g)
         applyLookAndFeel(k->knob);
 }
 
-//==============================================================================
-
 void AutoKnob::resized()
 {
-    //==========================================================================
-    /** This is generally where you'll want to lay out the positions of any
-    /** subcomponents in your editor... */
-    
+    // This is generally where you'll want to lay out the positions of any
+    // subcomponents in your editor...
+
     int x = 5;
     bool first = true;
 
@@ -163,4 +142,3 @@ void AutoKnob::resized()
     //    first = false;
     //}
 }
-//==============================================================================

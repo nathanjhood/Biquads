@@ -1,20 +1,23 @@
-/*
-  ==============================================================================
-
-    This file contains the basic framework code for a JUCE plugin processor.
-
-  ==============================================================================
-*/
+/**
+ * @file PluginProcessor.cpp
+ * @author StoneyDSP (nathanjhood@googlemail.com)
+ * @brief
+ * @version 0.1
+ * @date 2023-09-07
+ *
+ * @copyright Copyright (c) 2023
+ *
+ */
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
 //==============================================================================
 BiquadsAudioProcessor::BiquadsAudioProcessor()
-     : 
+     :
     AudioProcessor (BusesProperties()
                        .withInput  ("Input",  juce::AudioChannelSet::stereo(), true)
-                       .withOutput ("Output", juce::AudioChannelSet::stereo(), true)), 
+                       .withOutput ("Output", juce::AudioChannelSet::stereo(), true)),
     undoManager (),
     apvts (*this, &undoManager, "Parameters", createParameterLayout()),
     spec (),
@@ -68,8 +71,8 @@ juce::AudioProcessor::ProcessingPrecision BiquadsAudioProcessor::getProcessingPr
 }
 
 bool BiquadsAudioProcessor::isUsingDoublePrecision() const noexcept
-{ 
-    return processingPrecision == doublePrecision; 
+{
+    return processingPrecision == doublePrecision;
 }
 
 void BiquadsAudioProcessor::setProcessingPrecision(ProcessingPrecision newPrecision) noexcept

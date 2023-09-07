@@ -1,17 +1,17 @@
-/*
-  ==============================================================================
-
-    PluginWrapper.h
-    Created: 8 May 2022 9:38:17pm
-    Author:  StoneyDSP
-
-  ==============================================================================
-*/
+/**
+ * @file PluginWrapper.h
+ * @author StoneyDSP (nathanjhood@googlemail.com)
+ * @brief
+ * @version 0.1
+ * @date 2023-09-07
+ *
+ * @copyright Copyright (c) 2023
+ *
+ */
 
 #pragma once
 
-#ifndef PLUGINWRAPPER_H_INCLUDED
-#define PLUGINWRAPPER_H_INCLUDED
+#define __STONEYDSP_BIQUADS_PLUGINWRAPPER_H__
 
 #include <JuceHeader.h>
 
@@ -93,5 +93,3 @@ private:
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ProcessWrapper)
 };
-
-#endif //  PLUGINWRAPPER_H_INCLUDED

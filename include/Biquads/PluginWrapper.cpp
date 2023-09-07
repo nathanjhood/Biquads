@@ -1,20 +1,21 @@
-/*
-  ==============================================================================
-
-    PluginWrapper.cpp
-    Created: 8 May 2022 9:38:17pm
-    Author:  StoneyDSP
-
-  ==============================================================================
-*/
+/**
+ * @file PluginWrapper.cpp
+ * @author StoneyDSP (nathanjhood@googlemail.com)
+ * @brief
+ * @version 0.1
+ * @date 2023-09-07
+ *
+ * @copyright Copyright (c) 2023
+ *
+ */
 
 #include "PluginWrapper.h"
 #include "PluginProcessor.h"
 
 template <typename SampleType>
 ProcessWrapper<SampleType>::ProcessWrapper(BiquadsAudioProcessor& p)
-    : 
-    audioProcessor (p), 
+    :
+    audioProcessor (p),
     state (p.getAPVTS()),
     setup (p.getSpec()),
     mixer (),

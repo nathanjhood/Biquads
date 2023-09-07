@@ -1,17 +1,17 @@
-/*
-  ==============================================================================
-
-    PluginParameters.h
-    Created: 29 May 2022 7:58:00pm
-    Author:  Nathan J. Hood
-
-  ==============================================================================
-*/
+/**
+ * @file PluginParameters.h
+ * @author StoneyDSP (nathanjhood@googlemail.com)
+ * @brief
+ * @version 0.1
+ * @date 2023-09-07
+ *
+ * @copyright Copyright (c) 2023
+ *
+ */
 
 #pragma once
 
-#ifndef PLUGINPARAMETERS_H_INCLUDED
-#define PLUGINPARAMETERS_H_INCLUDED
+#define __STONEYDSP_BIQUADS_PLUGINPARAMETERS_H__
 
 #include <JuceHeader.h>
 
@@ -38,5 +38,3 @@ private:
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Parameters)
 };
-
-#endif //PLUGINPARAMETERS_H_INCLUDED
