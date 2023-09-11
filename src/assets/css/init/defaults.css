@@ -1,0 +1,527 @@
+/*-----------------------------------*
+*	StoneyDSP
+* CSS Reset to HTML standards (p2)
+*	MIT 2023
+*-----------------------------------*/
+
+/*
+* Browser defaults
+* https://www.w3schools.com/cssref/css_default_values.php
+*/
+
+
+/*
+* When setting the style for several link states, there are some order rules:
+* a:hover MUST come after a:link and a:visited
+* a:active MUST come after a:hover
+*/
+
+@layer defaults {
+
+  a:link, a:visited {
+    text-decoration: underline;
+    cursor: auto;
+  }
+
+  a:link,
+  a:link:active,
+  a:visited,
+  a:visited:active {
+    color: (internal value);
+  }
+
+  /* abbr {} */
+
+  address {
+    display: block;
+    font-style: italic;
+  }
+
+  area {
+    display: none;
+  }
+
+  article, aside {
+    display: block;
+  }
+
+  /* audio {} */
+
+  b {
+    font-weight: bold;
+  }
+
+  /* base {} */
+
+  /* bdi {} */
+
+  bdo {
+    unicode-bidi: bidi-override;
+  }
+
+  blockquote {
+    display: block;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    margin-left: 40px;
+    margin-right: 40px;
+  }
+
+  body {
+    display: block;
+    margin: 8px;
+  }
+
+  body:focus {
+    outline: none;
+  }
+
+  /* br {} */
+
+  /* button {} */
+
+  /* canvas {} */
+
+  caption {
+    display: table-caption;
+    text-align: center;
+  }
+
+  cite {
+    font-style: italic;
+  }
+
+  code {
+    font-family: monospace;
+  }
+
+  col {
+    display: table-column;
+  }
+
+  colgroup {
+    display: table-column-group;
+  }
+
+  datalist {
+    display: none;
+  }
+
+  dd {
+    display: block;
+    margin-left: 40px;
+  }
+
+  del {
+    text-decoration: line-through;
+  }
+
+  details {
+    display: block;
+  }
+
+  dfn {
+    font-style: italic;
+  }
+
+  /* dialog {} */
+
+  div	{
+    display: block;
+  }
+
+  dl {
+    display: block;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  dt {
+    display: block;
+  }
+
+  em {
+    font-style: italic;
+  }
+
+  embed:focus {
+    outline: none;
+  }
+
+  fieldset {
+    display: block;
+    margin-left: 2px;
+    margin-right: 2px;
+    padding-top: 0.35em;
+    padding-bottom: 0.625em;
+    padding-left: 0.75em;
+    padding-right: 0.75em;
+    border: 2px groove (internal value);
+  }
+
+  figcaption {
+    display: block;
+  }
+
+  figure {
+    display: block;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    margin-left: 40px;
+    margin-right: 40px;
+  }
+
+  footer {
+    display: block;
+  }
+
+  form {
+    display: block;
+    margin-top: 0;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    display: block;
+    margin-left: 0;
+    margin-right: 0;
+    margin-inline-start: 0;
+    margin-inline-end: 0;
+    font-weight: bold;
+  }
+
+  h1 {
+    font-size: 2em;
+    margin-top: 0.67em;
+    margin-bottom: 0.67em;
+  }
+
+  h2 {
+    font-size: 1.5em;
+    margin-top: 0.83em;
+    margin-bottom: 0.83em;
+  }
+
+  h3 {
+    font-size: 1.17em;
+    margin-top: 1em;
+    margin-bottom: 1em;
+  }
+
+  h4 {
+    font-size: 1em;
+    margin-top: 1.33em;
+    margin-bottom: 1.33em;
+  }
+
+  h5 {
+    font-size: 0.83em;
+    margin-top: 1.67em;
+    margin-bottom: 1.67em;
+  }
+
+  h6 {
+    font-size: 0.67em;
+    margin-top: 2.33em;
+    margin-bottom: 2.33em;
+  }
+
+  head {
+    display: none;
+  }
+
+  header {
+    display: block;
+  }
+
+  hr {
+    display: block;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    margin-left: auto;
+    margin-right: auto;
+    border-style: inset;
+    border-width: 1px;
+  }
+
+  html {
+    display: block;
+  }
+
+  html:focus {
+    outline: none;
+  }
+
+  i {
+    font-style: italic;
+  }
+
+  iframe:focus {
+    outline: none;
+  }
+
+  iframe[seamless] {
+    display: block;
+  }
+
+  img {
+    display: inline-block;
+  }
+
+  /* input {} */
+
+  ins {
+    text-decoration: underline;
+  }
+
+  kbd {
+    font-family: monospace;
+  }
+
+  label {
+    cursor: default;
+  }
+
+  legend {
+    display: block;
+    padding-left: 2px;
+    padding-right: 2px;
+    border: none;
+  }
+
+  li {
+    display: list-item;
+  }
+
+  link  {
+    display: none;
+  }
+
+  /* main {} */
+
+  map {
+    display: inline;
+  }
+
+  mark {
+    background-color: #ffff00;
+    color: black;
+  }
+
+  menu {
+    display: block;
+    list-style-type: disc;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 40px;
+  }
+
+  /* menuitem{} */
+
+  /* meta {} */
+
+  /* meter {} */
+
+  nav {
+    display: block;
+  }
+
+  /* noscript {} */
+
+  object:focus {
+    outline: none;
+  }
+
+  ol {
+    display: block;
+    list-style-type: decimal;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 40px;
+  }
+
+  /* optgroup {} */
+
+  /* option {} */
+
+  output {
+    display: inline;
+  }
+
+  p {
+    display: block;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  param {
+    display: none;
+  }
+
+  /* picture {} */
+
+  pre {
+    display: block;
+    font-family: monospace;
+    white-space: pre;
+    margin: 1em 0;
+  }
+
+  /* progress {} */
+
+  q {
+    display: inline;
+  }
+
+  q::before {
+    content: open-quote;
+  }
+
+  q::after {
+    content: close-quote;
+  }
+
+  /* rp {} */
+
+  rt {
+    line-height: normal;
+  }
+
+  /* ruby {} */
+
+  s {
+    text-decoration: line-through;
+  }
+
+  samp {
+    font-family: monospace;
+  }
+
+  script {
+    display: none;
+  }
+
+  section {
+    display: block;
+  }
+
+  /* select {} */
+
+  small {
+    font-size: smaller;
+  }
+
+  /* source {} */
+
+  /* span {} */
+
+  strike {
+    text-decoration: line-through;
+  }
+
+  strong {
+    font-weight: bold;
+  }
+
+  style {
+    display: none;
+  }
+
+  sub {
+    vertical-align: sub;
+    font-size: smaller;
+  }
+
+  summary {
+    display: block;
+  }
+
+  sup {
+    vertical-align: super;
+    font-size: smaller;
+  }
+
+  table {
+    display: table;
+    border-collapse: separate;
+    border-spacing: 2px;
+    border-color: gray;
+  }
+
+  tbody {
+    display: table-row-group;
+    vertical-align: middle;
+    border-color: inherit;
+  }
+
+  td {
+    display: table-cell;
+    vertical-align: inherit;
+  }
+
+  /* template {} */
+
+  /* textarea {} */
+
+  tfoot {
+    display: table-footer-group;
+    vertical-align: middle;
+    border-color: inherit;
+  }
+
+  th {
+    display: table-cell;
+    vertical-align: inherit;
+    font-weight: bold;
+    text-align: center;
+  }
+
+  thead {
+    display: table-header-group;
+    vertical-align: middle;
+    border-color: inherit;
+  }
+
+  /* time {} */
+
+  title	{
+    display: none;
+  }
+
+  tr {
+    display: table-row;
+    vertical-align: inherit;
+    border-color: inherit;
+  }
+
+  /* track {} */
+
+  u {
+    text-decoration: underline;
+  }
+
+  ul {
+    display: block;
+    list-style-type: disc;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 40px;
+  }
+
+  var {
+    font-style: italic;
+  }
+
+  /* video {} */
+
+  /* wbr {} */
+}

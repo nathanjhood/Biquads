@@ -1,0 +1,407 @@
+
+/* Calculate fractional font size using responsive 'vw' prop...*/
+/* Set all cascaded font sizes to be relative */
+/* body {
+  font-family: 'Cascadia';
+  font-size: calc(15.00px + 0.390625vw);
+  background-color: var(--brand-color__black);
+  display: block;
+	margin: 0;
+  line-height: 1.0;
+  width: 100%;
+  height: 100%;
+  min-width: 100%;
+  min-height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+} */
+
+/* header {
+  position: fixed;
+  top: 0;
+  min-width: 100%;
+  display: flex;
+  font-size: smaller;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  justify-content: center;
+  background-color: var(--brand-color__red);
+  z-index: var(--z-index__overground);
+} */
+
+/* main {
+  display: flex;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: calc(inherit + var(--z-index__scale-depth));
+} */
+
+/* footer {
+  position: relative;
+  min-width: 100.0%;
+  align-items: center;
+  font-size: smaller;
+  z-index: calc(inherit + var(--z-index__scale-depth));
+} */
+/* section {
+  contain: content;
+  z-index: calc(inherit + var(--z-index__scale-depth));
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding-top: 0;
+  padding-bottom: 1.0em;
+} */
+
+/* div {
+  display: flex;
+} */
+/* figure {
+  display: flex;
+  -ms-flex-direction: column;
+  flex-direction: column;
+} */
+/* nav {
+  width: 100.0%;
+  display: flex;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  z-index: var(--z-index__foreground);
+} */
+
+/* menu {
+  display: flex;
+  list-style-type: none;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 100.0%;
+  margin: 0;
+  padding: 0;
+} */
+/* menu > li {
+  list-style-type: none;
+  padding: 1.0em;
+  background-color: transparent;
+  text-align: center;
+} */
+/* li {
+  list-style-type: none;
+  padding: 1.0em;
+  background-color: transparent;
+} */
+
+/* menu > li > a:visited {
+  color: var(--brand-color__white);
+} */
+
+/*
+* When setting the style for several link states, there are some order rules:
+* a:hover MUST come after a:link and a:visited
+* a:active MUST come after a:hover
+*/
+
+/* a {
+  cursor: pointer;
+  z-index: calc(inherit + var(--z-index__scale-depth));
+  font-weight: bolder;
+} */
+
+/* unvisited link */
+/* a:link {
+  text-decoration: none;
+  color: var(--brand-color__link);
+} */
+
+/* visited link */
+/* a:visited {
+  text-decoration: none;
+  color: var(--brand-color__link-visited);
+} */
+
+/* mouse over link */
+/* a:hover {
+  text-decoration: underline var(--brand-color__link-hover);
+  color: var(--brand-color__link-hover);
+  font-weight: bolder;
+} */
+
+/* selected link */
+/* a:active {
+  text-decoration: underline;
+  color: var(--brand-color__link-active);
+} */
+
+h1 {
+  display: block;
+  margin-left: 0;
+  margin-right: 0;
+  font-weight: bold;
+
+  font-size: 2.00em;
+  margin-top: 0.67em;
+  margin-bottom: 0.67em;
+
+  /* color: var(--brand-color__text);
+  z-index: calc(inherit + var(--z-index__scale-depth)); */
+}
+h2 {
+  display: block;
+  margin-left: 0;
+  margin-right: 0;
+  font-weight: bold;
+
+  font-size: 1.5em;
+  margin-top: 0.83em;
+  margin-bottom: 0.83em;
+
+  /* color: var(--brand-color__text);
+  z-index: calc(inherit + var(--z-index__scale-depth)); */
+}
+h3 {
+  display: block;
+  margin-left: 0;
+  margin-right: 0;
+  font-weight: bold;
+
+  font-size: 1.17em;
+  margin-top: 1.00em;
+  margin-bottom: 1.00em;
+
+  /* color: var(--brand-color__text);
+  z-index: calc(inherit + var(--z-index__scale-depth)); */
+}
+h4 {
+  display: block;
+  margin-left: 0;
+  margin-right: 0;
+  font-weight: bold;
+  text-align: left;
+
+  font-size: 1.0rem;
+  margin-top: 1.33em;
+  margin-bottom: 1.33em;
+
+  /* color: var(--brand-color__text);
+  z-index: calc(inherit + var(--z-index__scale-depth)); */
+}
+h5 {
+  display: block;
+  margin-left: 0;
+  margin-right: 0;
+  font-weight: bold;
+  text-align: left;
+
+  font-size: 0.83em;
+  margin-top: 1.67em;
+  margin-bottom: 1.67em;
+/*
+  color: var(--brand-color__text);
+  z-index: calc(inherit + var(--z-index__scale-depth)); */
+}
+h6 {
+  display: block;
+  margin-left: 0;
+  margin-right: 0;
+  font-weight: bold;
+  text-align: left;
+
+  font-size: 0.67em;
+  margin-top: 2.33em;
+  margin-bottom: 2.33em;
+
+  /* color: var(--brand-color__text);
+  z-index: calc(inherit + var(--z-index__scale-depth)); */
+}
+p {
+  display: block;
+  margin-left: 0;
+  margin-right: 0;
+  margin-top: 1.00em;
+  margin-bottom: 1.00em;
+
+  font-weight: normal;
+  font-size: 1.0rem;
+
+  /* color: var(--brand-color__text);
+  z-index: calc(inherit + var(--z-index__scale-depth)); */
+}
+
+small {
+  font-size: smaller;
+}
+address {
+  text-align: center;
+  justify-content: center;
+}
+/* img {
+  width: 100%;
+  height: auto;
+  z-index: calc(inherit + var(--z-index__scale-depth));
+} */
+
+/* Sensible HTML Table layout */
+table {
+  table-layout: fixed;
+  padding: 1.0em;
+}
+colgroup {
+  table-layout: fixed;
+}
+col {
+  table-layout: fixed;
+}
+th {
+  table-layout: fixed;
+  justify-content: center;
+  text-align: center;
+  text-decoration: none;
+  font-weight: bold;
+  padding: 1.0em;
+}
+tr {
+  table-layout: fixed;
+  justify-content: center;
+  align-items: center;
+}
+td {
+  table-layout: fixed;
+  text-align: center;
+  padding: 1.0em;
+}
+thead {
+  table-layout: fixed;
+  text-align: center;
+}
+tbody {
+  table-layout: fixed;
+  text-align: center;
+}
+tfoot {
+  table-layout: fixed;
+  text-align: center;
+}
+
+
+
+
+/* Size of all tables contained within 'sections's */
+/* table {
+  width: 80%;
+  background-color: var(--color__white-alpha-10);
+  border-radius: var(--brand-border-radius);
+  box-shadow: var(--brand-shadow);
+}
+table > thead {
+  background-color: var(--color__white-alpha-10);
+  border-radius: var(--brand-border-radius);
+  padding: 1.0em;
+}
+table > thead > tr {
+  background-color: var(--color__white-alpha-10);
+  border-radius: var(--brand-border-radius);
+  box-shadow: var(--brand-shadow);
+  padding: 1.0em;
+}
+table > thead > tr > th {
+  background-color: var(--color__white-alpha-10);
+  border-radius: var(--brand-border-radius);
+  box-shadow: var(--brand-shadow);
+  padding: 1.0em;
+}
+table > thead > tr > td {
+  background-color: var(--color__white-alpha-10);
+  border-radius: var(--brand-border-radius);
+  box-shadow: var(--brand-shadow);
+  padding: 1.0em;
+}
+table > tbody > tr > th {
+  background-color: var(--color__white-alpha-10);
+  border-radius: var(--brand-border-radius);
+  box-shadow: var(--brand-shadow);
+  padding: 1.0em;
+}
+table > tbody > tr > td {
+  background-color: var(--color__white-alpha-10);
+  border-radius: var(--brand-border-radius);
+  box-shadow: var(--brand-shadow);
+  padding: 1.0em;
+}
+table > tfoot > tr > th {
+  background-color: var(--color__white-alpha-10);
+  border-radius: var(--brand-border-radius);
+  box-shadow: var(--brand-shadow);
+  padding: 1.0em;
+}
+table > tfoot > tr > td {
+  background-color: var(--color__white-alpha-10);
+  border-radius: var(--brand-border-radius);
+  box-shadow: var(--brand-shadow);
+  padding: 1.0em;
+} */
+
+
+:root {
+  --scrollbar-x__width: calc(100vh - (100vh - 100%));
+  --scrollbar-y__width: calc(100vw - (100vw - 100%));
+
+  /* Define brand-specific colors */
+  --brand-color__yellow-dark: var(--color__yellow-900);
+  --brand-color__yellow: var(--color__yellow-700);
+  --brand-color__yellow-light: var(--color__yellow-500);
+  --brand-color__bright_yellow: var(--color__yellow-300);
+  --brand-color__bright_yellow-light: var(--color__yellow-100);
+
+  --brand-color__blue-dark: var(--color__blue-900);
+  --brand-color__blue: var(--color__blue-700);
+  --brand-color__blue-light: var(--color__blue-500);
+  --brand-color__bright_blue: var(--color__blue-300);
+  --brand-color__bright_blue-light: var(--color__blue-100);
+
+  --brand-color__green-dark: var(--color__green-900);
+  --brand-color__green: var(--color__green-700);
+  --brand-color__green-light: var(--color__green-500);
+  --brand-color__bright_green: var(--color__green-300);
+  --brand-color__bright_green-light: var(--color__green-100);
+
+
+  --brand-color__red-dark: var(--color__red-900);
+  --brand-color__red: var(--color__red-700);
+  --brand-color__red-light: var(--color__red-500);
+  --brand-color__bright_red: var(--color__red-300);
+  --brand-color__bright_red-light: var(--color__red-100);
+
+  --brand-color__black: var(--color__black);
+  --brand-color__gray-dark: var(--color__neutral-700);
+  --brand-color__gray: var(--color__neutral-500);
+  --brand-color__gray-light: var(--color__neutral-300);
+  --brand-color__white: var(--color__white);
+
+  /*
+  * Define brand elements using brand colors
+  */
+  --brand-color__text: var(--color__neutral-100);
+  --brand-color__text-light: var(--color__neutral-300);
+  --brand-color__text-medium: var(--color__neutral-500);
+  --brand-color__text-dark: var(--color__neutral-900);
+
+  /* back-, fore-, and middle-ground colors */
+  --brand-color__underground: var(--color__neutral-900);
+  --brand-color__background: var(--color__neutral-700);
+  --brand-color__middleground: var(--color__neutral-500);
+  --brand-color__foreground: var(--color__neutral-300);
+  --brand-color__overground: var(--color__neutral-100);
+
+  --brand-color__link: var(--brand-color__yellow-light);
+  --brand-color__link-visited: var(--brand-color__yellow);
+  --brand-color__link-hover: var(--brand-color__bright_yellow);
+
+  /* Styles */
+  --brand-border-radius: 1.5em;
+  --brand-shadow: 0 0.25rem 0.25rem var(--color__black);
+}

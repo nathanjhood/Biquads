@@ -1,0 +1,267 @@
+/*
+*  CSS Anims
+*  StoneyDSP 2023
+*/
+
+/*
+*  Custom keyframe: .anim__bg-slideleft{}
+*/
+@-webkit-keyframes slidelr {
+  0% {
+    -webkit-transform: translateX(-25%) translateY(0%) rotate(0deg);
+    -webkit-transform-origin: left;
+  }
+  100% {
+    -webkit-transform: translateX(25%) translateY(0%) rotate(0deg);
+    -webkit-transform-origin: left;
+  }
+}
+@-moz-keyframes slidelr {
+  0% {
+    -moz-transform: translateX(-25%) translateY(0%) rotate(0deg);
+    -moz-transform-origin: left;
+  }
+  100% {
+    -moz-transform: translateX(25%) translateY(0%) rotate(0deg);
+    -moz-transform-origin: left;
+  }
+}
+@-ms-keyframes slidelr {
+  0% {
+    -ms-transform: translateX(-25%) translateY(0%) rotate(0deg);
+    -ms-transform-origin: left;
+  }
+  100% {
+    -ms-transform: translateX(25%) translateY(0%) rotate(0deg);
+    -ms-transform-origin: left;
+  }
+}
+@-o-keyframes slidelr {
+  0% {
+    -o-transform: translateX(-25%) translateY(0%) rotate(0deg);
+    -o-transform-origin: left;
+  }
+  100% {
+    -o-transform: translateX(25%) translateY(0%) rotate(0deg);
+    -o-transform-origin: left;
+  }
+}
+@keyframes slidelr {
+  0% {
+    transform: translateX(-25%) translateY(0%) rotate(0deg);
+    transform-origin: left;
+  }
+  100% {
+    transform: translateX(25%) translateY(0%) rotate(0deg);
+    transform-origin: left;
+  }
+}
+.anim__slide-lr-1s {
+  -webkit-animation: slidelr 1s;
+  -moz-animation: slidelr 1s;
+  -ms-animation: slidelr 1s;
+  -o-animation: slidelr 1s;
+  animation: slidelr 1s;
+
+  animation-direction: alternate;
+  animation-duration: 1s;
+  animation-timing-function: linear;
+  animation-delay: 0ms;
+  animation-iteration-count: infinite;
+}
+.anim__slide-lr-1s-rev {
+  -webkit-animation: slidelr 1s;
+  -moz-animation: slidelr 1s;
+  -ms-animation: slidelr 1s;
+  -o-animation: slidelr 1s;
+  animation: slidelr 1s;
+
+  animation-direction: alternate-reverse;
+  animation-duration: 1s;
+  animation-timing-function: linear;
+  animation-delay: 0ms;
+  animation-iteration-count: infinite;
+}
+.anim__slide-lr-2s {
+  -webkit-animation: slidelr 1s;
+  -moz-animation: slidelr 1s;
+  -ms-animation: slidelr 1s;
+  -o-animation: slidelr 1s;
+  animation: slidelr 1s;
+
+  animation-direction: alternate;
+  animation-duration: 2s;
+  animation-timing-function: linear;
+  animation-delay: 0ms;
+  animation-iteration-count: infinite;
+}
+.anim__slide-lr-2s-rev {
+  -webkit-animation: slidelr 1s;
+  -moz-animation: slidelr 1s;
+  -ms-animation: slidelr 1s;
+  -o-animation: slidelr 1s;
+  animation: slidelr 1s;
+
+  animation-direction: alternate-reverse;
+  animation-duration: 2s;
+  animation-timing-function: linear;
+  animation-delay: 0ms;
+  animation-iteration-count: infinite;
+}
+.anim__slide-lr-5s {
+  -webkit-animation: slidelr 1s;
+  -moz-animation: slidelr 1s;
+  -ms-animation: slidelr 1s;
+  -o-animation: slidelr 1s;
+  animation: slidelr 1s;
+
+  animation-direction: alternate;
+  animation-duration: 5s;
+  animation-timing-function: linear;
+  animation-delay: 0ms;
+  animation-iteration-count: infinite;
+}
+.anim__slide-lr-5s-rev {
+  -webkit-animation: slidelr 1s;
+  -moz-animation: slidelr 1s;
+  -ms-animation: slidelr 1s;
+  -o-animation: slidelr 1s;
+  animation: slidelr 1s;
+
+  animation-direction: alternate-reverse;
+  animation-duration: 5s;
+  animation-timing-function: linear;
+  animation-delay: 0ms;
+  animation-iteration-count: infinite;
+}
+.anim__slide-lr-10s {
+  -webkit-animation: slidelr 1s;
+  -moz-animation: slidelr 1s;
+  -ms-animation: slidelr 1s;
+  -o-animation: slidelr 1s;
+  animation: slidelr 1s;
+
+  animation-direction: alternate;
+  animation-duration: 10s;
+  animation-timing-function: linear;
+  animation-delay: 0ms;
+  animation-iteration-count: infinite;
+}
+.anim__slide-lr-10s-rev {
+  -webkit-animation: slidelr 1s;
+  -moz-animation: slidelr 1s;
+  -ms-animation: slidelr 1s;
+  -o-animation: slidelr 1s;
+  animation: slidelr 1s;
+
+  animation-direction: alternate-reverse;
+  animation-duration: 10s;
+  animation-timing-function: linear;
+  animation-delay: 0ms;
+  animation-iteration-count: infinite;
+}
+
+.anim__slide-lr-1s-ease-in-out {
+  -webkit-animation: slidelr 1s;
+  -moz-animation: slidelr 1s;
+  -ms-animation: slidelr 1s;
+  -o-animation: slidelr 1s;
+  animation: slidelr 1s;
+
+  animation-direction: alternate;
+  animation-duration: 1s;
+  animation-timing-function: ease-in-out;
+  animation-delay: 0ms;
+  animation-iteration-count: infinite;
+}
+.anim__slide-lr-1s-ease-in-out-rev {
+  -webkit-animation: slidelr 1s;
+  -moz-animation: slidelr 1s;
+  -ms-animation: slidelr 1s;
+  -o-animation: slidelr 1s;
+  animation: slidelr 1s;
+
+  animation-direction: alternate-reverse;
+  animation-duration: 1s;
+  animation-timing-function: ease-in-out;
+  animation-delay: 0ms;
+  animation-iteration-count: infinite;
+}
+.anim__slide-lr-2s-ease-in-out {
+  -webkit-animation: slidelr 1s;
+  -moz-animation: slidelr 1s;
+  -ms-animation: slidelr 1s;
+  -o-animation: slidelr 1s;
+  animation: slidelr 1s;
+
+  animation-direction: alternate;
+  animation-duration: 2s;
+  animation-timing-function: ease-in-out;
+  animation-delay: 0ms;
+  animation-iteration-count: infinite;
+}
+.anim__slide-lr-2s-ease-in-out-rev {
+  -webkit-animation: slidelr 1s;
+  -moz-animation: slidelr 1s;
+  -ms-animation: slidelr 1s;
+  -o-animation: slidelr 1s;
+  animation: slidelr 1s;
+
+  animation-direction: alternate-reverse;
+  animation-duration: 2s;
+  animation-timing-function: ease-in-out;
+  animation-delay: 0ms;
+  animation-iteration-count: infinite;
+}
+.anim__slide-lr-5s-ease-in-out {
+  -webkit-animation: slidelr 1s;
+  -moz-animation: slidelr 1s;
+  -ms-animation: slidelr 1s;
+  -o-animation: slidelr 1s;
+  animation: slidelr 1s;
+
+  animation-direction: alternate;
+  animation-duration: 5s;
+  animation-timing-function: ease-in-out;
+  animation-delay: 0ms;
+  animation-iteration-count: infinite;
+}
+.anim__slide-lr-5s-ease-in-out-rev {
+  -webkit-animation: slidelr 1s;
+  -moz-animation: slidelr 1s;
+  -ms-animation: slidelr 1s;
+  -o-animation: slidelr 1s;
+  animation: slidelr 1s;
+
+  animation-direction: alternate-reverse;
+  animation-duration: 5s;
+  animation-timing-function: ease-in-out;
+  animation-delay: 0ms;
+  animation-iteration-count: infinite;
+}
+.anim__slide-lr-10s-ease-in-out {
+  -webkit-animation: slidelr 1s;
+  -moz-animation: slidelr 1s;
+  -ms-animation: slidelr 1s;
+  -o-animation: slidelr 1s;
+  animation: slidelr 1s;
+
+  animation-direction: alternate;
+  animation-duration: 10s;
+  animation-timing-function: ease-in-out;
+  animation-delay: 0ms;
+  animation-iteration-count: infinite;
+}
+.anim__slide-lr-10s-ease-in-out-rev {
+  -webkit-animation: slidelr 1s;
+  -moz-animation: slidelr 1s;
+  -ms-animation: slidelr 1s;
+  -o-animation: slidelr 1s;
+  animation: slidelr 1s;
+
+  animation-direction: alternate-reverse;
+  animation-duration: 10s;
+  animation-timing-function: ease-in-out;
+  animation-delay: 0ms;
+  animation-iteration-count: infinite;
+}

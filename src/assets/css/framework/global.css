@@ -1,0 +1,167 @@
+:root {
+  /* Colors */
+  --color__unit: hsl(0, 0, 10.00%);
+
+  /* Dimmed black & white to prevent screen reflecting light at user's eyes */
+  --color__black: hsl(0, 0%, 0.1%);
+  --color__white: hsl(0, 0%, 99.9%);
+
+  /* Neutral grayscale colors */
+  --color__neutral-900: hsl(0, 0%, 10%);
+  --color__neutral-800: hsl(0, 0%, 20%);
+  --color__neutral-700: hsl(0, 0%, 30%);
+  --color__neutral-600: hsl(0, 0%, 40%);
+  --color__neutral-500: hsl(0, 0%, 50%);
+  --color__neutral-400: hsl(0, 0%, 60%);
+  --color__neutral-300: hsl(0, 0%, 70%);
+  --color__neutral-200: hsl(0, 0%, 80%);
+  --color__neutral-100: hsl(0, 0%, 90%);
+
+  --color__red-900: hsl(0, 100%, 10%);
+  --color__red-800: hsl(0, 100%, 20%);
+  --color__red-700: hsl(0, 100%, 30%);
+  --color__red-600: hsl(0, 100%, 40%);
+  --color__red-500: hsl(0, 100%, 50%);
+  --color__red-400: hsl(0, 100%, 60%);
+  --color__red-300: hsl(0, 100%, 70%);
+  --color__red-200: hsl(0, 100%, 80%);
+  --color__red-100: hsl(0, 100%, 90%);
+
+  --color__yellow-900: hsl(60, 100%, 10%);
+  --color__yellow-800: hsl(60, 100%, 20%);
+  --color__yellow-700: hsl(60, 100%, 30%);
+  --color__yellow-600: hsl(60, 100%, 40%);
+  --color__yellow-500: hsl(60, 100%, 50%);
+  --color__yellow-400: hsl(60, 100%, 60%);
+  --color__yellow-300: hsl(60, 100%, 70%);
+  --color__yellow-200: hsl(60, 100%, 80%);
+  --color__yellow-100: hsl(60, 100%, 90%);
+
+  --color__blue-900: hsl(240, 100%, 10%);
+  --color__blue-800: hsl(240, 100%, 20%);
+  --color__blue-700: hsl(240, 100%, 30%);
+  --color__blue-600: hsl(240, 100%, 40%);
+  --color__blue-500: hsl(240, 100%, 50%);
+  --color__blue-400: hsl(240, 100%, 60%);
+  --color__blue-300: hsl(240, 100%, 70%);
+  --color__blue-200: hsl(240, 100%, 80%);
+  --color__blue-100: hsl(240, 100%, 90%);
+
+  --color__green-900: hsl(120, 100%, 10%);
+  --color__green-800: hsl(120, 100%, 20%);
+  --color__green-700: hsl(120, 100%, 30%);
+  --color__green-600: hsl(120, 100%, 40%);
+  --color__green-500: hsl(120, 100%, 50%);
+  --color__green-400: hsla(120, 100%, 60%, 100%);
+  --color__green-300: hsla(120, 100%, 70%, 100%);
+  --color__green-200: hsla(120, 100%, 80%, 100%);
+  --color__green-100: hsla(120, 100%, 90%, 100%);
+
+  /*
+  * Opaques
+  */
+
+  /* Opacity units */
+  --color__alpha-01: hsla(0, 0%, 0%, 1%);
+  --color__alpha-02: hsla(0, 0%, 0%, 2%);
+  --color__alpha-05: hsla(0, 0%, 0%, 5%);
+  --color__alpha-10: hsla(0, 0%, 0%, 10%);
+  --color__alpha-20: hsla(0, 0%, 0%, 20%);
+  --color__alpha-50: hsla(0, 0%, 0%, 50%);
+  --color__alpha-100: hsla(0, 0%, 0%, 100%);
+
+  /* Dimmed blacks to prevent screen reflecting light at user's eyes */
+  --color__black-alpha-01: hsla(0, 0%, 0.01%, 1%);
+  --color__black-alpha-02: hsla(0, 0%, 0.01%, 2%);
+  --color__black-alpha-05: hsla(0, 0%, 0.01%, 5%);
+  --color__black-alpha-10: hsla(0, 0%, 0.01%, 10%);
+  --color__black-alpha-20: hsla(0, 0%, 0.01%, 20%);
+  --color__black-alpha-50: hsla(0, 0%, 0.01%, 50%);
+
+  /* Dimmed whites to prevent screen reflecting light at user's eyes */
+  --color__white-alpha-01: hsla(0, 0%, 99.9%, 1%);
+  --color__white-alpha-02: hsla(0, 0%, 99.9%, 2%);
+  --color__white-alpha-05: hsla(0, 0%, 99.9%, 5%);
+  --color__white-alpha-10: hsla(0, 0%, 99.9%, 10%);
+  --color__white-alpha-20: hsla(0, 0%, 99.9%, 20%);
+  --color__white-alpha-50: hsla(0, 0%, 99.9%, 50%);
+
+  /* Reds */
+  --color__red-900-alpha-10: hsla(0, 100%, 10%, 10%);
+  --color__red-700-alpha-10: hsla(0, 100%, 30%, 10%);
+  --color__red-500-alpha-10: hsla(0, 100%, 50%, 10%);
+  --color__red-300-alpha-10: hsla(0, 100%, 70%, 10%);
+  --color__red-100-alpha-10: hsla(0, 100%, 90%, 10%);
+
+  --color__red-900-alpha-50: hsla(0, 100%, 10%, 50%);
+  --color__red-700-alpha-50: hsla(0, 100%, 30%, 50%);
+  --color__red-500-alpha-50: hsla(0, 100%, 50%, 50%);
+  --color__red-300-alpha-50: hsla(0, 100%, 70%, 50%);
+  --color__red-100-alpha-50: hsla(0, 100%, 90%, 50%);
+
+
+
+  /* Yellows */
+  --color__yellow-900-alpha-10: hsla(60, 100%, 10%, 10%);
+  --color__yellow-700-alpha-10: hsla(60, 100%, 30%, 10%);
+  --color__yellow-500-alpha-10: hsla(60, 100%, 50%, 10%);
+  --color__yellow-300-alpha-10: hsla(60, 100%, 70%, 10%);
+  --color__yellow-100-alpha-10: hsla(60, 100%, 90%, 10%);
+
+  --color__yellow-900-alpha-50: hsla(60, 100%, 10%, 50%);
+  --color__yellow-700-alpha-50: hsla(60, 100%, 30%, 50%);
+  --color__yellow-500-alpha-50: hsla(60, 100%, 50%, 50%);
+  --color__yellow-300-alpha-50: hsla(60, 100%, 70%, 50%);
+  --color__yellow-100-alpha-50: hsla(60, 100%, 90%, 50%);
+
+  /* Greens */
+  --color__green-900-alpha-10: hsla(120, 100%, 10%, 10%);
+  --color__green-700-alpha-10: hsla(120, 100%, 30%, 10%);
+  --color__green-500-alpha-10: hsla(120, 100%, 50%, 10%);
+  --color__green-300-alpha-10: hsla(120, 100%, 70%, 10%);
+  --color__green-100-alpha-10: hsla(120, 100%, 90%, 10%);
+
+  --color__green-900-alpha-50: hsla(120, 100%, 10%, 50%);
+  --color__green-700-alpha-50: hsla(120, 100%, 30%, 50%);
+  --color__green-500-alpha-50: hsla(120, 100%, 50%, 50%);
+  --color__green-300-alpha-50: hsla(120, 100%, 70%, 50%);
+  --color__green-100-alpha-50: hsla(120, 100%, 90%, 50%);
+
+  /* Blues */
+  --color__blue-100-alpha-10: hsla(240, 100%, 90%, 10%);
+  --color__blue-300-alpha-10: hsla(240, 100%, 70%, 10%);
+  --color__blue-500-alpha-10: hsla(240, 100%, 50%, 10%);
+  --color__blue-700-alpha-10: hsla(240, 100%, 30%, 10%);
+  --color__blue-900-alpha-10: hsla(240, 100%, 10%, 10%);
+
+  --color__blue-100-alpha-50: hsla(240, 100%, 90%, 50%);
+  --color__blue-300-alpha-50: hsla(240, 100%, 70%, 50%);
+  --color__blue-500-alpha-50: hsla(240, 100%, 50%, 50%);
+  --color__blue-700-alpha-50: hsla(240, 100%, 30%, 50%);
+  --color__blue-900-alpha-50: hsla(240, 100%, 10%, 50%);
+
+
+  /*  Set a starting point value */
+  --z-index__init: 0;
+
+  /* Set a number to scale (increase and decrease) the starting point by */
+  --z-index__scale-depth: 100;
+
+  /*  Calculate a palette by cascading those two vars */
+  --z-index__100: calc(var(--z-index__200) - var(--z-index__scale-depth));
+  --z-index__200: calc(var(--z-index__300) - var(--z-index__scale-depth));
+  --z-index__300: calc(var(--z-index__400) - var(--z-index__scale-depth));
+  --z-index__400: calc(var(--z-index__500) - var(--z-index__scale-depth));
+  --z-index__500: var(--z-index__init);
+  --z-index__600: calc(var(--z-index__500) + var(--z-index__scale-depth));
+  --z-index__700: calc(var(--z-index__600) + var(--z-index__scale-depth));
+  --z-index__800: calc(var(--z-index__700) + var(--z-index__scale-depth));
+  --z-index__900: calc(var(--z-index__800) + var(--z-index__scale-depth));
+
+  /*  Apply the calculations to some well-named vars */
+  --z-index__underground: var(--z-index__100);
+  --z-index__background: var(--z-index__300);
+  --z-index__middleground: var(--z-index__500);
+  --z-index__foreground: var(--z-index__700);
+  --z-index__overground: var(--z-index__900);
+}

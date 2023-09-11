@@ -1,0 +1,36 @@
+/* .footer { background-color: none; } */
+footer.footer {
+  border-radius: none;
+  box-shadow: none;
+  background-color: transparent;
+}
+footer.footer > table {
+  border-radius: none;
+  box-shadow: none;
+  width: 100%;
+  background-color: transparent;
+}
+footer.footer > table > thead {
+  box-shadow: none;
+  background-color: transparent;
+}
+footer.footer > table > thead > tr {
+  box-shadow: none;
+  background-color: transparent;
+}
+footer.footer > table > thead > tr > th {
+  box-shadow: none;
+  background-color: transparent;
+}
+footer.footer > table > thead > tr > td {
+  box-shadow: none;
+  background-color: transparent;
+}
+footer.footer > table > tbody > tr > th {
+  box-shadow: none;
+  background-color: transparent;
+}
+footer.footer > table > tbody > tr > td {
+  box-shadow: none;
+  background-color: transparent;
+}

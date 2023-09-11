@@ -1,0 +1,65 @@
+/*
+*  CSS Anims
+*  StoneyDSP 2023
+*/
+
+/*
+*  Custom keyframe: .anim__bg-flash{}
+*/
+@-webkit-keyframes rotateleft {
+  0% {
+    -webkit-transform: translateX(0%) translateY(0%) rotate(0deg);
+    -webkit-transform-origin: right;
+  }
+  100% {
+    -webkit-transform: translateX(-150%) translateY(50%) rotate(-90deg);
+    -webkit-transform-origin: right;
+  }
+}
+@-moz-keyframes rotateleft {
+  0% {
+    -moz-transform: translateX(0%) translateY(0%) rotate(0deg);
+    -moz-transform-origin: right;
+  }
+  100% {
+    -moz-transform: translateX(-150%) translateY(50%) rotate(-90deg);
+    -moz-transform-origin: right;
+  }
+}
+@-ms-keyframes rotateleft {
+  0% {
+    -ms-transform: translateX(0%) translateY(0%) rotate(0deg);
+    -ms-transform-origin: right;
+  }
+  100% {
+    -ms-transform: translateX(-150%) translateY(50%) rotate(-90deg);
+    -ms-transform-origin: right;
+  }
+}
+@-o-keyframes rotateleft {
+  0% {
+    -o-transform: translateX(0%) translateY(0%) rotate(0deg);
+    -o-transform-origin: right;
+  }
+  100% {
+    -o-transform: translateX(-150%) translateY(50%) rotate(-90deg);
+    -o-transform-origin: right;
+  }
+}
+@keyframes rotateleft {
+  0% {
+    transform: translateX(0%) translateY(0%) rotate(0deg);
+    transform-origin: right;
+  }
+  100% {
+    transform: translateX(-150%) translateY(50%) rotate(-90deg);
+    transform-origin: right;
+  }
+}
+.anim__rotate-left-1s {
+  -webkit-animation: rotateleft 1s;
+  -moz-animation: rotateleft 1s;
+  -ms-animation: rotateleft 1s;
+  -o-animation: rotateleft 1s;
+  animation: rotateleft 1s;
+}

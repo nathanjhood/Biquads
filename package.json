@@ -1,0 +1,17 @@
+{
+  "name": "biquads-docs",
+  "version": "1.0.0",
+  "main": "index.html",
+  "repository": "https://github.com/StoneyDSP/Biquads.git",
+  "author": "Nathan J. Hood ",
+  "license": "MIT",
+  "private": false,
+  "dependencies": {
+    "@vercel/analytics": "^1.0.2",
+    "vercel": "^32.2.0"
+  },
+  "scripts": {
+    "dev": "npx serve",
+    "build": "node --version"
+  }
+}

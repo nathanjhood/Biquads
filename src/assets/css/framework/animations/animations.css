@@ -1,0 +1,61 @@
+@import url("./bgflash.css");
+@import url("./fadein.css");
+@import url("./fadeout.css");
+@import url("./rotateleft.css");
+@import url("./slideleft.css");
+@import url("./slidelr.css");
+@import url("./sliderl.css");
+
+/* body {
+  -moz-transition: all 1s;
+  -o-transition: all 1s;
+  -webkit-transition: all 1s;
+  transition: all 1s;
+  transition-property: background-color;
+  transition-duration: 1s;
+
+  animation-iteration-count: 1;
+  animation-direction: alternate;
+  animation-timing-function: ease-in-out;
+} */
+
+section {
+  /* -moz-transition: all 1s;
+  -o-transition: all 1s;
+  -webkit-transition: all 1s;
+  transition: all 1s; */
+  -moz-animation: fade-in 1s;
+  -o-animation: fade-in 1s;
+  -webkit-animation: fade-in 1s;
+  animation: fade-in 1s;
+}
+
+img.image {
+  /* -moz-transition: all 2.5s;
+  -o-transition: 2.5s;
+  -webkit-transition: 2.5s;
+  transition: all 2.5s; */
+  -moz-animation: fade-in 2.5s;
+  -o-animation: fade-in 2.5s;
+  -webkit-animation: fade-in 2.5s;
+  animation: fade-in 2.5s;
+}
+
+p.text {
+  /* -moz-transition: all 5s;
+  -o-transition: all 5s;
+  -webkit-transition: all 5s;
+  transition: all 5s; */
+  -moz-animation: fade-in 2.5s;
+  -o-animation: fade-in 2.5s;
+  -webkit-animation: fade-in 2.5s;
+  animation: fade-in 2.5s;
+}
+
+/* .site {
+  opacity: 100;
+  -moz-animation: ease-in 1s;
+  -o-animation: ease-in 1s;
+  -webkit-animation: ease-in 1s;
+  animation: ease-in 1s;
+} */

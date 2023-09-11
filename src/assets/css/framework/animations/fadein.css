@@ -1,0 +1,43 @@
+/*
+*  CSS Anims
+*  StoneyDSP 2023
+*/
+
+/*
+*  Custom keyframe: .fadein{}
+*/
+@-webkit-keyframes fadein {
+  0% { opacity: 0%; }
+  100% { opacity: 100%; }
+}
+@-moz-keyframes fadein {
+  0% { opacity: 0%; }
+  100% { opacity: 100%; }
+}
+@-ms-keyframes fadein {
+  0% { opacity: 0%; }
+  100% { opacity: 100%; }
+}
+@-o-keyframes fadein {
+  0% { opacity: 0%; }
+  100% { opacity: 100%; }
+}
+@keyframes fadein {
+  0% { opacity: 0%; }
+  100% { opacity: 100%; }
+}
+.anim__fade-in-1s {
+  /* props: name duration timing-function delay iteration-count */
+  -webkit-animation: fadein 1s linear 0s 1;
+  -moz-animation: fadein 1s linear 0s 1;
+  -ms-animation: fadein 1s linear 0s 1;
+  -o-animation: fadein 1s linear 0s 1;
+  animation: fadein 1s linear 0s 1;
+
+  animation-name: fadein;
+  animation-duration: 1s;
+  animation-timing-function: linear;
+  animation-delay: 0ms;
+  animation-iteration-count: 1;
+  animation-direction: normal;
+}

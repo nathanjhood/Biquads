@@ -1,0 +1,30 @@
+/*
+*  Custom keyframe: .anim__bg-flash{}
+*/
+@-webkit-keyframes flash {
+  0% { background: rgba(255,240,0,.25); }
+  100% { background: none; }
+}
+@-moz-keyframes flash {
+  0% { background: rgba(255,240,0,.25); }
+  100% { background: none; }
+}
+@-ms-keyframes flash {
+  0% { background: rgba(255,240,0,.25); }
+  100% { background: none; }
+}
+@-o-keyframes flash {
+  0% { background: rgba(255,240,0,.25); }
+  100% { background: none; }
+}
+@keyframes flash {
+  0% { background: rgba(255,240,0,.25); }
+  100% { background: none; }
+}
+.anim__bg-flash-1s {
+  -webkit-animation: flash 1s;
+  -moz-animation: flash 1s;
+  -ms-animation: flash 1s;
+  -o-animation: flash 1s;
+  animation: flash 1s;
+}

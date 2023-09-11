@@ -1,0 +1,45 @@
+/* https://dev.to/believer/how-to-lint-html-using-css-5dc */
+
+/* Find images with missing alt attributes */
+img:not([alt]) {
+  outline: 2px dotted red;
+}
+
+/* Links that go nowhere */
+a:is(:not([href]), [href=""], [href="#"]) {
+  outline: 2px dotted red;
+}
+
+/* Potential tabindex problems */
+[tabindex]:not([tabindex="0"], [tabindex="-1"]) {
+  outline: 2px dotted red;
+}
+
+/* Invalid list elements */
+:is(ul,ol) > *:not(li) {
+  outline: 2px dotted red;
+}
+
+/* Images without width and height */
+img:not([width]):not([height]) {
+  filter: blur(20px);
+}
+
+/* SVG's with no xmlns */
+svg:not([xmlns]) {
+  outline: 2px dotted red;
+}
+
+/* Elements with no color fallthrough */
+:not([color]) {
+  color:brown;
+}
+
+/* Elements with no BG color fallthrough */
+:not([background-color]) {
+  background-color: purple;
+}
+
+:not([id]) {
+  outline: 2px dotted yellow;
+}

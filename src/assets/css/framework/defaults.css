@@ -1,0 +1,198 @@
+/*
+* CSS Browser Defaults
+* StoneyDSP 2023
+* See 'support.css' for extensions
+*/
+
+html {
+  display: block;
+}
+
+header {
+  display: block;
+}
+body {
+  display: block;
+  margin: 8px;
+
+  font-family: system-ui, sans-serif;
+  font-size: 16.0px;
+
+  /* font-size: 1.0rem; */
+  line-height: 1.0;
+}
+footer {
+  display: block;
+}
+
+main {
+  display: block;
+}
+section {
+  display: block;
+}
+div {
+  display: block;
+}
+
+article {
+  display: block;
+}
+aside {
+  display: block;
+}
+
+h1 {
+  display: block;
+  font-size: 2em;
+  font-weight: bold;
+}
+h2 {
+  display: block;
+  font-size: 1.5em;
+  font-weight: bold;
+}
+h3 {
+  display: block;
+  font-size: 1.17em;
+  font-weight: bold;
+}
+h4 {
+  display: block;
+  font-size: 1rem;
+  font-weight: bold;
+}
+h5 {
+  display: block;
+  font-size: 0.83em;
+  font-weight: bold;
+}
+h6 {
+  display: block;
+  font-size: 0.67em;
+  font-weight: bold;
+}
+hgroup {
+  display: block;
+}
+p {
+  display: block;
+}
+i {
+  font-style: italic;
+}
+address {
+  display: block;
+  font-style: italic;
+}
+/* ¿?¿? seems ok!? */
+br {
+  display: inline;
+}
+wbr {
+  display: inline;
+}
+
+iframe {
+  border-width: 2px;
+  border-style: inset;
+  border-color: initial;
+}
+
+head {
+  display: none;
+}
+link {
+  display: none;
+}
+meta {
+  display: none;
+}
+script {
+  display: none;
+}
+title {
+  display: none;
+}
+
+menu {
+  display: block;
+  list-style-type: disc;
+}
+ul {
+  display: block;
+  list-style-type: disc;
+}
+ol {
+  display: block;
+  list-style-type: decimal;
+}
+li {
+  display: list-item;
+  text-align: left;
+}
+
+
+/* Tables */
+table > table {
+  display: table;
+  box-sizing: border-box;
+  border-color: transparent;
+}
+table {
+  display: table;
+  border-collapse: separate;
+  box-sizing: border-box;
+  text-indent: initial;
+  border-spacing: 0;
+  border-color: transparent;
+}
+thead {
+  display: table-header-group;
+  vertical-align: middle;
+  border-color: inherit;
+}
+tbody {
+  display: table-row-group;
+  vertical-align: middle;
+  border-color: inherit;
+}
+tfoot {
+  display: table-footer-group;
+  vertical-align: middle;
+  border-color: inherit;
+}
+colgroup {
+  display: table-column-group;
+}
+col {
+  display: table-column;
+}
+tr {
+  display: table-row;
+  vertical-align: inherit;
+  border-color: inherit;
+}
+th {
+  display: table-cell;
+  vertical-align: inherit;
+  font-weight: bold;
+  text-align: -internal-center;
+}
+td {
+  display: table-cell;
+  vertical-align: inherit;
+}
+
+
+
+[only]::marker {
+  text-transform: none;
+  text-indent: 0;
+}
+[only]::before {
+  box-sizing: border-box;
+}
+[only]::after {
+  box-sizing: border-box;
+}

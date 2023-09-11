@@ -1,0 +1,27 @@
+:root {
+  --debug-width: 1px;
+  --debug-color: purple;
+  --debug-style: dashed;
+  --color-debug-one: #D901F1;
+  --color-debug-two: #01F1D9;
+  --color-debug-three: #F1D901;
+  --color-debug-four: #901F1D;
+  --color-debug-five: #1F1D90;
+  --color-debug-six: #1D901F;
+}
+element {
+  outline: var(--color-grey) var(--debug-style) var(--debug-width);
+}
+:hover{
+  outline: var(--color-debug-one) var(--debug-style) var(--debug-width);
+}
+
+table {
+  outline: solid 0.5px grey;
+}
+th {
+  outline: solid 0.5px grey;
+}
+td {
+  outline: solid 0.5px grey;
+}

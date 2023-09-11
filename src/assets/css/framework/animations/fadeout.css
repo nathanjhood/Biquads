@@ -1,0 +1,30 @@
+/*
+*  Custom keyframe: .anim__fade-out{}
+*/
+@-webkit-keyframes fadeout {
+  0% { opacity: 100%; }
+  100% { opacity: 0%; }
+}
+@-moz-keyframes fadeout {
+  0% { opacity: 100%; }
+  100% { opacity: 0%; }
+}
+@-ms-keyframes fadeout {
+  0% { opacity: 100%; }
+  100% { opacity: 0%; }
+}
+@-o-keyframes fadeout {
+  0% { opacity: 100%; }
+  100% { opacity: 0%; }
+}
+@keyframes fadeout {
+  0% { opacity: 100%; }
+  100% { opacity: 0%; }
+}
+.anim__fade-out-1s {
+  -webkit-animation: fadeout 1s;
+  -moz-animation: fadeout 1s;
+  -ms-animation: fadeout 1s;
+  -o-animation: fadeout 1s;
+  animation: fadeout 1s;
+}
