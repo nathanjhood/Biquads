@@ -1,4 +1,6 @@
 ﻿.cache
+.nuxt
+.vercel
 .vscode
 
 build
@@ -8,3 +10,4 @@ JuceLibraryCode
 
 !*.svg
 !*.png
+node_modules
