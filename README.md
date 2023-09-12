@@ -1,13 +1,13 @@
 Current: v1.1.0b
 
-![Biquads-1-1-0b](https://github.com/StoneyDSP/Biquads/blob/27760cae425b2305498b493c6f63896a1b2c3d56/Res/biquad-1-1-0.png)
+![Biquads-1-1-0b](https://raw.githubusercontent.com/StoneyDSP/Biquads/master/Res/biquad-1-1-0.png)
 
 ## Biquads
 Multi-mode Biquad filter for audio analysis purposes using variable BiLinear transforms, processing precision, and oversampling to achieve high-quality results
 
 (Shown below; a resonant 2-pole Low Shelf filter with high oversampling, performed on a harmonic-rich 20Hz band-limited Impulse Response in Reaper)
 
-![Biquads](https://github.com/StoneyDSP/Biquads/blob/6cccdb2ec332ae277d62fae106b3278f07e22b39/Res/Biquad-AutoGUI.png)
+![Biquads](https://raw.githubusercontent.com/StoneyDSP/Biquads/master/Res/Biquad-AutoGUI.png)
 
 + Implementing various 6dB- and 12dB- filter types (such as low pass, high pass, band pass, shelves, plus many more) using variable BiLinear transforms, switchable processing precision, and oversampling to achieve high-quality results (much more to come)!
 + This filter is subject to amplitude and phase warping of the frequency spectrum approaching the Nyquist frequency when oversampling is not used.
@@ -305,7 +305,7 @@ For now, let's begin at the beginning.
         
         }
 
-![LP1](https://github.com/StoneyDSP/Biquads/blob/b65a9b5622afdb831e3b4cb6fc78a626e701cf06/Res/LP1.png)
+![LP1](https://raw.githubusercontent.com/StoneyDSP/Biquads/master/Res/LP1.png)
 
 In the above pseudo-code, we are shown a formula for manipulating our coefficients to provide us a simple 1st-order (i.e., 1 pole, 1 zero) Low Pass Filter. The writer shall assume the reader is familiar with this filter concept in usage terms, and is more interested in the DSP.
 
@@ -328,7 +328,7 @@ To demonstrate that we have infact retained (and exponentially increased) our "d
     
         }
 
-![HP1](https://github.com/StoneyDSP/Biquads/blob/b65a9b5622afdb831e3b4cb6fc78a626e701cf06/Res/HP1.png)
+![HP1](https://raw.githubusercontent.com/StoneyDSP/Biquads/master/Res/HP1.png)
 
 We can notice, even at a glance, that these two formulas are effectively the inverse of one another - as are the filter responses! Our Low Pass is transformed into a High Pass by this numerical inversion.
 
@@ -413,7 +413,7 @@ Compare the below with the 1st-order counterpart:
         
         }
         
-![LP2res](https://github.com/StoneyDSP/Biquads/blob/b65a9b5622afdb831e3b4cb6fc78a626e701cf06/Res/LP2res.png)
+![LP2res](https://raw.githubusercontent.com/StoneyDSP/Biquads/master/Res/LP2res.png)
 
 In our above example, we have added two further "degrees" - coefficients - with which to manipulate our signal; we have also added an additional parameter "⍺" ("alpha"), which in this forumula provides us with the typical "resonance" control that we ususally see on 2nd-order (or higher) filters. This "resonance" parameter is directly (and solely) responsible for the "bump" seen around the centre frequency of the filter, and can be increased or decreased as desired. Higher resonance can be reminiscent of a wah-wah pedal or synthesizer effect, while lower resonance is more like a trumpet-mute.
 
@@ -435,11 +435,11 @@ Now, we are determining an output transfer function (Y(n)), given an input value
 
 + <-, ->.. etc = signal flow direction 
 
-![DF I](https://github.com/StoneyDSP/OrfanidisBiquad/blob/0a9c1168752616b455d68b52a2b0b841102dfa16/Res/400px-Biquad_filter_DF-I.svg.png)
+![DF I](https://raw.githubusercontent.com/StoneyDSP/OrfanidisBiquad/master/Res/400px-Biquad_filter_DF-I.svg.png)
 
  Some forms have what may be considered an additional audio feedback path (notated as W(n) in this description, but may vary);
 
-![DF II](https://github.com/StoneyDSP/OrfanidisBiquad/blob/0a9c1168752616b455d68b52a2b0b841102dfa16/Res/Biquad_filter_DF-IIx.svg.png)
+![DF II](https://raw.githubusercontent.com/StoneyDSP/OrfanidisBiquad/master/Res/Biquad_filter_DF-IIx.svg.png)
 
 
 # Applying the coefficients;
@@ -478,13 +478,13 @@ Here's some pseudo-code to get us started with a template;
 
 I have also re-created all of the code from this study in my preferred visual-programming/workbench environment, Reaktor Core, which I have chosen to share here for it's ease of readability. Please see the above C++ code as translated visually into Core, below;
 
-![Workbench](https://github.com/StoneyDSP/OrfanidisBiquad/blob/0a9c1168752616b455d68b52a2b0b841102dfa16/Res/Workbench%20-%20Bypass%20(coded%20by%20StoneyDSP).png)
+![Workbench](https://raw.githubusercontent.com/StoneyDSP/OrfanidisBiquad/master/Res/Workbench%20-%20Bypass%20(coded%20by%20StoneyDSP).png)
 
 For any Reaktor Core builders in attendance - you will see some structures in this write-up that are not in accordance with Reaktor Core's processing paradigm, particularly with respect to feedback macros and handling. The writer has assumed that readers have (practically) no interest in Reaktor Core itself, and are primarily here for the theory and possibly the C code. Thus, I have intentionally mis-used Reaktor's feedback handling purely for the sake of the visual demonstrations ahead, which I believe are very clear, even for non-Reaktor users. To create safe versions of these macros, please use the *non-solid* factory "z-1 fdbk" macro for all unit delays, and ideally add an SR bundle distribution.
 
 For any readers unfamiliar with Reaktor Core, please keep in mind that signal flows from left (input) to right (output). In addition to the basic math operators connecting inputs to outputs (grey), we have a few macros (blue) that may raise queries - this symbol legend may help fill in a few blanks;
 
-![legend](https://github.com/StoneyDSP/OrfanidisBiquad/blob/0a9c1168752616b455d68b52a2b0b841102dfa16/Res/Workbench%20-%20Legend%20(coded%20by%20StoneyDSP).png)
+![legend](https://raw.githubusercontent.com/StoneyDSP/OrfanidisBiquad/master/Res/Workbench%20-%20Legend%20(coded%20by%20StoneyDSP).png)
 
 * *The blue macros perform a memory allocation as part of their operation, in case you were curious. This is useful for thread safety, which I have also somewhat considered within the pseudo-code (and indeed test plugin) that follows.*  
 
@@ -496,15 +496,15 @@ Direct Form I is characterized by having a total four unit delays present within
 
 Calculus:
 
-![Direct Form I calc](https://github.com/StoneyDSP/OrfanidisBiquad/blob/79913795b69fea84185d890bc17b1998918f8e5e/Res/DFI.svg)
+![Direct Form I calc](https://raw.githubusercontent.com/StoneyDSP/OrfanidisBiquad/master/Res/DFI.svg)
 
 Flow diagram:
 
-![Direct Form I](https://github.com/StoneyDSP/OrfanidisBiquad/blob/532db8ad616b7c0ed7f51e13772adba6b54e5cf3/Res/496px-Digital_Biquad_Direct_Form_1_Untransformed.svg.png)
+![Direct Form I](https://raw.githubusercontent.com/StoneyDSP/OrfanidisBiquad/master/Res/496px-Digital_Biquad_Direct_Form_1_Untransformed.svg.png)
 
 Implementation:
 
-![Direct Form I core](https://github.com/StoneyDSP/OrfanidisBiquad/blob/e8a995fec9f730532160692e6f69e9800725756e/Res/DFI_core.png)
+![Direct Form I core](https://raw.githubusercontent.com/StoneyDSP/OrfanidisBiquad/master/Res/DFI_core.png)
 
 * Blue cable = positive coeffiecient audio path
 
@@ -558,17 +558,17 @@ Direct Form II (also known as the "canonical" form, at least of the two discusse
 
 Calculus:
 
-![Direct Form II calc W](https://github.com/StoneyDSP/OrfanidisBiquad/blob/79913795b69fea84185d890bc17b1998918f8e5e/Res/DFII%20w.svg)
+![Direct Form II calc W](https://raw.githubusercontent.com/StoneyDSP/OrfanidisBiquad/master/Res/DFII%20w.svg)
 
-![Direct Form II calc Y](https://github.com/StoneyDSP/OrfanidisBiquad/blob/79913795b69fea84185d890bc17b1998918f8e5e/Res/DFII%20y.svg)
+![Direct Form II calc Y](https://raw.githubusercontent.com/StoneyDSP/OrfanidisBiquad/master/Res/DFII%20y.svg)
 
 Flow diagram:
 
-![Direct Form II](https://github.com/StoneyDSP/OrfanidisBiquad/blob/532db8ad616b7c0ed7f51e13772adba6b54e5cf3/Res/496px-Digital_Biquad_Direct_Form_2_Untransformed.svg.png)
+![Direct Form II](https://raw.githubusercontent.com/StoneyDSP/OrfanidisBiquad/master/Res/496px-Digital_Biquad_Direct_Form_2_Untransformed.svg.png)
 
 Implementation:
 
-![Direct Form II core](https://github.com/StoneyDSP/OrfanidisBiquad/blob/e8a995fec9f730532160692e6f69e9800725756e/Res/DFII_core.png)
+![Direct Form II core](https://raw.githubusercontent.com/StoneyDSP/OrfanidisBiquad/master/Res/DFII_core.png)
 
 Pseudo-code:
 
@@ -608,7 +608,7 @@ Notes:
 
 DFII, using less unit delays in it's architecture, produces much less significant artefacts during parameter modulation; in all but the most extreme cases, the output remains relatively benign. However, this structure is far more prone to "round-off" errors due to a narrowing computational precision in certain parts of the feedback network; this can manifest as a kind of "quantization noise" - much like un-dithered fixed-point audio - creeping well into the audible range, and in some cases enveloping low-amplitudinal parts of the input signal. This can be particularly extenuated by very large boosts of a tight "bell" shape in the lowest bass frequencies, causing strong quantization-error noise to permeate the upper-mid and treble ranges of the signal (image below).
 
-![Quantization Noise](https://github.com/StoneyDSP/OrfanidisBiquad/blob/d19bfc6f85a9e8c421482b100453a12288be7cb8/Res/QuantizedNoiseEdit.png)
+![Quantization Noise](https://raw.githubusercontent.com/StoneyDSP/OrfanidisBiquad/master/Res/QuantizedNoiseEdit.png)
 
 *(Shown above: +30dB boost at 20hz with Bandwidth of 1.0 using DFII, on a 20hz Sawtooth waveform)
 
@@ -618,11 +618,11 @@ For the "transposed" forms, all terms are inverted (signal flow reversed, summin
 
 Flow diagram:
 
-![Direct Form IT](https://github.com/StoneyDSP/OrfanidisBiquad/blob/532db8ad616b7c0ed7f51e13772adba6b54e5cf3/Res/496px-Digital_Biquad_Direct_Form_1_Transformed.svg.png)
+![Direct Form IT](https://raw.githubusercontent.com/StoneyDSP/OrfanidisBiquad/master/Res/496px-Digital_Biquad_Direct_Form_1_Transformed.svg.png)
 
 Implementation:
 
-![Direct Form I transposed core](https://github.com/StoneyDSP/OrfanidisBiquad/blob/e8a995fec9f730532160692e6f69e9800725756e/Res/DFtI_core.png)
+![Direct Form I transposed core](https://raw.githubusercontent.com/StoneyDSP/OrfanidisBiquad/master/Res/DFtI_core.png)
 
 Pseudo-code:
 
@@ -676,19 +676,19 @@ Direct Form II transposed only requires the two unit delays (like it's non-trans
 
 Calculus:
 
-![Direct Form IIT calc y](https://github.com/StoneyDSP/OrfanidisBiquad/blob/532db8ad616b7c0ed7f51e13772adba6b54e5cf3/Res/DFIIt%20y.svg)
+![Direct Form IIT calc y](https://raw.githubusercontent.com/StoneyDSP/OrfanidisBiquad/master/Res/DFIIt%20y.svg)
 
-![Direct Form IIT calc s1](https://github.com/StoneyDSP/OrfanidisBiquad/blob/532db8ad616b7c0ed7f51e13772adba6b54e5cf3/Res/DFIIt%20s1.svg)
+![Direct Form IIT calc s1](https://raw.githubusercontent.com/StoneyDSP/OrfanidisBiquad/master/Res/DFIIt%20s1.svg)
 
-![Direct Form IIT calc s2](https://github.com/StoneyDSP/OrfanidisBiquad/blob/532db8ad616b7c0ed7f51e13772adba6b54e5cf3/Res/DFIIt%20s2.svg)
+![Direct Form IIT calc s2](https://raw.githubusercontent.com/StoneyDSP/OrfanidisBiquad/master/Res/DFIIt%20s2.svg)
 
 Flow diagram:
 
-![Direct Form IIT](https://github.com/StoneyDSP/OrfanidisBiquad/blob/532db8ad616b7c0ed7f51e13772adba6b54e5cf3/Res/496px-Digital_Biquad_Direct_Form_2_Transformed.svg.png)
+![Direct Form IIT](https://raw.githubusercontent.com/StoneyDSP/OrfanidisBiquad/master/Res/496px-Digital_Biquad_Direct_Form_2_Transformed.svg.png)
 
 Implementation:
     
-![Direct Form II transposed core](https://github.com/StoneyDSP/OrfanidisBiquad/blob/e8a995fec9f730532160692e6f69e9800725756e/Res/DFtII_core.png)
+![Direct Form II transposed core](https://raw.githubusercontent.com/StoneyDSP/OrfanidisBiquad/master/Res/DFtII_core.png)
 
 Pseudo-code:
 
@@ -727,7 +727,7 @@ Notes:
 
 The Transposed Direct Form II, similarly to it's predecessor, uses only two unit-delays, making it much more amenable to audio-rate modulation; meanwhile, this form also successfully manages to avoid the higher "round-off" error and quantization noise of it's predecessor (and the DFI(t) structure).
 
-![NoiseGone](https://github.com/StoneyDSP/OrfanidisBiquad/blob/f127d5abe3a13265b05380a2550df118eb131466/Res/NoNoise.png)
+![NoiseGone](https://raw.githubusercontent.com/StoneyDSP/OrfanidisBiquad/master/Res/NoNoise.png)
 
 *(Shown above: +30dB boost at 20hz with Bandwidth of 1.0 using DFII(t), on a 20hz Sawtooth waveform)
 
