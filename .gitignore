@@ -1,4 +1,6 @@
 ﻿.cache
+.nuxt
+.vercel
 .vscode
 
 build
@@ -11,4 +13,3 @@ JuceLibraryCode
 !*.ico
 
 node_modules
-.vercel
