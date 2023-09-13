@@ -144,8 +144,11 @@ The digital Biquad Equalizer</h1>
 <h1><a class="anchor" id="autotoc_md3"></a>
 Passing audio</h1>
 <p>In the system we described above, we mentioned that our frequency equalizer is internally really just a system of various "gains" applied to the input signal. How so?</p>
-<p>Let's start by thinking of our audio stream entering our "system" and coming out the other side, unchanged. Here's some basic pseudo-code describing this scenario: </p><pre class="fragment">{
-    x = input sample;
+<p>Let's start by thinking of our audio stream entering our "system" and coming out the other side, unchanged. Here's some basic pseudo-code describing this scenario: </p>
+<pre class="fragment">
+{
+
+	x = input sample;
 
     y = x;
 
@@ -161,8 +164,11 @@ Coefficients</h1>
 <li>Denominator</li>
 </ul>
 <p>Furthermore, we shall refer to our "Numerator" coefficient object as "b", while our "Denonimator" shall be "a". <em>Please note: these labels are occasionally swapped over in some literatures!</em></p>
-<p>Let's take our crude metal-box-with-wire system, and begin applying the gains, i.e., our "coefficient" objects, in a simple fashion. As stated above, we have one "numerator" coefficient named "b", and a "denominator" coefficient named "a". Here is a simple expression to give you the idea of what these two initial coefficients do for our input audio sample: </p><pre class="fragment">{
-    x = input sample;
+<p>Let's take our crude metal-box-with-wire system, and begin applying the gains, i.e., our "coefficient" objects, in a simple fashion. As stated above, we have one "numerator" coefficient named "b", and a "denominator" coefficient named "a". Here is a simple expression to give you the idea of what these two initial coefficients do for our input audio sample: </p>
+<pre class="fragment">
+{
+
+	x = input sample;
 
     b = 1;
     a = 1;
@@ -171,9 +177,13 @@ Coefficients</h1>
 
     output sample = y;
 }
-</pre><p> <a class="el" href="d6/d6d/class_coefficient.html" title="The &#39;Coefficient&#39; class.">Coefficient</a> "b" is used as a gain multiplier for our direct signal (i.e., the level of our input signal to appear at the output).</p>
-<p>But first, our "a" is used to scale (multiply) our "b" like so: </p><pre class="fragment">{
-    x = input sample;
+</pre>
+<p> <a class="el" href="d6/d6d/class_coefficient.html" title="The &#39;Coefficient&#39; class.">Coefficient</a> "b" is used as a gain multiplier for our direct signal (i.e., the level of our input signal to appear at the output).</p>
+<p>But first, our "a" is used to scale (multiply) our "b" like so: </p>
+<pre class="fragment">
+{
+
+	x = input sample;
 
     a = 1;
     b = 1;
@@ -182,9 +192,13 @@ Coefficients</h1>
 
     output sample = y;
 }
-</pre><p> In fact, what we shall see moving forward, is that our <em>initial</em> coefficient "a" is something of a special case; it is used as a gain multiplier for <em>all coefficients except for itself</em>. That is, all other coefficients <em>except for</em> a, are multiplied by 1/a = 1.</p>
-<p>So that the above pseudo-code and the below are equivalent: </p><pre class="fragment">{
-    x = input sample;
+</pre>
+<p> In fact, what we shall see moving forward, is that our <em>initial</em> coefficient "a" is something of a special case; it is used as a gain multiplier for <em>all coefficients except for itself</em>. That is, all other coefficients <em>except for</em> a, are multiplied by 1/a = 1.</p>
+<p>So that the above pseudo-code and the below are equivalent: </p>
+<pre class="fragment">
+{
+
+	x = input sample;
 
     a = 1;
     b = 1/a;
@@ -193,7 +207,8 @@ Coefficients</h1>
 
     output sample = y;
 }
-</pre><p> The key difference in the above example, is that we see how "a" <em>only</em> works directly on "b", and thus only ever <em>indirectly</em> on "x".</p>
+</pre>
+<p> The key difference in the above example, is that we see how "a" <em>only</em> works directly on "b", and thus only ever <em>indirectly</em> on "x".</p>
 <p>The expressions are of course mathematically equivalent, but the above version explicitly demomstrates the concept that "all other coefficients *except for* a, are multiplied by 1/a = 1" that we'd just outlined previously.</p>
 <p><em>note: It is extremely common to see this initial "denominator" coefficient, "a", "normalised" to a value of 1, or even disregarded entirely, in most literature and implementations (since it is assumed that we *always</em> want our coefficients to be their <em>actual</em> values, instead of being scaled by 1/something else). This does help to keep things more simple. Doing so, however, does close down some potentially worthwhile experiments for much later on when addressing the topic of "de-cramping" a digital equalizer.*</p>
 <p>Our implementations shall maintain that "b" = numerator, "a" = denominator, and that our intial "a" is a valid parameter in our calculations, while still keeping things as simple as possible.</p>
@@ -213,22 +228,30 @@ Encapsulation</h1>
 About feedback</h1>
 <p>At this point we introduce the traditional concepts of "feedback" into our system. We likely all know what this means in at least some context: the input of a system is fed some amount of it's own output.</p>
 <p>This is of course a notorious way to introduce chaos, near-unpredictability, and deafening/damaging results to an audio system. Let's call such a case "positive feedback" - the changed output is being fed back into it's own input, thus the system iterates over itself infinitely (until some part of the chain reaches it's operating limit and explodes).</p>
-<p>Here's a very simplified pseudo-version of the "positive feedback" idea: </p><pre class="fragment">{
-    x = input sample;
+<p>Here's a very simplified pseudo-version of the "positive feedback" idea: </p>
+<pre class="fragment">
+{
+
+	x = input sample;
 
     y = x + y;
 
     output sample = y;
 }
-</pre><p> That's right - we're adding "y" to <em>itself</em>. So that if "x" = 0.7, and "y" = 0.9, technically "y" would <em>also</em> be equal to x + y = 1.6, but if that were the case then "y" would <em>also</em> be equal to x + y = 2.5, and so on... all in the same instant. Potentially, our signal could grow indefinitely... and dangerously.</p>
-<p>And what of "negative feedback"? What's the difference? </p><pre class="fragment">{
-    x = input sample;
+</pre>
+<p> That's right - we're adding "y" to <em>itself</em>. So that if "x" = 0.7, and "y" = 0.9, technically "y" would <em>also</em> be equal to x + y = 1.6, but if that were the case then "y" would <em>also</em> be equal to x + y = 2.5, and so on... all in the same instant. Potentially, our signal could grow indefinitely... and dangerously.</p>
+<p>And what of "negative feedback"? What's the difference? </p>
+<pre class="fragment">
+{
+
+	x = input sample;
 
     y = x - y;
 
     output sample = y;
 }
-</pre><p> So now, if as before "x" = 0.7, and "y" = 0.9, "y" should <em>also</em> be equal to -0.2, but <em>also</em> 0.9, and thus equal to -0.2... and so on. The subtraction in this case produces a stable system, that we can see "oscillates" from one value to another and back.</p>
+</pre>
+<p> So now, if as before "x" = 0.7, and "y" = 0.9, "y" should <em>also</em> be equal to -0.2, but <em>also</em> 0.9, and thus equal to -0.2... and so on. The subtraction in this case produces a stable system, that we can see "oscillates" from one value to another and back.</p>
 <p>Due to the bi-polar nature of both our input signal <em>and</em> our coefficients, it is also worth considering an additional case; Adding a negative number to a positive number.</p>
 <p>For example, if "y" = -0.9, and were added to "x" = 0.7, the resultant addition is equivalant to subtracting "y" - if "y" were a positive number.</p>
 <p>Thus, we can always invert the sign of any of our coefficients (or input signal), and <em>always</em> sum our results (addition) instead of having to chain additions and subtractions together, later on.</p>
@@ -236,8 +259,11 @@ About feedback</h1>
 <p>Such is the case when working with feedback. Fortunately (at least for this write up), our digital system is bound by the sampling theorem, in which the closest thing we have to "near-instant" in such a calculation is one audio sample. This will be investigated - utilized, even - later on in our design.</p>
 <h1><a class="anchor" id="autotoc_md7"></a>
 Adding positive and negative feedback paths</h1>
-<p>Let's revert to allowing our input signal to pass to the output, scaled by b * (1/a) as before: </p><pre class="fragment">{
-    x = input sample;
+<p>Let's revert to allowing our input signal to pass to the output, scaled by b * (1/a) as before: </p>
+<pre class="fragment">
+{
+
+	x = input sample;
 
     a = 1;
     b = 1/a;
@@ -261,8 +287,11 @@ Adding positive and negative feedback paths</h1>
 <li>a1 = negative feedback path</li>
 </ul>
 <p>Giving us a total of four "degrees of freedom" with which to manipulate our input signal.</p>
-<p>We can still start off by passing our audio directly, but with the new coefficients wired into place - we simply set them to 0 for now: </p><pre class="fragment">{
-    x = input sample;
+<p>We can still start off by passing our audio directly, but with the new coefficients wired into place - we simply set them to 0 for now: </p>
+<pre class="fragment">
+{
+
+	x = input sample;
 
     a0 = 1;
     b0 = 1/a0;
@@ -275,19 +304,28 @@ Adding positive and negative feedback paths</h1>
     output sample = y;
 }
 </pre><p> So, if;</p>
-<pre class="fragment">    a0 = 1;
+<pre class="fragment">    
+a0 = 1;
 
-    1/a0 = 1;   // hence often left out of the literature...
-</pre><p>Therefore;</p>
-<pre class="fragment">    b0 = 1;     // input signal multiplier...
+1/a0 = 1;   // hence often left out of the literature...
+</pre>
+<p>Therefore;</p>
+<pre class="fragment">    
+b0 = 1;     // input signal multiplier...
 
-    a1 = 0;     // negative feedback signal multiplier...
+a1 = 0;     // negative feedback signal multiplier...
 
-    b1 = 0;     // positive feedback signal multiplier...
-</pre><p>Thus for "y";</p>
-<pre class="fragment">    y = (x * 1) + 0 + 0;
-</pre><p>Or rather: </p><pre class="fragment">    y = x;
-</pre><p>So, nothing has so far changed, except we've now got two more potentiometers on the front of our metal box; one labelled "b1", and another labelled "a1".</p>
+b1 = 0;     // positive feedback signal multiplier...
+</pre>
+<p>Thus for "y";</p>
+<pre class="fragment">    
+y = (x * 1) + 0 + 0;
+</pre>
+<p>Or rather: </p>
+<pre class="fragment">    
+y = x;
+</pre>
+<p>So, nothing has so far changed, except we've now got two more potentiometers on the front of our metal box; one labelled "b1", and another labelled "a1".</p>
 <p>I have some very interesting experiments in which I have exposed these coefficients on the GUI of an audio plugin, allowing the user to play with them directly. The results are certainly interesting, and do in fact sometimes go beyond typically-expected filter shapes (for a one-pole system) - however, the main take-away from testing that plugin, is that the results are entirely unpredictable (being a feedback system) and that a typical filter implementation, even a most basic one (read on), will instead use a more generic parameter (such as a "frequency" knob) to update <em>several</em> coefficients simultaneously.</p>
 <p>The test plugin described above, and concurrent write-up, may appear on the writers' Github at some point in the near future - this section will updated with links if so.</p>
 <p>For now, we have described a system that has an input, an output, and four pots that behave and interact in unpredictable and potentially hazardous ways.</p>
@@ -296,15 +334,19 @@ Adding positive and negative feedback paths</h1>
 <h1><a class="anchor" id="autotoc_md8"></a>
 Building blocks</h1>
 <ul>
-<li>1st-order Low Pass Filter <pre class="fragment">  {
+<li>1st-order Low Pass Filter 
+<pre class="fragment">  
+{
 
-  b0 = ⍵ / (1 + ⍵);
-  b1 = ⍵ / (1 + ⍵);
-  a0 = 1;
-  a1 = -1 * ((1 - ⍵) / (1 + ⍵));
+	b0 = ⍵ / (1 + ⍵);
+	b1 = ⍵ / (1 + ⍵);
+	a0 = 1;
+	a1 = -1 * ((1 - ⍵) / (1 + ⍵));
 
-  }
-</pre> <img src="https://raw.githubusercontent.com/StoneyDSP/Biquads/dev/Res/LP1.png" alt="LP1" class="inline"/></li>
+}
+</pre> 
+<img src="https://raw.githubusercontent.com/StoneyDSP/Biquads/dev/Res/LP1.png" alt="LP1" class="inline"/>
+</li>
 </ul>
 <p>In the above pseudo-code, we are shown a formula for manipulating our coefficients to provide us a simple 1st-order (i.e., 1 pole, 1 zero) Low Pass Filter. The writer shall assume the reader is familiar with this filter concept in usage terms, and is more interested in the DSP.</p>
 <p>At this point, we have reasonably concluded that our system itself required more "degrees of freedom" in order to produce interesting and useful results, but that user exposure to all of this freedom leads to screeching feedback or complete silence at literally every turn of it's four pots.</p>
@@ -312,15 +354,19 @@ Building blocks</h1>
 <p>Our value "⍵" ("omega"), <em>is</em> this new parameter. As the value of "⍵" changes, so does the centre frequency (the writer refers to the -3dB point as centre frequency) of the filter. So with this formula, we have infact retained our "degrees of freedom", yet restricted user input to a much more simple, sensible, singular control parameter; one pot which, as it turns clockwise, the centre frequency increases.</p>
 <p>To demonstrate that we have infact retained (and exponentially increased) our "degrees of freedom", let's perform a sort of inversion of this formula but retain the simple one-control function of it:</p>
 <ul>
-<li>1st-order High Pass Filter <pre class="fragment">  {
+<li>1st-order High Pass Filter 
+<pre class="fragment">  
+{
 
-  b0 = 1 / (1 + ⍵);
-  b1 = (1 / (1 + ⍵)) * -1;
-  a0 = 1;
-  a1 = ((1 - ⍵) / (1 + ⍵)) * -1;
+	b0 = 1 / (1 + ⍵);
+	b1 = (1 / (1 + ⍵)) * -1;
+	a0 = 1;
+	a1 = ((1 - ⍵) / (1 + ⍵)) * -1;
 
-  }
-</pre> <img src="https://raw.githubusercontent.com/StoneyDSP/Biquads/dev/Res/HP1.png" alt="HP1" class="inline"/></li>
+}
+</pre> 
+<img src="https://raw.githubusercontent.com/StoneyDSP/Biquads/dev/Res/HP1.png" alt="HP1" class="inline"/>
+</li>
 </ul>
 <p>We can notice, even at a glance, that these two formulas are effectively the inverse of one another - as are the filter responses! Our Low Pass is transformed into a High Pass by this numerical inversion.</p>
 <h1><a class="anchor" id="autotoc_md9"></a>
@@ -331,7 +377,8 @@ Calculating the parameters</h1>
 <li>⍺ = alpha</li>
 <li>A = gain (<em>only</em> used in peaking and shelving filter calculations!)</li>
 </ul>
-<pre class="fragment">{
+<pre class="fragment">
+{
 
     ⍵ = frequencyParameter * (2π / sampleRate);
     sin(θ) = sin(⍵);
@@ -339,11 +386,13 @@ Calculating the parameters</h1>
     tan(θ) = sin(⍵) / cos(⍵);
     ⍺ = sin(⍵) * (1 - resonanceParameter);
     A = log10(gainParameter * 0.05)
-
 }
-</pre><p> <a href="https://en.wikipedia.org/wiki/Sine_and_cosine#Unit_circle_definitions">https://en.wikipedia.org/wiki/Sine_and_cosine#Unit_circle_definitions</a> <a href="https://en.wikipedia.org/wiki/Unit_circle">https://en.wikipedia.org/wiki/Unit_circle</a></p>
+</pre>
+<p> <a href="https://en.wikipedia.org/wiki/Sine_and_cosine#Unit_circle_definitions">https://en.wikipedia.org/wiki/Sine_and_cosine#Unit_circle_definitions</a> <a href="https://en.wikipedia.org/wiki/Unit_circle">https://en.wikipedia.org/wiki/Unit_circle</a></p>
 <p>Now that we have scaled and mapped our parameters "frequency", "resonance", and "gain", we can use these transformed values to control the gain (just a simple multiplication) at various points in our signal path, including feedback channels.</p>
-<p>Here is the total solution for a 1st-order Low Pass Filter: </p><pre class="fragment">    {
+<p>Here is the total solution for a 1st-order Low Pass Filter: </p>
+<pre class="fragment">    
+{
 
     // create coefficients from parameters
 
@@ -367,8 +416,9 @@ Calculating the parameters</h1>
 
     output sample = Y;
 
-    }
-</pre><p> You will notice in this expression, that coeff "a1" is inverted ("-1 * (x)..."), which provides us with our negative feedback path.</p>
+}
+</pre>
+<p> You will notice in this expression, that coeff "a1" is inverted ("-1 * (x)..."), which provides us with our negative feedback path.</p>
 <p>The expression "(z-1)" represents that this sample is <em>delayed by exactly one audio sample</em>.</p>
 <p>One thing this does tell us, is that one of the components of "y" is a copy of itself, delayed by one sample. One of it's other components is "x" directly, and the final component is "x" but again delayed by one sample.</p>
 <p>These three components are each scaled by three of our coefficients - with the remaining coefficient scaling those, in turn. So, three "degrees of freedom" acting directly upon the audio signal are currently in place. Another, somewhat hidden degree - a0 - is acting as a sort of "strength" factor on those other three "degrees".</p>
@@ -376,7 +426,9 @@ Calculating the parameters</h1>
 <h1><a class="anchor" id="autotoc_md10"></a>
 Adding higher filter orders</h1>
 <p>As with our transition from a simple "in-gain-out" system to now a one-pole filter, in which we added a second round of coefficients <em>sepcifically to affect feedback levels</em>, we can again add another round of coefficients, b2 and a2, to increase the "degrees of freedom" even further, and create some rather drastic filter shapes.</p>
-<p>Compare the below with the 1st-order counterpart: </p><pre class="fragment">    {
+<p>Compare the below with the 1st-order counterpart: </p>
+<pre class="fragment">    
+{
 
     b0 = (1 - cos(θ)) / 2;
     b1 = 1 - cos(θ);
@@ -385,8 +437,9 @@ Adding higher filter orders</h1>
     a1 = -2 * cos(θ);
     a2 = 1 - ⍺;
 
-    }
-</pre><p> <img src="https://raw.githubusercontent.com/StoneyDSP/Biquads/dev/Res/LP2res.png" alt="LP2res" class="inline"/></p>
+}
+</pre>
+<p> <img src="https://raw.githubusercontent.com/StoneyDSP/Biquads/dev/Res/LP2res.png" alt="LP2res" class="inline"/></p>
 <p>In our above example, we have added two further "degrees" - coefficients - with which to manipulate our signal; we have also added an additional parameter "⍺" ("alpha"), which in this forumula provides us with the typical "resonance" control that we ususally see on 2nd-order (or higher) filters. This "resonance" parameter is directly (and solely) responsible for the "bump" seen around the centre frequency of the filter, and can be increased or decreased as desired. Higher resonance can be reminiscent of a wah-wah pedal or synthesizer effect, while lower resonance is more like a trumpet-mute.</p>
 <p>You will have also noted a cosine math operation being performed on "⍵", expressed as "cos(θ)". This was calculated previously, in our <a class="el" href="da/d39/class_parameters.html">Parameters</a> chapter. It is equivalent to "cos(⍵)".</p>
 <h1><a class="anchor" id="autotoc_md11"></a>
@@ -400,38 +453,40 @@ Transformations</h1>
 <li>z-1 = unit (single sample) delay</li>
 <li>&lt;-, -&gt;.. etc = signal flow direction</li>
 </ul>
-<p><img src="https://raw.githubusercontent.com/StoneyDSP/OrfanidisBiquad/master/Res/400px-Biquad_filter_DF-I.svg.png" alt="DF I" class="inline"/></p>
+<p><img src="https://raw.githubusercontent.com/StoneyDSP/OrfanidisBiquad/master/Res/400px-Biquad_filter_DF-I.png" alt="DF I" class="inline"/></p>
 <p>Some forms have what may be considered an additional audio feedback path (notated as W(n) in this description, but may vary);</p>
-<p><img src="https://raw.githubusercontent.com/StoneyDSP/OrfanidisBiquad/master/Res/Biquad_filter_DF-IIx.svg.png" alt="DF II" class="inline"/></p>
+<p><img src="https://raw.githubusercontent.com/StoneyDSP/OrfanidisBiquad/master/Res/Biquad_filter_DF-IIx.png" alt="DF II" class="inline"/></p>
 <h1><a class="anchor" id="autotoc_md12"></a>
 Applying the coefficients;</h1>
 <p>First, we need to create an input (Xn), and output (Yn), and our 6 gain multiplication coefficients, the results of which are summed together using linear addition. We can start with an arrangement that simply passes the audio sample from input to output unchanged.</p>
-<p>Here's some pseudo-code to get us started with a template; </p><pre class="fragment">{
+<p>Here's some pseudo-code to get us started with a template; </p>
+<pre class="fragment">
+{
 
-X = input sample;                                                             // audio input stream...
+	X = input sample;                                                             // audio input stream...
 
-_b0 = 1;                                                                       // initialize coefficients to safe numbers...
-_b1 = 0;
-_b2 = 0;
-_a0 = 1;
-_a1 = 0;
-_a2 = 0;
+	_b0 = 1;                                                                       // initialize coefficients to safe numbers...
+	_b1 = 0;
+	_b2 = 0;
+	_a0 = 1;
+	_a1 = 0;
+	_a2 = 0;
 
-a0 = (1 / a0_);                                                                 // calculate new coefficients from parameters...
+	a0 = (1 / a0_);                                                                 // calculate new coefficients from parameters...
 
-a1 = (-1 * (a1_ * a0));
-a2 = (-1 * (a2_ * a0));
+	a1 = (-1 * (a1_ * a0));
+	a2 = (-1 * (a2_ * a0));
 
-b0 = (b0_ * a0);
-b1 = (b1_ * a0);
-b2 = (b2_ * a0);
+	b0 = (b0_ * a0);
+	b1 = (b1_ * a0);
+	b2 = (b2_ * a0);
 
-Y = ((X * b0) + (X * b1) + (X * b2) + (X * a1) + (X * a2));                     // apply coefficients to input sample...
+	Y = ((X * b0) + (X * b1) + (X * b2) + (X * a1) + (X * a2));                     // apply coefficients to input sample...
 
-output sample = Y;                                                              // audio output stream...
-
+	output sample = Y;                                                              // audio output stream...
 }
-</pre><p> (please note that extra care is taken where necessary within the code to ensure thread safety between parameter (message thread) and playback (audio thread).)</p>
+</pre>
+<p> (please note that extra care is taken where necessary within the code to ensure thread safety between parameter (message thread) and playback (audio thread).)</p>
 <p>I have also re-created all of the code from this study in my preferred visual-programming/workbench environment, Reaktor Core, which I have chosen to share here for it's ease of readability. Please see the above C++ code as translated visually into Core, below;</p>
 <p><img src="https://raw.githubusercontent.com/StoneyDSP/OrfanidisBiquad/master/Res/Workbench%20-%20Bypass%20(coded%20by%20StoneyDSP).png" alt="Workbench" class="inline"/></p>
 <p>For any Reaktor Core builders in attendance - you will see some structures in this write-up that are not in accordance with Reaktor Core's processing paradigm, particularly with respect to feedback macros and handling. The writer has assumed that readers have (practically) no interest in Reaktor Core itself, and are primarily here for the theory and possibly the C code. Thus, I have intentionally mis-used Reaktor's feedback handling purely for the sake of the visual demonstrations ahead, which I believe are very clear, even for non-Reaktor users. To create safe versions of these macros, please use the <em>non-solid</em> factory "z-1 fdbk" macro for all unit delays, and ideally add an SR bundle distribution.</p>
@@ -447,7 +502,7 @@ Direct Form I;</h1>
 <p>Calculus:</p>
 <p><img src="https://raw.githubusercontent.com/StoneyDSP/OrfanidisBiquad/master/Res/DFI.svg" alt="Direct Form I calc" style="pointer-events: none;" class="inline"/></p>
 <p>Flow diagram:</p>
-<p><img src="https://raw.githubusercontent.com/StoneyDSP/OrfanidisBiquad/master/Res/496px-Digital_Biquad_Direct_Form_1_Untransformed.svg.png" alt="Direct Form I" class="inline"/></p>
+<p><img src="https://raw.githubusercontent.com/StoneyDSP/OrfanidisBiquad/master/Res/496px-Digital_Biquad_Direct_Form_1_Untransformed.png" alt="Direct Form I" class="inline"/></p>
 <p>Implementation:</p>
 <p><img src="https://raw.githubusercontent.com/StoneyDSP/OrfanidisBiquad/master/Res/DFI_core.png" alt="Direct Form I core" class="inline"/></p>
 <ul>
@@ -455,38 +510,40 @@ Direct Form I;</h1>
 <li>Red cable = negative ceofficient audio path</li>
 <li>Grey cable = parameter value</li>
 </ul>
-<p>Pseudo-code: </p><pre class="fragment">{
+<p>Pseudo-code: </p>
+<pre class="fragment">
+{
 
-X = input sample;
-
-_b0 = 1;
-_b1 = 0;
-_b2 = 0;
-_a0 = 1;
-_a1 = 0;
-_a2 = 0;
-
-a0 = (1 / a0_);
-
-a1 = (-1 * (a1_ * a0));
-a2 = (-1 * (a2_ * a0));
-
-b0 = (b0_ * a0);
-b1 = (b1_ * a0);
-b2 = (b2_ * a0);
-
-Y = ((X * b0) + (X(z-1) * b1) + (X(z-2) * b2) + (Y(z-1) * a1) + (Y(z-2) * a2));
-
-X(z-2) = X(z-1);
-X(z-1) = X;
-
-Y(z-2) = Y(z-1);
-Y(z-1) = Y;
-
-output sample = Y;
-
+	X = input sample;
+	
+	_b0 = 1;
+	_b1 = 0;
+	_b2 = 0;
+	_a0 = 1;
+	_a1 = 0;
+	_a2 = 0;
+	
+	a0 = (1 / a0_);
+	
+	a1 = (-1 * (a1_ * a0));
+	a2 = (-1 * (a2_ * a0));
+	
+	b0 = (b0_ * a0);
+	b1 = (b1_ * a0);
+	b2 = (b2_ * a0);
+	
+	Y = ((X * b0) + (X(z-1) * b1) + (X(z-2) * b2) + (Y(z-1) * a1) + (Y(z-2) * a2));
+	
+	X(z-2) = X(z-1);
+	X(z-1) = X;
+	
+	Y(z-2) = Y(z-1);
+	Y(z-1) = Y;
+	
+	output sample = Y;
 }
-</pre><p>Notes:</p>
+</pre>
+<p>Notes:</p>
 <p>DFI utlizes a total of four samples of delay ("z-1"). This (comparatively) higher number of unit delays present in the DFI structure make this arrangement relatively unstable when modulating the parameters while simultaneously passing audio, resulting in loud (and potentially damaging) clicks and pops in the resulting audio. In our test workbench (running as a VST3 effect in Reaper), even just moderate sweeps of the filter frequency control can incur signal overloads significant enough to trigger the in-built "channel auto-mute" safety feature, which avoids sending potentially damaging signals to the audio playback device and speakers.</p>
 <h1><a class="anchor" id="autotoc_md14"></a>
 Direct Form II;</h1>
@@ -495,39 +552,41 @@ Direct Form II;</h1>
 <p><img src="https://raw.githubusercontent.com/StoneyDSP/OrfanidisBiquad/master/Res/DFII%20w.svg" alt="Direct Form II calc W" style="pointer-events: none;" class="inline"/></p>
 <p><img src="https://raw.githubusercontent.com/StoneyDSP/OrfanidisBiquad/master/Res/DFII%20y.svg" alt="Direct Form II calc Y" style="pointer-events: none;" class="inline"/></p>
 <p>Flow diagram:</p>
-<p><img src="https://raw.githubusercontent.com/StoneyDSP/OrfanidisBiquad/master/Res/496px-Digital_Biquad_Direct_Form_2_Untransformed.svg.png" alt="Direct Form II" class="inline"/></p>
+<p><img src="https://raw.githubusercontent.com/StoneyDSP/OrfanidisBiquad/master/Res/496px-Digital_Biquad_Direct_Form_2_Untransformed.png" alt="Direct Form II" class="inline"/></p>
 <p>Implementation:</p>
 <p><img src="https://raw.githubusercontent.com/StoneyDSP/OrfanidisBiquad/master/Res/DFII_core.png" alt="Direct Form II core" class="inline"/></p>
-<p>Pseudo-code: </p><pre class="fragment">{
-
-X = input sample;
-
-_b0 = 1;
-_b1 = 0;
-_b2 = 0;
-_a0 = 1;
-_a1 = 0;
-_a2 = 0;
-
-a0 = (1 / a0_);
-
-a1 = (-1 * (a1_ * a0));
-a2 = (-1 * (a2_ * a0));
-
-b0 = (b0_ * a0);
-b1 = (b1_ * a0);
-b2 = (b2_ * a0);
-
-W = (X + ((W(z-1) * a1) + (W(z-2) * a2)));
-Y = ((W * b0) + (W(z-1) * b1) + (W(z-2) * b2));
-
-W(z-2) = W(z-1);
-W(z-1) = W;
-
-output sample = Y;
-
+<p>Pseudo-code: </p>
+<pre class="fragment">
+{
+	
+	X = input sample;
+	
+	_b0 = 1;
+	_b1 = 0;
+	_b2 = 0;
+	_a0 = 1;
+	_a1 = 0;
+	_a2 = 0;
+	
+	a0 = (1 / a0_);
+	
+	a1 = (-1 * (a1_ * a0));
+	a2 = (-1 * (a2_ * a0));
+	
+	b0 = (b0_ * a0);
+	b1 = (b1_ * a0);
+	b2 = (b2_ * a0);
+	
+	W = (X + ((W(z-1) * a1) + (W(z-2) * a2)));
+	Y = ((W * b0) + (W(z-1) * b1) + (W(z-2) * b2));
+	
+	W(z-2) = W(z-1);
+	W(z-1) = W;
+	
+	output sample = Y;
 }
-</pre><p>Notes:</p>
+</pre>
+<p>Notes:</p>
 <p>DFII, using less unit delays in it's architecture, produces much less significant artefacts during parameter modulation; in all but the most extreme cases, the output remains relatively benign. However, this structure is far more prone to "round-off" errors due to a narrowing computational precision in certain parts of the feedback network; this can manifest as a kind of "quantization noise" - much like un-dithered fixed-point audio - creeping well into the audible range, and in some cases enveloping low-amplitudinal parts of the input signal. This can be particularly extenuated by very large boosts of a tight "bell" shape in the lowest bass frequencies, causing strong quantization-error noise to permeate the upper-mid and treble ranges of the signal (image below).</p>
 <p><img src="https://raw.githubusercontent.com/StoneyDSP/OrfanidisBiquad/master/Res/QuantizedNoiseEdit.png" alt="Quantization Noise" class="inline"/></p>
 <p>*(Shown above: +30dB boost at 20hz with Bandwidth of 1.0 using DFII, on a 20hz Sawtooth waveform)</p>
@@ -535,43 +594,44 @@ output sample = Y;
 Direct Form I Transposed;</h1>
 <p>For the "transposed" forms, all terms are inverted (signal flow reversed, summing points become split points, and multpiliers swap positions), creating the same output transfer function for the same number of components but in a somewhat "mirrored" directional flow of our input signal, resulting in our coefficient multiplications occuring <em>before</em> the unit delays;</p>
 <p>Flow diagram:</p>
-<p><img src="https://raw.githubusercontent.com/StoneyDSP/OrfanidisBiquad/master/Res/496px-Digital_Biquad_Direct_Form_1_Transformed.svg.png" alt="Direct Form IT" class="inline"/></p>
+<p><img src="https://raw.githubusercontent.com/StoneyDSP/OrfanidisBiquad/master/Res/496px-Digital_Biquad_Direct_Form_1_Transformed.png" alt="Direct Form IT" class="inline"/></p>
 <p>Implementation:</p>
 <p><img src="https://raw.githubusercontent.com/StoneyDSP/OrfanidisBiquad/master/Res/DFtI_core.png" alt="Direct Form I transposed core" class="inline"/></p>
 <p>Pseudo-code:</p>
-<pre class="fragment">{
+<pre class="fragment">
+{
 
-X = input sample;
-
-_b0 = 1;
-_b1 = 0;
-_b2 = 0;
-_a0 = 1;
-_a1 = 0;
-_a2 = 0;
-
-a0 = (1 / a0_);
-
-a1 = (-1 * (a1_ * a0));
-a2 = (-1 * (a2_ * a0));
-
-b0 = (b0_ * a0);
-b1 = (b1_ * a0);
-b2 = (b2_ * a0);
-
-W = (X + W(z-2));
-Y = ((W * b0) + X(z-2));
-
-X(z-2) = ((W * b1) + X(z-1));
-X(z-1) = (W * b2);
-
-W(z-2) = ((W * a1) + W(z-1));
-W(z-1) = (W * a2);
-
-output sample = Y;
-
+	X = input sample;
+	
+	_b0 = 1;
+	_b1 = 0;
+	_b2 = 0;
+	_a0 = 1;
+	_a1 = 0;
+	_a2 = 0;
+	
+	a0 = (1 / a0_);
+	
+	a1 = (-1 * (a1_ * a0));
+	a2 = (-1 * (a2_ * a0));
+	
+	b0 = (b0_ * a0);
+	b1 = (b1_ * a0);
+	b2 = (b2_ * a0);
+	
+	W = (X + W(z-2));
+	Y = ((W * b0) + X(z-2));
+	
+	X(z-2) = ((W * b1) + X(z-1));
+	X(z-1) = (W * b2);
+	
+	W(z-2) = ((W * a1) + W(z-1));
+	W(z-1) = (W * a2);
+	
+	output sample = Y;
 }
-</pre><p>Notes:</p>
+</pre>
+<p>Notes:</p>
 <p>The transposed Direct Form I ("DFI(t)") utilizes the four unit-delays of it's predecessor, meaning a higher memory footprint, while it <em>also</em> incurs the exact same "round-off error" and quantization noise as the original DFII structure. This is a dangerous combination for real-world audio use-cases, such as a mixing scenario.</p>
 <p>So far, we've encountered one transformation resulting in zipper noise, one resulting in quantization noise, and one resulting in <em>both</em>.</p>
 <p>This may seem discouraging, but we still have one final arrangement to try.</p>
@@ -583,38 +643,40 @@ Direct Form II Transposed;</h1>
 <p><img src="https://raw.githubusercontent.com/StoneyDSP/OrfanidisBiquad/master/Res/DFIIt%20s1.svg" alt="Direct Form IIT calc s1" style="pointer-events: none;" class="inline"/></p>
 <p><img src="https://raw.githubusercontent.com/StoneyDSP/OrfanidisBiquad/master/Res/DFIIt%20s2.svg" alt="Direct Form IIT calc s2" style="pointer-events: none;" class="inline"/></p>
 <p>Flow diagram:</p>
-<p><img src="https://raw.githubusercontent.com/StoneyDSP/OrfanidisBiquad/master/Res/496px-Digital_Biquad_Direct_Form_2_Transformed.svg.png" alt="Direct Form IIT" class="inline"/></p>
+<p><img src="https://raw.githubusercontent.com/StoneyDSP/OrfanidisBiquad/master/Res/496px-Digital_Biquad_Direct_Form_2_Transformed.png" alt="Direct Form IIT" class="inline"/></p>
 <p>Implementation:</p>
 <p><img src="https://raw.githubusercontent.com/StoneyDSP/OrfanidisBiquad/master/Res/DFtII_core.png" alt="Direct Form II transposed core" class="inline"/></p>
-<p>Pseudo-code: </p><pre class="fragment">{
+<p>Pseudo-code: </p>
+<pre class="fragment">
+{
 
-X = input sample;
-
-_b0 = 1;
-_b1 = 0;
-_b2 = 0;
-_a0 = 1;
-_a1 = 0;
-_a2 = 0;
-
-a0 = (1 / a0_);
-
-a1 = (-1 * (a1_ * a0));
-a2 = (-1 * (a2_ * a0));
-
-b0 = (b0_ * a0);
-b1 = (b1_ * a0);
-b2 = (b2_ * a0);
-
-Y = ((X * b0) + (X(z-2));
-
-X(z-2) = ((X * b1) + (X(z-1)) + (Y * a1));
-X(z-1) = ((X * b2) + (Y * a2));
-
-output sample = Y;
-
+	X = input sample;
+	
+	_b0 = 1;
+	_b1 = 0;
+	_b2 = 0;
+	_a0 = 1;
+	_a1 = 0;
+	_a2 = 0;
+	
+	a0 = (1 / a0_);
+	
+	a1 = (-1 * (a1_ * a0));
+	a2 = (-1 * (a2_ * a0));
+	
+	b0 = (b0_ * a0);
+	b1 = (b1_ * a0);
+	b2 = (b2_ * a0);
+	
+	Y = ((X * b0) + (X(z-2));
+	
+	X(z-2) = ((X * b1) + (X(z-1)) + (Y * a1));
+	X(z-1) = ((X * b2) + (Y * a2));
+	
+	output sample = Y;
 }
-</pre><p>Notes:</p>
+</pre>
+<p>Notes:</p>
 <p>The Transposed Direct Form II, similarly to it's predecessor, uses only two unit-delays, making it much more amenable to audio-rate modulation; meanwhile, this form also successfully manages to avoid the higher "round-off" error and quantization noise of it's predecessor (and the DFI(t) structure).</p>
 <p><img src="https://raw.githubusercontent.com/StoneyDSP/OrfanidisBiquad/master/Res/NoNoise.png" alt="NoiseGone" class="inline"/></p>
 <p>*(Shown above: +30dB boost at 20hz with Bandwidth of 1.0 using DFII(t), on a 20hz Sawtooth waveform)</p>
