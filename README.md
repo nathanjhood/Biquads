@@ -564,7 +564,7 @@ Calculus:
 
 Flow diagram:
 
-![Direct Form II](https://raw.githubusercontent.com/StoneyDSP/OrfanidisBiquad/master/Res/496px-Digital_Biquad_Direct_Form_2_Untransformed.svg.png)
+![Direct Form II](https://raw.githubusercontent.com/StoneyDSP/OrfanidisBiquad/master/Res/496px-Digital_Biquad_Direct_Form_2_Untransformed.png)
 
 Implementation:
 
