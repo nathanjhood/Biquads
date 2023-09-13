@@ -435,11 +435,11 @@ Now, we are determining an output transfer function (Y(n)), given an input value
 
 + <-, ->.. etc = signal flow direction 
 
-![DF I](https://raw.githubusercontent.com/StoneyDSP/OrfanidisBiquad/master/Res/400px-Biquad_filter_DF-I.svg.png)
+![DF I](https://raw.githubusercontent.com/StoneyDSP/OrfanidisBiquad/master/Res/400px-Biquad_filter_DF-I.png)
 
  Some forms have what may be considered an additional audio feedback path (notated as W(n) in this description, but may vary);
 
-![DF II](https://raw.githubusercontent.com/StoneyDSP/OrfanidisBiquad/master/Res/Biquad_filter_DF-IIx.svg.png)
+![DF II](https://raw.githubusercontent.com/StoneyDSP/OrfanidisBiquad/master/Res/Biquad_filter_DF-IIx.png)
 
 
 # Applying the coefficients;
