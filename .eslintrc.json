@@ -1,0 +1,52 @@
+{
+	"$schema": "https://raw.githubusercontent.com/SchemaStore/schemastore/master/src/schemas/json/eslintrc.json",
+	"env": {
+		"browser": true,
+		"es2021": true,
+		"node": true,
+		"es6": true
+	},
+	"extends": "eslint:recommended",
+	"plugins": [
+		"@html-eslint"
+	],
+	"overrides": [
+		{
+			"files": [
+				"*.html"
+			],
+			"parser": "@html-eslint/parser",
+			"extends": [
+				"plugin:@html-eslint/recommended"
+			]
+		}
+	],
+	"parserOptions": {
+		"ecmaVersion": "latest",
+		"sourceType": "module"
+	},
+	"rules": {
+		"indent": [
+			"error",
+			4
+		],
+		"linebreak-style": [
+			"error",
+			"unix"
+		],
+		"quotes": [
+			"error",
+			"double"
+		],
+		"semi": [
+			"error",
+			"always"
+		],
+		"@html-eslint/indent": [
+			"error",
+			4
+		],
+		"@html-eslint/require-lang": ["error"],
+		"@html-eslint/no-multiple-h1": ["warn"]
+	}
+}
