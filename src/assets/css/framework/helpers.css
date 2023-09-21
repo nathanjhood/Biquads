@@ -3,87 +3,87 @@
 */
 
 .display__none {
-  display: none;
+    display: none;
 }
 .display__block {
-  display: block;
+    display: block;
 }
 .display__flex {
-  display: flex;
+    display: flex;
 }
 
 .contain-content {
-  contain: content;
+    contain: content;
 }
 
 /*  Position  */
 .position__fixed {
-  position: fixed;
+    position: fixed;
 }
 .position__relative {
-  position: relative;
+    position: relative;
 }
 .position__absolute {
-  position: absolute;
+    position: absolute;
 }
 .position__inherit {
-  position: inherit;
+    position: inherit;
 }
 .position__initial {
-  position: initial;
+    position: initial;
 }
 
 /*
 * Text transforms
 */
 .uppercase {
-  text-transform: uppercase;
+    text-transform: uppercase;
 }
 .lowercase {
-  text-transform: lowercase;
+    text-transform: lowercase;
 }
 .capitalize {
-  text-transform: capitalize;
+    text-transform: capitalize;
 }
 
 /*
 * Filter styles
 */
 .saturate {
-  -webkit-filter: saturate(3);
-  filter: saturate(3);
+    -webkit-filter: saturate(3);
+    filter: saturate(3);
 }
 .grayscale {
-  -webkit-filter: grayscale(100%);
-  filter: grayscale(100%);
+    -webkit-filter: grayscale(100%);
+    filter: grayscale(100%);
 }
 .contrast {
-  -webkit-filter: contrast(160%);
-  filter: contrast(160%);
+    -webkit-filter: contrast(160%);
+    filter: contrast(160%);
 }
 .brightness {
-  -webkit-filter: brightness(0.25);
-  filter: brightness(0.25);
+    -webkit-filter: brightness(0.25);
+    filter: brightness(0.25);
 }
 .blur {
-  -webkit-filter: blur(3px);
-  filter: blur(3px);
+-webkit-filter: blur(3px);
+    filter: blur(3px);
 }
 .invert {
-  -webkit-filter: invert(100%);
-  filter: invert(100%);
+    -webkit-filter: invert(100%);
+    filter: invert(100%);
 }
 .sepia {
-  -webkit-filter: sepia(100%);
-  filter: sepia(100%);
+    -webkit-filter: sepia(100%);
+    filter: sepia(100%);
 }
 .huerotate {
-  -webkit-filter: hue-rotate(180deg);
-  filter: hue-rotate(180deg);
+    -webkit-filter: hue-rotate(180deg);
+    filter: hue-rotate(180deg);
 }
 .rss.opacity {
-  -webkit-filter: opacity(50%);
-  filter: opacity(50%);
+    -webkit-filter: opacity(50%);
+    filter: opacity(50%);
 }
 
 /*
@@ -91,80 +91,80 @@
 */
 
 .text-color-black {
-  color: var(--brand-color-black);
+    color: var(--brand-color-black);
 }
 .text-color-gray {
-  color: var(--brand-color-gray);
+    color: var(--brand-color-gray);
 }
 .text-color-white {
-  color: var(--brand-color-white);
+    color: var(--brand-color-white);
 }
 .text-color-red {
-  color: var(--brand-color-red);
+    color: var(--brand-color-red);
 }
 .text-color-yellow {
-  color: var(--brand-color-yellow);
+    color: var(--brand-color-yellow);
 }
 .text-color-blue {
-  color: var(--brand-color-blue);
+    color: var(--brand-color-blue);
 }
 
 /*
 *  Background Colors
 */
 .bg-color-black {
-  background-color: var(--brand-color__black);
+    background-color: var(--brand-color__black);
 }
 .bg-color-gray {
-  background-color: var(--brand-color__gray);
+    background-color: var(--brand-color__gray);
 }
 .bg-color-white {
-  background-color: var(--brand-color__white);
+    background-color: var(--brand-color__white);
 }
 .bg-color__red-dark {
-  background-color: var(--brand-color__red-dark);
+    background-color: var(--brand-color__red-dark);
 }
 .bg-color__red {
-  background-color: var(--brand-color__red);
+    background-color: var(--brand-color__red);
 }
 .bg-color__red-light {
-  background-color: var(--brand-color__red-light);
+    background-color: var(--brand-color__red-light);
 }
 .bg-color-yellow {
-  background-color: var(--brand-color-yellow);
+    background-color: var(--brand-color-yellow);
 }
 .bg-color-blue {
-  background-color: var(--brand-color-blue);
+    background-color: var(--brand-color-blue);
 }
 
 .bg-color__underground {
-  background-color: var(--brand-color__underground);
+    background-color: var(--brand-color__underground);
 }
 .bg-color__background {
-  background-color: var(--brand-color__background);
+    background-color: var(--brand-color__background);
 }
 .bg-color__middleground {
-  background-color: var(--brand-color__middleground);
+    background-color: var(--brand-color__middleground);
 }
 .bg-color__foreground {
-  background-color: var(--brand-color__foreground);
+    background-color: var(--brand-color__foreground);
 }
 .bg-color__overground {
-  background-color: var(--brand-color__overground);
+    background-color: var(--brand-color__overground);
 }
 
 .bg-color__increase {
-  background-color: calc(inherit + var(--color__unit));
+    background-color: calc(inherit + var(--color__unit));
 }
 .bg-color__decrease {
-  background-color: calc(inherit - var(--color__unit));
+    background-color: calc(inherit - var(--color__unit));
 }
 .bg-color__inherit {
-  background-color: inherit;
+    background-color: inherit;
 }
 
 .bg-color__transparent {
-  background-color: transparent;
+    background-color: transparent;
 }
 
 
@@ -173,143 +173,143 @@
 */
 
 .flex-wrap__enabled {
-  -ms-flex-wrap: wrap;
-  flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
 }
 
 .flex-wrap__none {
-  -ms-flex-wrap: nowrap;
-  flex-wrap: nowrap;
+    -ms-flex-wrap: nowrap;
+    flex-wrap: nowrap;
 }
 
 .flex-wrap__reverse {
-  -ms-flex-wrap: wrap-reverse;
-  flex-wrap: wrap-reverse;
+    -ms-flex-wrap: wrap-reverse;
+    flex-wrap: wrap-reverse;
 }
 
 .flex-direction__row {
-  -ms-flex-direction: row;
-  flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
 }
 
 .flex-direction__column {
-  -ms-flex-direction: column;
-  flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
 }
 
 .flex-direction__row-reverse {
-  -ms-flex-direction: row-reverse;
-  flex-direction: row-reverse;
+    -ms-flex-direction: row-reverse;
+    flex-direction: row-reverse;
 }
 
 .flex-direction__column-reverse {
-  -ms-flex-direction: column-reverse;
-  flex-direction: column-reverse;
+    -ms-flex-direction: column-reverse;
+    flex-direction: column-reverse;
 }
 
 
 .align-items__center {
-  align-items: center;
+    align-items: center;
 }
 
 .align-items__start {
-  align-items: start;
+    align-items: start;
 }
 
 .align-items__end {
-  align-items: end;
+    align-items: end;
 }
 
 .align-items__flex-center {
-  -ms-flex-align: center;
-  align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
 }
 
 .align-items__flex-start {
-  -ms-flex-align: start;
-  align-items: flex-start;
+    -ms-flex-align: start;
+    align-items: flex-start;
 }
 
 .align-items__flex-end {
-  -ms-flex-align: end;
-  align-items: flex-end;
+    -ms-flex-align: end;
+    align-items: flex-end;
 }
 
 .justify-content__space-around {
-  justify-content: space-around;
+    justify-content: space-around;
 }
 
 .justify-content__space-between {
-  justify-content: space-between;
+    justify-content: space-between;
 }
 
 .justify-content__space-evenly {
-  justify-content: space-evenly;
+    justify-content: space-evenly;
 }
 
 .justify-content__center {
-  justify-content: center;
+    justify-content: center;
 }
 
 .justify-content__left {
-  justify-content: left;
+    justify-content: left;
 }
 
 .justify-content__right {
-  justify-content: right;
+    justify-content: right;
 }
 
 .responsive {
-  width: 100%;
-  height: auto;
+    width: 100%;
+    height: auto;
 }
 
 /*
 *  Aspect Ratios (for images and iframes)
 */
 .aspect-ratio__1940-1948 {
-  aspect-ratio: 1940 / 1948;
+    aspect-ratio: 1940 / 1948;
 }
 
 .aspect-ratio__205-49 {
-  aspect-ratio: 205 / 49;
+    aspect-ratio: 205 / 49;
 }
 
 .aspect-ratio__300-300 {
-  aspect-ratio: 300 / 300;
+    aspect-ratio: 300 / 300;
 }
 
 .aspect-ratio__337-190 {
-  aspect-ratio: 337 / 190;
+    aspect-ratio: 337 / 190;
 }
 
 /*
 * Z-Index
 */
 .z-index__underground {
-  z-index: var(--z-index__underground);
+    z-index: var(--z-index__underground);
 }
 
 .z-index__background {
-  z-index: var(--z-index__background);
+    z-index: var(--z-index__background);
 }
 
 .z-index__middleground {
-  z-index: var(--z-index__middleground);
+    z-index: var(--z-index__middleground);
 }
 
 .z-index__foreground {
-  z-index: var(--z-index__foreground);
+    z-index: var(--z-index__foreground);
 }
 
 .z-index__overground {
-  z-index: var(--z-index__overground);
+    z-index: var(--z-index__overground);
 }
 
 .z-index__increase {
-  z-index: calc(inherit + var(--z-index__scale-depth));
+    z-index: calc(inherit + var(--z-index__scale-depth));
 }
 
 .z-index__decrease {
-  z-index: calc(inherit - var(--z-index__scale-depth));
+    z-index: calc(inherit - var(--z-index__scale-depth));
 }
