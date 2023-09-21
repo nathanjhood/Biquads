@@ -1,17 +1,42 @@
 {
-  "name": "biquads-docs",
-  "version": "1.0.0",
-  "main": "index.html",
-  "repository": "https://github.com/StoneyDSP/Biquads.git",
-  "author": "Nathan J. Hood ",
+  "name": "@stoneydsp/biquads",
+  "version": "0.0.1-608e088576e7c5c103dc2bf4850152752beed94b",
+  "description": "StoneyDSP Official Website",
+  "main": "./index.html",
+  "icon": "./favicon.ico",
+  "author": "StoneyDSP <nathanjhood@googlemail.com>",
   "license": "MIT",
-  "private": false,
-  "dependencies": {
-    "@vercel/analytics": "^1.0.2",
-    "vercel": "^32.2.0"
-  },
+  "homepage": "https://github.com/StoneyDSP/stoneydsp.github.io#readme",
+  "readme": "README.md",
+  "private": true,
+  "preferGlobal": true,
+  "packageManager": "yarn@1.22.19",
   "scripts": {
+		"lint": "eslint *.html",
     "dev": "npx serve",
-    "build": "node --version"
-  }
+    "build": "node --version",
+    "rebuild": "yarn clean && yarn build",
+    "clean": "rm -rvf src/main/main.js",
+    "wipe": "yarn clean && rm -rvf node_modules"
+  },
+	"devDependencies": {
+		"@html-eslint/eslint-plugin": "^0.19.1",
+    "@html-eslint/parser": "^0.19.1",
+    "@vercel/node": "^3.0.5",
+    "eslint": "^8.49.0",
+    "typescript": "*"
+	},
+	"dependencies": {
+    "@vercel/analytics": "^1.0.2"
+  },
+	"files": [
+    "./public",
+    "./src"
+  ],
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead",
+    "not ie 11"
+  ]
 }
