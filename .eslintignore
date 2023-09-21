@@ -1,0 +1,15 @@
+.bak
+.cache
+.out
+.vscode
+
+*bak*
+*log*
+
+node_modules
+
+!*.ico
+!*.png
+!*.svg
+!/.npmrc
+!/public

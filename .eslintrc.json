@@ -28,25 +28,36 @@
 	"rules": {
 		"indent": [
 			"error",
-			4
+			2
 		],
 		"linebreak-style": [
 			"error",
 			"unix"
 		],
-		"quotes": [
-			"error",
-			"double"
+		"no-unused-vars": [
+			"off"
 		],
+		// "quotes": [
+		// 	"error",
+		// 	"double"
+		// ],
 		"semi": [
 			"error",
 			"always"
 		],
 		"@html-eslint/indent": [
 			"error",
-			4
+			2
 		],
-		"@html-eslint/require-lang": ["error"],
-		"@html-eslint/no-multiple-h1": ["warn"]
+		"@html-eslint/require-lang": [
+			"error"
+		],
+		"@html-eslint/no-multiple-h1": [
+			"warn"
+		],
+		"@html-eslint/quotes": [
+			"error",
+			"double"
+		]
 	}
 }

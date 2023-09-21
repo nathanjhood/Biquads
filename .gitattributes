@@ -1,0 +1,23 @@
+# This sets the default behaviour, overriding core.autocrlf
+* text=auto eol=lf
+
+# All source files should have unix line-endings in the repository, but convert to native line-endings on checkout
+*.{c,m,C,M,c++,cc,cpp,cxx,mm,mpp,CPP,ixx,cppm,ccm,cxxm,c++m} text
+# Keep the include header(s) with LFs to make sure it is uploaded, hashed etc with LF
+*.{h,hh,hpp,hxx,h++,inl,ipp,ixx,tlh,tli} text
+
+*.{json,js,jsx,ts,tsx} text
+*.md text
+*.cmake text
+CMakeLists.txt text
+
+LICENSE eol=lf
+VERSION eol=lf
+
+*.{sln,[sS][lL][nN]} eol=crlf
+*.{cmd,[cC][mM][dD]} eol=crlf
+*.{bat,[bB][aA][tT]} eol=crlf
+*.{ps1,psm1} eol=crlf
+
+.bin binary
+.pfx binary

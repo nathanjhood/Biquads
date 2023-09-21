@@ -8,30 +8,32 @@
   "license": "MIT",
   "homepage": "https://github.com/StoneyDSP/stoneydsp.github.io#readme",
   "readme": "README.md",
-  "private": true,
+    "private": true,
   "preferGlobal": true,
   "packageManager": "yarn@1.22.19",
   "scripts": {
-		"lint": "eslint *.html",
+    "lint": "eslint *.html public/*.js",
     "dev": "npx serve",
     "build": "node --version",
     "rebuild": "yarn clean && yarn build",
     "clean": "rm -rvf src/main/main.js",
     "wipe": "yarn clean && rm -rvf node_modules"
   },
-	"devDependencies": {
-		"@html-eslint/eslint-plugin": "^0.19.1",
-    "@html-eslint/parser": "^0.19.1",
-    "@vercel/node": "^3.0.5",
-    "eslint": "^8.49.0",
-    "typescript": "*"
-	},
-	"dependencies": {
+  "dependencies": {
     "@vercel/analytics": "^1.0.2"
   },
-	"files": [
-    "./public",
-    "./src"
+  "devDependencies": {
+    "@html-eslint/eslint-plugin": "^0.19.1",
+    "@html-eslint/parser": "^0.19.1",
+    "@vercel/node": "^3.0.5",
+    "@vercel/postgres": "^0.4.2",
+    "eslint": "^8.49.0",
+    "typescript": "*",
+    "web-vitals": "^3.4.0"
+  },
+  "files": [
+		"./api",
+    "./public"
   ],
   "browserslist": [
     "> 1%",

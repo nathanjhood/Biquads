@@ -1,15 +1,32 @@
-﻿.cache
+.bak
+.cache
+.nitro
 .nuxt
+.out
+.output
+.turbo
+*.tsbuildinfo
 .vercel
 .vscode
 
-build
+.env
+.env.*
+!.env.example
 
-Builds
-JuceLibraryCode
+*.log*
 
-!*.svg
-!*.png
-!*.ico
+.DS_Store
+
+dist
+node_modules
+
+*bak*
+*log*
 
 node_modules
+
+!*.ico
+!*.png
+!*.svg
+!*.npmrc
+!/public
