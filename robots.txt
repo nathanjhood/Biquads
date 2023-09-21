@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /src/
+
+Sitemap: https://www.biquads.stoneydsp.com/sitemap.xml

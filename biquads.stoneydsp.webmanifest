@@ -1,0 +1,21 @@
+{
+	"name": "@stoneydsp/biquads",
+	"short_name": "biquads",
+	"start_url": "/index.html",
+    "id": "/index.html",
+	"display": "browser",
+	"background_color": "#fff",
+	"description": "Simple two-pole equalizer with variable oversampling.",
+	"icons": [
+		{
+			"src": "favicon.ico",
+		    "sizes": "64x64",
+			"type": "image/x-icon"
+		}
+	],
+	"related_applications": [
+	],
+	"categories": [
+		"music", "education", "utilities"
+	]
+}
