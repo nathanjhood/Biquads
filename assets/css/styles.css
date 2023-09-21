@@ -1,0 +1,282 @@
+@charset "UTF-8";
+@import url("../../src/assets/css/framework/fonts/microsoft/cascadia/font-cascadia-dynamic.css") layer(fontFace);
+/* @import url("../../src/assets/css/framework/reset.css") layer(reset); */
+@import url("../../src/assets/css/framework/support.css") layer(defaults.support);
+@import url("../../src/assets/css/framework/defaults.css") layer(defaults);
+@import url("../../src/assets/css/framework/global.css") layer(global);
+/* @import url("../../src/assets/css/framework/helpers.css") layer(global.helpers); */
+/* @import url("../src/assets/css/framework/animations/animations.css") layer(site.animations); */
+@import url("../../src/assets/css/framework/site.css") layer(site);
+/* @import url("../../src/assets/css/framework/components/header.css") layer(header); */
+/* @import url("./framework/components/footer.css") layer(footer); */
+
+/* @import url("../../src/assets/css/framework/debug/dbg.css") layer(site.dbg); */
+/* @import url("../../src/assets/css/framework/debug/lint.css") layer(site.dbg.lint); */
+
+@import url("../../src/assets/css/doxygen/doxygen.css") layer(site.doxygen);
+@import url("../../src/assets/css/doxygen/tabs.css") layer(site.doxygen.tabs);
+@import url("../../src/assets/css/doxygen/search.css") layer(site.doxygen.search);
+
+html {
+	--colour-dull: hsla(0, 0%, 0%, 50%);
+	--powered-by-vercel: url("../../public/powered-by-vercel_d.svg");
+	--table-gradient: url("../../src/assets/css/doxygen/tab_b.png");
+	--table-row-gradient: ("../../src/assets/css/doxygen/nav_h.png");
+
+	--git-stats-card: url("https://github-readme-stats.stoneydsp.com/api?username=StoneyDSP&show_icons=true&theme=default");
+
+	--top-langs-card: url("https://github-readme-stats.stoneydsp.com/api/top-langs/?username=StoneyDSP&langs_count=8&show_icons=true&theme=default&hide=tex,html&layout=donut");
+
+	--lang-icon-cpp: url("https://skillicons.dev/icons?i=cpp&theme=light");
+	--lang-icon-c: url("https://skillicons.dev/icons?i=c&theme=light");
+	--lang-icon-cmake: url("https://skillicons.dev/icons?i=cmake&theme=light");
+	--lang-icon-nodejs: url("https://skillicons.dev/icons?i=nodejs&theme=light");
+
+	--lang-icon-html: url("https://skillicons.dev/icons?i=html&theme=light");
+	--lang-icon-css: url("https://skillicons.dev/icons?i=css&theme=light");
+	--lang-icon-ts: url("https://skillicons.dev/icons?i=ts&theme=light");
+	--lang-icon-js: url("https://skillicons.dev/icons?i=js&theme=light");
+
+	--card-repo__biquads: url("https://github-readme-stats.stoneydsp.com/api/pin/?username=StoneyDSP&repo=Biquads&theme=default");
+	--card-repo__ubento: url("https://github-readme-stats.stoneydsp.com/api/pin/?username=StoneyDSP&repo=UBento&theme=default");
+	--card-repo__orfanidis: url("https://github-readme-stats.stoneydsp.com/api/pin/?username=StoneyDSP&repo=OrfanidisBiquad&theme=default");
+	--card-repo__cxxwin: url("https://github-readme-stats.stoneydsp.com/api/pin/?username=StoneyDSP&repo=CxxWin&theme=default");
+	--card-repo__nonlinearfilters: url("https://github-readme-stats.stoneydsp.com/api/pin/?username=StoneyDSP&repo=NonLinearFilters&theme=default");
+	--card-repo__cmodule: url("https://github-readme-stats.stoneydsp.com/api/pin/?username=StoneyDSP&repo=cmodule&theme=default");
+	--card-repo__audioplugin-svf: url("https://github-readme-stats.stoneydsp.com/api/pin/?username=StoneyDSP&repo=AudioPlugin-svf&theme=default");
+	--card-repo__audioplugin: url("https://github-readme-stats.stoneydsp.com/api/pin/?username=StoneyDSP&repo=AudioPlugin&theme=default");
+}
+
+html.dark-mode {
+	--colour-dull: hsla(0, 0%, 100%, 50%);
+	--powered-by-vercel: url("../../public/powered-by-vercel.svg");
+	--table-gradient: url("../../src/assets/css/doxygen/tab_bd.png");
+	--table-row-gradient: ("../../src/assets/css/doxygen/nav_hd.png");
+
+	--git-stats-card: url("https://github-readme-stats.stoneydsp.com/api?username=StoneyDSP&show_icons=true&theme=dark");
+
+	--top-langs-card: url("https://github-readme-stats.stoneydsp.com/api/top-langs/?username=StoneyDSP&langs_count=8&show_icons=true&theme=dark&hide=tex,html&layout=donut");
+
+	--lang-icon-cpp: url("https://skillicons.dev/icons?i=cpp&theme=dark");
+	--lang-icon-c: url("https://skillicons.dev/icons?i=c&theme=dark");
+	--lang-icon-cmake: url("https://skillicons.dev/icons?i=cmake&theme=dark");
+	--lang-icon-nodejs: url("https://skillicons.dev/icons?i=nodejs&theme=dark");
+
+	--lang-icon-html: url("https://skillicons.dev/icons?i=html&theme=dark");
+	--lang-icon-css: url("https://skillicons.dev/icons?i=css&theme=dark");
+	--lang-icon-ts: url("https://skillicons.dev/icons?i=ts&theme=dark");
+	--lang-icon-js: url("https://skillicons.dev/icons?i=js&theme=dark");
+
+	--card-repo__biquads: url("https://github-readme-stats.stoneydsp.com/api/pin/?username=StoneyDSP&repo=Biquads&theme=dark");
+	--card-repo__ubento: url("https://github-readme-stats.stoneydsp.com/api/pin/?username=StoneyDSP&repo=UBento&theme=dark");
+	--card-repo__orfanidis: url("https://github-readme-stats.stoneydsp.com/api/pin/?username=StoneyDSP&repo=OrfanidisBiquad&theme=dark");
+	--card-repo__cxxwin: url("https://github-readme-stats.stoneydsp.com/api/pin/?username=StoneyDSP&repo=CxxWin&theme=dark");
+	--card-repo__nonlinearfilters: url("https://github-readme-stats.stoneydsp.com/api/pin/?username=StoneyDSP&repo=NonLinearFilters&theme=dark");
+	--card-repo__cmodule: url("https://github-readme-stats.stoneydsp.com/api/pin/?username=StoneyDSP&repo=cmodule&theme=dark");
+	--card-repo__audioplugin-svf: url("https://github-readme-stats.stoneydsp.com/api/pin/?username=StoneyDSP&repo=AudioPlugin-svf&theme=dark");
+	--card-repo__audioplugin: url("https://github-readme-stats.stoneydsp.com/api/pin/?username=StoneyDSP&repo=AudioPlugin&theme=dark");
+}
+
+img.git-stats-card { background-image: var(--git-stats-card);}
+img.top-langs-card { background-image: var(--top-langs-card);}
+
+img.lang-icon-cpp { background-image: var(--lang-icon-cpp);}
+img.lang-icon-c { background-image: var(--lang-icon-c);}
+img.lang-icon-cmake { background-image: var(--lang-icon-cmake);}
+img.lang-icon-nodejs { background-image: var(--lang-icon-nodejs);}
+img.lang-icon-js { background-image: var(--lang-icon-js);}
+img.lang-icon-ts { background-image: var(--lang-icon-ts);}
+img.lang-icon-css { background-image: var(--lang-icon-css);}
+img.lang-icon-html { background-image: var(--lang-icon-html);}
+
+img.card-repo__biquads { background-image: var(--card-repo__biquads);}
+img.card-repo__ubento { background-image: var(--card-repo__ubento);}
+img.card-repo__orfanidis { background-image: var(--card-repo__orfanidis);}
+img.card-repo__cxxwin { background-image: var(--card-repo__cxxwin);}
+img.card-repo__nonlinearfilters { background-image: var(--card-repo__nonlinearfilters);}
+img.card-repo__cmodule { background-image: var(--card-repo__cmodule);}
+img.card-repo__audioplugin-svf { background-image: var(--card-repo__audioplugin-svf);}
+img.card-repo__audioplugin { background-image: var(--card-repo__audioplugin);}
+
+img.git-stats-card,
+img.top-langs-card {
+	vertical-align: middle;
+	background-size: cover;
+	background-repeat: no-repeat;
+	text-align: center;
+	border-radius: 0.25rem;
+}
+
+img.lang-icon-cpp,
+img.lang-icon-c,
+img.lang-icon-cmake,
+img.lang-icon-nodejs,
+img.lang-icon-js,
+img.lang-icon-ts,
+img.lang-icon-css,
+img.lang-icon-html {
+	vertical-align: middle;
+	width: 3.0rem;
+	height: 3.0rem;
+
+	background-size: cover;
+	background-repeat: no-repeat;
+	border-radius: 25.0%;
+
+	-webkit-transition-property: width, height;
+	-webkit-transition-duration: 0.5s;
+	-webkit-transition-timing-function: ease-in-out;
+	-moz-transition-property: width, height;
+	-moz-transition-duration: 0.5s;
+	-moz-transition-timing-function: ease-in-out;
+	-ms-transition-property: width, height;
+	-ms-transition-duration: 0.5s;
+	-ms-transition-timing-function: ease-in-out;
+	-o-transition-property: width, height;
+	-o-transition-duration: 0.5s;
+	-o-transition-timing-function: ease-in-out;
+	transition-property: width, height;
+	transition-duration: 0.5s;
+	transition-timing-function: ease-in-out;
+}
+
+img.lang-icon-cpp:hover,
+img.lang-icon-c:hover,
+img.lang-icon-cmake:hover,
+img.lang-icon-nodejs:hover,
+img.lang-icon-js:hover,
+img.lang-icon-ts:hover,
+img.lang-icon-css:hover,
+img.lang-icon-html:hover {
+
+	width: 4.0rem;
+	height: 4.0rem;
+
+	-webkit-transition-property: width, height;
+	-webkit-transition-duration: 0.5s;
+	-webkit-transition-timing-function: ease-in-out;
+	-moz-transition-property: width, height;
+	-moz-transition-duration: 0.5s;
+	-moz-transition-timing-function: ease-in-out;
+	-ms-transition-property: width, height;
+	-ms-transition-duration: 0.5s;
+	-ms-transition-timing-function: ease-in-out;
+	-o-transition-property: width, height;
+	-o-transition-duration: 0.5s;
+	-o-transition-timing-function: ease-in-out;
+	transition-property: width, height;
+	transition-duration: 0.5s;
+	transition-timing-function: ease-in-out;
+}
+
+img.card-repo__biquads,
+img.card-repo__ubento,
+img.card-repo__orfanidis,
+img.card-repo__cxxwin,
+img.card-repo__nonlinearfilters,
+img.card-repo__cmodule,
+img.card-repo__audioplugin-svf,
+img.card-repo__audioplugin {
+	display: inline;
+	vertical-align: middle;
+	width: 400.0px;
+	height: 150.0px;
+
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position-x: left;
+	background-position-y: center;
+	border-radius: 0.25rem;
+}
+
+/* th.markdownTableHeadCenter {
+	background-image: var(--header-gradient-image);
+	background-repeat:repeat-x;
+	background-color: var(--nav-background-color);
+
+	border-bottom: 1px solid var(--header-separator-color);
+	color: var(--table-header-foreground-color);
+	font-size: 110%;
+	padding-bottom: 4px;
+	padding-top: 5px;
+} */
+
+tr.markdownTableRowOdd {
+	background-image: var(--table-row-gradient);
+	background-repeat: repeat-x;
+	background-color: var(--header-background-color);
+}
+
+tr.markdownTableRowEven {
+	background-image: var(--table-gradient);
+	background-repeat: repeat-x;
+	background-color: var(--header-background-color);
+}
+
+.footer.vercel {
+	width: 212px;
+	height: 44px;
+	border: 0px;
+	background-image: var(--powered-by-vercel);
+	background-repeat: no-repeat;
+	background-position-x: center;
+	background-position-y: bottom;
+}
+
+img.paypal-button {
+	background-size: cover;
+	border-radius: 2rem;
+}
+
+a.projectname {
+	/* background-color: var(--glow-color);
+	background-repeat: no-repeat; */
+	text-shadow: 0 0 0.25rem var(--colour-dull);
+}
+a.projectname:hover {
+	/* background-color: var(--glow-color);
+	background-repeat: no-repeat; */
+	text-shadow: 0 0 0.5rem var(--glow-color);
+}
+
+.transition__glow {
+	box-shadow: 0 0 1.0rem var(--colour-dull);
+	background-color: var(--colour-dull);
+
+	-webkit-transition-property: background-color, box-shadow;
+	-webkit-transition-duration: 0.5s;
+	-webkit-transition-timing-function: ease-in-out;
+	-moz-transition-property: background-color, box-shadow;
+	-moz-transition-duration: 0.5s;
+	-moz-transition-timing-function: ease-in-out;
+	-ms-transition-property: background-color, box-shadow;
+	-ms-transition-duration: 0.5s;
+	-ms-transition-timing-function: ease-in-out;
+	-o-transition-property: background-color, box-shadow;
+	-o-transition-duration: 0.5s;
+	-o-transition-timing-function: ease-in-out;
+	transition-property: background-color, box-shadow;
+	transition-duration: 0.5s;
+	transition-timing-function: ease-in-out;
+}
+
+.transition__glow:hover {
+	background-color: var(--glow-color);
+	box-shadow: 0 0 2.0rem var(--glow-color);
+
+	-webkit-transition-property: background-color, box-shadow;
+	-webkit-transition-duration: 0.5s;
+	-webkit-transition-timing-function: ease-in-out;
+	-moz-transition-property: background-color, box-shadow;
+	-moz-transition-duration: 0.5s;
+	-moz-transition-timing-function: ease-in-out;
+	-ms-transition-property: background-color, box-shadow;
+	-ms-transition-duration: 0.5s;
+	-ms-transition-timing-function: ease-in-out;
+	-o-transition-property: background-color, box-shadow;
+	-o-transition-duration: 0.5s;
+	-o-transition-timing-function: ease-in-out;
+	transition-property: background-color, box-shadow;
+	transition-duration: 0.5s;
+	transition-timing-function: ease-in-out;
+}
