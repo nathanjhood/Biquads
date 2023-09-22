@@ -8,7 +8,7 @@
 	"description": "Simple two-pole equalizer with variable oversampling.",
 	"icons": [
 		{
-			"src": "favicon.ico",
+			"src": "/favicon.ico",
 		    "sizes": "64x64",
 			"type": "image/x-icon"
 		}
