@@ -111,4 +111,27 @@ var menudata={children:[
 {text:"Functions",url:"globals_func.html"},
 {text:"Typedefs",url:"globals_type.html"},
 {text:"Enumerations",url:"globals_enum.html"},
-{text:"Macros",url:"globals_defs.html"}]}]}]}
+{text:"Macros",url:"globals_defs.html"}]}]},
+{
+  text: "Projects",
+  url: "https://projects.stoneydsp.com",
+  children: [
+    {
+      text: "Biquads",
+      url: "https://biquads.stoneydsp.com"
+    },
+    {
+      text: "CxxWin",
+      url: "https://cxxwin.stoneydsp.com"
+    },
+    {
+      text: "UBento",
+      url: "https://ubento.stoneydsp.com"
+    }
+  ]
+},
+{
+  text: "Contact",
+  url: "https://contact.stoneydsp.com"
+}
+]};
