@@ -157,15 +157,14 @@ html {
 	--tooltip-shadow: 1px 1px 7px gray;
 
 	/** font-family */
-	/* --font-family-normal: Cascadia,sans-serif; */
-	--font-family-normal: 'Segoe UI', Ubuntu, Sans-Serif;
+    --font-family-normal: 'Segoe UI', Ubuntu, Sans-Serif;
 	--font-family-monospace: 'Cascadia Mono',Consolas,Monaco,'Andale Mono','Ubuntu Mono',monospace,fixed;
 	--font-family-nav: 'Lucida Grande',Geneva,Helvetica,Arial,sans-serif;
 	--font-family-title: Tahoma,Arial,sans-serif;
 	--font-family-toc: Verdana,'DejaVu Sans',Geneva,sans-serif;
 	--font-family-search: Arial,Verdana,sans-serif;
 	--font-family-icon: Arial,Helvetica;
-	--font-family-tooltip: 'Segoe UI', Ubuntu, Sans-Serif;
+	--font-family-tooltip: Cascadia Code,sans-serif;
 
 	}
 
@@ -330,7 +329,7 @@ html {
 		--font-family-toc: Verdana,'DejaVu Sans',Geneva,sans-serif;
 		--font-family-search: Arial,Verdana,sans-serif;
 		--font-family-icon: Arial,Helvetica;
-		--font-family-tooltip: 'Segoe UI', Ubuntu, Sans-Serif;
+		--font-family-tooltip: Cascadia Code,sans-serif;
 
 	}
 
