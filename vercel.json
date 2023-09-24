@@ -1,66 +1,24 @@
 {
-	"version": 2,
-	"devCommand": null,
-	"installCommand": null,
-	"buildCommand": null,
-	"outputDirectory": ".",
-	"public": false,
-	"framework": null,
+	"$schema": "https://openapi.vercel.sh/vercel.json",
+  "version": 2,
+  "devCommand": "yarn dev",
+  "installCommand": "yarn install",
+  "buildCommand": "yarn build",
+  "outputDirectory": ".",
+  "public": false,
+  "framework": null,
+	"cleanUrls": false,
+	"trailingSlash": false,
 	"functions": {
-
-		"api/*.js": {
-					"memory": 1024,
-					"maxDuration": 10
-			},
-
-			"api/**/*.js": {
-					"memory": 1024,
-					"maxDuration": 10
-			},
-
-			"api/**/*.ts": {
-					"memory": 1024,
-					"maxDuration": 10
-			}
-	},
-	"redirects": [
-		{
-			"source": "/redirect/",
-			"destination": "/index.html"
-		},
-		{
-			"source": "/backup/",
-			"destination": "https://www.biquads.stoneydsp.com/index.html"
-		},
-		{
-			"source": "/new/",
-			"destination": "https://www.biquads.stoneydsp.com/index.html"
-		},
-		{
-			"source": "/old/",
-			"destination": "https://www.biquads.stoneydsp.com/index.html"
-		},
-		{
-			"source": "/temp/",
-			"destination": "https://www.biquads.stoneydsp.com/index.html"
-		},
-		{
-			"source": "/test/",
-			"destination": "https://www.biquads.stoneydsp.com/index.html"
-		},
-		{
-			"source": "/wordpress/",
-			"destination": "https://www.biquads.stoneydsp.com/index.html"
-		},
-				{
-			"source": "/wp/",
-			"destination": "https://www.biquads.stoneydsp.com/index.html"
-		},
-		{
-			"source": "/wp-login.php",
-			"destination": "https://www.biquads.stoneydsp.com/index.html"
-		}
-	],
+    "api/**/*.ts": {
+      "memory": 1024,
+      "maxDuration": 10
+    },
+		"api/**/*.js": {
+      "memory": 1024,
+      "maxDuration": 10
+    }
+  },
 	"git": {
 		"deploymentEnabled": true
 	},
@@ -69,6 +27,15 @@
 		"silent": false
 	},
 	"headers": [
+		{
+			"source": "/service-worker.js",
+			"headers": [
+				{
+					"key": "Cache-Control",
+					"value": "public, max-age=0, must-revalidate"
+				}
+			]
+		},
 		{
 			"source": "/(.html)",
 			"headers": [
@@ -85,13 +52,13 @@
 					"value": "max-age=60"
 				},
 				{
-										"key": "Cache-Control",
-										"value": "public, max-age=10, s-maxage=86400, immutable"
-								},
+					"key": "Cache-Control",
+					"value": "public, max-age=10, s-maxage=86400, immutable"
+				},
 				{
-										"key": "X-XSS-Protection",
-										"value": "1; mode=block"
-								}
+					"key": "X-XSS-Protection",
+					"value": "1; mode=block"
+				}
 			]
 		},
 		{
@@ -106,9 +73,9 @@
 					"value": "max-age=60"
 				},
 				{
-										"key": "Cache-Control",
-										"value": "public, max-age=10, s-maxage=86400, immutable"
-								}
+					"key": "Cache-Control",
+					"value": "public, max-age=10, s-maxage=86400, immutable"
+				}
 			]
 		},
 		{
@@ -123,39 +90,38 @@
 					"value": "max-age=60"
 				},
 				{
-										"key": "Cache-Control",
-										"value": "public, max-age=10, s-maxage=86400, immutable"
-								}
+					"key": "Cache-Control",
+					"value": "public, max-age=10, s-maxage=86400, immutable"
+				}
 			]
 		},
+		{
+			"source": "/(.*)",
+			"headers": [
 				{
-						"source": "/(.*)",
-						"headers": [
-								{
-										"key": "X-Content-Type-Options",
-										"value": "nosniff"
-								},
-								{
-										"key": "X-Frame-Options",
-										"value": "DENY"
-								}
-
-						]
+					"key": "X-Content-Type-Options",
+					"value": "nosniff"
 				},
 				{
-						"source": "/:path*",
-						"has": [
-								{
-										"type": "query",
-										"key": "authorized"
-								}
-						],
-						"headers": [
-								{
-										"key": "x-authorized",
-										"value": "true"
-								}
-						]
+					"key": "X-Frame-Options",
+					"value": "DENY"
 				}
-		]
+			]
+		},
+		{
+			"source": "/:path*",
+			"has": [
+				{
+					"type": "query",
+					"key": "authorized"
+				}
+			],
+		"headers": [
+				{
+					"key": "x-authorized",
+					"value": "true"
+				}
+			]
+		}
+	]
 }
