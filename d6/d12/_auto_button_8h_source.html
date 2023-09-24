@@ -1,28 +1,72 @@
-<!-- HTML header for doxygen 1.9.7-->
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
-<head>
-<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=11"/>
-<meta name="generator" content="Doxygen 1.9.7"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-GB" prefix="og: https://ogp.me/ns#">
+
+  <head>
+    <meta charset="UTF-8">
+
+    <base href="https://www.biquads.stoneydsp.com/">
+
+    <meta name="generator" content="Doxygen 1.9.7">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="google-site-verification" content="U222mQRVBnX_8XrWZU9c6ETanVW8lFK6jvhJFQwtcdE">
+    <meta name="google-site-verification" content="RGeh6hqM-ZZ-p0iM4G9NekMKA5RJmK-3qsmVmghRA6o">
+    <meta name="robots" content="all">
+    <meta name="description" content="Simple two-pole equalizer with variable oversampling.">
+
+    <meta property="og:description" content="Simple two-pole equalizer with variable oversampling.">
+    <meta property="og:title" content="StoneyDSP/Biquads">
+    <meta property="og:url" content="https://www.biquads.stoneydsp.com/index.html">
+    <meta property="og:image" content="https://raw.githubusercontent.com/StoneyDSP/ubento/main/ubento.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="628">
+    <meta property="og:image:height" content="628">
+    <meta property="og:image:alt" content="Simple two-pole equalizer with variable oversampling.">
+
+    <meta property="twitter:card" content="summary">
+    <meta property="twitter:title" content="StoneyDSP/Biquds">
+    <meta property="twitter:description" content="Simple two-pole equalizer with variable oversampling.">
+    <meta property="twitter:image" content="https://raw.githubusercontent.com/StoneyDSP/ubento/main/ubento.png">
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+      new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+      'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+      })(window,document,'script','dataLayer','GTM-NPCRG84Z');</script>
+    <!-- End Google Tag Manager -->
+
+    <link rel="canonical" href="https://www.biquads.stoneydsp.com/index.html">
+    <link rel="shortlink" href="https://www.biquads.stoneydsp.com/index.html">
+    <link rel="dns-prefetch" href="//www.biquads.stoneydsp.com">
+    <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">
+    <link rel="manifest" href="/biquads.stoneydsp.webmanifest">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link href="/assets/css/styles.css" rel="stylesheet" type="text/css">
+    <script type="text/javascript" src="/api/jquery.js"></script>
+    <script type="text/javascript" src="/api/dynsections.js"></script>
+    <script type="text/javascript" src="/api/search/searchdata.js"></script>
+    <script type="text/javascript" src="/api/search/search.js"></script>
+    <script type="text/x-mathjax-config">
+			MathJax.Hub.Config({
+				extensions: ["tex2jax.js", "TeX/AMSmath.js", "TeX/AMSsymbols.js"],
+				jax: ["input/TeX","output/HTML-CSS"],
+			});
+		</script>
+    <script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
+    <script type="text/javascript" src="/api/darkmode_toggle.js"></script>
+    <script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
+    <script defer src="/_vercel/insights/script.js"></script>
+    <!-- Google tag (gtag.js) -->
+    <script async="async" src="https://www.googletagmanager.com/gtag/js?id=G-TC6Y1YYSW8"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-TC6Y1YYSW8');
+    </script>
+
 <title>Biquads: include/Biquads/Components/AutoButton.h Source File</title>
-<link href="../../tabs.css" rel="stylesheet" type="text/css"/>
-<script type="text/javascript" src="../../jquery.js"></script>
-<script type="text/javascript" src="../../dynsections.js"></script>
-<link href="../../search/search.css" rel="stylesheet" type="text/css"/>
-<script type="text/javascript" src="../../search/searchdata.js"></script>
-<script type="text/javascript" src="../../search/search.js"></script>
-<script type="text/x-mathjax-config">
-MathJax.Hub.Config({
-  extensions: ["tex2jax.js", "TeX/AMSmath.js", "TeX/AMSsymbols.js"],
-  jax: ["input/TeX","output/HTML-CSS"],
-});
-</script>
-<script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
-<script type="text/javascript" src="../../darkmode_toggle.js"></script>
-<link href="../../doxygen.css" rel="stylesheet" type="text/css" />
-<link href="../../doxy_stylesheet.css" rel="stylesheet" type="text/css"/>
+
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
