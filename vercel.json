@@ -19,6 +19,144 @@
       "maxDuration": 10
     }
   },
+	"redirects": [
+		{
+			"source": "/redirect/",
+			"destination": "/404.html"
+		},
+		{
+			"source": "/backup/",
+			"destination": "/404.html"
+		},
+		{
+			"source": "/new/",
+			"destination": "/404.html"
+		},
+		{
+			"source": "/old/",
+			"destination": "/404.html"
+		},
+		{
+			"source": "/temp/",
+			"destination": "/404.html"
+		},
+		{
+			"source": "/tmp/",
+			"destination": "/404.html"
+		},
+		{
+			"source": "/test/",
+			"destination": "/404.html"
+		},
+		{
+			"source": "/v2/",
+			"destination": "/404.html"
+		},
+		{
+			"source": "/wordpress/",
+			"destination": "/404.html"
+		},
+    {
+			"source": "/wp/",
+			"destination": "/404.html"
+		},
+    {
+			"source": "/wp-includes/",
+			"destination": "/404.html"
+		},
+		{
+			"source": "/wp-login.php",
+			"destination": "/404.html"
+		},
+		{
+			"source": "/login.action",
+			"destination": "/404.html"
+		},
+		{
+			"source": "/_all_dbs",
+			"destination": "/404.html"
+		},
+		{
+			"source": "/_catalog",
+			"destination": "/404.html"
+		},
+		{
+			"source": "/config.json",
+			"destination": "/404.html"
+		},
+		{
+			"source": "/.DS_Store",
+			"destination": "/404.html"
+		},
+		{
+			"source": "/.env",
+			"destination": "/404.html"
+		},
+		{
+			"source": "/ecp/Current/exporttool/microsoft.exchange.ediscovery.exporttool.application",
+			"destination": "/404.html"
+		},
+		{
+			"source": "/server-status",
+			"destination": "/404.html"
+		},
+		{
+			"source": "/telescope/requests",
+			"destination": "/404.html"
+		},
+		{
+			"source": "/.vscode/sftp.json",
+			"destination": "/404.html"
+		},
+		{
+			"source": "/about",
+			"destination": "/404.html"
+		},
+		{
+			"source": "/debug/default/view",
+			"destination": "/404.html"
+		},
+		{
+			"source": "/.git/config",
+			"destination": "/404.html"
+		},
+		{
+			"source": "/Public/home/js/check.js",
+			"destination": "/404.html"
+		},
+		{
+			"source": "/static/admin/javascript/hetong.js",
+			"destination": "/404.html"
+		},
+		{
+			"source": "/wp-json/wp/v2/users",
+			"destination": "/404.html"
+		},
+		{
+			"source": "/vendor/phpunit/phpunit/src/Util/PHP/eval-stdin.php",
+			"destination": "/404.html"
+		},
+		{
+			"source": "/ajksdnasfbjghdsf.php",
+			"destination": "/404.html"
+		},
+		{
+			"source": "/check.php",
+			"destination": "/404.html"
+		},
+		{
+			"source": "/__repl",
+			"destination": "/404.html"
+		},
+		{
+			"source": "/api/getsiteconfig/",
+			"destination": "/404.html"
+		},
+		{
+			"source": "/index.html",
+			"destination": "/"
+		}
+	],
 	"git": {
 		"deploymentEnabled": true
 	},
