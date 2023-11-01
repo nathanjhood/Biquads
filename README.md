@@ -55,7 +55,7 @@ Four different ways of applying the filter to the audio.
 + Direct Form I transposed
 + Direct Form II transposed
 
-For further information, please continue reading. 
+For further information, please continue reading.
 
 # The digital Biquad Equalizer
 
@@ -67,17 +67,19 @@ Before we look at these so-say "simple" gain functions that happen inside the sy
 
 In the system we described above, we mentioned that our frequency equalizer is internally really just a system of various "gains" applied to the input signal. How so?
 
-Let's start by thinking of our audio stream entering our "system" and coming out the other side, unchanged. Here's some basic pseudo-code describing this scenario: 
+Let's start by thinking of our audio stream entering our "system" and coming out the other side, unchanged. Here's some basic pseudo-code describing this scenario:
 
-    {
-        x = input sample;
-        
-        y = x;
-        
-        output sample = y;
-    }
-    
-In the above, "x" represents our entry point into our system, and "y" is the output point. The operator "y = x" tells us, in other words, that "output sample = input sample". In the analogue world, the above example is equivalent to a metal box with hole on either side (input and output), with a simple copper wire connecting one hole to the other. In other words, the audio sample data is copied directly from the input to the output, completely unchanged. 
+```
+{
+    x = input sample;
+
+    y = x;
+
+    output sample = y;
+}
+```
+
+In the above, "x" represents our entry point into our system, and "y" is the output point. The operator "y = x" tells us, in other words, that "output sample = input sample". In the analogue world, the above example is equivalent to a metal box with hole on either side (input and output), with a simple copper wire connecting one hole to the other. In other words, the audio sample data is copied directly from the input to the output, completely unchanged.
 
 # Coefficients
 
@@ -92,48 +94,54 @@ Furthermore, we shall refer to our "Numerator" coefficient object as "b", while 
 
 Let's take our crude metal-box-with-wire system, and begin applying the gains, i.e., our "coefficient" objects, in a simple fashion. As stated above, we have one "numerator" coefficient named "b", and a "denominator" coefficient named "a". Here is a simple expression to give you the idea of what these two initial coefficients do for our input audio sample:
 
-    {
-        x = input sample;
-        
-        b = 1;
-        a = 1;
-        
-        y = x * b;
-        
-        output sample = y;
-    }
+```
+{
+    x = input sample;
+
+    b = 1;
+    a = 1;
+
+    y = x * b;
+
+    output sample = y;
+}
+```
 
 Coefficient "b" is used as a gain multiplier for our direct signal (i.e., the level of our input signal to appear at the output).
 
 But first, our "a" is used to scale (multiply) our "b" like so:
 
-    {
-        x = input sample;
-        
-        a = 1;
-        b = 1;
-        
-        y = x * (b * (1/a));
-        
-        output sample = y;
-    }
+```
+{
+    x = input sample;
+
+    a = 1;
+    b = 1;
+
+    y = x * (b * (1/a));
+
+    output sample = y;
+}
+```
 
 In fact, what we shall see moving forward, is that our *initial* coefficient "a" is something of a special case; it is used as a gain multiplier for *all coefficients except for itself*. That is, all other coefficients *except for* a, are multiplied by 1/a = 1.
 
 So that the above pseudo-code and the below are equivalent:
 
-    {
-        x = input sample;
-        
-        a = 1;
-        b = 1/a;
-        
-        y = x * b;
-        
-        output sample = y;
-    }
+```
+{
+    x = input sample;
 
-The key difference in the above example, is that we see how "a" *only* works directly on "b", and thus only ever *indirectly* on "x". 
+    a = 1;
+    b = 1/a;
+
+    y = x * b;
+
+    output sample = y;
+}
+```
+
+The key difference in the above example, is that we see how "a" *only* works directly on "b", and thus only ever *indirectly* on "x".
 
 The expressions are of course  mathematically equivalent, but the above version explicitly demomstrates the concept that "all other coefficients *except for* a, are multiplied by 1/a = 1" that we'd just outlined previously.
 
@@ -149,42 +157,46 @@ We've also stuck a second potentiometer on the front, this one labelled "a", and
 
 Actually, both of these pots are infact *bi-polar*. That is, at centre detent, each potentiometer outputs a voltage of 0v. And;
 
-+ When fully clockwise, "b" outputs a voltage of 1v. When fully counter-clockwise, it's output is -1v. 
++ When fully clockwise, "b" outputs a voltage of 1v. When fully counter-clockwise, it's output is -1v.
 + The pot labelled "a" is the opposite; clockwise gives -1v, and counter-clockwise gives us 1v. (this inversion is the result of the 1/a in it's path).
 
-In our metal-box-with-two-pots "system" so far, we already know that "b" is actually = b * (1/a). 
+In our metal-box-with-two-pots "system" so far, we already know that "b" is actually = b * (1/a).
 
-Potentiometer "a" does not touch the input signal itself, it's just connected to the "b" pot, as above. 
+Potentiometer "a" does not touch the input signal itself, it's just connected to the "b" pot, as above.
 
 And yet it's *still* just a simple volume control overall, now with a silly interface; not really anything approaching our desired equalizer system. We only have one connection (input-to-output) to interact with, so how can we add more?
 
 # About feedback
 
-At this point we introduce the traditional concepts of "feedback" into our system. We likely all know what this means in at least some context: the input of a system is fed some amount of it's own output. 
+At this point we introduce the traditional concepts of "feedback" into our system. We likely all know what this means in at least some context: the input of a system is fed some amount of it's own output.
 
 This is of course a notorious way to introduce chaos, near-unpredictability, and deafening/damaging results to an audio system. Let's call such a case "positive feedback" - the changed output is being fed back into it's own input, thus the system iterates over itself infinitely (until some part of the chain reaches it's operating limit and explodes).
 
 Here's a very simplified pseudo-version of the "positive feedback" idea:
 
-    {
-        x = input sample;
-        
-        y = x + y;
-        
-        output sample = y;
-    }
-    
+```
+{
+    x = input sample;
+
+    y = x + y;
+
+    output sample = y;
+}
+```
+
 That's right - we're adding "y" to *itself*. So that if "x" = 0.7, and "y" = 0.9, technically "y" would *also* be equal to x + y = 1.6, but if that were the case then "y" would *also* be equal to x + y = 2.5, and so on... all in the same instant. Potentially, our signal could grow indefinitely... and dangerously.
 
 And what of "negative feedback"? What's the difference?
 
-    {
-        x = input sample;
-        
-        y = x - y;
-        
-        output sample = y;
-    }
+```
+{
+    x = input sample;
+
+    y = x - y;
+
+    output sample = y;
+}
+```
 
 So now, if as before "x" = 0.7, and "y" = 0.9, "y" should *also* be equal to -0.2, but *also* 0.9, and thus equal to -0.2... and so on. The subtraction in this case produces a stable system, that we can see "oscillates" from one value to another and back.
 
@@ -202,23 +214,25 @@ Such is the case when working with feedback. Fortunately (at least for this writ
 
 Let's revert to allowing our input signal to pass to the output, scaled by b * (1/a) as before:
 
-    {
-        x = input sample;
-        
-        a = 1;
-        b = 1/a;
-        
-        y = x * b;
-        
-        output sample = y;
-    }
-    
+```
+{
+    x = input sample;
+
+    a = 1;
+    b = 1/a;
+
+    y = x * b;
+
+    output sample = y;
+}
+```
+
 As we know, the above is a just crude metal box with two holes, one wire, and two labelled pots; literally a "gain multiplier of a gain multiplier", nothing more.
 
 In order to do anything more interesting with it, we will need more "degrees of freedom" to work with.
-  
+
 We also know that beyond a basic gain multiplication, we can also manipulate the signal via the use of feedback - wherein the system's input is detecting it's own output.
-  
+
 In order to include "more degrees of freedom" in our system, we can consider using combinations of gain and feedback - both in both positive, and negative, applications.
 
 We shall expand our system's current parameter set, the coefficients, by double. Let's introduce numbers:
@@ -236,48 +250,51 @@ Giving us a total of four "degrees of freedom" with which to manipulate our inpu
 
 We can still start off by passing our audio directly, but with the new coefficients wired into place - we simply set them to 0 for now:
 
-    {
-        x = input sample;
-        
-        a0 = 1;
-        b0 = 1/a0;
-        
-        a1 = 0/a0;
-        b1 = 0/a0;
-        
-        y = ((x * b0) + (x * b1) + (y * a1));    
-        
-        output sample = y;
-    }
+```
+{
+    x = input sample;
+
+    a0 = 1;
+    b0 = 1/a0;
+
+    a1 = 0/a0;
+    b1 = 0/a0;
+
+    y = ((x * b0) + (x * b1) + (y * a1));
+
+    output sample = y;
+}
+```
 
 So, if;
 
+```
+a0 = 1;
 
-        a0 = 1;
-        
-        1/a0 = 1;   // hence often left out of the literature...
-
+1/a0 = 1;   // hence often left out of the literature...
+```
 
 Therefore;
 
+```
+b0 = 1;     // input signal multiplier...
 
-        b0 = 1;     // input signal multiplier...
+a1 = 0;     // negative feedback signal multiplier...
 
-        a1 = 0;     // negative feedback signal multiplier...
-
-        b1 = 0;     // positive feedback signal multiplier...
-
+b1 = 0;     // positive feedback signal multiplier...
+```
 
 Thus for "y";
 
-
-        y = (x * 1) + 0 + 0;
-
+```
+y = (x * 1) + 0 + 0;
+```
 
 Or rather:
 
-        y = x;
-
+```
+y = x;
+```
 
 So, nothing has so far changed, except we've now got two more potentiometers on the front of our metal box; one labelled "b1", and another labelled "a1".
 
@@ -296,14 +313,16 @@ For now, let's begin at the beginning.
 
 + 1st-order Low Pass Filter
 
-        {
-    
-        b0 = ⍵ / (1 + ⍵);
-        b1 = ⍵ / (1 + ⍵);
-        a0 = 1;
-        a1 = -1 * ((1 - ⍵) / (1 + ⍵));
-        
-        }
+```
+{
+
+    b0 = ⍵ / (1 + ⍵);
+    b1 = ⍵ / (1 + ⍵);
+    a0 = 1;
+    a1 = -1 * ((1 - ⍵) / (1 + ⍵));
+
+}
+```
 
 ![LP1](https://raw.githubusercontent.com/StoneyDSP/Biquads/master/Res/LP1.png)
 
@@ -319,14 +338,16 @@ To demonstrate that we have infact retained (and exponentially increased) our "d
 
 + 1st-order High Pass Filter
 
-        {
-        
+```
+{
+
         b0 = 1 / (1 + ⍵);
         b1 = (1 / (1 + ⍵)) * -1;
         a0 = 1;
         a1 = ((1 - ⍵) / (1 + ⍵)) * -1;
-    
-        }
+
+}
+```
 
 ![HP1](https://raw.githubusercontent.com/StoneyDSP/Biquads/master/Res/HP1.png)
 
@@ -340,55 +361,57 @@ As we explore further filter types and orders, we will want to formalize a contr
 + ⍺ = alpha
 + A = gain (*only* used in peaking and shelving filter calculations!)
 
+```
+{
 
-    {
-    
-        ⍵ = frequencyParameter * (2π / sampleRate);
-        sin(θ) = sin(⍵);
-        cos(θ) = cos(⍵);
-        tan(θ) = sin(⍵) / cos(⍵);
-        ⍺ = sin(⍵) * (1 - resonanceParameter);
-        A = log10(gainParameter * 0.05)
-        
-    }
+    ⍵ = frequencyParameter * (2π / sampleRate);
+    sin(θ) = sin(⍵);
+    cos(θ) = cos(⍵);
+    tan(θ) = sin(⍵) / cos(⍵);
+    ⍺ = sin(⍵) * (1 - resonanceParameter);
+    A = log10(gainParameter * 0.05)
+
+}
+```
 
 https://en.wikipedia.org/wiki/Sine_and_cosine#Unit_circle_definitions
 https://en.wikipedia.org/wiki/Unit_circle
 
 
-Now that we have scaled and mapped our parameters "frequency", "resonance", and "gain", we can use these transformed values to control the gain (just a simple multiplication) at various points in our signal path, including feedback channels. 
+Now that we have scaled and mapped our parameters "frequency", "resonance", and "gain", we can use these transformed values to control the gain (just a simple multiplication) at various points in our signal path, including feedback channels.
 
 Here is the total solution for a 1st-order Low Pass Filter:
 
-        {
-        
-        // create coefficients from parameters
-        
-        a0 = 1;
-        a1 = -1 * ((-1 * ((1 - ⍵) / (1 + ⍵))) * (1/a0));
-        b0 = ((⍵ / (1 + ⍵)) * (1/a0));
-        b1 = ((⍵ / (1 + ⍵)) * (1/a0));
-        
-        
-        // input...
-        
-        X = input sample;
-        
-        
-        // apply coefficients
-        
-        Y = (X * b0) + (X(z-1) * b1) + (Y(z-1) * a1);
-        
-        
-        // output
-        
-        output sample = Y;
-        
-        }
+```
+{
 
+    // create coefficients from parameters
+
+    a0 = 1;
+    a1 = -1 * ((-1 * ((1 - ⍵) / (1 + ⍵))) * (1/a0));
+    b0 = ((⍵ / (1 + ⍵)) * (1/a0));
+    b1 = ((⍵ / (1 + ⍵)) * (1/a0));
+
+
+    // input...
+
+    X = input sample;
+
+
+    // apply coefficients
+
+    Y = (X * b0) + (X(z-1) * b1) + (Y(z-1) * a1);
+
+
+    // output
+
+    output sample = Y;
+
+}
+```
 You will notice in this expression, that coeff "a1" is inverted ("-1 * (x)..."), which provides us with our negative feedback path.
 
-The expression "(z-1)" represents that this sample is *delayed by exactly one audio sample*. 
+The expression "(z-1)" represents that this sample is *delayed by exactly one audio sample*.
 
 One thing this does tell us, is that one of the components of "y" is a copy of itself, delayed by one sample. One of it's other components is "x" directly, and the final component is "x" but again delayed by one sample.
 
@@ -402,17 +425,19 @@ As with our transition from a simple "in-gain-out" system to now a one-pole filt
 
 Compare the below with the 1st-order counterpart:
 
-        {
-    
-        b0 = (1 - cos(θ)) / 2;
-        b1 = 1 - cos(θ);
-        b2 = (1 - cos(θ)) / 2;
-        a0 = 1 + ⍺;
-        a1 = -2 * cos(θ);
-        a2 = 1 - ⍺;
-        
-        }
-        
+```
+{
+
+    b0 = (1 - cos(θ)) / 2;
+    b1 = 1 - cos(θ);
+    b2 = (1 - cos(θ)) / 2;
+    a0 = 1 + ⍺;
+    a1 = -2 * cos(θ);
+    a2 = 1 - ⍺;
+
+}
+```
+
 ![LP2res](https://raw.githubusercontent.com/StoneyDSP/Biquads/master/Res/LP2res.png)
 
 In our above example, we have added two further "degrees" - coefficients - with which to manipulate our signal; we have also added an additional parameter "⍺" ("alpha"), which in this forumula provides us with the typical "resonance" control that we ususally see on 2nd-order (or higher) filters. This "resonance" parameter is directly (and solely) responsible for the "bump" seen around the centre frequency of the filter, and can be increased or decreased as desired. Higher resonance can be reminiscent of a wah-wah pedal or synthesizer effect, while lower resonance is more like a trumpet-mute.
@@ -433,7 +458,7 @@ Now, we are determining an output transfer function (Y(n)), given an input value
 
 + z-1 = unit (single sample) delay
 
-+ <-, ->.. etc = signal flow direction 
++ \<-, -\>.. etc = signal flow direction
 
 ![DF I](https://raw.githubusercontent.com/StoneyDSP/OrfanidisBiquad/master/Res/400px-Biquad_filter_DF-I.png)
 
@@ -448,17 +473,18 @@ First, we need to create an input (Xn), and output (Yn), and our 6 gain multipli
 
 Here's some pseudo-code to get us started with a template;
 
-    {
-    
+```
+{
+
     X = input sample;                                                             // audio input stream...
-    
+
     _b0 = 1;                                                                       // initialize coefficients to safe numbers...
     _b1 = 0;
     _b2 = 0;
     _a0 = 1;
     _a1 = 0;
     _a2 = 0;
-    
+
     a0 = (1 / a0_);                                                                 // calculate new coefficients from parameters...
 
     a1 = (-1 * (a1_ * a0));
@@ -467,12 +493,13 @@ Here's some pseudo-code to get us started with a template;
     b0 = (b0_ * a0);
     b1 = (b1_ * a0);
     b2 = (b2_ * a0);
-    
+
     Y = ((X * b0) + (X * b1) + (X * b2) + (X * a1) + (X * a2));                     // apply coefficients to input sample...
-    
+
     output sample = Y;                                                              // audio output stream...
-    
-    }
+
+}
+```
 
 (please note that extra care is taken where necessary within the code to ensure thread safety between parameter (message thread) and playback (audio thread).)
 
@@ -486,13 +513,13 @@ For any readers unfamiliar with Reaktor Core, please keep in mind that signal fl
 
 ![legend](https://raw.githubusercontent.com/StoneyDSP/OrfanidisBiquad/master/Res/Workbench%20-%20Legend%20(coded%20by%20StoneyDSP).png)
 
-* *The blue macros perform a memory allocation as part of their operation, in case you were curious. This is useful for thread safety, which I have also somewhat considered within the pseudo-code (and indeed test plugin) that follows.*  
+* *The blue macros perform a memory allocation as part of their operation, in case you were curious. This is useful for thread safety, which I have also somewhat considered within the pseudo-code (and indeed test plugin) that follows.*
 
 Now I shall use a combination of visuals and pseudo-code as presented above to re-create and further investigate our various transformations available within the test plugin. Let's begin.
 
 # Direct Form I;
 
-Direct Form I is characterized by having a total four unit delays present within it's architecture, with two coefficients (a1 and a2) arranged as to control negative coefficient gain (thus inverting the corresponding signal), and the remaining three (b0 to b2) controlling positive coefficient gain, with all feedback terms summed (added) together in a simple linear fashion;  
+Direct Form I is characterized by having a total four unit delays present within it's architecture, with two coefficients (a1 and a2) arranged as to control negative coefficient gain (thus inverting the corresponding signal), and the remaining three (b0 to b2) controlling positive coefficient gain, with all feedback terms summed (added) together in a simple linear fashion;
 
 Calculus:
 
@@ -514,10 +541,11 @@ Implementation:
 
 Pseudo-code:
 
-    {
-    
+```
+{
+
     X = input sample;
-    
+
     _b0 = 1;
     _b1 = 0;
     _b2 = 0;
@@ -535,17 +563,17 @@ Pseudo-code:
     b2 = (b2_ * a0);
 
     Y = ((X * b0) + (X(z-1) * b1) + (X(z-2) * b2) + (Y(z-1) * a1) + (Y(z-2) * a2));
-    
+
     X(z-2) = X(z-1);
     X(z-1) = X;
-    
+
     Y(z-2) = Y(z-1);
     Y(z-1) = Y;
 
     output sample = Y;
-    
-    }
 
+}
+```
 
 
 Notes:
@@ -572,10 +600,11 @@ Implementation:
 
 Pseudo-code:
 
-    {
-    
+```
+{
+
     X = input sample;
-    
+
     _b0 = 1;
     _b1 = 0;
     _b2 = 0;
@@ -591,7 +620,7 @@ Pseudo-code:
     b0 = (b0_ * a0);
     b1 = (b1_ * a0);
     b2 = (b2_ * a0);
-    
+
     W = (X + ((W(z-1) * a1) + (W(z-2) * a2)));
     Y = ((W * b0) + (W(z-1) * b1) + (W(z-2) * b2));
 
@@ -599,10 +628,9 @@ Pseudo-code:
     W(z-1) = W;
 
     output sample = Y;
-    
-    }
 
-
+}
+```
 
 Notes:
 
@@ -626,11 +654,11 @@ Implementation:
 
 Pseudo-code:
 
+```
+{
 
-    {
-    
     X = input sample;
-    
+
     _b0 = 1;
     _b1 = 0;
     _b2 = 0;
@@ -646,21 +674,20 @@ Pseudo-code:
     b0 = (b0_ * a0);
     b1 = (b1_ * a0);
     b2 = (b2_ * a0);
-    
+
     W = (X + W(z-2));
-    Y = ((W * b0) + X(z-2);
-    
+    Y = ((W * b0) + X(z-2));
+
     X(z-2) = ((W * b1) + X(z-1));
     X(z-1) = (W * b2);
-    
+
     W(z-2) = ((W * a1) + W(z-1));
     W(z-1) = (W * a2);
-    
-    output sample = Y;
-    
-    }
-    
 
+    output sample = Y;
+
+}
+```
 
 Notes:
 
@@ -687,15 +714,16 @@ Flow diagram:
 ![Direct Form IIT](https://raw.githubusercontent.com/StoneyDSP/OrfanidisBiquad/master/Res/496px-Digital_Biquad_Direct_Form_2_Transformed.svg.png)
 
 Implementation:
-    
+
 ![Direct Form II transposed core](https://raw.githubusercontent.com/StoneyDSP/OrfanidisBiquad/master/Res/DFtII_core.png)
 
 Pseudo-code:
 
-    {
-    
+```
+{
+
     X = input sample;
-    
+
     _b0 = 1;
     _b1 = 0;
     _b2 = 0;
@@ -711,17 +739,16 @@ Pseudo-code:
     b0 = (b0_ * a0);
     b1 = (b1_ * a0);
     b2 = (b2_ * a0);
-    
-    Y = ((X * b0) + (X(z-2));
-    
+
+    Y = ((X * b0) + (X(z-2)));
+
     X(z-2) = ((X * b1) + (X(z-1)) + (Y * a1));
     X(z-1) = ((X * b2) + (Y * a2));
-    
-    output sample = Y;
-    
-    }
-    
 
+    output sample = Y;
+
+}
+```
 
 Notes:
 
@@ -735,7 +762,7 @@ The Transposed Direct Form II, similarly to it's predecessor, uses only two unit
 
 As depicted in the above diagrams, the Direct Form I ("DFI") and II ("DFII") utlize a chain of single-sample unit delays in a feedback arrangement, with the coefficients a1 through to b2 controlling the gain at various points in the feedback network (in the case of DFII, actually two feedback networks).
 
-The two "transposed" forms provide us the same output characteristics for the same number of components, but arranged in inverse terms as compared with the non-transposed forms; summing points become split points, gain multpiliers swap positions within the network, and the entire signal flow is reversed (our images are also flipped around to keep the input and output directions visually aligned with the previous structures). 
+The two "transposed" forms provide us the same output characteristics for the same number of components, but arranged in inverse terms as compared with the non-transposed forms; summing points become split points, gain multpiliers swap positions within the network, and the entire signal flow is reversed (our images are also flipped around to keep the input and output directions visually aligned with the previous structures).
 
 This transposition places our coefficient multipliers *before* our unit delays, instead of after them.
 
@@ -743,13 +770,13 @@ I have seen some texts which provide several insights into what this change mean
 
 Furthermore, we might want to consider how our coefficient calculations are being applied to the input signal "across time", on a sample-by-sample basis. This is where the relationship order of gain multiplier and unit delay becomes very important; if we consider that a single parameter, such as our "Q" control (adjusting our filter's bandwidth) is in fact updating several of our coefficient multipliers "simultaneously" by itself, then at what point in time do these various coefficient updates get applied to our audio stream?
 
-As a slight abstraction, we can imagine that both "b2" and "a1" gain coefficients are updated simultaneously by our "Q" parameter on the GUI. Perhaps, one is the perfect inverse of the other; 
+As a slight abstraction, we can imagine that both "b2" and "a1" gain coefficients are updated simultaneously by our "Q" parameter on the GUI. Perhaps, one is the perfect inverse of the other;
 
-when "b2 = 1, a1= -1", 
+when "b2 = 1, a1= -1",
 
-just as when "a1 = -0.5, b2 = 0.5", 
+just as when "a1 = -0.5, b2 = 0.5",
 
-...and so on. 
+...and so on.
 
 They are moving in perfectly complementary values at all times, instantaneously. So then what's the issue?
 
@@ -769,7 +796,7 @@ We can therefore conclude; It seems there are some quite terminal arguements for
 
 Of course, our circuit is much more complicated than this, especially as the number of poles (and zeros) grows - but these outlined concepts might at least help us gain some bearings on *why* these real-time performance differences arise between supposedly equal circuits.
 
-Now, if we compare our results side by side, the results are interesting; 
+Now, if we compare our results side by side, the results are interesting;
 
 + DFI = four delay units (unstable modulation and higher footprint), higher precision (less quantization noise)
 + DFII =  two delay units (stable modulation and lower footprint), lower precision (more quantization noise)
@@ -777,7 +804,7 @@ Now, if we compare our results side by side, the results are interesting;
 + DFII(t) = two delay units (stable modulation and lower footprint), higher precision (less quantization noise)
 
 (images to follow)
-    
+
 # And the winner is...;
 
 As we can observe from the above comparison, our DFII(t) structure is the most favourable in all cases - it has only two delay units, meaning it is more stable under modulation, favourably comparable to the DFII structure; it also produces less quantization noise, comparable to the DFI structure in this regard. The lower unit delay count also produces a lower memory footprint in realtime use.
@@ -790,17 +817,9 @@ A parameter smoother may be applied in a future revision. However, during testin
 
 Likewise, the quantization noise created by the feedback network's computational round-off errors can be seemingly entirely negated by increasing processing precision from Floats to Doubles; the resulting noise floor falls not only well below the audible threshold, but also below the reach of abilities of our testing software.
 
-However, out of sight and out of mind does not mean out the window; we are able to produce several very pronounced audible artefacts in three of the four structures when processing in Floats (commonly deemed to be a beyond acceptable processing precision for audio purposes, to be debated elsewhere). Indeed only the Transposed Direct Form II manages favourably in all cases, and thus appears to be the prime candidate transformation for Biquad-based Equalizers in all audio application contexts at the time of writing. It stands to reason that these differences in quality shall also hold true (to some degree) for processing in Doubles, although we'd be extremely unlikely to encounter these differences when processing at that level of precision, seemingly well beyond the scope of measurement of our analysis tools - especially, and most critically, our ears. 
+However, out of sight and out of mind does not mean out the window; we are able to produce several very pronounced audible artefacts in three of the four structures when processing in Floats (commonly deemed to be a beyond acceptable processing precision for audio purposes, to be debated elsewhere). Indeed only the Transposed Direct Form II manages favourably in all cases, and thus appears to be the prime candidate transformation for Biquad-based Equalizers in all audio application contexts at the time of writing. It stands to reason that these differences in quality shall also hold true (to some degree) for processing in Doubles, although we'd be extremely unlikely to encounter these differences when processing at that level of precision, seemingly well beyond the scope of measurement of our analysis tools - especially, and most critically, our ears.
 
 - Nathan Hood (StoneyDSP), May 2022.
-
-# Before you go...
-
-Coffee! That's how I get things done!! If you'd like to see me get more things done, please kindly consider <a href="https://www.patreon.com/bePatron?u=8549187" data-patreon-widget-type="become-patron-button">buying me a coffee</a> or two ;)
-
-<p align="center">
- <a href= "https://paypal.me/StoneyDSPAudio?country.x=ES&locale.x=en_US"><img src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif"/></a>
-</p>
 
 # Credits
 
