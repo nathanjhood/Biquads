@@ -28,6 +28,8 @@ DISCLAIMED.
 
 cmake_minimum_required (VERSION 3.22...3.28 FATAL_ERROR)
 
+list (APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/share/cmake/Modules")
+
 project (STONEYDSP_BIQUADS VERSION 1.1.0
     DESCRIPTION "Simple two-pole equalizer with variable oversampling."
     HOMEPAGE_URL "https://github.com/nathanjhood/Biquads"
