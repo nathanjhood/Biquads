@@ -2,7 +2,7 @@
 #include "StoneyDSP/Biquads/PluginEditor.hpp"
 
 //==============================================================================
-BiquadsAudioProcessorEditor::BiquadsAudioProcessorEditor (AudioPluginAudioProcessor& p)
+BiquadsAudioProcessorEditor::BiquadsAudioProcessorEditor (BiquadsAudioProcessor& p)
     : AudioProcessorEditor (&p), processorRef (p)
 {
     juce::ignoreUnused (processorRef);
@@ -23,7 +23,7 @@ void BiquadsAudioProcessorEditor::paint (juce::Graphics& g)
 
     g.setColour (juce::Colours::white);
     g.setFont (15.0f);
-    g.drawFittedText ("Hello World!", getLocalBounds(), juce::Justification::centred, 1);
+    g.drawFittedText ("Hello from @StoneyDSP/Biquads!", getLocalBounds(), juce::Justification::centred, 1);
 }
 
 void BiquadsAudioProcessorEditor::resized()
