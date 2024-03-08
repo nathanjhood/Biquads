@@ -30,5 +30,12 @@ private:
     // access the processor object that created it.
     BiquadsAudioProcessor& processorRef;
 
+    juce::AudioProcessorValueTreeState& state;
+
+    juce::UndoManager& undoManager;
+
+    juce::ArrowButton undoButton { "Undo", 0.5f , juce::Colours::white };
+    juce::ArrowButton redoButton { "Redo", 0.0f , juce::Colours::white };
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BiquadsAudioProcessorEditor)
 };

@@ -170,9 +170,8 @@
 	"files.associations": {
 		"**.bash**": "shellscript",
 		"**.cmake": "cmake",
-		"ignore": "ignore",
 		".editorconfig": "editorconfig",
-
+		"ignore": "ignore",
 		"array": "cpp",
 		"atomic": "cpp",
 		"bit": "cpp",
@@ -191,7 +190,6 @@
 		"cstring": "cpp",
 		"ctime": "cpp",
 		"cwchar": "cpp",
-
 		"exception": "cpp",
 		"initializer_list": "cpp",
 		"ios": "cpp",
@@ -266,6 +264,7 @@
 		"xlocmes": "cpp",
 		"xlocmon": "cpp",
 		"xloctime": "cpp",
-		"xtree": "cpp"
+		"xtree": "cpp",
+		"*.mm": "cpp"
 	}
 }

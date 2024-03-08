@@ -1,21 +1,56 @@
+/**
+ * @file PluginProcessor.cpp
+ * @author StoneyDSP (nathanjhood@googlemail.com)
+ * @brief
+ * @version 0.1
+ * @date 2023-09-07
+ *
+ * @copyright Copyright (c) 2023
+ *
+ */
+
 #include "StoneyDSP/Biquads/PluginProcessor.hpp"
 #include "StoneyDSP/Biquads/PluginEditor.hpp"
 
 //==============================================================================
 BiquadsAudioProcessor::BiquadsAudioProcessor()
-     : AudioProcessor (BusesProperties()
-                     #if ! JucePlugin_IsMidiEffect
-                      #if ! JucePlugin_IsSynth
-                       .withInput  ("Input",  juce::AudioChannelSet::stereo(), true)
-                      #endif
-                       .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
-                     #endif
-                       )
+: AudioProcessor (BusesProperties()
+#if ! JucePlugin_IsMidiEffect
+ #if ! JucePlugin_IsSynth
+    .withInput  ("Input",  juce::AudioChannelSet::stereo(), true)
+ #endif
+    .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
+#endif
+)
+, undoManager()
+, apvts(*this, &undoManager, "Parameters", createParameterLayout())
+, bypassState (dynamic_cast<juce::AudioParameterBool*>(apvts.getParameter("bypassID")))
 {
 }
 
 BiquadsAudioProcessor::~BiquadsAudioProcessor()
 {
+}
+
+//==============================================================================
+juce::AudioProcessorParameter* BiquadsAudioProcessor::getBypassParameter() const
+{
+    return bypassState;
+}
+
+bool BiquadsAudioProcessor::isBypassed() const noexcept
+{
+    return bypassState->get() == true;
+}
+
+void BiquadsAudioProcessor::setBypassParameter(juce::AudioParameterBool* newBypass) noexcept
+{
+    if (bypassState != newBypass)
+    {
+        bypassState = newBypass;
+        releaseResources();
+        reset();
+    }
 }
 
 //==============================================================================
@@ -164,20 +199,53 @@ juce::AudioProcessorEditor* BiquadsAudioProcessor::createEditor()
     return new BiquadsAudioProcessorEditor (*this);
 }
 
+juce::AudioProcessorValueTreeState::ParameterLayout BiquadsAudioProcessor::createParameterLayout()
+{
+    juce::AudioProcessorValueTreeState::ParameterLayout parameterLayout;
+
+    parameterLayout.add(std::make_unique<juce::AudioParameterBool>("bypassID", "Bypass", false));
+
+    // Parameters::setParameterLayout(parameterLayout);
+
+    return parameterLayout;
+}
+
 //==============================================================================
 void BiquadsAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
 {
     // You should use this method to store your parameters in the memory block.
     // You could do that either as raw data, or use the XML or ValueTree classes
     // as intermediaries to make it easy to save and load complex data.
-    juce::ignoreUnused (destData);
+    auto state = apvts.copyState();
+    std::unique_ptr<juce::XmlElement> xml(state.createXml());
+    copyXmlToBinary(*xml, destData);
+}
+
+void BiquadsAudioProcessor::getCurrentProgramStateInformation(juce::MemoryBlock& destData)
+{
+    auto state = apvts.copyState();
+    std::unique_ptr<juce::XmlElement> xml(state.createXml());
+    copyXmlToBinary(*xml, destData);
 }
 
 void BiquadsAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
     // You should use this method to restore your parameters from this memory block,
     // whose contents will have been created by the getStateInformation() call.
-    juce::ignoreUnused (data, sizeInBytes);
+    std::unique_ptr<juce::XmlElement> xmlState(getXmlFromBinary(data, sizeInBytes));
+
+    if (xmlState.get() != nullptr)
+        if (xmlState->hasTagName(apvts.state.getType()))
+            apvts.replaceState(juce::ValueTree::fromXml(*xmlState));
+}
+
+void BiquadsAudioProcessor::setCurrentProgramStateInformation(const void* data, int sizeInBytes)
+{
+    std::unique_ptr<juce::XmlElement> xmlState(getXmlFromBinary(data, sizeInBytes));
+
+    if (xmlState.get() != nullptr)
+        if (xmlState->hasTagName(apvts.state.getType()))
+            apvts.replaceState(juce::ValueTree::fromXml(*xmlState));
 }
 
 //==============================================================================

@@ -12,9 +12,9 @@
 
 #pragma once
 
-#include <juce_audio_processors/juce_audio_processors.h>
+// #include <juce_audio_processors/juce_audio_processors.h>
 
-// #include <JuceHeader.h>
+#include <JuceHeader.h>
 
 // #include "PluginParameters.h"
 // #include "PluginWrapper.h"
@@ -26,6 +26,11 @@ public:
     //==============================================================================
     BiquadsAudioProcessor();
     ~BiquadsAudioProcessor() override;
+
+    //==========================================================================
+    juce::AudioProcessorParameter* getBypassParameter() const override;
+    bool isBypassed() const noexcept;
+    void setBypassParameter(juce::AudioParameterBool* newBypass) noexcept;
 
     //==============================================================================
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
@@ -57,7 +62,37 @@ public:
 
     //==============================================================================
     void getStateInformation (juce::MemoryBlock& destData) override;
+    void getCurrentProgramStateInformation(juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
+    void setCurrentProgramStateInformation(const void* data, int sizeInBytes) override;
+
+    //==========================================================================
+    /** Undo Manager. */
+    juce::UndoManager undoManager;
+    /**
+     * @brief Get a reference to the UndoManager object.
+     *
+     * @return juce::UndoManager&
+     */
+    juce::UndoManager& getUndoManager() { return undoManager; };
+
+    //==========================================================================
+    /** Audio processor value tree. */
+    juce::AudioProcessorValueTreeState apvts;
+    /**
+     * @brief Get a reference to the AudioProcessorValueTreeState object.
+     *
+     * @return juce::AudioProcessorValueTreeState&
+     */
+    juce::AudioProcessorValueTreeState& getAPVTS() { return apvts; };
+    /**
+     * @brief Create a juce::AudioProcessorValueTreeState::ParameterLayout object.
+     *
+     * @return juce::AudioProcessorValueTreeState::ParameterLayout
+     */
+    static juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
+
+    juce::AudioParameterBool* bypassState { nullptr };
 
 private:
     //==============================================================================

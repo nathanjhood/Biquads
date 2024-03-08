@@ -3,7 +3,10 @@
 
 //==============================================================================
 BiquadsAudioProcessorEditor::BiquadsAudioProcessorEditor (BiquadsAudioProcessor& p)
-    : AudioProcessorEditor (&p), processorRef (p)
+: AudioProcessorEditor (&p)
+,   processorRef(p)
+,   state(p.getAPVTS())
+,   undoManager(p.getUndoManager())
 {
     juce::ignoreUnused (processorRef);
     // Make sure that before the constructor has finished, you've set the
