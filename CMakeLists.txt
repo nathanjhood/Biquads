@@ -194,7 +194,7 @@ set(STONEYDSP_BIQUADS_INSTALL_DESTINATION "lib/cmake/StoneyDSP-Biquads-v${STONEY
 
 configure_package_config_file(
     "${STONEYDSP_BIQUADS_SOURCE_DIR}/share/cmake/Modules/StoneyDSPBiquadsConfig.cmake.in"
-    "${StoneyDSP_BINARY_DIR}/StoneyDSPBiquadsConfig.cmake"
+    "${STONEYDSP_BIQUADS_BINARY_DIR}/StoneyDSPBiquadsConfig.cmake"
     INSTALL_DESTINATION "${STONEYDSP_BIQUADS_INSTALL_DESTINATION}"
 )
 
