@@ -1,203 +1,141 @@
-cmake_minimum_required (VERSION 3.15...3.27 FATAL_ERROR)
+#[=============================================================================[
+This file is part of the StoneyDSP library.
+Copyright (c) 2024 - StoneyDSP
+Home: https://www.stoneydsp.com
+Source: https://github.com/StoneyDSP/StoneyDSP
 
-list (APPEND CMAKE_MODULE_PATH
-	"${CMAKE_CURRENT_LIST_DIR}/share/cmake/Modules"
-)
+StoneyDSP is an open source library subject to open-source licensing.
 
-project(Biquads)
+By using StoneyDSP, you agree to the terms of the StoneyDSP End-User License
+Agreement and also the StoneyDSP Privacy Policy.
 
-set (PROJECT_VERSION_MAJOR 1)
-set (PROJECT_VERSION_MINOR 0)
-set (PROJECT_VERSION_PATCH 2)
+End User License Agreement: www.stoneydsp.com/LICENSE
+Privacy Policy: www.stoneydsp.com/privacy-policy
 
-include (GetSourceInfo)
-get_source_info ()
-set (PROJECT_VERSION_TWEAK "${git_revision}")
-# set(PROJECT_VERSION_TWEAK "x")
+By using StoneyDSP, you must also agree to the terms of both the JUCE 7 End-User
+License Agreement and JUCE Privacy Policy.
 
-set (PROJECT_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}" CACHE STRING "Value given to the ``VERSION`` option of the most recent call to the ``project()`` command, if any." FORCE)
+End User License Agreement: www.juce.com/juce-7-licence
+Privacy Policy: www.juce.com/juce-privacy-policy
 
-set (PROJECT_HOMEPAGE_URL "https://stoneydsp.github.io/Biquads" CACHE STRING "The homepage URL of the project." FORCE)
+Or: You may also use this code under the terms of the GPL v3 (see
+www.gnu.org/licenses).
 
-file (COPY
-    "${CMAKE_CURRENT_SOURCE_DIR}/include/${PROJECT_NAME}/Components/AutoButton.h"
-    "${CMAKE_CURRENT_SOURCE_DIR}/include/${PROJECT_NAME}/Components/AutoComboBox.h"
-    "${CMAKE_CURRENT_SOURCE_DIR}/include/${PROJECT_NAME}/Components/AutoComponent.h"
-    "${CMAKE_CURRENT_SOURCE_DIR}/include/${PROJECT_NAME}/Components/AutoKnob.h"
-    "${CMAKE_CURRENT_SOURCE_DIR}/include/${PROJECT_NAME}/Components/Viewer.h"
-    DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/include/${PROJECT_NAME}/Components"
-)
+STONEYDSP IS PROVIDED "AS IS" WITHOUT ANY WARRANTY, AND ALL WARRANTIES, WHETHER
+EXPRESSED OR IMPLIED, INCLUDING MERCHANTABILITY AND FITNESS FOR PURPOSE, ARE
+DISCLAIMED.
+]=============================================================================]#
 
-file (COPY
-    "${CMAKE_CURRENT_SOURCE_DIR}/include/${PROJECT_NAME}/Modules/Biquads.h"
-    "${CMAKE_CURRENT_SOURCE_DIR}/include/${PROJECT_NAME}/Modules/Coefficient.hpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/include/${PROJECT_NAME}/Modules/SecondOrderBiquads.h"
-    DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/include/${PROJECT_NAME}/Modules"
-)
+cmake_minimum_required (VERSION 3.22...3.28 FATAL_ERROR)
 
-file (COPY
-    "${CMAKE_CURRENT_SOURCE_DIR}/include/${PROJECT_NAME}/PluginEditor.h"
-    "${CMAKE_CURRENT_SOURCE_DIR}/include/${PROJECT_NAME}/PluginParameters.h"
-    "${CMAKE_CURRENT_SOURCE_DIR}/include/${PROJECT_NAME}/PluginProcessor.h"
-    "${CMAKE_CURRENT_SOURCE_DIR}/include/${PROJECT_NAME}/PluginWrapper.h"
-    DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/include/${PROJECT_NAME}"
-)
+project (STONEYDSP_BIQUADS VERSION 1.1.0)
 
-# If you've installed JUCE somehow (via a package manager, or directly using the CMake install
-# target), you'll need to tell this project that it depends on the installed copy of JUCE. If you've
-# included JUCE directly in your source tree (perhaps as a submodule), you'll need to tell CMake to
-# include that subdirectory as part of the build.
-
-# If you've installed JUCE to your system
-find_package (JUCE CONFIG REQUIRED)
-# or
-# If you've put JUCE in a subdirectory called JUCE
-# add_subdirectory(JUCE)
-
-
-# `juce_add_plugin` adds a static library target with the name passed as the first argument
-# (AudioPluginExample here). This target is a normal CMake target, but has a lot of extra properties set
-# up by default. As well as this shared code static library, this function adds targets for each of
-# the formats specified by the FORMATS arguments. This function accepts many optional arguments.
-# Check the readme at `docs/CMake API.md` in the JUCE repo for the full list.
+#find_package (JUCE CONFIG REQUIRED)
+#find_package (StoneyDSP CONFIG REQUIRED)
 
 juce_add_plugin (Biquads
-    # Set this if the plugin version is different to the project version
-    # VERSION ...
-    # "ICON_*" arguments specify a path to an image file to use as an icon for the Standalone
-    # ICON_BIG ...
+    # VERSION ...                               # Set this if the plugin version is different to the project version
+    # ICON_BIG ...                              # ICON_* arguments specify a path to an image file to use as an icon for the Standalone
     # ICON_SMALL ...
-    # Specify the name of the plugin's author
-    COMPANY_NAME StoneyDSP
-    # Is this a synth or an effect?
-    IS_SYNTH FALSE
-    # Does the plugin need midi input?
-    NEEDS_MIDI_INPUT FALSE
-    # Does the plugin need midi output?
-    NEEDS_MIDI_OUTPUT FALSE
-    # Is this plugin a MIDI effect?
-    IS_MIDI_EFFECT FALSE
-    # Does the editor need keyboard focus?
-    EDITOR_WANTS_KEYBOARD_FOCUS TRUE
-    # Should the plugin be installed to a default location after building?
-    COPY_PLUGIN_AFTER_BUILD FALSE
-    # A four-character manufacturer id with at least one upper-case character
-    PLUGIN_MANUFACTURER_CODE Juce
-    # A unique four-character plugin id with exactly one upper-case character
-    # GarageBand 10.3 requires the first letter to be upper-case, and the remaining letters to be lower-case
-    PLUGIN_CODE Dem0
-        # The formats to build. Other valid formats are: AAX Unity VST AU AUv3
-    FORMATS AU VST3 Standalone
-    # The name of the final executable, which can differ from the target name
-    PRODUCT_NAME "Biquads"
+    COMPANY_NAME StoneyDSP                      # Specify the name of the plugin's author
+    IS_SYNTH FALSE                              # Is this a synth or an effect?
+    NEEDS_MIDI_INPUT FALSE                      # Does the plugin need midi input?
+    NEEDS_MIDI_OUTPUT FALSE                     # Does the plugin need midi output?
+    IS_MIDI_EFFECT FALSE                        # Is this plugin a MIDI effect?
+    EDITOR_WANTS_KEYBOARD_FOCUS TRUE            # Does the editor need keyboard focus?
+    COPY_PLUGIN_AFTER_BUILD FALSE               # Should the plugin be installed to a default location after building?
+    PLUGIN_MANUFACTURER_CODE Sdsp               # A four-character manufacturer id with at least one upper-case character
+    PLUGIN_CODE Biq0                            # A unique four-character plugin id with exactly one upper-case character
+                                                # GarageBand 10.3 requires the first letter to be upper-case, and the remaining letters to be lower-case
+    FORMATS AU VST3 Standalone                  # The formats to build. Other valid formats are: AAX Unity VST AU AUv3
+    PRODUCT_NAME "Biquads"                      # The name of the final executable, which can differ from the target name
 )
 
-# `juce_generate_juce_header` will create a JuceHeader.h for a given target, which will be generated
-# into your build tree. This should be included with `#include <JuceHeader.h>`. The include path for
-# this header will be automatically added to the target. The main function of the JuceHeader is to
-# include all your JUCE module headers; if you're happy to include module headers directly, you
-# probably don't need to call this.
 juce_generate_juce_header (Biquads)
 
 target_include_directories (Biquads
-
     PRIVATE
-
-        $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include>
+        $<BUILD_INTERFACE:${STONEYDSP_BIQUADS_BINARY_DIR}/include>
         $<INSTALL_INTERFACE:include>
 )
 
-target_sources (Biquads
-
-    PUBLIC
-
-        FILE_SET biquads_HEADERS
-        TYPE HEADERS
-
-        BASE_DIRS
-            $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include/${PROJECT_NAME}>
-            $<INSTALL_INTERFACE:include/${PROJECT_NAME}>
-        FILES
-            # # include/${PROJECT_NAME}/Components/AutoButton.h
-            # $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include/${PROJECT_NAME}/Components/AutoButton.h>
-            # $<INSTALL_INTERFACE:include/${PROJECT_NAME}/Components/AutoButton.h>
-
-            # # include/${PROJECT_NAME}/Components/AutoComboBox.h
-            # $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include/${PROJECT_NAME}/Components/AutoComboBox.h>
-            # $<INSTALL_INTERFACE:include/${PROJECT_NAME}/Components/AutoComboBox.h>
-
-            # include/${PROJECT_NAME}/Components/AutoComponent.h
-            $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include/${PROJECT_NAME}/Components/AutoComponent.h>
-            $<INSTALL_INTERFACE:include/${PROJECT_NAME}/Components/AutoComponent.h>
-
-            # # include/${PROJECT_NAME}/Components/AutoKnob.h
-            # $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include/${PROJECT_NAME}/Components/AutoKnob.h>
-            # $<INSTALL_INTERFACE:include/${PROJECT_NAME}/Components/AutoKnob.h>
-
-            # include/${PROJECT_NAME}/Components/Viewer.h
-            $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include/${PROJECT_NAME}/Components/Viewer.h>
-            $<INSTALL_INTERFACE:include/${PROJECT_NAME}/Components/Viewer.h>
-
-            # include/${PROJECT_NAME}/Modules/Biquads.h
-            $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include/${PROJECT_NAME}/Modules/Biquads.h>
-            $<INSTALL_INTERFACE:include/${PROJECT_NAME}/Modules/Biquads.h>
-
-            # include/${PROJECT_NAME}/Modules/Coefficient.hpp
-            $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include/${PROJECT_NAME}/Modules/Coefficient.hpp>
-            $<INSTALL_INTERFACE:include/${PROJECT_NAME}/Modules/Coefficient.hpp>
-
-            # include/${PROJECT_NAME}/Modules/SecondOrderBiquads.h
-            $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include/${PROJECT_NAME}/Modules/SecondOrderBiquads.h>
-            $<INSTALL_INTERFACE:include/${PROJECT_NAME}/Modules/SecondOrderBiquads.h>
-
-            # include/${PROJECT_NAME}/PluginEditor.h
-            $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include/${PROJECT_NAME}/PluginEditor.h>
-            $<INSTALL_INTERFACE:include/${PROJECT_NAME}/PluginEditor.h>
-
-            # include/${PROJECT_NAME}/PluginParameters.h
-            $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include/${PROJECT_NAME}/PluginParameters.h>
-            $<INSTALL_INTERFACE:include/${PROJECT_NAME}/PluginParameters.h>
-
-            # include/${PROJECT_NAME}/PluginProcessor.h
-            $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include/${PROJECT_NAME}/PluginProcessor.h>
-            $<INSTALL_INTERFACE:include/${PROJECT_NAME}/PluginProcessor.h>
-
-            # include/${PROJECT_NAME}/PluginWrapper.h
-            $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include/${PROJECT_NAME}/PluginWrapper.h>
-            $<INSTALL_INTERFACE:include/${PROJECT_NAME}/PluginWrapper.h>
-
+set (STONEYDSP_BIQUADS_GUI_UNITS "")
+list (APPEND STONEYDSP_BIQUADS_GUI_UNITS
+    # "StoneyDSP/Biquads/Components/AutoButton"
+    # "StoneyDSP/Biquads/Components/AutoComboBox"
+    # "StoneyDSP/Biquads/Components/AutoKnob"
+    "StoneyDSP/Biquads/Components/AutoComponent"
+    "StoneyDSP/Biquads/Components/Viewer"
 )
 
-target_sources (Biquads
-    PRIVATE
-        include/Biquads/PluginEditor.cpp
-        include/Biquads/PluginParameters.cpp
-        include/Biquads/PluginProcessor.cpp
-        include/Biquads/PluginWrapper.cpp
-
-        include/Biquads/Modules/Biquads.cpp
-        include/Biquads/Modules/Coefficient.cpp
-        include/Biquads/Modules/SecondOrderBiquads.cpp
-
-        # include/Biquads/Components/AutoButton.cpp
-        # include/Biquads/Components/AutoComboBox.cpp
-        include/Biquads/Components/AutoComponent.cpp
-        # include/Biquads/Components/AutoKnob.cpp
-        include/Biquads/Components/Viewer.cpp
+set (STONEYDSP_BIQUADS_DSP_UNITS "")
+list (APPEND STONEYDSP_BIQUADS_DSP_UNITS
+    "StoneyDSP/Biquads/Modules/Biquads"
+    "StoneyDSP/Biquads/Modules/Coefficient"
+    "StoneyDSP/Biquads/Modules/SecondOrderBiquads"
 )
+
+set (STONEYDSP_BIQUADS_APP_UNITS "")
+list (APPEND STONEYDSP_BIQUADS_APP_UNITS
+    "StoneyDSP/Biquads/PluginEditor"
+    "StoneyDSP/Biquads/PluginParameters"
+    "StoneyDSP/Biquads/PluginProcessor"
+    "StoneyDSP/Biquads/PluginWrapper"
+)
+
+set (STONEYDSP_BIQUADS_UNITS "")
+list (APPEND STONEYDSP_BIQUADS_UNITS
+    ${STONEYDSP_BIQUADS_GUI_UNITS}
+    ${STONEYDSP_BIQUADS_DSP_UNITS}
+    ${STONEYDSP_BIQUADS_APP_UNITS}
+)
+
+foreach (STONEYDSP_BIQUADS_UNIT IN LISTS STONEYDSP_BIQUADS_UNITS)
+
+    string (REGEX REPLACE "[/]" "_" _stoneydsp_biquads_unit_transformed "${STONEYDSP_BIQUADS_UNIT}")
+    # set (_stoneydsp_biquads_unit_transformed ${_stoneydsp_biquads_unit_transformed})
+    string (TOUPPER "${_stoneydsp_biquads_unit_transformed}" _stoneydsp_biquads_unit_transformed_upper)
+
+    message (STATUS "Biquads: ${_stoneydsp_biquads_unit_transformed_upper} found at ${_stoneydsp_biquads_unit_transformed}")
+
+    configure_file (
+        "include/${STONEYDSP_BIQUADS_UNIT}.h" # SRC_DIR
+        "include/${STONEYDSP_BIQUADS_UNIT}.h" # BIN_DIR
+    )
+    target_sources (Biquads
+        PUBLIC
+            FILE_SET biquads_HEADERS
+            TYPE HEADERS
+            BASE_DIRS
+                $<BUILD_INTERFACE:${STONEYDSP_BIQUADS_BINARY_DIR}/include>
+                $<INSTALL_INTERFACE:include>
+            FILES
+                $<BUILD_INTERFACE:${STONEYDSP_BIQUADS_BINARY_DIR}/include/${STONEYDSP_BIQUADS_UNIT}.h>
+                $<INSTALL_INTERFACE:include/${STONEYDSP_BIQUADS_UNIT}.h>
+    )
+    target_sources (Biquads
+        PRIVATE
+            "src/${STONEYDSP_BIQUADS_UNIT}.cpp"
+    )
+    # target_compile_definitions (Biquads
+    #     PRIVATE
+    #         "${STONEYDSP_BIQUADS_UNIT_UPPERCASE}_H_INCLUDED"
+    # )
+endforeach ()
 
 target_compile_definitions (Biquads
     PUBLIC
-        # JUCE_WEB_BROWSER and JUCE_USE_CURL would be on by default, but you might not need them.
-        # If you remove this, add `NEEDS_WEB_BROWSER TRUE` to the `juce_add_plugin` call
         JUCE_WEB_BROWSER=0
-        # If you remove this, add `NEEDS_CURL TRUE` to the `juce_add_plugin` call
         JUCE_USE_CURL=0
         JUCE_VST3_CAN_REPLACE_VST2=0
 )
 
 target_link_libraries (Biquads
     PRIVATE
+        # StoneyDSP::stoneydsp_core
+        # StoneyDSP::stoneydsp_audio
+        # StoneyDSP::stoneydsp_graphics
+
         juce::juce_audio_basics
         juce::juce_audio_devices
         juce::juce_audio_formats
@@ -216,3 +154,10 @@ target_link_libraries (Biquads
         juce::juce_recommended_lto_flags
         juce::juce_recommended_warning_flags
 )
+
+option (STONEYDSP_BIQUADS_BUILD_TESTS "Build tests" ON)
+if (STONEYDSP_BIQUADS_BUILD_TESTS AND (STONEYDSP_BIQUADS_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR))
+
+    enable_testing ()
+    add_subdirectory (tests)
+endif ()

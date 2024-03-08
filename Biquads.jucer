@@ -8,23 +8,23 @@
   <MAINGROUP id="butqEA" name="Biquads">
     <GROUP id="{B7BEB523-13AE-DC81-1072-78BF4CC3A396}" name="Source">
       <GROUP id="{19BEE9C3-82E8-891C-7BCF-623477F38C0E}" name="Components">
-        <FILE id="NxF6lP" name="AutoComponent.cpp" compile="1" resource="0" file="include/Biquads/Components/AutoComponent.cpp"/>
-        <FILE id="oNSzMK" name="AutoComponent.h" compile="0" resource="0" file="include/Biquads/Components/AutoComponent.h"/>
+        <FILE id="NxF6lP" name="AutoComponent.cpp" compile="1" resource="0" file="src/StoneyDSP/Biquads/Components/AutoComponent.cpp"/>
+        <FILE id="oNSzMK" name="AutoComponent.h" compile="0" resource="0" file="include/StoneyDSP/Biquads/Components/AutoComponent.h"/>
       </GROUP>
       <GROUP id="{9CCA4E58-A6DF-778D-0E47-615CE5201735}" name="Modules">
-        <FILE id="CkmJBA" name="Coefficient.cpp" compile="1" resource="0" file="include/Biquads/Modules/Coefficient.cpp"/>
-        <FILE id="cfbQWO" name="Coefficient.h" compile="0" resource="0" file="include/Biquads/Modules/Coefficient.h"/>
-        <FILE id="unuiPg" name="SecondOrderBiquads.cpp" compile="1" resource="0" file="include/Biquads/Modules/SecondOrderBiquads.cpp"/>
-        <FILE id="fw6I4S" name="SecondOrderBiquads.h" compile="0" resource="0" file="include/Biquads/Modules/SecondOrderBiquads.h"/>
+        <FILE id="CkmJBA" name="Coefficient.cpp" compile="1" resource="0" file="src/StoneyDSP/Biquads/Modules/Coefficient.cpp"/>
+        <FILE id="cfbQWO" name="Coefficient.h" compile="0" resource="0" file="include/StoneyDSP/Biquads/Modules/Coefficient.h"/>
+        <FILE id="unuiPg" name="SecondOrderBiquads.cpp" compile="1" resource="0" file="src/StoneyDSP/Biquads/Modules/SecondOrderBiquads.cpp"/>
+        <FILE id="fw6I4S" name="SecondOrderBiquads.h" compile="0" resource="0" file="include/StoneyDSP/Biquads/Modules/SecondOrderBiquads.h"/>
       </GROUP>
-      <FILE id="VST2bi" name="PluginParameters.cpp" compile="1" resource="0" file="include/Biquads/PluginParameters.cpp"/>
-      <FILE id="wSuuDB" name="PluginParameters.h" compile="0" resource="0" file="include/Biquads/PluginParameters.h"/>
-      <FILE id="pvZewN" name="PluginWrapper.cpp" compile="1" resource="0" file="include/Biquads/PluginWrapper.cpp"/>
-      <FILE id="irQxwW" name="PluginWrapper.h" compile="0" resource="0" file="include/Biquads/PluginWrapper.h"/>
-      <FILE id="vmXpNV" name="PluginProcessor.cpp" compile="1" resource="0" file="include/Biquads/PluginProcessor.cpp"/>
-      <FILE id="qN9OPw" name="PluginProcessor.h" compile="0" resource="0" file="include/Biquads/PluginProcessor.h"/>
-      <FILE id="TI9DHC" name="PluginEditor.cpp" compile="1" resource="0" file="include/Biquads/PluginEditor.cpp"/>
-      <FILE id="fgFCra" name="PluginEditor.h" compile="0" resource="0" file="include/Biquads/PluginEditor.h"/>
+      <FILE id="VST2bi" name="PluginParameters.cpp" compile="1" resource="0" file="src/StoneyDSP/Biquads/PluginParameters.cpp"/>
+      <FILE id="wSuuDB" name="PluginParameters.h" compile="0" resource="0" file="include/StoneyDSP/Biquads/PluginParameters.h"/>
+      <FILE id="pvZewN" name="PluginWrapper.cpp" compile="1" resource="0" file="src/StoneyDSP/Biquads/PluginWrapper.cpp"/>
+      <FILE id="irQxwW" name="PluginWrapper.h" compile="0" resource="0" file="include/StoneyDSP/Biquads/PluginWrapper.h"/>
+      <FILE id="vmXpNV" name="PluginProcessor.cpp" compile="1" resource="0" file="src/StoneyDSP/Biquads/PluginProcessor.cpp"/>
+      <FILE id="qN9OPw" name="PluginProcessor.h" compile="0" resource="0" file="include/StoneyDSP/Biquads/PluginProcessor.h"/>
+      <FILE id="TI9DHC" name="PluginEditor.cpp" compile="1" resource="0" file="src/StoneyDSP/Biquads/PluginEditor.cpp"/>
+      <FILE id="fgFCra" name="PluginEditor.h" compile="0" resource="0" file="include/StoneyDSP/Biquads/PluginEditor.h"/>
     </GROUP>
   </MAINGROUP>
   <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1" JUCE_VST3_CAN_REPLACE_VST2="0"/>

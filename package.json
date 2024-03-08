@@ -1,44 +1,38 @@
 {
   "name": "@stoneydsp/biquads",
-  "version": "0.0.1-608e088576e7c5c103dc2bf4850152752beed94b",
-  "description": "StoneyDSP Official Website",
-  "main": "./index.html",
-  "icon": "./favicon.ico",
-  "author": "StoneyDSP <nathanjhood@googlemail.com>",
+  "version": "0.0.1",
+  "main": "index.js",
+  "author": {
+		"email": "nathanjhood@googlemail.com",
+		"name": "Nathan J. Hood",
+		"url": "https://github.com/nathanjhood"
+	},
+	"repository": {
+		"url": "https://github.com/StoneyDSP/Biquads.git",
+		"type": "git"
+	},
+	"readme": "https://github.com/StoneyDSP/Biquads/README.md",
   "license": "MIT",
-  "homepage": "https://github.com/StoneyDSP/stoneydsp.github.io#readme",
-  "readme": "README.md",
-  "private": true,
-  "preferGlobal": true,
-  "packageManager": "yarn@1.22.19",
   "scripts": {
-    "lint": "eslint *.html",
-    "dev": "npx serve",
-    "build": "node --version",
-    "rebuild": "yarn clean && yarn build",
-    "clean": "rm -rvf src/main/main.js",
-    "wipe": "yarn clean && rm -rvf node_modules"
+    "configure":    "cmake         -S . -B ./build -DSTONEYDSP_BIQUADS_BUILD_TESTS:BOOL=FALSE -DSTONEYDSP_BIQUADS_BUILD_EXTRAS:BOOL=TRUE -DSTONEYDSP_BIQUADS_BUILD_EXAMPLES:BOOL=TRUE -DCMAKE_INSTALL_PREFIX:PATH=./install -GNinja",
+    "reconfigure":  "cmake --fresh -S . -B ./build -DSTONEYDSP_BIQUADS_BUILD_TESTS:BOOL=FALSE -DSTONEYDSP_BIQUADS_BUILD_EXTRAS:BOOL=TRUE -DSTONEYDSP_BIQUADS_BUILD_EXAMPLES:BOOL=TRUE -DCMAKE_INSTALL_PREFIX:PATH=./install -GNinja",
+    "build":        "cmake --build         ./build",
+    "postbuild":    "cmake --install       ./build",
+    "ctest":        "ctest --test-dir      ./build --rerun-failed --output-on-failure --verbose",
+    "cpack":        "cpack --config        ./build/CPackSourceConfig.cmake -B ./install",
+    "cdist":        "cpack --config        ./build/CPackConfig.cmake       -B ./install",
+
+		"sys:config":   "cmake --fresh -S . -B ./build -DSTONEYDSP_BIQUADS_BUILD_TESTS:BOOL=FALSE -DSTONEYDSP_BIQUADS_BUILD_EXTRAS:BOOL=TRUE -DSTONEYDSP_BIQUADS_BUILD_EXAMPLES:BOOL=TRUE -GNinja",
+		"sys:install":  "cmake --build         ./build && cmake --build         ./build --target install"
   },
+	"engines": {
+		"node": ">=16.8.0"
+	},
   "dependencies": {
-    "@vercel/analytics": "^1.0.2"
+    "clang-format": "^1.8.0"
   },
   "devDependencies": {
-    "@html-eslint/eslint-plugin": "^0.19.1",
-    "@html-eslint/parser": "^0.19.1",
-    "@vercel/node": "^3.0.5",
-    "@vercel/postgres": "^0.4.2",
-    "eslint": "^8.49.0",
-    "typescript": "*",
-    "web-vitals": "^3.4.0"
-  },
-  "files": [
-    "./api",
-    "./public"
-  ],
-  "browserslist": [
-    "> 1%",
-    "last 2 versions",
-    "not dead",
-    "not ie 11"
-  ]
+    "@types/node": "^20.11.14",
+    "typescript": "^5.3.3"
+  }
 }
