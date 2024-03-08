@@ -74,18 +74,18 @@ public:
     //==========================================================================
     /** Undo Manager. */
     juce::UndoManager undoManager;
-    juce::UndoManager& getUndoManager() { return undoManager; };
+    juce::UndoManager& getUndoManager() { return undoManager; }
 
     //==========================================================================
     /** Audio processor value tree. */
     juce::AudioProcessorValueTreeState apvts;
-    juce::AudioProcessorValueTreeState& getAPVTS() { return apvts; };
+    juce::AudioProcessorValueTreeState& getAPVTS() { return apvts; }
     static juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
 
     //==========================================================================
     /** Audio processor specs. */
     juce::dsp::ProcessSpec spec;
-    juce::dsp::ProcessSpec& getSpec() { return spec; };
+    juce::dsp::ProcessSpec& getSpec() { return spec; }
 
 private:
     //==========================================================================
