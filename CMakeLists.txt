@@ -28,16 +28,31 @@ DISCLAIMED.
 
 cmake_minimum_required (VERSION 3.22...3.28 FATAL_ERROR)
 
-project (STONEYDSP_BIQUADS VERSION 1.1.0)
+project (STONEYDSP_BIQUADS VERSION 1.1.0
+    DESCRIPTION "Simple two-pole equalizer with variable oversampling."
+    HOMEPAGE_URL "https://github.com/nathanjhood/Biquads"
+    LANGUAGES C;CXX
+)
 
-#find_package (JUCE CONFIG REQUIRED)
+message (STATUS "Configuring StoneyDSP Biquads v${STONEYDSP_BIQUADS}...")
+
+set_property(GLOBAL PROPERTY USE_FOLDERS YES)
+
+if (NOT DEFINED JUCE_VERSION)
+    message (STATUS "Looking for JUCE...")
+    set (JUCE_BUILD_EXAMPLES FALSE)
+    set (JUCE_BUILD_EXTRAS   FALSE)
+    find_package (JUCE CONFIG REQUIRED)
+    message (STATUS "  Found JUCE v${JUCE_VERSION}...")
+endif ()
+
 #find_package (StoneyDSP CONFIG REQUIRED)
 
 juce_add_plugin (Biquads
     # VERSION ...                               # Set this if the plugin version is different to the project version
     # ICON_BIG ...                              # ICON_* arguments specify a path to an image file to use as an icon for the Standalone
     # ICON_SMALL ...
-    COMPANY_NAME StoneyDSP                      # Specify the name of the plugin's author
+
     IS_SYNTH FALSE                              # Is this a synth or an effect?
     NEEDS_MIDI_INPUT FALSE                      # Does the plugin need midi input?
     NEEDS_MIDI_OUTPUT FALSE                     # Does the plugin need midi output?
@@ -48,7 +63,9 @@ juce_add_plugin (Biquads
     PLUGIN_CODE Biq0                            # A unique four-character plugin id with exactly one upper-case character
                                                 # GarageBand 10.3 requires the first letter to be upper-case, and the remaining letters to be lower-case
     FORMATS AU VST3 Standalone                  # The formats to build. Other valid formats are: AAX Unity VST AU AUv3
+
     PRODUCT_NAME "Biquads"                      # The name of the final executable, which can differ from the target name
+    COMPANY_NAME StoneyDSP                      # Specify the name of the plugin's author
 )
 
 juce_generate_juce_header (Biquads)
@@ -161,3 +178,77 @@ if (STONEYDSP_BIQUADS_BUILD_TESTS AND (STONEYDSP_BIQUADS_SOURCE_DIR STREQUAL CMA
     enable_testing ()
     add_subdirectory (tests)
 endif ()
+
+#[=============================================================================[
+    Install & CPack configuration
+]=============================================================================]#
+
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file(
+    "${STONEYDSP_BIQUADS_BINARY_DIR}/StoneyDSPBiquadsConfigVersion.cmake"
+    VERSION ${STONEYDSP_BIQUADS_VERSION}
+    COMPATIBILITY ExactVersion
+)
+
+set(STONEYDSP_BIQUADS_INSTALL_DESTINATION "lib/cmake/StoneyDSP-Biquads-v${STONEYDSP_BIQUADS_VERSION}" CACHE STRING "The location, relative to the install prefix, where the StoneyDSP Biquads config file will be installed")
+
+configure_package_config_file(
+    "${STONEYDSP_BIQUADS_SOURCE_DIR}/share/cmake/Modules/StoneyDSPBiquadsConfig.cmake.in"
+    "${StoneyDSP_BINARY_DIR}/StoneyDSPBiquadsConfig.cmake"
+    INSTALL_DESTINATION "${STONEYDSP_BIQUADS_INSTALL_DESTINATION}"
+)
+
+install(FILES
+    "${STONEYDSP_BIQUADS_BINARY_DIR}/StoneyDSPBiquadsConfigVersion.cmake"
+    "${STONEYDSP_BIQUADS_BINARY_DIR}/StoneyDSPBiquadsConfig.cmake"
+    # "${STONEYDSP_CMAKE_UTILS_DIR}/CMakeRC.cmake"
+    # "${STONEYDSP_CMAKE_UTILS_DIR}/FindCMakeRC.cmake"
+    # "${STONEYDSP_CMAKE_UTILS_DIR}/Findfmt.cmake"
+    # "${STONEYDSP_CMAKE_UTILS_DIR}/GetGitRef.cmake"
+    # "${STONEYDSP_CMAKE_UTILS_DIR}/JoinPaths.cmake"
+    # "${STONEYDSP_CMAKE_UTILS_DIR}/StoneyDSPCPackIgnoreList.cmake"
+    # "${STONEYDSP_CMAKE_UTILS_DIR}/StoneyDSPModuleSupport.cmake"
+    # "${STONEYDSP_CMAKE_UTILS_DIR}/WriteVersionFile.cmake"
+    # "${STONEYDSP_CMAKE_UTILS_DIR}/WriteVersionHeader.cmake"
+    DESTINATION "${STONEYDSP_BIQUADS_INSTALL_DESTINATION}"
+)
+
+# offer a basic/messy CPack
+set(STONEYDSP_BIQUADS_CPACK_GENERATORS "")
+list(APPEND STONEYDSP_BIQUADS_CPACK_GENERATORS
+    "ZIP"
+)
+if(UNIX)
+    list(APPEND STONEYDSP_BIQUADS_CPACK_GENERATORS
+        "TAR"
+    )
+endif()
+if(WIN32)
+    list(APPEND STONEYDSP_BIQUADS_CPACK_GENERATORS
+        "NSIS"
+    )
+endif()
+include(StoneyDSPBiquadsCPackIgnoreList)
+# set(CPACK_PACKAGE_CHECKSUM "${PROJECT_VERSION_TWEAK}") # git rev-parse is a good idea for this...
+set(CPACK_PACKAGE_VENDOR "StoneyDSP")
+set(CPACK_PACKAGE_NAME              "StoneyDSP-Biquads-v${STONEYDSP_BIQUADS_VERSION_MAJOR}.${STONEYDSP_BIQUADS_VERSION_MINOR}.${STONEYDSP_BIQUADS_VERSION_PATCH}-${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR}-JUCE-v${JUCE_VERSION}")
+set(CPACK_PACKAGE_FILE_NAME         "StoneyDSP-Biquads-v${STONEYDSP_BIQUADS_VERSION_MAJOR}.${STONEYDSP_BIQUADS_VERSION_MINOR}.${STONEYDSP_BIQUADS_VERSION_PATCH}-${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR}-JUCE-v${JUCE_VERSION}") # Multi-platform CMake API distribution
+set(CPACK_SOURCE_PACKAGE_FILE_NAME  "StoneyDSP-Biquads-v${STONEYDSP_BIQUADS_VERSION_MAJOR}.${STONEYDSP_BIQUADS_VERSION_MINOR}.${STONEYDSP_BIQUADS_VERSION_PATCH}-Source") # No system spec as this is un-compiled source file distribution (i.e., the Javascript API)
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "${STONEYDSP_BIQUADS_DESCRIPTION}")
+set(CPACK_PACKAGE_VERSION_MAJOR "${STONEYDSP_BIQUADS_VERSION_MAJOR}")
+set(CPACK_PACKAGE_VERSION_MINOR "${STONEYDSP_BIQUADS_VERSION_MINOR}")
+set(CPACK_PACKAGE_VERSION_PATCH "${STONEYDSP_BIQUADS_VERSION_PATCH}")
+set(CPACK_PACKAGE_VERSION_TWEAK "${STONEYDSP_BIQUADS_VERSION_TWEAK}")
+set(CPACK_RESOURCE_FILE_LICENSE "${STONEYDSP_BIQUADS_SOURCE_DIR}/LICENSE")
+set(CPACK_RESOURCE_FILE_README  "${STONEYDSP_BIQUADS_SOURCE_DIR}/README.md")
+set(CPACK_INCLUDE_TOPLEVEL_DIRECTORY ON)
+set(CPACK_COMPONENT_INCLUDE_TOPLEVEL_DIRECTORY ON)
+set(CPACK_SOURCE_GENERATOR "TGZ;ZIP") # Check out CPack's 'NSIS' installer for Win32, and the others!
+set(CPACK_SOURCE_IGNORE_FILES ${STONEYDSP_BIQUADS_CPACK_IGNORE_LIST})
+include(CPack)
+
+#[=============================================================================[
+
+]=============================================================================]#
+
+message (STATUS "Configuring StoneyDSP Biquads v${STONEYDSP_BIQUADS_VERSION} - done.")
