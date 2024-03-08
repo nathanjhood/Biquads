@@ -89,9 +89,9 @@ list (APPEND STONEYDSP_BIQUADS_GUI_UNITS
 
 set (STONEYDSP_BIQUADS_DSP_UNITS "")
 list (APPEND STONEYDSP_BIQUADS_DSP_UNITS
-    "StoneyDSP/Biquads/Modules/Biquads"
-    "StoneyDSP/Biquads/Modules/Coefficient"
-    "StoneyDSP/Biquads/Modules/SecondOrderBiquads"
+    "StoneyDSP/Biquads/DSP/Biquads"
+    #"StoneyDSP/Biquads/DSP/Coefficient"
+    #"StoneyDSP/Biquads/DSP/SecondOrderBiquads"
 )
 
 set (STONEYDSP_BIQUADS_APP_UNITS "")
@@ -99,7 +99,7 @@ list (APPEND STONEYDSP_BIQUADS_APP_UNITS
     "StoneyDSP/Biquads/PluginEditor"
     #"StoneyDSP/Biquads/PluginParameters"
     "StoneyDSP/Biquads/PluginProcessor"
-    #"StoneyDSP/Biquads/PluginWrapper"
+    #"StoneyDSP/Biquads/PluginProcessWrapper"
 )
 
 set (STONEYDSP_BIQUADS_UNITS "")
@@ -147,6 +147,7 @@ target_compile_definitions (Biquads
         JUCE_WEB_BROWSER=0
         JUCE_USE_CURL=0
         JUCE_VST3_CAN_REPLACE_VST2=0
+        DONT_SET_USING_JUCE_NAMESPACE=1
 )
 
 target_link_libraries (Biquads

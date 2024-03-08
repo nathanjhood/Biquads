@@ -134,7 +134,7 @@
 	},
 
   "C_Cpp.files.exclude": {
-		"**/.bak/**": true,
+		// "**/.bak": true,
 		"**/.bash_history": true,
 		"**/.bash_logout": true,
 		"**/.bash_profile": true,

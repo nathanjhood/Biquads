@@ -11,6 +11,10 @@
 
 #pragma once
 
+#define STONEYDSP_BIQUADS_PLUGINEDITOR_HPP
+
+#include <JuceHeader.h>
+
 #include "PluginProcessor.hpp"
 // #include "Components/AutoComponent.hpp"
 

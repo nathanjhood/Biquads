@@ -24,8 +24,12 @@ BiquadsAudioProcessor::BiquadsAudioProcessor()
 )
 , undoManager()
 , apvts(*this, &undoManager, "Parameters", createParameterLayout())
+, spec ()
+// , processorFloat (*this)
+// , processorDouble (*this)
 , bypassState (dynamic_cast<juce::AudioParameterBool*>(apvts.getParameter("bypassID")))
 {
+    jassert(bypassState != nullptr);
 }
 
 BiquadsAudioProcessor::~BiquadsAudioProcessor()
@@ -124,6 +128,9 @@ void BiquadsAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBloc
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
     juce::ignoreUnused (sampleRate, samplesPerBlock);
+
+    // processorFloat.prepare( getSpec() );
+    // processorDouble.prepare( getSpec() );
 }
 
 void BiquadsAudioProcessor::releaseResources()
@@ -156,11 +163,12 @@ bool BiquadsAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) 
   #endif
 }
 
-void BiquadsAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
-                                              juce::MidiBuffer& midiMessages)
+void BiquadsAudioProcessor::processBlock (
+    juce::AudioBuffer<float>& buffer,
+    juce::MidiBuffer& midiMessages
+)
 {
-    juce::ignoreUnused (midiMessages);
-
+    juce::ignoreUnused(midiMessages);
     juce::ScopedNoDenormals noDenormals;
     auto totalNumInputChannels  = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
@@ -186,6 +194,75 @@ void BiquadsAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
         juce::ignoreUnused (channelData);
         // ..do something to the data...
     }
+
+    // switch(bypassState->get())
+    // {
+    //     case false:
+
+    //         processorFloat.process(buffer, midiMessages);
+
+    //     default:
+
+    //         processBlockBypassed(buffer, midiMessages);
+    // }
+}
+
+void BiquadsAudioProcessor::processBlock (
+    juce::AudioBuffer<double>& buffer,
+    juce::MidiBuffer& midiMessages
+)
+{
+    juce::ignoreUnused(midiMessages);
+    juce::ScopedNoDenormals noDenormals;
+    auto totalNumInputChannels  = getTotalNumInputChannels();
+    auto totalNumOutputChannels = getTotalNumOutputChannels();
+
+    for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
+        buffer.clear (i, 0, buffer.getNumSamples());
+
+    for (int channel = 0; channel < totalNumInputChannels; ++channel)
+    {
+        auto* channelData = buffer.getWritePointer (channel);
+        juce::ignoreUnused (channelData);
+        // ..do something to the data...
+    }
+
+    // switch(bypassState->get())
+    // {
+    //     case false:
+
+    //         processorDouble.process(buffer, midiMessages);
+
+    //     default:
+
+    //         processBlockBypassed(buffer, midiMessages);
+    // }
+}
+
+void BiquadsAudioProcessor::processBlockBypassed(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
+{
+    midiMessages.clear();
+
+    juce::dsp::AudioBlock<float> block(buffer);
+    juce::dsp::ProcessContextReplacing context(block);
+
+    const auto& inputBlock = context.getInputBlock();
+    auto& outputBlock = context.getOutputBlock();
+
+    outputBlock.copyFrom(inputBlock);
+}
+
+void BiquadsAudioProcessor::processBlockBypassed(juce::AudioBuffer<double>& buffer, juce::MidiBuffer& midiMessages)
+{
+    midiMessages.clear();
+
+    juce::dsp::AudioBlock<double> block(buffer);
+    juce::dsp::ProcessContextReplacing context(block);
+
+    const auto& inputBlock = context.getInputBlock();
+    auto& outputBlock = context.getOutputBlock();
+
+    outputBlock.copyFrom(inputBlock);
 }
 
 //==============================================================================

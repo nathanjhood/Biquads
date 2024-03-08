@@ -12,12 +12,12 @@
 
 #pragma once
 
-// #include <juce_audio_processors/juce_audio_processors.h>
+#define STONEYDSP_BIQUADS_PLUGINPROCESSOR_HPP
 
 #include <JuceHeader.h>
 
 // #include "PluginParameters.h"
-// #include "PluginWrapper.h"
+// #include "PluginProcessWrapper.hpp"
 
 //==============================================================================
 class BiquadsAudioProcessor final : public juce::AudioProcessor
@@ -38,8 +38,13 @@ public:
 
     bool isBusesLayoutSupported (const BusesLayout& layouts) const override;
 
-    void processBlock (juce::AudioBuffer<float>&, juce::MidiBuffer&) override;
-    using AudioProcessor::processBlock;
+        //==========================================================================
+    void processBlock(juce::AudioBuffer<float>&, juce::MidiBuffer&) override;
+    void processBlock(juce::AudioBuffer<double>&, juce::MidiBuffer&) override;
+    void processBlockBypassed(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages) override;
+    void processBlockBypassed(juce::AudioBuffer<double>& buffer, juce::MidiBuffer& midiMessages) override;
+
+    // (TODO: what is this this about?) using AudioProcessor::processBlock;
 
     //==============================================================================
     juce::AudioProcessorEditor* createEditor() override;
@@ -69,32 +74,27 @@ public:
     //==========================================================================
     /** Undo Manager. */
     juce::UndoManager undoManager;
-    /**
-     * @brief Get a reference to the UndoManager object.
-     *
-     * @return juce::UndoManager&
-     */
     juce::UndoManager& getUndoManager() { return undoManager; };
 
     //==========================================================================
     /** Audio processor value tree. */
     juce::AudioProcessorValueTreeState apvts;
-    /**
-     * @brief Get a reference to the AudioProcessorValueTreeState object.
-     *
-     * @return juce::AudioProcessorValueTreeState&
-     */
     juce::AudioProcessorValueTreeState& getAPVTS() { return apvts; };
-    /**
-     * @brief Create a juce::AudioProcessorValueTreeState::ParameterLayout object.
-     *
-     * @return juce::AudioProcessorValueTreeState::ParameterLayout
-     */
     static juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
 
-    juce::AudioParameterBool* bypassState { nullptr };
+    //==========================================================================
+    /** Audio processor specs. */
+    juce::dsp::ProcessSpec spec;
+    juce::dsp::ProcessSpec& getSpec() { return spec; };
 
 private:
+    //==========================================================================
+    /** Audio processor members. */
+    // ProcessWrapper<float> processorFloat;
+    // ProcessWrapper<double> processorDouble;
+    juce::AudioParameterBool* bypassState { nullptr };
+    // Parameters parameters;
+
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BiquadsAudioProcessor)
 };
