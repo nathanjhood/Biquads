@@ -1,0 +1,185 @@
+name: ubuntu-latest
+
+on:
+  workflow_dispatch: # lets you run a build from the UI
+  push:
+
+# When pushing new commits, cancel any running builds on that branch
+concurrency:
+  group: ubuntu-latest-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
+  CMAKE_CONFIGURATION_TYPES: Debug;Release;RelWithDebInfo;MinSizeRel
+  BUILD_TYPE: Release
+  BUILD_DIR: Builds
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  DISPLAY: :0 # linux pluginval needs this
+  CMAKE_BUILD_PARALLEL_LEVEL: 3 # Use up to 3 cpus to build juceaide, etc
+  VCPKG_MAX_CONCURRENCY: 3
+  SCCACHE_GHA_ENABLED: "true"
+  STONEYDSP_BIQUADS_CURRENT_VERSION: 0.0.1
+  STONEYDSP_CURRENT_JUCE_VERSION: 7.0.9
+
+jobs:
+  ubuntu:
+    # The CMake configure and build commands are platform agnostic and should work equally well on Windows or Mac.
+    # You can convert this to a matrix build if you need cross-platform coverage.
+    # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
+    runs-on: ubuntu-latest
+
+    steps:
+    
+      # This also starts up our "fake" display Xvfb, needed for pluginval
+    - name: Install JUCE's Linux Deps
+      if: runner.os == 'Linux'
+      # Thanks to McMartin & co https://forum.juce.com/t/list-of-juce-dependencies-under-linux/15121/44
+      run: |
+        sudo apt-get update && sudo apt install libasound2-dev libx11-dev libxinerama-dev libxext-dev libfreetype6-dev libwebkit2gtk-4.0-dev libglu1-mesa-dev xvfb ninja-build ccache
+        # downgrade gcc to workaround 22.04 and C++20 issue 
+        # see: https://github.com/actions/runner-images/issues/8659
+        sudo apt-get install -y --allow-downgrades libc6=2.35-0ubuntu3.6 libc6-dev=2.35-0ubuntu3.6 libstdc++6=12.3.0-1ubuntu1~22.04 libgcc-s1=12.3.0-1ubuntu1~22.04
+        sudo /usr/bin/Xvfb $DISPLAY &
+        
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        submodules: true # Get JUCE populated (if used)
+
+    - name: Cache the build
+      uses: mozilla-actions/sccache-action@v0.0.4
+      
+    - name: vcpkg install
+      # You may pin to the exact commit or the version.
+      # uses: johnwason/vcpkg-action@7c4b562bb35ef5a01d9d728acc90100b107dee4d
+      uses: johnwason/vcpkg-action@v6
+      with:
+        # List of packages to build, separated by spaces. Cannot be used with manifest-dir
+        # pkgs: # optional
+        # vcpkg triplet to use
+        triplet: x64-linux
+        # Extra vcpkg command line args (optional)
+        # extra-args: --allow-unsupported # optional
+        # Additional cache key component (optional)
+        cache-key: ubuntu-22.04 # optional
+        # Disable cache (useful for release builds)
+        # disable-cache: # optional, default is false
+        # vcpkg revision to checkout.
+        revision: master # optional, default is 
+        # GitHub token to authenticate API requests. Recommended to use  github.token 
+        token: ${{ github.token }}
+        # Directory containing vcpkg.json manifest file. Cannot be used with pkgs.
+        manifest-dir: ${{ github.workspace }} # optional, default is 
+        # Use vcpkg built-in GitHub binary caching. If not specified, will use the dry-run based file cache.
+        github-binarycache: true
+        # Fetch depth for vcpkg checkout
+        # fetch-depth: # optional, default is 1
+          
+    - name: Use Node.js 16.18.0
+      uses: actions/setup-node@v4
+      with:
+        node-version: 16.18.0
+
+    - name: npm install
+      run: npm install
+
+    - name: Configure
+      working-directory: ${{github.workspace}}
+      shell: bash
+      # Configure CMake in a 'bin' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
+      # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
+      run: >-
+        cmake -S${{github.workspace}}
+        -B${{github.workspace}}/${{ env.BUILD_DIR }}
+        -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
+        -DCMAKE_C_COMPILER_LAUNCHER=sccache
+        -DCMAKE_CXX_COMPILER_LAUNCHER=sccache
+        -DSTONEYDSP_BIQUADS_BUILD_TESTS:BOOL=TRUE
+        -DCMAKE_INSTALL_PREFIX=${{github.workspace}}/install
+        -DVCPKG_HOST_TRIPLET:STRING=x64-linux
+        -DVCPKG_TARGET_TRIPLET:STRING=x64-linux
+        -DVCPKG_MANIFEST_MODE:BOOL=FALSE
+        -DCMAKE_TOOLCHAIN_FILE:FILEPATH="${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake"
+        -G "Ninja"
+        --compile-no-warning-as-error
+        --no-warn-unused-cli
+
+    - name: Build
+      # Build your program with the given configuration
+      run: >-
+        cmake
+        --build ${{github.workspace}}/${{ env.BUILD_DIR }}
+        --config ${{env.BUILD_TYPE}}
+        --parallel 4
+        --target all
+
+    - name: Test
+      working-directory: ${{ github.workspace }}
+      shell: bash
+      # Execute tests defined by the CMake configuration.
+      # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
+      run: >-
+        ctest
+        --test-dir ${{ github.workspace }}/${{ env.BUILD_DIR }}
+        -j4
+        --rerun-failed
+        --output-on-failure
+        --verbose 
+
+    - name: Install
+      shell: bash
+      working-directory: ${{ github.workspace }}
+      # Install StoneyDSP Biquads with the given configuration
+      run: cmake --install ${{ github.workspace }}/${{ env.BUILD_DIR }}
+
+    - name: Zip Source 
+      shell: bash
+      working-directory: ${{ github.workspace }}
+      # Pack the StoneyDSP Biquads source code with the given configuration
+      run: cpack --config ${{ github.workspace }}/${{ env.BUILD_DIR }}/CPackSourceConfig.cmake -B install -G ZIP
+
+    - name: Tar Source
+      shell: bash
+      working-directory: ${{ github.workspace }}
+      # Pack the StoneyDSP Biquads source code with the given configuration
+      run: cpack --config ${{ github.workspace }}/${{ env.BUILD_DIR }}/CPackSourceConfig.cmake -B install -G TGZ
+
+    - name: Zip Build
+      shell: bash
+      working-directory: ${{github.workspace}}
+      # Pack the StoneyDSP Biquads source code with the given configuration
+      run: cpack --config ${{ github.workspace }}/${{ env.BUILD_DIR }}/CPackConfig.cmake -B install -G ZIP
+
+    - name: Tar Build
+      shell: bash
+      working-directory: ${{github.workspace}}
+      # Pack the StoneyDSP Biquads source code with the given configuration
+      run: cpack --config ${{ github.workspace }}/${{ env.BUILD_DIR }}/CPackConfig.cmake -B install -G TGZ
+
+    - name: Upload Zip Source
+      uses: actions/upload-artifact@v4
+      with:
+        name: StoneyDSP-v${{ env.STONEYDSP_BIQUADS_CURRENT_VERSION }}-Source.zip
+        path: '${{ github.workspace }}/install/StoneyDSP-v${{ env.STONEYDSP_BIQUADS_CURRENT_VERSION }}-Source.zip'
+        
+    - name: Upload Tar Source
+      uses: actions/upload-artifact@v4
+      with:
+        name: StoneyDSP-v${{ env.STONEYDSP_BIQUADS_CURRENT_VERSION }}-Source.tar.gz
+        path: '${{ github.workspace }}/install/StoneyDSP-v${{ env.STONEYDSP_BIQUADS_CURRENT_VERSION }}-Source.tar.gz'
+
+    - name: Upload Zip Build
+      uses: actions/upload-artifact@v4
+      with:
+        name: StoneyDSP-v${{ env.STONEYDSP_BIQUADS_CURRENT_VERSION }}-Linux-x86_64-JUCE-v${{ env.STONEYDSP_CURRENT_JUCE_VERSION }}.zip
+        path: '${{ github.workspace }}/install/StoneyDSP-v${{ env.STONEYDSP_BIQUADS_CURRENT_VERSION }}-Linux-x86_64-JUCE-v${{ env.STONEYDSP_CURRENT_JUCE_VERSION }}.zip'
+
+    - name: Upload Tar Build
+      uses: actions/upload-artifact@v4
+      with:
+        name: StoneyDSP-v${{ env.STONEYDSP_BIQUADS_CURRENT_VERSION }}-Linux-x86_64-JUCE-v${{ env.STONEYDSP_CURRENT_JUCE_VERSION }}.tar.gz
+        path: '${{ github.workspace }}/install/StoneyDSP-v${{ env.STONEYDSP_BIQUADS_CURRENT_VERSION }}-Linux-x86_64-JUCE-v${{ env.STONEYDSP_CURRENT_JUCE_VERSION }}.tar.gz'
+
+    - name: Get Artifacts
+      uses: actions/download-artifact@v4
