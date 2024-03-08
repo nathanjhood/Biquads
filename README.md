@@ -4,14 +4,14 @@ Simple two-pole equalizer with variable oversampling.
 
 Current: v1.1.0b
 
-![Biquads-1-1-0b](https://raw.githubusercontent.com/StoneyDSP/Biquads/master/Res/biquad-1-1-0.png)
+![Biquads-1-1-0b](https://stoneydsp.com/resources/projects/biquads/biquad-1-1-0.png)
 
 ## Biquads
 Multi-mode Biquad filter for audio analysis purposes using variable BiLinear transforms, processing precision, and oversampling to achieve high-quality results.
 
 (Shown below; a resonant 2-pole Low Shelf filter with high oversampling, performed on a harmonic-rich 20Hz band-limited Impulse Response in Reaper)
 
-![Biquads](https://raw.githubusercontent.com/StoneyDSP/Biquads/master/Res/Biquad-AutoGUI.png)
+![Biquads](https://stoneydsp.com/resources/projects/biquads/Biquad-AutoGUI.png)
 
 + Implementing various 6dB- and 12dB- filter types (such as low pass, high pass, band pass, shelves, plus many more) using variable BiLinear transforms, switchable processing precision, and oversampling to achieve high-quality results (much more to come)!
 + This filter is subject to amplitude and phase warping of the frequency spectrum approaching the Nyquist frequency when oversampling is not used.
@@ -328,7 +328,7 @@ For now, let's begin at the beginning.
 }
 ```
 
-![LP1](https://raw.githubusercontent.com/StoneyDSP/Biquads/master/Res/LP1.png)
+![LP1](https://stoneydsp.com/resources/projects/biquads/LP1.png)
 
 In the above pseudo-code, we are shown a formula for manipulating our coefficients to provide us a simple 1st-order (i.e., 1 pole, 1 zero) Low Pass Filter. The writer shall assume the reader is familiar with this filter concept in usage terms, and is more interested in the DSP.
 
@@ -351,7 +351,7 @@ To demonstrate that we have infact retained (and exponentially increased) our "d
 }
 ```
 
-![HP1](https://raw.githubusercontent.com/StoneyDSP/Biquads/master/Res/HP1.png)
+![HP1](https://stoneydsp.com/resources/projects/biquads/HP1.png)
 
 We can notice, even at a glance, that these two formulas are effectively the inverse of one another - as are the filter responses! Our Low Pass is transformed into a High Pass by this numerical inversion.
 
@@ -431,7 +431,7 @@ Compare the below with the 1st-order counterpart:
 }
 ```
 
-![LP2res](https://raw.githubusercontent.com/StoneyDSP/Biquads/master/Res/LP2res.png)
+![LP2res](https://stoneydsp.com/resources/projects/biquads/LP2res.png)
 
 In our above example, we have added two further "degrees" - coefficients - with which to manipulate our signal; we have also added an additional parameter "⍺" ("alpha"), which in this forumula provides us with the typical "resonance" control that we ususally see on 2nd-order (or higher) filters. This "resonance" parameter is directly (and solely) responsible for the "bump" seen around the centre frequency of the filter, and can be increased or decreased as desired. Higher resonance can be reminiscent of a wah-wah pedal or synthesizer effect, while lower resonance is more like a trumpet-mute.
 
