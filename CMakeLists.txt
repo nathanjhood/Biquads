@@ -36,7 +36,7 @@ project (STONEYDSP_BIQUADS VERSION 1.1.0
     LANGUAGES C;CXX
 )
 
-message (STATUS "Configuring StoneyDSP Biquads v${STONEYDSP_BIQUADS}...")
+message (STATUS "Configuring StoneyDSP Biquads v${STONEYDSP_BIQUADS_VERSION}...")
 
 set_property(GLOBAL PROPERTY USE_FOLDERS YES)
 
@@ -97,15 +97,15 @@ list (APPEND STONEYDSP_BIQUADS_DSP_UNITS
 set (STONEYDSP_BIQUADS_APP_UNITS "")
 list (APPEND STONEYDSP_BIQUADS_APP_UNITS
     "StoneyDSP/Biquads/PluginEditor"
-    "StoneyDSP/Biquads/PluginParameters"
+    #"StoneyDSP/Biquads/PluginParameters"
     "StoneyDSP/Biquads/PluginProcessor"
-    "StoneyDSP/Biquads/PluginWrapper"
+    #"StoneyDSP/Biquads/PluginWrapper"
 )
 
 set (STONEYDSP_BIQUADS_UNITS "")
 list (APPEND STONEYDSP_BIQUADS_UNITS
-    ${STONEYDSP_BIQUADS_GUI_UNITS}
-    ${STONEYDSP_BIQUADS_DSP_UNITS}
+    #${STONEYDSP_BIQUADS_GUI_UNITS}
+    #${STONEYDSP_BIQUADS_DSP_UNITS}
     ${STONEYDSP_BIQUADS_APP_UNITS}
 )
 
@@ -118,8 +118,8 @@ foreach (STONEYDSP_BIQUADS_UNIT IN LISTS STONEYDSP_BIQUADS_UNITS)
     message (STATUS "Biquads: ${_stoneydsp_biquads_unit_transformed_upper} found at ${_stoneydsp_biquads_unit_transformed}")
 
     configure_file (
-        "include/${STONEYDSP_BIQUADS_UNIT}.h" # SRC_DIR
-        "include/${STONEYDSP_BIQUADS_UNIT}.h" # BIN_DIR
+        "include/${STONEYDSP_BIQUADS_UNIT}.hpp" # SRC_DIR
+        "include/${STONEYDSP_BIQUADS_UNIT}.hpp" # BIN_DIR
     )
     target_sources (Biquads
         PUBLIC
@@ -129,8 +129,8 @@ foreach (STONEYDSP_BIQUADS_UNIT IN LISTS STONEYDSP_BIQUADS_UNITS)
                 $<BUILD_INTERFACE:${STONEYDSP_BIQUADS_BINARY_DIR}/include>
                 $<INSTALL_INTERFACE:include>
             FILES
-                $<BUILD_INTERFACE:${STONEYDSP_BIQUADS_BINARY_DIR}/include/${STONEYDSP_BIQUADS_UNIT}.h>
-                $<INSTALL_INTERFACE:include/${STONEYDSP_BIQUADS_UNIT}.h>
+                $<BUILD_INTERFACE:${STONEYDSP_BIQUADS_BINARY_DIR}/include/${STONEYDSP_BIQUADS_UNIT}.hpp>
+                $<INSTALL_INTERFACE:include/${STONEYDSP_BIQUADS_UNIT}.hpp>
     )
     target_sources (Biquads
         PRIVATE

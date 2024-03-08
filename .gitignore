@@ -1,5 +1,6 @@
 !package.json
 node_modules
+!/.vscode/c_cpp_properties.json
 
 # Windows Temp Cache Files
 [Tt]humbs.db

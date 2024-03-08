@@ -1,0 +1,109 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "cmake",
+      "label": "CMake: build",
+      "command": "build",
+      "problemMatcher": [
+        "$gcc",
+        "$msCompile"
+      ],
+      "detail": "CMake build task",
+      "group": "build",
+      "icon": {
+        "color": "terminal.ansiGreen"
+      }
+    },
+    {
+      "type": "cmake",
+      "label": "CMake: configure",
+      "command": "configure",
+      "problemMatcher": [
+        "$gcc",
+        "$msCompile"
+      ],
+      "detail": "CMake configure task",
+      "group": "none",
+      "icon": {
+        "color": "terminal.ansiGreen"
+      }
+    },
+    {
+      "type": "cmake",
+      "label": "CMake: install",
+      "command": "install",
+      "problemMatcher": [
+        "$gcc",
+        "$msCompile"
+      ],
+      "detail": "CMake install task",
+      "group": "none",
+      "icon": {
+        "color": "terminal.ansiGreen"
+      }
+    },
+    {
+      "type": "cmake",
+      "label": "CMake: test",
+      "command": "test",
+      "problemMatcher": [
+        "$gcc",
+        "$msCompile"
+      ],
+      "detail": "CMake test task",
+      "group": "build",
+      "icon": {
+        "color": "terminal.ansiGreen"
+      }
+    },
+    {
+      "type": "cmake",
+      "label": "CMake: clean",
+      "command": "clean",
+      "problemMatcher": [
+        "$gcc",
+        "$msCompile"
+      ],
+      "detail": "CMake clean task",
+      "group": "none",
+      "icon": {
+        "color": "terminal.ansiGreen"
+      }
+    },
+    {
+      "type": "cmake",
+      "label": "CMake: clean rebuild",
+      "command": "cleanRebuild",
+      "problemMatcher": [
+        "$gcc",
+        "$msCompile"
+      ],
+      "detail": "CMake clean rebuild task",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "icon": {
+        "color": "terminal.ansiGreen"
+      }
+    },
+    {
+      "type": "cmake",
+      "label": "CMake: test",
+      "command": "test",
+      "problemMatcher": [
+        "$gcc",
+        "$msCompile"
+      ],
+      "detail": "CMake test task",
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
+      "icon": {
+        "color": "terminal.ansiGreen"
+      }
+    }
+  ]
+}
