@@ -265,6 +265,12 @@
 		"xlocmon": "cpp",
 		"xloctime": "cpp",
 		"xtree": "cpp",
-		"*.mm": "cpp"
+		"*.mm": "cpp",
+		"bitset": "cpp",
+		"memory_resource": "cpp",
+		"string_view": "cpp",
+		"numbers": "cpp",
+		"semaphore": "cpp",
+		"cinttypes": "cpp"
 	}
 }

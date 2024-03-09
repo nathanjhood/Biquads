@@ -50,6 +50,16 @@ endif ()
 
 #find_package (StoneyDSP CONFIG REQUIRED)
 
+#[=============================================================================[
+    target: StoneyDSP::stoneydsp_audio
+]=============================================================================]#
+
+add_subdirectory(modules)
+
+#[=============================================================================[
+    target: StoneyDSP::Biquads
+]=============================================================================]#
+
 juce_add_plugin (Biquads
     # VERSION ...                               # Set this if the plugin version is different to the project version
     # ICON_BIG ...                              # ICON_* arguments specify a path to an image file to use as an icon for the Standalone
@@ -153,7 +163,7 @@ target_compile_definitions (Biquads
 target_link_libraries (Biquads
     PRIVATE
         # StoneyDSP::stoneydsp_core
-        # StoneyDSP::stoneydsp_audio
+        StoneyDSP::stoneydsp_audio
         # StoneyDSP::stoneydsp_graphics
 
         juce::juce_audio_basics

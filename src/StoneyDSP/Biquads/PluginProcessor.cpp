@@ -25,11 +25,15 @@ BiquadsAudioProcessor::BiquadsAudioProcessor()
 , undoManager()
 , apvts(*this, &undoManager, "Parameters", createParameterLayout())
 , spec ()
+, bypassState (dynamic_cast<juce::AudioParameterBool*> (apvts.getParameter("bypassID")))
+, outputPtr   (dynamic_cast<juce::AudioParameterFloat*>(apvts.getParameter("outputID")))
+, coeffFlt(0.5f)
+, coeffDbl(0.5)
 // , processorFloat (*this)
 // , processorDouble (*this)
-, bypassState (dynamic_cast<juce::AudioParameterBool*>(apvts.getParameter("bypassID")))
 {
     jassert(bypassState != nullptr);
+    jassert(outputPtr != nullptr);
 }
 
 BiquadsAudioProcessor::~BiquadsAudioProcessor()
@@ -188,18 +192,27 @@ void BiquadsAudioProcessor::processBlock (
     // the samples and the outer loop is handling the channels.
     // Alternatively, you can process the samples with the channels
     // interleaved by keeping the same state.
-    for (int channel = 0; channel < totalNumInputChannels; ++channel)
-    {
-        auto* channelData = buffer.getWritePointer (channel);
-        juce::ignoreUnused (channelData);
-        // ..do something to the data...
-    }
+    // for (int channel = 0; channel < totalNumInputChannels; ++channel)
+    // {
+    //     auto* channelData = buffer.getWritePointer (channel);
+    //     juce::ignoreUnused (channelData);
+    //     // ..do something to the data...
+    // }
+
+    coeffFlt = outputPtr->get();
+    buffer.applyGain (coeffFlt.get());
 
     // switch(bypassState->get())
     // {
     //     case false:
 
-    //         processorFloat.process(buffer, midiMessages);
+    //         // processorDouble.process(buffer, midiMessages);
+    //         coeffFlt = outputPtr->get();
+    //         buffer.applyGain (coeffFlt.get());
+
+    //     case true:
+
+    //         processBlockBypassed(buffer, midiMessages);
 
     //     default:
 
@@ -220,18 +233,27 @@ void BiquadsAudioProcessor::processBlock (
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
-    for (int channel = 0; channel < totalNumInputChannels; ++channel)
-    {
-        auto* channelData = buffer.getWritePointer (channel);
-        juce::ignoreUnused (channelData);
-        // ..do something to the data...
-    }
+    // for (int channel = 0; channel < totalNumInputChannels; ++channel)
+    // {
+    //     auto* channelData = buffer.getWritePointer (channel);
+    //     juce::ignoreUnused (channelData);
+    //     // ..do something to the data...
+    // }
+
+    coeffDbl = outputPtr->get();
+    buffer.applyGain (coeffDbl.get());
 
     // switch(bypassState->get())
     // {
     //     case false:
 
-    //         processorDouble.process(buffer, midiMessages);
+    //         // processorDouble.process(buffer, midiMessages);
+    //         coeffDbl = outputPtr->get();
+    //         buffer.applyGain (coeffDbl.get());
+
+    //     case true:
+
+    //         processBlockBypassed(buffer, midiMessages);
 
     //     default:
 
@@ -280,7 +302,52 @@ juce::AudioProcessorValueTreeState::ParameterLayout BiquadsAudioProcessor::creat
 {
     juce::AudioProcessorValueTreeState::ParameterLayout parameterLayout;
 
+    // const auto dBMax = juce::Decibels::gainToDecibels(16.0f);
+    // const auto dBMin = juce::Decibels::gainToDecibels(0.0625f);
+    // const auto dBOut = juce::Decibels::gainToDecibels(0.5f, -120.0f); //  * 20.0f
+
+    const auto outputRangeDBMin = juce::Decibels::gainToDecibels(00.0f, -120.0f);
+    const auto outputRangeDBMax = juce::Decibels::gainToDecibels(16.0f, -120.0f);
+
+    // const auto freqRange = juce::NormalisableRange<float>(20.00f, 20000.00f, 0.001f, 00.198894f);
+    // const auto resRange = juce::NormalisableRange<float>(00.00f, 1.00f, 0.01f, 1.00f);
+    // const auto gainRange = juce::NormalisableRange<float>(dBMin, dBMax, 0.01f, 1.00f);
+    // const auto mixRange = juce::NormalisableRange<float>(00.00f, 100.00f, 0.01f, 1.00f);
+    const auto outputRange = juce::NormalisableRange<float>(outputRangeDBMin, outputRangeDBMax, 0.01f, 1.00f);
+
+    // const auto fString = juce::StringArray({ "LP2", "LP1", "HP2", "HP1" , "BP2", "BP2c", "LS2", "LS1c", "LS1", "HS2", "HS1c", "HS1", "PK2", "NX2", "AP2" });
+    // const auto tString = juce::StringArray({ "DFI", "DFII", "DFI t", "DFII t" });
+    // const auto osString = juce::StringArray({ "--", "2x", "4x", "8x", "16x" });
+
+    const auto decibels = juce::String{ ("dB") };
+    // const auto frequency = juce::String{ ("Hz") };
+    // const auto reso = juce::String{ ("q") };
+    // const auto percentage = juce::String{ ("%") };
+
+    auto genParam = juce::AudioProcessorParameter::genericParameter;
+    // auto inMeter = juce::AudioProcessorParameter::inputMeter;
+    auto outParam = juce::AudioProcessorParameter::outputGain;
+    // auto outMeter = juce::AudioProcessorParameter::outputMeter;
+
+    // auto mixAttributes = juce::AudioParameterFloatAttributes()
+    //     .withLabel(percentage)
+    //     .withCategory(genParam);
+
+    auto outputAttributes = juce::AudioParameterFloatAttributes()
+        .withLabel(decibels)
+        .withCategory(outParam);
+
+    // parameterLayout.add
+    //     //======================================================================
+    //     (std::make_unique<juce::AudioProcessorParameterGroup>("masterID", "0", "seperatorA",
+    //         //==================================================================
+    //         std::make_unique<juce::AudioParameterFloat>("outputID", "Output", outputRange, 00.00f, outputAttributes),
+    //         // std::make_unique<juce::AudioParameterFloat>("mixID", "Mix", mixRange, 100.00f, mixAttributes)
+    //         //==================================================================
+    //     ));
+
     parameterLayout.add(std::make_unique<juce::AudioParameterBool>("bypassID", "Bypass", false));
+    parameterLayout.add(std::make_unique<juce::AudioParameterFloat>("outputID", "Output", outputRange, 00.00f, outputAttributes));
 
     // Parameters::setParameterLayout(parameterLayout);
 

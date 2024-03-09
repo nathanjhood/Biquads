@@ -27,7 +27,7 @@ public:
     BiquadsAudioProcessor();
     ~BiquadsAudioProcessor() override;
 
-    //==========================================================================
+    //==============================================================================
     juce::AudioProcessorParameter* getBypassParameter() const override;
     bool isBypassed() const noexcept;
     void setBypassParameter(juce::AudioParameterBool* newBypass) noexcept;
@@ -71,29 +71,33 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
     void setCurrentProgramStateInformation(const void* data, int sizeInBytes) override;
 
-    //==========================================================================
+    //==============================================================================
     /** Undo Manager. */
     juce::UndoManager undoManager;
     juce::UndoManager& getUndoManager() { return undoManager; }
 
-    //==========================================================================
+    //==============================================================================
     /** Audio processor value tree. */
     juce::AudioProcessorValueTreeState apvts;
     juce::AudioProcessorValueTreeState& getAPVTS() { return apvts; }
     static juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
 
-    //==========================================================================
+    //==============================================================================
     /** Audio processor specs. */
     juce::dsp::ProcessSpec spec;
     juce::dsp::ProcessSpec& getSpec() { return spec; }
 
 private:
-    //==========================================================================
+    //==============================================================================
     /** Audio processor members. */
     // ProcessWrapper<float> processorFloat;
     // ProcessWrapper<double> processorDouble;
     juce::AudioParameterBool* bypassState { nullptr };
+    juce::AudioParameterFloat* outputPtr  { nullptr };
     // Parameters parameters;
+
+    StoneyDSP::Maths::Coefficient<float> coeffFlt;
+    StoneyDSP::Maths::Coefficient<double> coeffDbl;
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BiquadsAudioProcessor)
