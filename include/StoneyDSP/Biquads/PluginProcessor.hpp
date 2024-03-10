@@ -86,7 +86,7 @@ private:
     StoneyDSP::Biquads::AudioPluginAudioProcessWrapper<float> processorFlt;
     StoneyDSP::Biquads::AudioPluginAudioProcessWrapper<double> processorDbl;
     juce::AudioParameterBool* bypassState { nullptr };
-    // juce::AudioParameterFloat* outputPtr  { nullptr };
+    juce::AudioParameterFloat* outputPtr  { nullptr };
     // Parameters parameters;
 
     // StoneyDSP::Maths::Coefficient<float> coeffFlt;

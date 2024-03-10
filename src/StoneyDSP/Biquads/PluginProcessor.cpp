@@ -28,7 +28,7 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
 , undoManager()
 , apvts(*this, &undoManager, "Parameters", createParameterLayout())
 , spec ()
-// , outputPtr   (dynamic_cast<juce::AudioParameterFloat*>(apvts.getParameter("outputID")))
+, outputPtr   (dynamic_cast<juce::AudioParameterFloat*>(apvts.getParameter("outputID")))
 // , coeffFlt(0.5f)
 // , coeffDbl(0.5)
 , processorFlt (*this)
@@ -37,7 +37,7 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
 // , processingPrecision(singlePrecision)
 {
     jassert(bypassState != nullptr);
-    // jassert(outputPtr != nullptr);
+    jassert(outputPtr != nullptr);
 }
 
 AudioPluginAudioProcessor::~AudioPluginAudioProcessor()
@@ -210,12 +210,16 @@ bool AudioPluginAudioProcessor::isBusesLayoutSupported (const BusesLayout& layou
 
 void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
+    jassert (! isUsingDoublePrecision());
     // juce::ignoreUnused(midiMessages); // let them pass...
 
     juce::ScopedNoDenormals noDenormals;
 
     auto totalNumInputChannels  = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
+    auto numSamples = buffer.getNumSamples();
+
+    auto gainParamValue  = apvts.getParameter ("outputID")->getValue();
 
     // In case we have more outputs than inputs, this code clears any output
     // channels that didn't contain input data, (because these aren't
@@ -224,7 +228,7 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, 
     // when they first compile a plugin, but obviously you don't need to keep
     // this code if your algorithm always overwrites all the output channels.
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
-        buffer.clear (i, 0, buffer.getNumSamples());
+        buffer.clear (i, 0, numSamples);
 
     // This is the place where you'd normally do the guts of your plugin's
     // audio processing...
@@ -240,16 +244,25 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, 
     }
 
     processorFlt.process(buffer, midiMessages);
+
+    for (auto channel = 0; channel < totalNumOutputChannels; ++channel)
+    {
+        buffer.applyGain (channel, 0, numSamples, gainParamValue);
+    }
 }
 
 void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<double>& buffer, juce::MidiBuffer& midiMessages)
 {
+    jassert (isUsingDoublePrecision());
     // juce::ignoreUnused(midiMessages); // let them pass...
 
     juce::ScopedNoDenormals noDenormals;
 
     auto totalNumInputChannels  = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
+    auto numSamples = buffer.getNumSamples();
+
+    auto gainParamValue  = apvts.getParameter ("outputID")->getValue();
 
     // In case we have more outputs than inputs, this code clears any output
     // channels that didn't contain input data, (because these aren't
@@ -258,7 +271,7 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<double>& buffer,
     // when they first compile a plugin, but obviously you don't need to keep
     // this code if your algorithm always overwrites all the output channels.
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
-        buffer.clear (i, 0, buffer.getNumSamples());
+        buffer.clear (i, 0, numSamples);
 
     // This is the place where you'd normally do the guts of your plugin's
     // audio processing...
@@ -274,6 +287,12 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<double>& buffer,
     }
 
     processorDbl.process(buffer, midiMessages);
+
+    for (auto channel = 0; channel < totalNumOutputChannels; ++channel)
+    {
+        // buffer.applyGain (channel, 0, numSamples, gainParamValue);
+        buffer.applyGain (channel, 0, numSamples, (float) gainParamValue);
+    }
 }
 
 void AudioPluginAudioProcessor::processBlockBypassed(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
@@ -324,23 +343,23 @@ juce::AudioProcessorValueTreeState::ParameterLayout AudioPluginAudioProcessor::c
     // const auto tString = juce::StringArray({ "DFI", "DFII", "DFI t", "DFII t" });
     // const auto osString = juce::StringArray({ "--", "2x", "4x", "8x", "16x" });
 
-    // const auto decibels = juce::String{ ("dB") };
+    const auto decibels = juce::String{ ("dB") };
     // const auto frequency = juce::String{ ("Hz") };
     // const auto reso = juce::String{ ("q") };
     // const auto percentage = juce::String{ ("%") };
 
     // auto genParam = juce::AudioProcessorParameter::genericParameter;
     // auto inMeter = juce::AudioProcessorParameter::inputMeter;
-    // auto outParam = juce::AudioProcessorParameter::outputGain;
+    auto outParam = juce::AudioProcessorParameter::outputGain;
     // auto outMeter = juce::AudioProcessorParameter::outputMeter;
 
     // auto mixAttributes = juce::AudioParameterFloatAttributes()
     //     .withLabel(percentage)
     //     .withCategory(genParam);
 
-    // auto outputAttributes = juce::AudioParameterFloatAttributes()
-    //     .withLabel(decibels)
-    //     .withCategory(outParam);
+    auto outputAttributes = juce::AudioParameterFloatAttributes()
+        .withLabel(decibels)
+        .withCategory(outParam);
 
     // parameterLayout.add
     //     //======================================================================
@@ -351,8 +370,8 @@ juce::AudioProcessorValueTreeState::ParameterLayout AudioPluginAudioProcessor::c
     //         //==================================================================
     //     ));
 
-    parameterLayout.add(std::make_unique<juce::AudioParameterBool>("bypassID", "Bypass", false));
-    // parameterLayout.add(std::make_unique<juce::AudioParameterFloat>("outputID", "Output", outputRange, 00.00f, outputAttributes));
+    parameterLayout.add(std::make_unique<juce::AudioParameterBool> (juce::ParameterID{ "bypassID", 1}, "Bypass", false));
+    parameterLayout.add(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ "outputID", 1}, "Output", /** outputRange */ juce::NormalisableRange<float> (0.0f, 1.0f), 00.00f, outputAttributes));
 
     // Parameters::setParameterLayout(parameterLayout);
 
@@ -368,6 +387,10 @@ void AudioPluginAudioProcessor::getStateInformation (juce::MemoryBlock& destData
     auto state = apvts.copyState();
     std::unique_ptr<juce::XmlElement> xml(state.createXml());
     copyXmlToBinary(*xml, destData);
+
+    // // Store an xml representation of our state.
+    // if (auto xmlState = state.copyState().createXml())
+    //     copyXmlToBinary (*xmlState, destData);
 }
 
 void AudioPluginAudioProcessor::getCurrentProgramStateInformation(juce::MemoryBlock& destData)
@@ -386,6 +409,11 @@ void AudioPluginAudioProcessor::setStateInformation (const void* data, int sizeI
     if (xmlState.get() != nullptr)
         if (xmlState->hasTagName(apvts.state.getType()))
             apvts.replaceState(juce::ValueTree::fromXml(*xmlState));
+
+    // // Restore our plug-in's state from the xml representation stored in the above
+    // // method.
+    // if (auto xmlState = getXmlFromBinary (data, sizeInBytes))
+    //     state.replaceState (ValueTree::fromXml (*xmlState));
 }
 
 void AudioPluginAudioProcessor::setCurrentProgramStateInformation(const void* data, int sizeInBytes)
