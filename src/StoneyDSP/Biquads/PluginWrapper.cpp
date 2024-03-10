@@ -12,155 +12,79 @@
 #include "StoneyDSP/Biquads/PluginWrapper.hpp"
 #include "StoneyDSP/Biquads/PluginProcessor.hpp"
 
+namespace StoneyDSP {
+namespace Biquads {
+
 template <typename SampleType>
-ProcessWrapper<SampleType>::ProcessWrapper(BiquadsAudioProcessor& p)
-    :
-    audioProcessor (p),
-    // state (p.getAPVTS()),
-    // setup (p.getSpec()),
-    // mixer (),
-    // biquad (),
-    // output (),
-    // frequencyPtr (dynamic_cast <juce::AudioParameterFloat*> (p.getAPVTS().getParameter("frequencyID"))),
-    // resonancePtr (dynamic_cast <juce::AudioParameterFloat*> (p.getAPVTS().getParameter("resonanceID"))),
-    // gainPtr (dynamic_cast <juce::AudioParameterFloat*> (p.getAPVTS().getParameter("gainID"))),
-    // typePtr(dynamic_cast <juce::AudioParameterChoice*> (p.getAPVTS().getParameter("typeID"))),
-    // transformPtr (dynamic_cast <juce::AudioParameterChoice*> (p.getAPVTS().getParameter("transformID"))),
-    // osPtr (dynamic_cast <juce::AudioParameterChoice*> (p.getAPVTS().getParameter("osID"))),
-    // outputPtr (dynamic_cast <juce::AudioParameterFloat*> (p.getAPVTS().getParameter("outputID"))),
-    // mixPtr (dynamic_cast <juce::AudioParameterFloat*> (p.getAPVTS().getParameter("mixID")))
+AudioPluginAudioProcessWrapper<SampleType>::AudioPluginAudioProcessWrapper(AudioPluginAudioProcessor& p)
+: audioProcessor (p)
+, state (p.getAPVTS())
+, setup (p.getSpec())
+, mixer()
 {
-    // jassert(frequencyPtr != nullptr);
-    // jassert(resonancePtr != nullptr);
-    // jassert(gainPtr != nullptr);
-    // jassert(typePtr != nullptr);
-    // jassert(transformPtr != nullptr);
-    // jassert(osPtr != nullptr);
-    // jassert(outputPtr != nullptr);
-    // jassert(mixPtr != nullptr);
-
-    // auto osFilter = juce::dsp::Oversampling<SampleType>::filterHalfBandFIREquiripple;
-
-    // for (int i = 0; i < 5; ++i)
-    //     oversampler[i] = std::make_unique<juce::dsp::Oversampling<SampleType>>
-    //     (audioProcessor.getTotalNumInputChannels(), i, osFilter, true, false);
-
-    // reset();
+    reset();
 }
 
-//template <typename SampleType>
-//void ProcessWrapper<SampleType>::setRampDurationSeconds(double newDurationSeconds) noexcept
-//{
-//    if (rampDurationSeconds != newDurationSeconds)
-//    {
-//        rampDurationSeconds = newDurationSeconds;
-//        reset();
-//    }
-//}
-//
-//template <typename SampleType>
-//double ProcessWrapper<SampleType>::getRampDurationSeconds() const noexcept
-//{
-//    return rampDurationSeconds;
-//}
-//
-//template <typename SampleType>
-//bool ProcessWrapper<SampleType>::isSmoothing() const noexcept
-//{
-//    bool smoothingActive = frq.isSmoothing() || res.isSmoothing() || lev.isSmoothing();
-//
-//    return smoothingActive;
-//}
+template <typename SampleType>
+void AudioPluginAudioProcessWrapper<SampleType>::prepare(juce::dsp::ProcessSpec& spec)
+{
+    mixer.prepare(spec);
+    reset();
+    update();
+}
 
-// template <typename SampleType>
-// void ProcessWrapper<SampleType>::prepare(Spec& spec)
-// {
-//     oversamplingFactor = 1 << curOS;
-//     prevOS = curOS;
-
-//     for (int i = 0; i < 5; ++i)
-//         oversampler[i]->initProcessing(spec.maximumBlockSize);
-
-//     for (int i = 0; i < 5; ++i)
-//         oversampler[i]->numChannels = (size_t)spec.numChannels;
-
-//     mixer.prepare(spec);
-//     biquad.prepare(spec);
-//     output.prepare(spec);
-
-//     reset();
-//     update();
-// }
-
-// template <typename SampleType>
-// void ProcessWrapper<SampleType>::reset()
-// {
-//     mixer.reset();
-//     biquad.reset();
-//     output.reset();
-
-//     for (int i = 0; i < 5; ++i)
-//         oversampler[i]->reset();
-// }
+template <typename SampleType>
+void AudioPluginAudioProcessWrapper<SampleType>::reset()
+{
+    mixer.reset();
+}
 
 // //==============================================================================
-// template <typename SampleType>
-// void ProcessWrapper<SampleType>::process(juce::AudioBuffer<SampleType>& buffer, juce::MidiBuffer& midiMessages)
-// {
-//     midiMessages.clear();
+template <typename SampleType>
+void AudioPluginAudioProcessWrapper<SampleType>::process(juce::AudioBuffer<SampleType>& buffer, juce::MidiBuffer& midiMessages)
+{
+    juce::ignoreUnused(midiMessages);
 
-//     setOversampling();
-//     update();
+    juce::dsp::AudioBlock<SampleType> block(buffer);
 
-//     juce::dsp::AudioBlock<SampleType> block(buffer);
-//     juce::dsp::AudioBlock<SampleType> osBlock(buffer);
+    // This context is intended for use in situations where two different blocks
+    // are being used as the input and output to the process algorithm, so the
+    // processor must read from the block returned by getInputBlock() and write
+    // its results to the block returned by getOutputBlock().
+    juce::dsp::ProcessContextReplacing<SampleType> context(block);
 
-//     mixer.pushDrySamples(block);
+    const auto& inputBlock = context.getInputBlock();
+    auto& outputBlock = context.getOutputBlock();
 
-//     osBlock = oversampler[curOS]->processSamplesUp(block);
+    outputBlock.copyFrom(inputBlock);
+}
 
-//     juce::dsp::ProcessContextReplacing context(osBlock);
+template <typename SampleType>
+void AudioPluginAudioProcessWrapper<SampleType>::processBypass(juce::AudioBuffer<SampleType>& buffer, juce::MidiBuffer& midiMessages)
+{
+    juce::ignoreUnused(midiMessages);
 
-//     biquad.process(context);
+    juce::dsp::AudioBlock<SampleType> block(buffer);
 
-//     output.process(context);
+    // This context is intended for use in situations where a single block is
+    // being used for both the input and output to the process algorithm, so it
+    // will return the same object for both its getInputBlock() and
+    // getOutputBlock() methods.
+    juce::dsp::ProcessContextReplacing<SampleType> context(block);
 
-//     oversampler[curOS]->processSamplesDown(block);
+    const auto& inputBlock = context.getInputBlock();
+    auto& outputBlock = context.getOutputBlock();
 
-//     mixer.mixWetSamples(block);
-// }
+    outputBlock.copyFrom(inputBlock);
+}
 
-// template <typename SampleType>
-// void ProcessWrapper<SampleType>::update()
-// {
-//     mixer.setWetMixProportion(mixPtr->get() * 0.01f);
-//     biquad.setFrequency(frequencyPtr->get() / oversamplingFactor);
-//     biquad.setResonance(resonancePtr->get());
-//     biquad.setGain(gainPtr->get());
-//     biquad.setFilterType(static_cast<FilterType>(typePtr->getIndex()));
-//     biquad.setTransformType(static_cast<TransformationType>(transformPtr->getIndex()));
-//     output.setGainDecibels(outputPtr->get());
-// }
-
-// template <typename SampleType>
-// void ProcessWrapper<SampleType>::setOversampling()
-// {
-//     curOS = (int)osPtr->getIndex();
-//     if (curOS != prevOS)
-//     {
-//         oversamplingFactor = 1 << curOS;
-//         prevOS = curOS;
-//         mixer.reset();
-//         biquad.reset();
-//         output.reset();
-//     }
-// }
-
-// template <typename SampleType>
-// SampleType ProcessWrapper<SampleType>::getLatencySamples() const noexcept
-// {
-//     return oversampler[curOS]->getLatencyInSamples();
-// }
+template <typename SampleType>
+void AudioPluginAudioProcessWrapper<SampleType>::update()
+{
+}
 //==============================================================================
-template class ProcessWrapper<float>;
-template class ProcessWrapper<double>;
+template class AudioPluginAudioProcessWrapper<float>;
+template class AudioPluginAudioProcessWrapper<double>;
+
+} // namespace StoneyDSP
+} // namespace Biquads

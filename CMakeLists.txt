@@ -80,8 +80,6 @@ juce_add_plugin (Biquads
     COMPANY_NAME StoneyDSP                      # Specify the name of the plugin's author
 )
 
-juce_generate_juce_header (Biquads)
-
 target_include_directories (Biquads
     PRIVATE
         $<BUILD_INTERFACE:${STONEYDSP_BIQUADS_BINARY_DIR}/include>
@@ -106,10 +104,10 @@ list (APPEND STONEYDSP_BIQUADS_DSP_UNITS
 
 set (STONEYDSP_BIQUADS_APP_UNITS "")
 list (APPEND STONEYDSP_BIQUADS_APP_UNITS
-    "StoneyDSP/Biquads/PluginEditor"
+    #"StoneyDSP/Biquads/PluginEditor"
     #"StoneyDSP/Biquads/PluginParameters"
     "StoneyDSP/Biquads/PluginProcessor"
-    #"StoneyDSP/Biquads/PluginProcessWrapper"
+    "StoneyDSP/Biquads/PluginWrapper"
 )
 
 set (STONEYDSP_BIQUADS_UNITS "")
@@ -185,9 +183,25 @@ target_link_libraries (Biquads
         juce::juce_recommended_warning_flags
 )
 
-option (STONEYDSP_BIQUADS_BUILD_TESTS "Build tests" ON)
-if (STONEYDSP_BIQUADS_BUILD_TESTS AND (STONEYDSP_BIQUADS_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR))
+#[=============================================================================[
+    Helpers
+]=============================================================================]#
+juce_generate_juce_header (Biquads)
+if (STONEYDSP_BIQUADS_IS_TOP_LEVEL)
+    execute_process (
+        COMMAND "${CMAKE_COMMAND}"
+        "--build ${STONEYDSP_BIQUADS_BINARY_DIR}"
+        "--config ${CMAKE_BUILD_TYPE}"
+        "--target juce_vst3_helper"
+    )
+endif ()
 
+#[=============================================================================[
+    CTest configuration
+]=============================================================================]#
+option (STONEYDSP_BIQUADS_BUILD_TESTS "Build tests" ON)
+
+if (STONEYDSP_BIQUADS_BUILD_TESTS AND (STONEYDSP_BIQUADS_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR))
     enable_testing ()
     add_subdirectory (tests)
 endif ()
@@ -197,6 +211,7 @@ endif ()
 ]=============================================================================]#
 
 include(CMakePackageConfigHelpers)
+
 write_basic_package_version_file(
     "${STONEYDSP_BIQUADS_BINARY_DIR}/StoneyDSPBiquadsConfigVersion.cmake"
     VERSION ${STONEYDSP_BIQUADS_VERSION}
