@@ -15,26 +15,32 @@
 
 #include <JuceHeader.h>
 
-class BiquadsAudioProcessor;
+namespace StoneyDSP {
+namespace Biquads {
 
-class Parameters
+class AudioPluginAudioProcessor;
+
+class AudioPluginAudioProcessorParameters
 {
 public:
-    using APVTS = juce::AudioProcessorValueTreeState;
-    using Params = juce::AudioProcessorValueTreeState::ParameterLayout;
     //==========================================================================
     /** Constructor. */
-    Parameters(BiquadsAudioProcessor& p);
+    AudioPluginAudioProcessorParameters(AudioPluginAudioProcessor& p, juce::AudioProcessorValueTreeState& apvts, juce::dsp::ProcessSpec& spec);
 
     //==========================================================================
     /** Create Parameter Layout. */
-    static void setParameterLayout(Params& params);
+    static void setParameterLayout(juce::AudioProcessorValueTreeState::ParameterLayout& params);
 
 private:
     //==========================================================================
     // This reference is provided as a quick way for the wrapper to
     // access the processor object that created it.
-    BiquadsAudioProcessor& audioProcessor;
+    AudioPluginAudioProcessor& audioProcessor;
+    juce::AudioProcessorValueTreeState& state;
+    juce::dsp::ProcessSpec& setup;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Parameters)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(AudioPluginAudioProcessorParameters)
 };
+
+} // namespace StoneyDSP
+} // namespace Biquads

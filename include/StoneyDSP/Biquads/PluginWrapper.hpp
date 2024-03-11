@@ -21,12 +21,12 @@ namespace Biquads {
 class AudioPluginAudioProcessor;
 
 template <typename SampleType>
-class AudioPluginAudioProcessWrapper
+class AudioPluginAudioProcessorWrapper
 {
 public:
     //==============================================================================
     /** Constructor. */
-    AudioPluginAudioProcessWrapper(AudioPluginAudioProcessor& p);
+    AudioPluginAudioProcessorWrapper(AudioPluginAudioProcessor& p, juce::AudioProcessorValueTreeState& apvts, juce::dsp::ProcessSpec& spec);
 
     //==============================================================================
     /** Initialises the processor. */
@@ -53,8 +53,11 @@ private:
     juce::dsp::ProcessSpec& setup;
 
     juce::dsp::DryWetMixer<SampleType> mixer;
+    juce::AudioParameterFloat* outputPtr  { nullptr };
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(AudioPluginAudioProcessWrapper)
+    StoneyDSP::Maths::Coefficient<SampleType> coeff;
+
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(AudioPluginAudioProcessorWrapper)
 };
 
 } // namespace StoneyDSP

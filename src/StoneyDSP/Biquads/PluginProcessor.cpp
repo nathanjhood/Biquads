@@ -28,16 +28,13 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
 , undoManager()
 , apvts(*this, &undoManager, "Parameters", createParameterLayout())
 , spec ()
-// , coeffFlt(0.5f)
-// , coeffDbl(0.5)
-, processorFlt (*this)
-, processorDbl (*this)
-, outputPtr   (dynamic_cast<juce::AudioParameterFloat*>(apvts.getParameter("outputID")))
+, parameters   (*this, getAPVTS(), getSpec())
+, processorFlt (*this, getAPVTS(), getSpec())
+, processorDbl (*this, getAPVTS(), getSpec())
 , bypassState (dynamic_cast<juce::AudioParameterBool*> (apvts.getParameter("bypassID")))
 // , processingPrecision(singlePrecision)
 {
     jassert(bypassState != nullptr);
-    jassert(outputPtr != nullptr);
 }
 
 AudioPluginAudioProcessor::~AudioPluginAudioProcessor()
@@ -212,38 +209,50 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, 
 {
     jassert (! isUsingDoublePrecision());
 
-    juce::ScopedNoDenormals noDenormals;
+    auto byp = bypassState->get() == false;
 
-    auto gainParamValue  = apvts.getParameter ("outputID")->getValue();
+    if (!byp)
+    {
+        juce::ScopedNoDenormals noDenormals;
 
-    processorFlt.process(buffer, midiMessages);
-
-    for (auto channel = 0; channel < getTotalNumOutputChannels(); ++channel)
-        buffer.applyGain (channel, 0, buffer.getNumSamples(), gainParamValue);
+        processorFlt.process(buffer, midiMessages);
+    }
+    else
+    {
+        processBlockBypassed(buffer, midiMessages);
+    }
 }
 
 void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<double>& buffer, juce::MidiBuffer& midiMessages)
 {
     jassert (isUsingDoublePrecision());
 
-    juce::ScopedNoDenormals noDenormals;
+    auto byp = bypassState->get() == false;
 
-    auto gainParamValue  = apvts.getParameter ("outputID")->getValue();
+    if (!byp)
+    {
+        juce::ScopedNoDenormals noDenormals;
 
-    processorDbl.process(buffer, midiMessages);
-
-    for (auto channel = 0; channel < getTotalNumOutputChannels(); ++channel)
-        buffer.applyGain (channel, 0, buffer.getNumSamples(), (float) gainParamValue);
+        processorDbl.process(buffer, midiMessages);
+    }
+    else
+    {
+        processBlockBypassed(buffer, midiMessages);
+    }
 
 }
 
 void AudioPluginAudioProcessor::processBlockBypassed(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
+    jassert (! isUsingDoublePrecision());
+
     processorFlt.processBypass(buffer, midiMessages);
 }
 
 void AudioPluginAudioProcessor::processBlockBypassed(juce::AudioBuffer<double>& buffer, juce::MidiBuffer& midiMessages)
 {
+    jassert (isUsingDoublePrecision());
+
     processorDbl.processBypass(buffer, midiMessages);
 }
 
@@ -263,59 +272,10 @@ juce::AudioProcessorValueTreeState::ParameterLayout AudioPluginAudioProcessor::c
 {
     juce::AudioProcessorValueTreeState::ParameterLayout parameterLayout;
 
-    // const auto dBMax = juce::Decibels::gainToDecibels(16.0f);
-    // const auto dBMin = juce::Decibels::gainToDecibels(0.0625f);
-    // const auto dBOut = juce::Decibels::gainToDecibels(0.5f, -120.0f); //  * 20.0f
-
-    // constexpr auto minusInfinityDb = 120.0f;
-
-    // const auto outputRangeDBMin = juce::Decibels::gainToDecibels(00.0f, minusInfinityDb);
-    // const auto outputRangeDBMax = juce::Decibels::gainToDecibels(16.0f, minusInfinityDb);
-
-    // const auto outputRangeMin = juce::Decibels::decibelsToGain(outputRangeDBMin, minusInfinityDb);
-    // const auto outputRangeMax = juce::Decibels::decibelsToGain(outputRangeDBMax, minusInfinityDb);
-
-    // const auto freqRange = juce::NormalisableRange<float>(20.00f, 20000.00f, 0.001f, 00.198894f);
-    // const auto resRange = juce::NormalisableRange<float>(00.00f, 1.00f, 0.01f, 1.00f);
-    // const auto gainRange = juce::NormalisableRange<float>(dBMin, dBMax, 0.01f, 1.00f);
-    // const auto mixRange = juce::NormalisableRange<float>(00.00f, 100.00f, 0.01f, 1.00f);
-    // const auto outputRange = juce::NormalisableRange<float>(outputRangeMin, outputRangeMax, 0.01f, 1.00f);
-
-    // const auto fString = juce::StringArray({ "LP2", "LP1", "HP2", "HP1" , "BP2", "BP2c", "LS2", "LS1c", "LS1", "HS2", "HS1c", "HS1", "PK2", "NX2", "AP2" });
-    // const auto tString = juce::StringArray({ "DFI", "DFII", "DFI t", "DFII t" });
-    // const auto osString = juce::StringArray({ "--", "2x", "4x", "8x", "16x" });
-
-    const auto decibels = juce::String{ ("dB") };
-    // const auto frequency = juce::String{ ("Hz") };
-    // const auto reso = juce::String{ ("q") };
-    // const auto percentage = juce::String{ ("%") };
-
-    // auto genParam = juce::AudioProcessorParameter::genericParameter;
-    // auto inMeter = juce::AudioProcessorParameter::inputMeter;
-    auto outParam = juce::AudioProcessorParameter::outputGain;
-    // auto outMeter = juce::AudioProcessorParameter::outputMeter;
-
-    // auto mixAttributes = juce::AudioParameterFloatAttributes()
-    //     .withLabel(percentage)
-    //     .withCategory(genParam);
-
-    auto outputAttributes = juce::AudioParameterFloatAttributes()
-        .withLabel(decibels)
-        .withCategory(outParam);
-
-    // parameterLayout.add
-    //     //======================================================================
-    //     (std::make_unique<juce::AudioProcessorParameterGroup>("masterID", "0", "seperatorA",
-    //         //==================================================================
-    //         std::make_unique<juce::AudioParameterFloat>("outputID", "Output", outputRange, 00.00f, outputAttributes),
-    //         // std::make_unique<juce::AudioParameterFloat>("mixID", "Mix", mixRange, 100.00f, mixAttributes)
-    //         //==================================================================
-    //     ));
-
     parameterLayout.add(std::make_unique<juce::AudioParameterBool> (juce::ParameterID{ "bypassID", 1}, "Bypass", false));
-    parameterLayout.add(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ "outputID", 1}, "Output", /** outputRange */ juce::NormalisableRange<float> (0.0f, 1.0f), 00.00f, outputAttributes));
+    // parameterLayout.add(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ "outputID", 1}, "Output", /** outputRange */ juce::NormalisableRange<float> (0.0f, 1.0f), 00.00f, outputAttributes));
 
-    // Parameters::setParameterLayout(parameterLayout);
+    AudioPluginAudioProcessorParameters::setParameterLayout(parameterLayout);
 
     return parameterLayout;
 }

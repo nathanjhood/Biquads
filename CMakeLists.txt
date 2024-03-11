@@ -105,7 +105,7 @@ list (APPEND STONEYDSP_BIQUADS_DSP_UNITS
 set (STONEYDSP_BIQUADS_APP_UNITS "")
 list (APPEND STONEYDSP_BIQUADS_APP_UNITS
     #"StoneyDSP/Biquads/PluginEditor"
-    #"StoneyDSP/Biquads/PluginParameters"
+    "StoneyDSP/Biquads/PluginParameters"
     "StoneyDSP/Biquads/PluginProcessor"
     "StoneyDSP/Biquads/PluginWrapper"
 )

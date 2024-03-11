@@ -16,32 +16,42 @@ namespace StoneyDSP {
 namespace Biquads {
 
 template <typename SampleType>
-AudioPluginAudioProcessWrapper<SampleType>::AudioPluginAudioProcessWrapper(AudioPluginAudioProcessor& p)
+AudioPluginAudioProcessorWrapper<SampleType>::AudioPluginAudioProcessorWrapper(AudioPluginAudioProcessor& p, juce::AudioProcessorValueTreeState& apvts, juce::dsp::ProcessSpec& spec)
 : audioProcessor (p)
-, state (p.getAPVTS())
-, setup (p.getSpec())
+, state (apvts)
+, setup (spec)
+// , coeff((<SampleType>)0.5)
 , mixer()
+, outputPtr   (dynamic_cast<juce::AudioParameterFloat*>(state.getParameter("outputID")))
 {
+    jassert(outputPtr != nullptr);
+
     reset();
 }
 
 template <typename SampleType>
-void AudioPluginAudioProcessWrapper<SampleType>::prepare(juce::dsp::ProcessSpec& spec)
+void AudioPluginAudioProcessorWrapper<SampleType>::prepare(juce::dsp::ProcessSpec& spec)
 {
-    mixer.prepare(spec);
+    setup.sampleRate        = spec.sampleRate;
+    setup.maximumBlockSize  = spec.maximumBlockSize;
+    setup.numChannels       = spec.numChannels;
+
     reset();
+
+    mixer.prepare(setup);
+
     update();
 }
 
 template <typename SampleType>
-void AudioPluginAudioProcessWrapper<SampleType>::reset()
+void AudioPluginAudioProcessorWrapper<SampleType>::reset()
 {
     mixer.reset();
 }
 
 //==============================================================================
 template <typename SampleType>
-void AudioPluginAudioProcessWrapper<SampleType>::process(juce::AudioBuffer<SampleType>& buffer, juce::MidiBuffer& midiMessages)
+void AudioPluginAudioProcessorWrapper<SampleType>::process(juce::AudioBuffer<SampleType>& buffer, juce::MidiBuffer& midiMessages)
 {
     auto totalNumInputChannels  = audioProcessor.getTotalNumInputChannels();
     auto totalNumOutputChannels = audioProcessor.getTotalNumOutputChannels();
@@ -73,26 +83,34 @@ void AudioPluginAudioProcessWrapper<SampleType>::process(juce::AudioBuffer<Sampl
 }
 
 template <typename SampleType>
-void AudioPluginAudioProcessWrapper<SampleType>::processBlock(juce::AudioBuffer<SampleType>& buffer, juce::MidiBuffer& midiMessages)
+void AudioPluginAudioProcessorWrapper<SampleType>::processBlock(juce::AudioBuffer<SampleType>& buffer, juce::MidiBuffer& midiMessages)
 {
     juce::ignoreUnused(midiMessages);
 
-    juce::dsp::AudioBlock<SampleType> block(buffer);
+    auto gainParamValue  = state.getParameter ("outputID")->getValue();
+
+    juce::dsp::AudioBlock<SampleType> dryBlock(buffer);
+    juce::dsp::AudioBlock<SampleType> wetBlock(buffer);
 
     // This context is intended for use in situations where two different blocks
     // are being used as the input and output to the process algorithm, so the
     // processor must read from the block returned by getInputBlock() and write
     // its results to the block returned by getOutputBlock().
-    juce::dsp::ProcessContextReplacing<SampleType> context(block);
+    auto context = juce::dsp::ProcessContextReplacing<SampleType> (wetBlock);
 
     const auto& inputBlock = context.getInputBlock();
     auto& outputBlock = context.getOutputBlock();
 
     outputBlock.copyFrom(inputBlock);
+
+    for (auto channel = 0; channel < audioProcessor.getTotalNumOutputChannels(); ++channel)
+        buffer.applyGain (channel, 0, buffer.getNumSamples(), gainParamValue);
+
+    mixer.mixWetSamples(outputBlock);
 }
 
 template <typename SampleType>
-void AudioPluginAudioProcessWrapper<SampleType>::processBypass(juce::AudioBuffer<SampleType>& buffer, juce::MidiBuffer& midiMessages)
+void AudioPluginAudioProcessorWrapper<SampleType>::processBypass(juce::AudioBuffer<SampleType>& buffer, juce::MidiBuffer& midiMessages)
 {
     juce::ignoreUnused(midiMessages);
 
@@ -102,21 +120,23 @@ void AudioPluginAudioProcessWrapper<SampleType>::processBypass(juce::AudioBuffer
     // being used for both the input and output to the process algorithm, so it
     // will return the same object for both its getInputBlock() and
     // getOutputBlock() methods.
-    juce::dsp::ProcessContextReplacing<SampleType> context(block);
+    auto context = juce::dsp::ProcessContextReplacing<SampleType>(block);
 
     const auto& inputBlock = context.getInputBlock();
     auto& outputBlock = context.getOutputBlock();
 
     outputBlock.copyFrom(inputBlock);
+
+    mixer.pushDrySamples(outputBlock);
 }
 
 template <typename SampleType>
-void AudioPluginAudioProcessWrapper<SampleType>::update()
+void AudioPluginAudioProcessorWrapper<SampleType>::update()
 {
 }
 //==============================================================================
-template class AudioPluginAudioProcessWrapper<float>;
-template class AudioPluginAudioProcessWrapper<double>;
+template class AudioPluginAudioProcessorWrapper<float>;
+template class AudioPluginAudioProcessorWrapper<double>;
 
 } // namespace StoneyDSP
 } // namespace Biquads

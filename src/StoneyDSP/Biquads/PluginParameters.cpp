@@ -12,12 +12,19 @@
 #include "StoneyDSP/Biquads/PluginParameters.hpp"
 #include "StoneyDSP/Biquads/PluginProcessor.hpp"
 
-Parameters::Parameters(BiquadsAudioProcessor& p) : audioProcessor (p)
+namespace StoneyDSP {
+namespace Biquads {
+
+AudioPluginAudioProcessorParameters::AudioPluginAudioProcessorParameters(AudioPluginAudioProcessor& p, juce::AudioProcessorValueTreeState& apvts, juce::dsp::ProcessSpec& spec)
+: audioProcessor (p)
+, state (apvts)
+, setup (spec)
 {
 }
 
-void Parameters::setParameterLayout(Params& params)
+void AudioPluginAudioProcessorParameters::setParameterLayout(juce::AudioProcessorValueTreeState::ParameterLayout& params)
 {
+    // auto v = audioProcessor.get
     const auto dBMax = juce::Decibels::gainToDecibels(16.0f);
     const auto dBMin = juce::Decibels::gainToDecibels(0.0625f);
     const auto dBOut = juce::Decibels::gainToDecibels(0.5f, -120.0f) * 20.0f;
@@ -65,25 +72,28 @@ void Parameters::setParameterLayout(Params& params)
         .withLabel(decibels)
         .withCategory(outParam);
 
-    params.add
+    params.add(
         //======================================================================
-        (std::make_unique<juce::AudioProcessorParameterGroup>("BandOneID", "0", "seperatorA",
+        //(std::make_unique<juce::AudioProcessorParameterGroup>(juce::ParameterID{ "masterID", 1}, "0", "seperatorA",
             //==================================================================
-            std::make_unique<juce::AudioParameterFloat>("frequencyID", "Frequency", freqRange, 632.455f, freqAttributes),
-            std::make_unique<juce::AudioParameterFloat>("resonanceID", "Resonance", resRange, 00.10f, resoAttributes),
-            std::make_unique<juce::AudioParameterFloat>("gainID", "Gain", gainRange, 00.00f, gainAttributes),
-            std::make_unique<juce::AudioParameterChoice>("typeID", "Type", fString, 0)
+            std::make_unique<juce::AudioParameterChoice>(juce::ParameterID{ "transformID", 1}, "Transform", tString, 3),
+            std::make_unique<juce::AudioParameterChoice>(juce::ParameterID{ "osID", 1}, "Oversampling", osString, 0),
+            std::make_unique<juce::AudioParameterFloat> (juce::ParameterID{ "outputID", 1}, "Output", outputRange, 00.00f, outputAttributes),
+            std::make_unique<juce::AudioParameterFloat> (juce::ParameterID{ "mixID", 1}, "Mix", mixRange, 100.00f, mixAttributes)
             //==================================================================
-            ));
+    );
 
-    params.add
+    params.add(
         //======================================================================
-        (std::make_unique<juce::AudioProcessorParameterGroup>("masterID", "1", "seperatorB",
+        //(std::make_unique<juce::AudioProcessorParameterGroup>(juce::ParameterID{ "BandOneID", 1}, "1", "seperatorB",
             //==================================================================
-            std::make_unique<juce::AudioParameterChoice>("transformID", "Transform", tString, 3),
-            std::make_unique<juce::AudioParameterChoice>("osID", "Oversampling", osString, 0),
-            std::make_unique<juce::AudioParameterFloat>("outputID", "Output", outputRange, 00.00f, outputAttributes),
-            std::make_unique<juce::AudioParameterFloat>("mixID", "Mix", mixRange, 100.00f, mixAttributes)
+            std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ "frequencyID", 1}, "Frequency", freqRange, 632.455f, freqAttributes),
+            std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ "resonanceID", 1}, "Resonance", resRange, 00.10f, resoAttributes),
+            std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ "gainID", 1}, "Gain", gainRange, 00.00f, gainAttributes),
+            std::make_unique<juce::AudioParameterChoice>(juce::ParameterID{ "typeID", 1}, "Type", fString, 0)
             //==================================================================
-            ));
+    );
 }
+
+} // namespace StoneyDSP
+} // namespace Biquads

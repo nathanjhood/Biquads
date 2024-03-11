@@ -17,7 +17,7 @@
 #define DONT_SET_USING_JUCE_NAMESPACE 1
 #include <JuceHeader.h>
 
-// #include "PluginParameters.h"
+#include "PluginParameters.hpp"
 #include "PluginWrapper.hpp"
 
 namespace StoneyDSP {
@@ -83,14 +83,10 @@ private:
     //==============================================================================
     /** Audio processor members. */
     juce::AudioProcessor::ProcessingPrecision processingPrecision;
-    StoneyDSP::Biquads::AudioPluginAudioProcessWrapper<float> processorFlt;
-    StoneyDSP::Biquads::AudioPluginAudioProcessWrapper<double> processorDbl;
+    StoneyDSP::Biquads::AudioPluginAudioProcessorParameters parameters;
+    StoneyDSP::Biquads::AudioPluginAudioProcessorWrapper<float> processorFlt;
+    StoneyDSP::Biquads::AudioPluginAudioProcessorWrapper<double> processorDbl;
     juce::AudioParameterBool* bypassState { nullptr };
-    juce::AudioParameterFloat* outputPtr  { nullptr };
-    // Parameters parameters;
-
-    // StoneyDSP::Maths::Coefficient<float> coeffFlt;
-    // StoneyDSP::Maths::Coefficient<double> coeffDbl;
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioPluginAudioProcessor)
