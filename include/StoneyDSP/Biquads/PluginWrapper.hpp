@@ -37,6 +37,7 @@ public:
 
     //==============================================================================
     void process(juce::AudioBuffer<SampleType>& buffer, juce::MidiBuffer& midiMessages);
+    void processBlock(juce::AudioBuffer<SampleType>& buffer, juce::MidiBuffer& midiMessages);
     void processBypass(juce::AudioBuffer<SampleType>& buffer, juce::MidiBuffer& midiMessages);
 
     //==============================================================================
