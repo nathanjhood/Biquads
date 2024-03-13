@@ -2,9 +2,9 @@
 
 <p align="center">Simple two-pole equalizer with variable oversampling.</p>
 
-![Biquads-1-1-0b](https://stoneydsp.com/resources/projects/biquads/biquad-1-1-0.png)
-
 <div align="center">
+
+![Biquads-1-1-0b](https://stoneydsp.com/resources/projects/biquads/biquad-1-1-0.png)
 
 | Latest release: | [v.1.1.0](https://github.com/nathanjhood/Biquads/tree/v1.1.0) |
 | :-: | :-: |

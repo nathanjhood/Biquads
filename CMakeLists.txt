@@ -184,7 +184,7 @@ target_compile_definitions (Biquads
 
 target_link_libraries (Biquads
     PRIVATE
-        # StoneyDSP::stoneydsp_core
+        StoneyDSP::stoneydsp_core
         StoneyDSP::stoneydsp_audio
         # StoneyDSP::stoneydsp_graphics
 
@@ -210,15 +210,15 @@ target_link_libraries (Biquads
 #[=============================================================================[
     Helpers
 ]=============================================================================]#
-juce_generate_juce_header (Biquads)
-if (STONEYDSP_BIQUADS_IS_TOP_LEVEL)
-    execute_process (
-        COMMAND "${CMAKE_COMMAND}"
-        "--build ${STONEYDSP_BIQUADS_BINARY_DIR}"
-        "--config ${CMAKE_BUILD_TYPE}"
-        "--target juce_vst3_helper"
-    )
-endif ()
+# juce_generate_juce_header (Biquads)
+# if (STONEYDSP_BIQUADS_IS_TOP_LEVEL)
+#     execute_process (
+#         COMMAND "${CMAKE_COMMAND}"
+#         "--build ${STONEYDSP_BIQUADS_BINARY_DIR}"
+#         "--config ${CMAKE_BUILD_TYPE}"
+#         "--target juce_vst3_helper"
+#     )
+# endif ()
 
 #[=============================================================================[
     CTest configuration

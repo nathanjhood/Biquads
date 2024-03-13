@@ -57,6 +57,8 @@ private:
 
     StoneyDSP::Maths::Coefficient<SampleType> coeff;
 
+    StoneyDSP::Audio::Biquads<SampleType> biquads;
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(AudioPluginAudioProcessorWrapper)
 };
 
