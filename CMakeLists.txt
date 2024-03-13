@@ -30,7 +30,7 @@ cmake_minimum_required (VERSION 3.22...3.28 FATAL_ERROR)
 
 list (APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/share/cmake/Modules")
 
-project (STONEYDSP_BIQUADS VERSION 1.1.0
+project (STONEYDSP_BIQUADS VERSION 1.2.0
     DESCRIPTION "Simple two-pole equalizer with variable oversampling."
     HOMEPAGE_URL "https://github.com/nathanjhood/Biquads"
     LANGUAGES C;CXX
@@ -80,12 +80,12 @@ juce_add_plugin (Biquads
     COMPANY_NAME StoneyDSP                      # Specify the name of the plugin's author
 )
 
-set(STONEYDSP_BIQUADS_INCLUDE_DIR
-    $<BUILD_INTERFACE:${STONEYDSP_BIQUADS_BINARY_DIR}/include>
-    $<INSTALL_INTERFACE:include/StoneyDSP>
-)
+# set(STONEYDSP_BIQUADS_INCLUDE_DIR
+#     $<BUILD_INTERFACE:${STONEYDSP_BIQUADS_BINARY_DIR}/include>
+#     $<INSTALL_INTERFACE:include/StoneyDSP>
+# )
 
-target_include_directories (Biquads PRIVATE ${STONEYDSP_BIQUADS_INCLUDE_DIR})
+# target_include_directories (Biquads PRIVATE ${STONEYDSP_BIQUADS_INCLUDE_DIR})
 
 # set(STONEYDSP_BIQUADS_HEADER "include/StoneyDSP/Biquads.hpp")
 # configure_file (
@@ -110,35 +110,13 @@ target_include_directories (Biquads PRIVATE ${STONEYDSP_BIQUADS_INCLUDE_DIR})
 #     "src/StoneyDSP/Biquads.cpp"
 # )
 
-set (STONEYDSP_BIQUADS_GUI_UNITS "")
-list (APPEND STONEYDSP_BIQUADS_GUI_UNITS
-    # "StoneyDSP/Biquads/Components/AutoButton"
-    # "StoneyDSP/Biquads/Components/AutoComboBox"
-    # "StoneyDSP/Biquads/Components/AutoKnob"
-    "StoneyDSP/Biquads/Components/AutoComponent"
-    "StoneyDSP/Biquads/Components/Viewer"
-)
-
-set (STONEYDSP_BIQUADS_DSP_UNITS "")
-list (APPEND STONEYDSP_BIQUADS_DSP_UNITS
-    "StoneyDSP/Biquads/DSP/Biquads"
-    #"StoneyDSP/Biquads/DSP/Coefficient"
-    #"StoneyDSP/Biquads/DSP/SecondOrderBiquads"
-)
-
-set (STONEYDSP_BIQUADS_APP_UNITS "")
-list (APPEND STONEYDSP_BIQUADS_APP_UNITS
-    #"StoneyDSP/Biquads/PluginEditor"
-    "StoneyDSP/Biquads/PluginParameters"
-    "StoneyDSP/Biquads/PluginProcessor"
-    "StoneyDSP/Biquads/PluginWrapper"
-)
-
 set (STONEYDSP_BIQUADS_UNITS "")
 list (APPEND STONEYDSP_BIQUADS_UNITS
-    #${STONEYDSP_BIQUADS_GUI_UNITS}
-    #${STONEYDSP_BIQUADS_DSP_UNITS}
-    ${STONEYDSP_BIQUADS_APP_UNITS}
+    "StoneyDSP/Biquads"
+    # "StoneyDSP/Biquads/PluginEditor"
+    "StoneyDSP/Biquads/Parameters"
+    "StoneyDSP/Biquads/Processor"
+    "StoneyDSP/Biquads/Wrapper"
 )
 
 foreach (STONEYDSP_BIQUADS_UNIT IN LISTS STONEYDSP_BIQUADS_UNITS)

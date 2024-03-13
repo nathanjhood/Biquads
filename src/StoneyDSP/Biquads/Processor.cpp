@@ -1,19 +1,32 @@
 /**
- * @file PluginProcessor.cpp
- * @author StoneyDSP (nathanjhood@googlemail.com)
+ * @file Processor.cpp
+ * @author Nathan J. Hood (nathanjhood@googlemail.com)
  * @brief
- * @version 0.1
+ * @version 1.2.0
  * @date 2023-09-07
  *
  * @copyright Copyright (c) 2023
  *
  */
 
-#include "StoneyDSP/Biquads/PluginProcessor.hpp"
-// #include "StoneyDSP/Biquads/PluginEditor.hpp"
+#include "StoneyDSP/Biquads/Processor.hpp"
+// #include "StoneyDSP/Biquads/Editor.hpp"
 
-namespace StoneyDSP {
-namespace Biquads {
+namespace StoneyDSP
+{
+/** @addtogroup StoneyDSP
+ *  @{
+ */
+
+/**
+ * @brief The ```StoneyDSP::Biquads``` namespace.
+ *
+ */
+namespace Biquads
+{
+/** @addtogroup Biquads
+ *  @{
+ */
 
 //==============================================================================
 AudioPluginAudioProcessor::AudioPluginAudioProcessor()
@@ -28,10 +41,10 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
 , undoManager()
 , apvts(*this, &undoManager, "Parameters", createParameterLayout())
 , spec ()
-, parameters   (*this, getAPVTS(), getSpec())
-, processorFlt (*this, getAPVTS(), getSpec())
-, processorDbl (*this, getAPVTS(), getSpec())
-, bypassState (dynamic_cast<juce::AudioParameterBool*> (apvts.getParameter("bypassID")))
+, parameters(*this, getAPVTS())
+, processorFlt(*this, getAPVTS(), getSpec())
+, processorDbl(*this, getAPVTS(), getSpec())
+, bypassState (dynamic_cast<juce::AudioParameterBool*> (getAPVTS().getParameter("bypassID")))
 // , processingPrecision(singlePrecision)
 {
     jassert(bypassState != nullptr);
@@ -177,8 +190,8 @@ void AudioPluginAudioProcessor::releaseResources()
 {
     // When playback stops, you can use this as an opportunity to free up any
     // spare memory, etc.
-    processorFlt.reset();
-    processorDbl.reset();
+    processorFlt.reset(0.0f);
+    processorDbl.reset(0.0);
 }
 
 bool AudioPluginAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
@@ -209,36 +222,44 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, 
 {
     jassert (! isUsingDoublePrecision());
 
-    auto byp = bypassState->get() == false;
+    // auto byp = bypassState->get() == false;
 
-    if (!byp)
-    {
-        juce::ScopedNoDenormals noDenormals;
+    // if (!byp)
+    // {
+    //     juce::ScopedNoDenormals noDenormals;
 
-        processorFlt.process(buffer, midiMessages);
-    }
-    else
-    {
-        processBlockBypassed(buffer, midiMessages);
-    }
+    //     processorFlt.process(buffer, midiMessages);
+    // }
+    // else
+    // {
+    //     processBlockBypassed(buffer, midiMessages);
+    // }
+
+    juce::ScopedNoDenormals noDenormals;
+
+    processorFlt.process(buffer, midiMessages);
 }
 
 void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<double>& buffer, juce::MidiBuffer& midiMessages)
 {
     jassert (isUsingDoublePrecision());
 
-    auto byp = bypassState->get() == false;
+    // auto byp = bypassState->get() == false;
 
-    if (!byp)
-    {
-        juce::ScopedNoDenormals noDenormals;
+    // if (!byp)
+    // {
+    //     juce::ScopedNoDenormals noDenormals;
 
-        processorDbl.process(buffer, midiMessages);
-    }
-    else
-    {
-        processBlockBypassed(buffer, midiMessages);
-    }
+    //     processorDbl.process(buffer, midiMessages);
+    // }
+    // else
+    // {
+    //     processBlockBypassed(buffer, midiMessages);
+    // }
+
+    juce::ScopedNoDenormals noDenormals;
+
+    processorDbl.process(buffer, midiMessages);
 
 }
 
@@ -272,10 +293,9 @@ juce::AudioProcessorValueTreeState::ParameterLayout AudioPluginAudioProcessor::c
 {
     juce::AudioProcessorValueTreeState::ParameterLayout parameterLayout;
 
-    parameterLayout.add(std::make_unique<juce::AudioParameterBool> (juce::ParameterID{ "bypassID", 1}, "Bypass", false));
-    // parameterLayout.add(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ "outputID", 1}, "Output", /** outputRange */ juce::NormalisableRange<float> (0.0f, 1.0f), 00.00f, outputAttributes));
-
     AudioPluginAudioProcessorParameters::setParameterLayout(parameterLayout);
+
+    // parameterLayout.add(std::make_unique<juce::AudioParameterBool> (juce::ParameterID{ "bypassID", 1}, "Bypass", false));
 
     return parameterLayout;
 }
@@ -283,6 +303,8 @@ juce::AudioProcessorValueTreeState::ParameterLayout AudioPluginAudioProcessor::c
 //==============================================================================
 void AudioPluginAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
 {
+    // auto apvts = parameters.getAPVTS();
+
     // You should use this method to store your parameters in the memory block.
     // You could do that either as raw data, or use the XML or ValueTree classes
     // as intermediaries to make it easy to save and load complex data.
@@ -297,6 +319,8 @@ void AudioPluginAudioProcessor::getStateInformation (juce::MemoryBlock& destData
 
 void AudioPluginAudioProcessor::getCurrentProgramStateInformation(juce::MemoryBlock& destData)
 {
+    // using apvts = parameters.getAPVTS();
+
     auto state = apvts.copyState();
     std::unique_ptr<juce::XmlElement> xml(state.createXml());
     copyXmlToBinary(*xml, destData);
@@ -304,6 +328,7 @@ void AudioPluginAudioProcessor::getCurrentProgramStateInformation(juce::MemoryBl
 
 void AudioPluginAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
+    // using apvts = parameters.getAPVTS();
     // You should use this method to restore your parameters from this memory block,
     // whose contents will have been created by the getStateInformation() call.
     std::unique_ptr<juce::XmlElement> xmlState(getXmlFromBinary(data, sizeInBytes));
@@ -320,6 +345,8 @@ void AudioPluginAudioProcessor::setStateInformation (const void* data, int sizeI
 
 void AudioPluginAudioProcessor::setCurrentProgramStateInformation(const void* data, int sizeInBytes)
 {
+    // using apvts = parameters.getAPVTS();
+
     std::unique_ptr<juce::XmlElement> xmlState(getXmlFromBinary(data, sizeInBytes));
 
     if (xmlState.get() != nullptr)
@@ -327,7 +354,10 @@ void AudioPluginAudioProcessor::setCurrentProgramStateInformation(const void* da
             apvts.replaceState(juce::ValueTree::fromXml(*xmlState));
 }
 
+  /// @} group Biquads
 } // namespace Biquads
+
+  /// @} group StoneyDSP
 } // namespace StoneyDSP
 
 //==============================================================================

@@ -9,12 +9,25 @@
  *
  */
 
-#ifdef STONEYDSP_BIQUADS_HPP
+#ifdef STONEYDSP_BIQUADS_HPP_INCLUDED
  #error "Incorrect usage of 'Biquads.cpp'!"
 #endif
 
 #include "StoneyDSP/Biquads.hpp"
 
-#include "StoneyDSP/Biquads/PluginProcessor.cpp"
-#include "StoneyDSP/Biquads/PluginWrapper.cpp"
-#include "StoneyDSP/Biquads/PluginParameters.cpp"
+// #include "Biquads/Processor.cpp"
+// #include "Biquads/Wrapper.cpp"
+// #include "Biquads/Parameters.cpp"
+
+//   /// @} group Biquads
+// } // namespace Biquads
+
+//   /// @} group StoneyDSP
+// } // namespace StoneyDSP
+
+// //==============================================================================
+// // This creates new instances of the plugin..
+// juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
+// {
+//     return new StoneyDSP::Biquads::AudioPluginAudioProcessor();
+// }

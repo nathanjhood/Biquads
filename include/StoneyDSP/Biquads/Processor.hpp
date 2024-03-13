@@ -1,8 +1,8 @@
 /**
- * @file PluginProcessor.hpp
- * @author StoneyDSP (nathanjhood@googlemail.com)
+ * @file Processor.hpp
+ * @author Nathan J. Hood (nathanjhood@googlemail.com)
  * @brief
- * @version 0.1
+ * @version 1.2.0
  * @date 2023-09-07
  *
  * @copyright Copyright (c) 2023
@@ -12,16 +12,31 @@
 
 #pragma once
 
-#define STONEYDSP_BIQUADS_PLUGINPROCESSOR_HPP
+#define STONEYDSP_BIQUADS_PROCESSOR_HPP_INCLUDED
 
-#define DONT_SET_USING_JUCE_NAMESPACE 1
-#include <JuceHeader.h>
+// #define DONT_SET_USING_JUCE_NAMESPACE 1
+// #include <JuceHeader.h>
 
-#include "PluginParameters.hpp"
-#include "PluginWrapper.hpp"
+#include "StoneyDSP/Biquads.hpp"
 
-namespace StoneyDSP {
-namespace Biquads {
+#include "Parameters.hpp"
+#include "Wrapper.hpp"
+
+namespace StoneyDSP
+{
+/** @addtogroup StoneyDSP
+ *  @{
+ */
+
+/**
+ * @brief The ```StoneyDSP::Biquads``` namespace.
+ *
+ */
+namespace Biquads
+{
+/** @addtogroup Biquads
+ *  @{
+ */
 
 class AudioPluginAudioProcessor final : public juce::AudioProcessor
 {
@@ -68,10 +83,10 @@ public:
     void getCurrentProgramStateInformation(juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
     void setCurrentProgramStateInformation(const void* data, int sizeInBytes) override;
-    //==============================================================================
+    // //==============================================================================
     juce::UndoManager undoManager;
     juce::UndoManager& getUndoManager() { return undoManager; }
-    //==============================================================================
+    // //==============================================================================
     juce::AudioProcessorValueTreeState apvts;
     juce::AudioProcessorValueTreeState& getAPVTS() { return apvts; }
     static juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
@@ -79,18 +94,25 @@ public:
     juce::dsp::ProcessSpec spec;
     juce::dsp::ProcessSpec& getSpec() { return spec; }
 
+    StoneyDSP::Biquads::AudioPluginAudioProcessorParameters& getParams() { return parameters; }
+
 private:
     //==============================================================================
     /** Audio processor members. */
     juce::AudioProcessor::ProcessingPrecision processingPrecision;
-    StoneyDSP::Biquads::AudioPluginAudioProcessorParameters parameters;
-    StoneyDSP::Biquads::AudioPluginAudioProcessorWrapper<float> processorFlt;
-    StoneyDSP::Biquads::AudioPluginAudioProcessorWrapper<double> processorDbl;
+
+    AudioPluginAudioProcessorParameters parameters;
+    AudioPluginAudioProcessorWrapper<float> processorFlt;
+    AudioPluginAudioProcessorWrapper<double> processorDbl;
+
     juce::AudioParameterBool* bypassState { nullptr };
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioPluginAudioProcessor)
 };
 
+  /// @} group Biquads
 } // namespace Biquads
+
+  /// @} group StoneyDSP
 } // namespace StoneyDSP

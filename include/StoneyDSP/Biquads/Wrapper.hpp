@@ -1,13 +1,21 @@
 /**
- * @file stoneydsp_Biquads.hpp
+ * @file Wrapper.hpp
  * @author Nathan J. Hood (nathanjhood@googlemail.com)
  * @brief
- * @version 0.1
+ * @version 1.2.0
  * @date 2023-09-07
  *
  * @copyright Copyright (c) 2023
  *
  */
+
+#pragma once
+
+#define STONEYDSP_BIQUADS_WRAPPER_HPP_INCLUDED
+
+// #include <JuceHeader.h>
+
+#include "StoneyDSP/Biquads.hpp"
 
 namespace StoneyDSP
 {
@@ -15,36 +23,50 @@ namespace StoneyDSP
  *  @{
  */
 
-namespace Audio
+/**
+ * @brief The ```StoneyDSP::Biquads``` namespace.
+ *
+ */
+namespace Biquads
 {
-/** @addtogroup Audio
+/** @addtogroup Biquads
  *  @{
  */
 
-/**
- * @brief The 'Biquads' class.
- *
- * @tparam SampleType
- */
+class AudioPluginAudioProcessor;
+
+class AudioPluginAudioProcessorParameters;
+
 template <typename SampleType>
-class Biquads
+class AudioPluginAudioProcessorWrapper
 {
 public:
+    using filterType            = StoneyDSP::Audio::FilterType;
+    using transformationType    = StoneyDSP::Audio::TransformationType;
+    //==============================================================================
+    /** Constructor. */
+    AudioPluginAudioProcessorWrapper(AudioPluginAudioProcessor& p, juce::AudioProcessorValueTreeState& apvts, juce::dsp::ProcessSpec& spec);
 
-    using filterType = FilterType;
-    using transformationType = TransformationType;
-
-    Biquads();
-
+    //==============================================================================
     void setFrequency(SampleType newFreq);
     void setResonance(SampleType newRes);
     void setGain(SampleType newGain);
     void setFilterType(filterType newFiltType);
     void setTransformType(transformationType newTransformType);
 
+    //==============================================================================
+    /** Initialises the processor. */
     void prepare(juce::dsp::ProcessSpec& spec);
+
+    /** Resets the internal state variables of the processor. */
+    void reset();
     void reset(SampleType initialValue = { 0.0 });
     void snapToZero() noexcept;
+
+    //==============================================================================
+    void process(juce::AudioBuffer<SampleType>& buffer, juce::MidiBuffer& midiMessages);
+    void processBlock(juce::AudioBuffer<SampleType>& buffer, juce::MidiBuffer& midiMessages);
+    void processBypass(juce::AudioBuffer<SampleType>& buffer, juce::MidiBuffer& midiMessages);
 
     /**
      * @brief  Processes the input and output samples supplied in the
@@ -54,7 +76,7 @@ public:
      * @param context
      */
     template <typename ProcessContext>
-    void process(const ProcessContext& context) noexcept
+    void processContext(const ProcessContext& context) noexcept
     {
         const auto& inputBlock = context.getInputBlock();
         auto& outputBlock = context.getOutputBlock();
@@ -87,7 +109,7 @@ public:
 
     SampleType processSample(int channel, SampleType inputValue);
 
-    //==========================================================================
+        //==========================================================================
     /**
      * @brief Coefficient current value. Safe to pass i.e. to the display thread.
      *
@@ -125,25 +147,34 @@ public:
      */
     SampleType getb2() { return b2.get(); }
 
-private:
+    //==============================================================================
+    /** Updates the internal state variables of the processor. */
+    void update();
 
+private:
     void calculateCoefficients();
 
-    SampleType directFormI(int channel, SampleType inputValue);
-    SampleType directFormII(int channel, SampleType inputValue);
-    SampleType directFormITransposed(int channel, SampleType inputValue);
-    SampleType directFormIITransposed(int channel, SampleType inputValue);
+    SampleType directFormI              (int channel, SampleType inputValue);
+    SampleType directFormII             (int channel, SampleType inputValue);
+    SampleType directFormITransposed    (int channel, SampleType inputValue);
+    SampleType directFormIITransposed   (int channel, SampleType inputValue);
 
-    /**
-     * @brief Unit-delay object(s).
-     *
-     */
+    //==============================================================================
+    // This reference is provided as a quick way for the wrapper to
+    // access the processor object that created it.
+
+    AudioPluginAudioProcessor& audioProcessor;
+    juce::AudioProcessorValueTreeState& state;
+    juce::dsp::ProcessSpec& setup;
+
+    // juce::dsp::DryWetMixer<SampleType> mixer;
+
+    // StoneyDSP::Audio::Biquads<SampleType> biquad;
+
+    /** Unit-delay object(s). */
     std::vector<SampleType> Wn_1, Wn_2, Xn_1, Xn_2, Yn_1, Yn_2;
 
-    /**
-     * @brief Coefficient gain(s).
-     *
-     */
+    /** Coefficient gain(s). */
     StoneyDSP::Maths::Coefficient<SampleType> b0, b1, b2, a0, a1, a2;
 
     /** Coefficient calculation(s). */
@@ -169,13 +200,13 @@ private:
     /** Initialised constant */
     const SampleType zero = 0.0, one = 1.0, two = 2.0, minusOne = -1.0, minusTwo = -2.0;
     const SampleType pi = juce::MathConstants<SampleType>::pi;
-    double sampleRate = 48000.0;
+    double sampleRate = 0.0;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Biquads)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(AudioPluginAudioProcessorWrapper)
 };
 
-  /// @} group Audio
-} // namespace Audio
+  /// @} group Biquads
+} // namespace Biquads
 
   /// @} group StoneyDSP
 } // namespace StoneyDSP
