@@ -210,7 +210,7 @@ target_link_libraries (Biquads
 #[=============================================================================[
     Helpers
 ]=============================================================================]#
-# juce_generate_juce_header (Biquads)
+juce_generate_juce_header (Biquads)
 # if (STONEYDSP_BIQUADS_IS_TOP_LEVEL)
 #     execute_process (
 #         COMMAND "${CMAKE_COMMAND}"
