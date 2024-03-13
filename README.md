@@ -1,10 +1,26 @@
-# Biquads
+# <p align="center">Biquads</p>
 
-Simple two-pole equalizer with variable oversampling.
-
-Current: v1.1.0b
+<p align="center">Simple two-pole equalizer with variable oversampling.</p>
 
 ![Biquads-1-1-0b](https://stoneydsp.com/resources/projects/biquads/biquad-1-1-0.png)
+
+<div align="center">
+
+| Latest release: | [v.1.1.0](https://github.com/nathanjhood/Biquads/tree/v1.1.0) |
+| :-: | :-: |
+| Latest development: | Formats: |
+[![windows-latest](https://github.com/nathanjhood/Biquads/actions/workflows/windows-latest.yaml/badge.svg?branch=development&event=push)](https://github.com/nathanjhood/Biquads/actions/workflows/windows-latest.yaml) | VST3, Standalone |
+[![ubuntu-latest](https://github.com/nathanjhood/Biquads/actions/workflows/ubuntu-latest.yaml/badge.svg?branch=development&event=push)](https://github.com/nathanjhood/Biquads/actions/workflows/ubuntu-latest.yaml) | LV2, VST3, Standalone |
+[![macos-latest](https://github.com/nathanjhood/Biquads/actions/workflows/macos-latest.yaml/badge.svg?branch=development&event=push)](https://github.com/nathanjhood/Biquads/actions/workflows/macos-latest.yaml) | AU, VST3, Standalone |
+[![macos-arm-latest](https://github.com/nathanjhood/Biquads/actions/workflows/macos-arm-latest.yaml/badge.svg?branch=development&event=push)](https://github.com/nathanjhood/Biquads/actions/workflows/macos-arm-latest.yaml) | AU, VST3, Standalone |
+
+<hr>
+
+[![StoneyDSP](https://raw.githubusercontent.com/StoneyDSP/StoneyDSP/production/extras/Icons/images/w_icon__384x256.png)](https://www.stoneydsp.com)
+
+<hr>
+
+</div>
 
 ## Biquads
 Multi-mode Biquad filter for audio analysis purposes using variable BiLinear transforms, processing precision, and oversampling to achieve high-quality results.

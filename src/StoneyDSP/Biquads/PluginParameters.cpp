@@ -24,7 +24,6 @@ AudioPluginAudioProcessorParameters::AudioPluginAudioProcessorParameters(AudioPl
 
 void AudioPluginAudioProcessorParameters::setParameterLayout(juce::AudioProcessorValueTreeState::ParameterLayout& params)
 {
-    // auto v = audioProcessor.get
     const auto dBMax = juce::Decibels::gainToDecibels(16.0f);
     const auto dBMin = juce::Decibels::gainToDecibels(0.0625f);
     const auto dBOut = juce::Decibels::gainToDecibels(0.5f, -120.0f) * 20.0f;
@@ -76,10 +75,10 @@ void AudioPluginAudioProcessorParameters::setParameterLayout(juce::AudioProcesso
         //======================================================================
         //(std::make_unique<juce::AudioProcessorParameterGroup>(juce::ParameterID{ "masterID", 1}, "0", "seperatorA",
             //==================================================================
-            std::make_unique<juce::AudioParameterChoice>(juce::ParameterID{ "transformID", 1}, "Transform", tString, 3),
-            std::make_unique<juce::AudioParameterChoice>(juce::ParameterID{ "osID", 1}, "Oversampling", osString, 0),
-            std::make_unique<juce::AudioParameterFloat> (juce::ParameterID{ "outputID", 1}, "Output", outputRange, 00.00f, outputAttributes),
-            std::make_unique<juce::AudioParameterFloat> (juce::ParameterID{ "mixID", 1}, "Mix", mixRange, 100.00f, mixAttributes)
+            std::make_unique<juce::AudioParameterChoice>(juce::ParameterID{ "transformID", ::ProjectInfo::versionNumber}, "Transform", tString, 3),
+            std::make_unique<juce::AudioParameterChoice>(juce::ParameterID{ "osID", ProjectInfo::versionNumber}, "Oversampling", osString, 0),
+            std::make_unique<juce::AudioParameterFloat> (juce::ParameterID{ "outputID", ProjectInfo::versionNumber}, "Output", outputRange, 00.00f, outputAttributes),
+            std::make_unique<juce::AudioParameterFloat> (juce::ParameterID{ "mixID", ProjectInfo::versionNumber}, "Mix", mixRange, 100.00f, mixAttributes)
             //==================================================================
     );
 
@@ -87,10 +86,10 @@ void AudioPluginAudioProcessorParameters::setParameterLayout(juce::AudioProcesso
         //======================================================================
         //(std::make_unique<juce::AudioProcessorParameterGroup>(juce::ParameterID{ "BandOneID", 1}, "1", "seperatorB",
             //==================================================================
-            std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ "frequencyID", 1}, "Frequency", freqRange, 632.455f, freqAttributes),
-            std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ "resonanceID", 1}, "Resonance", resRange, 00.10f, resoAttributes),
-            std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ "gainID", 1}, "Gain", gainRange, 00.00f, gainAttributes),
-            std::make_unique<juce::AudioParameterChoice>(juce::ParameterID{ "typeID", 1}, "Type", fString, 0)
+            std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ "frequencyID", ProjectInfo::versionNumber}, "Frequency", freqRange, 632.455f, freqAttributes),
+            std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ "resonanceID", ProjectInfo::versionNumber}, "Resonance", resRange, 00.10f, resoAttributes),
+            std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ "gainID", ProjectInfo::versionNumber}, "Gain", gainRange, 00.00f, gainAttributes),
+            std::make_unique<juce::AudioParameterChoice>(juce::ParameterID{ "typeID", ProjectInfo::versionNumber}, "Type", fString, 0)
             //==================================================================
     );
 }

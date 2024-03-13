@@ -80,11 +80,35 @@ juce_add_plugin (Biquads
     COMPANY_NAME StoneyDSP                      # Specify the name of the plugin's author
 )
 
-target_include_directories (Biquads
-    PRIVATE
-        $<BUILD_INTERFACE:${STONEYDSP_BIQUADS_BINARY_DIR}/include>
-        $<INSTALL_INTERFACE:include>
+set(STONEYDSP_BIQUADS_INCLUDE_DIR
+    $<BUILD_INTERFACE:${STONEYDSP_BIQUADS_BINARY_DIR}/include>
+    $<INSTALL_INTERFACE:include/StoneyDSP>
 )
+
+target_include_directories (Biquads PRIVATE ${STONEYDSP_BIQUADS_INCLUDE_DIR})
+
+# set(STONEYDSP_BIQUADS_HEADER "include/StoneyDSP/Biquads.hpp")
+# configure_file (
+#     ${STONEYDSP_BIQUADS_HEADER} # SRC_DIR
+#     ${STONEYDSP_BIQUADS_HEADER} # BIN_DIR
+# )
+# set(STONEYDSP_BIQUADS_HEADER
+#     $<BUILD_INTERFACE:${STONEYDSP_BIQUADS_BINARY_DIR}/include/StoneyDSP/Biquads.hpp>
+#     $<INSTALL_INTERFACE:include/StoneyDSP/Biquads.hpp>
+# )
+
+# target_sources (Biquads
+#     PUBLIC
+#         FILE_SET    biquads_HEADERS
+#         TYPE        HEADERS
+#         BASE_DIRS   ${STONEYDSP_BIQUADS_INCLUDE_DIR}
+#         FILES       ${STONEYDSP_BIQUADS_HEADER}
+# )
+
+# target_sources(Biquads
+#     PRIVATE
+#     "src/StoneyDSP/Biquads.cpp"
+# )
 
 set (STONEYDSP_BIQUADS_GUI_UNITS "")
 list (APPEND STONEYDSP_BIQUADS_GUI_UNITS
@@ -211,6 +235,8 @@ endif ()
 ]=============================================================================]#
 
 include(CMakePackageConfigHelpers)
+include(GNUInstallDirs)
+# set(STONEYDSP_BIQUADS_HEADER "${CMAKE_INSTALL_INCLUDEDIR}/StoneyDSP/Biquads.hpp")
 
 write_basic_package_version_file(
     "${STONEYDSP_BIQUADS_BINARY_DIR}/StoneyDSPBiquadsConfigVersion.cmake"
