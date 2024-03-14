@@ -30,35 +30,37 @@ namespace Biquads
 
 AudioPluginAudioProcessorParameters::AudioPluginAudioProcessorParameters(AudioPluginAudioProcessor& p, juce::AudioProcessorValueTreeState& apvts)
 : audioProcessor (p)
+// , undoManager()
+// , apvts(p, &undoManager, "Parameters", createParameterLayout())
 , state(apvts)
-, frequencyPtr (dynamic_cast <juce::AudioParameterFloat*> (state.getParameter("frequencyID")))
-, resonancePtr (dynamic_cast <juce::AudioParameterFloat*> (state.getParameter("resonanceID")))
-, gainPtr (dynamic_cast <juce::AudioParameterFloat*> (state.getParameter("gainID")))
-, typePtr(dynamic_cast <juce::AudioParameterChoice*> (state.getParameter("typeID")))
-, transformPtr (dynamic_cast <juce::AudioParameterChoice*> (state.getParameter("transformID")))
-// , osPtr (dynamic_cast <juce::AudioParameterChoice*> (state.getParameter("osID")))
-, outputPtr (dynamic_cast <juce::AudioParameterFloat*> (state.getParameter("outputID")))
-// , mixPtr (dynamic_cast <juce::AudioParameterFloat*> (state.getParameter("mixID")))
-, bypassPtr (dynamic_cast<juce::AudioParameterBool*> (state.getParameter("bypassID")))
+// , frequencyPtr (dynamic_cast <juce::AudioParameterFloat*> (apvts.getParameter("frequencyID")))
+// , resonancePtr (dynamic_cast <juce::AudioParameterFloat*> (apvts.getParameter("resonanceID")))
+// , gainPtr (dynamic_cast <juce::AudioParameterFloat*> (apvts.getParameter("gainID")))
+// , typePtr(dynamic_cast <juce::AudioParameterChoice*> (apvts.getParameter("typeID")))
+// , transformPtr (dynamic_cast <juce::AudioParameterChoice*> (apvts.getParameter("transformID")))
+// , osPtr (dynamic_cast <juce::AudioParameterChoice*> (apvts.getParameter("osID")))
+// , outputPtr (dynamic_cast <juce::AudioParameterFloat*> (apvts.getParameter("outputID")))
+// , mixPtr (dynamic_cast <juce::AudioParameterFloat*> (apvts.getParameter("mixID")))
+// , bypassPtr (dynamic_cast<juce::AudioParameterBool*> (apvts.getParameter("bypassID")))
 {
-    // frequencyPtr = dynamic_cast <juce::AudioParameterFloat*> (state.getParameter("frequencyID"));
-    // resonancePtr = dynamic_cast <juce::AudioParameterFloat*> (state.getParameter("resonanceID"));
-    // gainPtr = dynamic_cast <juce::AudioParameterFloat*> (state.getParameter("gainID")));
-    // typePtr = dynamic_cast <juce::AudioParameterChoice*> (state.getParameter("typeID"));
-    // // osPtr = dynamic_cast <juce::AudioParameterChoice*> (state.getParameter("osID"));
-    // outputPtr = dynamic_cast <juce::AudioParameterFloat*> (state.getParameter("outputID"));
-    // // mixPtr = dynamic_cast <juce::AudioParameterFloat*> (state.getParameter("mixID"));
-    // bypassPtr = dynamic_cast <juce::AudioParameterBool*> (state.getParameter("bypassID"));
+    // frequencyPtr = dynamic_cast <juce::AudioParameterFloat*> (apvts.getParameter("frequencyID"));
+    // resonancePtr = dynamic_cast <juce::AudioParameterFloat*> (apvts.getParameter("resonanceID"));
+    // gainPtr = dynamic_cast <juce::AudioParameterFloat*> (apvts.getParameter("gainID"));
+    // typePtr = dynamic_cast <juce::AudioParameterChoice*> (apvts.getParameter("typeID"));
+    // // osPtr = dynamic_cast <juce::AudioParameterChoice*> (apvts.getParameter("osID"));
+    // outputPtr = dynamic_cast <juce::AudioParameterFloat*> (apvts.getParameter("outputID"));
+    // // mixPtr = dynamic_cast <juce::AudioParameterFloat*> (apvts.getParameter("mixID"));
+    // bypassPtr = dynamic_cast <juce::AudioParameterBool*> (apvts.getParameter("bypassID"));
 
-    jassert(frequencyPtr != nullptr);
-    jassert(resonancePtr != nullptr);
-    jassert(gainPtr != nullptr);
-    jassert(typePtr != nullptr);
-    jassert(transformPtr != nullptr);
-    // jassert(osPtr != nullptr);
-    jassert(outputPtr != nullptr);
-    // jassert(mixPtr != nullptr);
-    jassert(bypassPtr != nullptr);
+    // jassert(frequencyPtr != nullptr);
+    // jassert(resonancePtr != nullptr);
+    // jassert(gainPtr != nullptr);
+    // jassert(typePtr != nullptr);
+    // jassert(transformPtr != nullptr);
+    // // jassert(osPtr != nullptr);
+    // jassert(outputPtr != nullptr);
+    // // jassert(mixPtr != nullptr);
+    // jassert(bypassPtr != nullptr);
 }
 
 void AudioPluginAudioProcessorParameters::setParameterLayout(juce::AudioProcessorValueTreeState::ParameterLayout& params)
@@ -118,16 +120,16 @@ void AudioPluginAudioProcessorParameters::setParameterLayout(juce::AudioProcesso
         //======================================================================
         //(std::make_unique<juce::AudioProcessorParameterGroup>(juce::ParameterID{ "masterID", 1}, "0", "seperatorA",
             //==================================================================
-            std::make_unique<juce::AudioParameterBool> (juce::ParameterID{ "bypassID", ProjectInfo::versionNumber}, "Bypass", false)
-            , std::make_unique<juce::AudioParameterFloat> (juce::ParameterID{ "outputID", ProjectInfo::versionNumber}, "Output", outputRange, 00.00f, outputAttributes)
-            // , std::make_unique<juce::AudioParameterFloat> (juce::ParameterID{ "mixID", ProjectInfo::versionNumber}, "Mix", mixRange, 100.00f, mixAttributes)
+              std::make_unique<juce::AudioParameterBool>  ("bypassID", "Bypass", false)
+            , std::make_unique<juce::AudioParameterFloat> ("outputID", "Output", outputRange, 00.00f, outputAttributes)
+            // , std::make_unique<juce::AudioParameterFloat> ("mixID", "Mix", mixRange, 100.00f, mixAttributes)
     );
 
     params.add(
         //======================================================================
         //(std::make_unique<juce::AudioProcessorParameterGroup>(juce::ParameterID{ "masterID", 1}, "0", "seperatorA",
             //==================================================================
-            std::make_unique<juce::AudioParameterChoice>(juce::ParameterID{ "transformID", ProjectInfo::versionNumber}, "Transform", tString, 3)
+            std::make_unique<juce::AudioParameterChoice>("transformID", "Transform", tString, 3)
             // , std::make_unique<juce::AudioParameterChoice>(juce::ParameterID{ "osID", ProjectInfo::versionNumber}, "Oversampling", osString, 0)
             //==================================================================
     );
@@ -136,13 +138,24 @@ void AudioPluginAudioProcessorParameters::setParameterLayout(juce::AudioProcesso
         //======================================================================
         //(std::make_unique<juce::AudioProcessorParameterGroup>(juce::ParameterID{ "BandOneID", 1}, "1", "seperatorB",
             //==================================================================
-            std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ "frequencyID", ProjectInfo::versionNumber}, "Frequency", freqRange, 632.455f, freqAttributes)
+            std::make_unique<juce::AudioParameterFloat>("frequencyID", "Frequency", freqRange, 632.455f, freqAttributes)
             , std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ "resonanceID", ProjectInfo::versionNumber}, "Resonance", resRange, 00.10f, resoAttributes)
             , std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ "gainID", ProjectInfo::versionNumber}, "Gain", gainRange, 00.00f, gainAttributes)
             , std::make_unique<juce::AudioParameterChoice>(juce::ParameterID{ "typeID", ProjectInfo::versionNumber}, "Type", fString, 0)
             //==================================================================
     );
 }
+
+// juce::AudioProcessorValueTreeState::ParameterLayout AudioPluginAudioProcessorParameters::createParameterLayout()
+// {
+//     juce::AudioProcessorValueTreeState::ParameterLayout parameterLayout;
+
+//     setParameterLayout(parameterLayout);
+
+//     // parameterLayout.add(std::make_unique<juce::AudioParameterBool> (juce::ParameterID{ "bypassID", 1}, "Bypass", false));
+
+//     return parameterLayout;
+// }
 
   /// @} group Biquads
 } // namespace Biquads

@@ -83,10 +83,10 @@ public:
     void getCurrentProgramStateInformation(juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
     void setCurrentProgramStateInformation(const void* data, int sizeInBytes) override;
-    // //==============================================================================
+    //==============================================================================
     juce::UndoManager undoManager;
     juce::UndoManager& getUndoManager() { return undoManager; }
-    // //==============================================================================
+    //==============================================================================
     juce::AudioProcessorValueTreeState apvts;
     juce::AudioProcessorValueTreeState& getAPVTS() { return apvts; }
     static juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
@@ -94,7 +94,6 @@ public:
     juce::dsp::ProcessSpec spec;
     juce::dsp::ProcessSpec& getSpec() { return spec; }
 
-    StoneyDSP::Biquads::AudioPluginAudioProcessorParameters& getParams() { return parameters; }
 
 private:
     //==============================================================================
@@ -102,8 +101,21 @@ private:
     juce::AudioProcessor::ProcessingPrecision processingPrecision;
 
     AudioPluginAudioProcessorParameters parameters;
+
     AudioPluginAudioProcessorWrapper<float> processorFlt;
     AudioPluginAudioProcessorWrapper<double> processorDbl;
+
+    //==========================================================================
+    /** Parameter pointers. */
+    juce::AudioParameterFloat*      frequencyPtr    { nullptr };
+    juce::AudioParameterFloat*      resonancePtr    { nullptr };
+    juce::AudioParameterFloat*      gainPtr         { nullptr };
+    juce::AudioParameterChoice*     typePtr         { nullptr };
+    juce::AudioParameterChoice*     transformPtr    { nullptr };
+    // juce::AudioParameterChoice*  osPtr           { nullptr };
+    juce::AudioParameterFloat*      outputPtr       { nullptr };
+    // juce::AudioParameterFloat*   mixPtr          { nullptr };
+    juce::AudioParameterBool*       bypassPtr       { nullptr };
 
     juce::AudioParameterBool* bypassState { nullptr };
 

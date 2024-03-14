@@ -28,25 +28,25 @@ namespace Audio
  */
 template <typename SampleType>
 Biquads<SampleType>::Biquads()
- : b0(1.0)
- , b1(0.0)
- , b2(0.0)
- , a0(1.0)
- , a1(0.0)
- , a2(0.0)
- , b_0(1.0)
- , b_1(0.0)
- , b_2(0.0)
- , a_0(1.0)
- , a_1(0.0)
- , a_2(0.0)
- , loop(0.0)
- , outputSample(0.0)
- , minFreq(20.0)
- , maxFreq(20000.0)
- , hz(1000.0)
- , q(0.5)
- , g(0.0)
+ : b0           (static_cast <SampleType>(1.0))
+ , b1           (static_cast <SampleType>(0.0))
+ , b2           (static_cast <SampleType>(0.0))
+ , a0           (static_cast <SampleType>(1.0))
+ , a1           (static_cast <SampleType>(0.0))
+ , a2           (static_cast <SampleType>(0.0))
+ , b_0          (static_cast <SampleType>(1.0))
+ , b_1          (static_cast <SampleType>(0.0))
+ , b_2          (static_cast <SampleType>(0.0))
+ , a_0          (static_cast <SampleType>(1.0))
+ , a_1          (static_cast <SampleType>(0.0))
+ , a_2          (static_cast <SampleType>(0.0))
+ , loop         (static_cast <SampleType>(0.0))
+ , outputSample (static_cast <SampleType>(0.0))
+ , minFreq      (static_cast <SampleType>(20.0))
+ , maxFreq      (static_cast <SampleType>(20000.0))
+ , hz           (static_cast <SampleType>(1000.0))
+ , q            (static_cast <SampleType>(0.5))
+ , g            (static_cast <SampleType>(0.0))
 {
     reset();
 }
@@ -62,8 +62,8 @@ void Biquads<SampleType>::setFrequency (SampleType newFreq)
 {
     jassert(minFreq <= newFreq && newFreq <= maxFreq);
 
-    if (hz != newFreq)
-    {
+    // if (hz != newFreq)
+    // {
         hz = juce::jlimit(minFreq, maxFreq, newFreq);
 
         omega = (hz * ((pi * two) / static_cast <SampleType>(sampleRate)));
@@ -71,7 +71,7 @@ void Biquads<SampleType>::setFrequency (SampleType newFreq)
         sin = (std::sin(omega));
 
         calculateCoefficients();
-    }
+    // }
 }
 
 /**
@@ -85,12 +85,12 @@ void Biquads<SampleType>::setResonance(SampleType newRes)
 {
     jassert(zero <= newRes && newRes <= one);
 
-    if (q != newRes)
-    {
+    // if (q != newRes)
+    // {
         q = juce::jlimit(SampleType(0.0), SampleType(1.0), newRes);
 
         calculateCoefficients();
-    }
+    // }
 }
 
 /**
@@ -103,12 +103,12 @@ void Biquads<SampleType>::setResonance(SampleType newRes)
 template <typename SampleType>
 void Biquads<SampleType>::setGain(SampleType newGain)
 {
-    if (g != newGain)
-    {
+    // if (g != newGain)
+    // {
         g = newGain;
 
         calculateCoefficients();
-    }
+    // }
 }
 
 /**

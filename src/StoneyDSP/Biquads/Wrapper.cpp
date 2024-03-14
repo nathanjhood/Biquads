@@ -11,6 +11,7 @@
 
 #include "StoneyDSP/Biquads/Wrapper.hpp"
 #include "StoneyDSP/Biquads/Processor.hpp"
+#include "StoneyDSP/Biquads/Parameters.hpp"
 
 namespace StoneyDSP
 {
@@ -33,29 +34,49 @@ AudioPluginAudioProcessorWrapper<SampleType>::AudioPluginAudioProcessorWrapper(A
 : audioProcessor (p)
 , state(apvts)
 , setup(spec)
+// , parameters(p)
+// , parameters(audioProcessor, state)
 // , mixer()
 // , biquad()
-, b0(1.0)
-, b1(0.0)
-, b2(0.0)
-, a0(1.0)
-, a1(0.0)
-, a2(0.0)
-, b_0(1.0)
-, b_1(0.0)
-, b_2(0.0)
-, a_0(1.0)
-, a_1(0.0)
-, a_2(0.0)
-, loop(0.0)
-, outputSample(0.0)
-, minFreq(20.0)
-, maxFreq(20000.0)
-, hz(1000.0)
-, q(0.5)
-, g(0.0)
+, b0           (one)
+, b1           (zero)
+, b2           (zero)
+, a0           (one)
+, a1           (zero)
+, a2           (zero)
+, b_0          (one)
+, b_1          (zero)
+, b_2          (zero)
+, a_0          (one)
+, a_1          (zero)
+, a_2          (zero)
+, loop         (zero)
+, outputSample (zero)
+, minFreq      (static_cast <SampleType>(20.0))
+, maxFreq      (static_cast <SampleType>(20000.0))
+, hz           (static_cast <SampleType>(1000.0))
+, q            (static_cast <SampleType>(0.5))
+, g            (zero)
+, frequencyPtr (dynamic_cast <juce::AudioParameterFloat*> (p.getAPVTS().getParameter("frequencyID")))
+, resonancePtr (dynamic_cast <juce::AudioParameterFloat*> (p.getAPVTS().getParameter("resonanceID")))
+, gainPtr (dynamic_cast <juce::AudioParameterFloat*> (p.getAPVTS().getParameter("gainID")))
+, typePtr(dynamic_cast <juce::AudioParameterChoice*> (p.getAPVTS().getParameter("typeID")))
+, transformPtr (dynamic_cast <juce::AudioParameterChoice*> (p.getAPVTS().getParameter("transformID")))
+// , osPtr (dynamic_cast <juce::AudioParameterChoice*> (p.getAPVTS().getParameter("osID")))
+, outputPtr (dynamic_cast <juce::AudioParameterFloat*> (p.getAPVTS().getParameter("outputID")))
+// , mixPtr (dynamic_cast <juce::AudioParameterFloat*> (p.getAPVTS().getParameter("mixID")))
 {
-    reset(static_cast <SampleType> (0.0));
+
+    jassert(frequencyPtr != nullptr);
+    jassert(resonancePtr != nullptr);
+    jassert(gainPtr != nullptr);
+    jassert(typePtr != nullptr);
+    jassert(transformPtr != nullptr);
+    // jassert(osPtr != nullptr);
+    jassert(outputPtr != nullptr);
+    // jassert(mixPtr != nullptr);
+
+    reset(zero);
 }
 
 template <typename SampleType>
@@ -82,7 +103,7 @@ void AudioPluginAudioProcessorWrapper<SampleType>::setResonance(SampleType newRe
 
     // if (q != newRes)
     // {
-        q = juce::jlimit(SampleType(0.0), SampleType(1.0), newRes);
+        q = juce::jlimit(zero, one, newRes);
         calculateCoefficients();
     // }
 }
@@ -100,11 +121,11 @@ void AudioPluginAudioProcessorWrapper<SampleType>::setGain(SampleType newGain)
 template <typename SampleType>
 void AudioPluginAudioProcessorWrapper<SampleType>::setFilterType(filterType newFiltType)
 {
-    if (filtType != newFiltType)
+    if (filterTypeParamValue != newFiltType)
     {
-        filtType = newFiltType;
+        filterTypeParamValue = newFiltType;
 
-        reset(static_cast <SampleType> (0.0));
+        reset(zero);
         calculateCoefficients();
     }
 }
@@ -112,10 +133,10 @@ void AudioPluginAudioProcessorWrapper<SampleType>::setFilterType(filterType newF
 template <typename SampleType>
 void AudioPluginAudioProcessorWrapper<SampleType>::setTransformType(transformationType newTransformType)
 {
-    if (transformType != newTransformType)
+    if (transformationParamValue != newTransformType)
     {
-        transformType = newTransformType;
-        reset(static_cast <SampleType> (0.0));
+        transformationParamValue = newTransformType;
+        reset(zero);
     }
 }
 
@@ -141,12 +162,15 @@ void AudioPluginAudioProcessorWrapper<SampleType>::prepare(juce::dsp::ProcessSpe
     jassert(static_cast <SampleType> (20.0) <= maxFreq && maxFreq >= static_cast <SampleType> (20000.0));
 
 
-    reset(static_cast <SampleType> (0.0));
+    reset(zero);
 
     // mixer.prepare(setup);
     // biquad.prepare(spec);
-    setFilterType(filtType);
-    setTransformType(transformType);
+    setFrequency(hz);
+    setResonance(q);
+    setGain(g);
+    setFilterType(filterTypeParamValue);
+    setTransformType(transformationParamValue);
 
     update();
 }
@@ -157,7 +181,7 @@ void AudioPluginAudioProcessorWrapper<SampleType>::reset()
     // mixer.reset();
     // biquad.reset();
 
-    SampleType initialValue = static_cast<SampleType>(0.0);
+    SampleType initialValue = zero;
 
     for (auto v : { &Wn_1, &Wn_2, &Xn_1, &Xn_2, &Yn_1, &Yn_2 })
         std::fill(v->begin(), v->end(), initialValue);
@@ -200,6 +224,8 @@ void AudioPluginAudioProcessorWrapper<SampleType>::process(juce::AudioBuffer<Sam
         // ..do something to the data... (mixer push wet samples)?
     }
 
+    // update();
+
     processBlock(buffer, midiMessages);
 }
 
@@ -208,8 +234,13 @@ void AudioPluginAudioProcessorWrapper<SampleType>::processBlock(juce::AudioBuffe
 {
     juce::ignoreUnused(midiMessages);
 
-    auto gainParamValue  = state.getParameter ("outputID")->getValue();
-    // auto gainParamValue  = audioProcessorParameters.getOutput();
+    // auto outputParamValue = static_cast<SampleType>(state.getParameter ("outputID")->getValue());
+    // auto freqParamValue = static_cast<SampleType> (state.getParameter ("frequencyID")->getValue() /** / oversamplingFactor */)
+    setFrequency     (static_cast   <SampleType>    (frequencyPtr->get()));
+    setResonance     (static_cast   <SampleType>    (resonancePtr->get()));
+    setGain          (static_cast   <SampleType>    (gainPtr->get()));
+    setFilterType    (static_cast   <StoneyDSP::Audio::FilterType>          (typePtr->getIndex()));
+    setTransformType (static_cast   <StoneyDSP::Audio::TransformationType>  (transformPtr->getIndex()));
 
     // juce::dsp::AudioBlock<SampleType> dryBlock(buffer);
     juce::dsp::AudioBlock<SampleType> wetBlock(buffer);
@@ -226,7 +257,7 @@ void AudioPluginAudioProcessorWrapper<SampleType>::processBlock(juce::AudioBuffe
     processContext(context);
 
     for (auto channel = 0; channel < audioProcessor.getTotalNumOutputChannels(); ++channel)
-        buffer.applyGain (channel, 0, buffer.getNumSamples(), gainParamValue);
+        buffer.applyGain (channel, 0, buffer.getNumSamples(), static_cast<SampleType>(outputPtr->get()));
 
     // mixer.mixWetSamples(wetBlock);
 }
@@ -262,7 +293,7 @@ SampleType AudioPluginAudioProcessorWrapper<SampleType>::processSample(int chann
     jassert(juce::isPositiveAndBelow(channel, Yn_1.size()));
     jassert(juce::isPositiveAndBelow(channel, Yn_1.size()));
 
-    switch (transformType)
+    switch (transformationParamValue)
     {
     case StoneyDSP::Audio::TransformationType::directFormI:
         inputValue = directFormI(channel, inputValue);
@@ -366,28 +397,28 @@ void AudioPluginAudioProcessorWrapper<SampleType>::calculateCoefficients()
     a = (std::pow(SampleType(10), (g * SampleType(0.05))));
     sqrtA = ((std::sqrt(a) * two) * alpha);
 
-    switch (filtType)
+    switch (filterTypeParamValue)
     {
     case filterType::lowPass2:
 
-        b_0 = (one - cos) / two;
-        b_1 = one - cos;
-        b_2 = (one - cos) / two;
-        a_0 = one + alpha;
-        a_1 = minusTwo * cos;
-        a_2 = one - alpha;
+        b_0 = ((one - cos) / two);
+        b_1 = (one - cos);
+        b_2 = ((one - cos) / two);
+        a_0 = (one + alpha);
+        a_1 = (minusTwo * cos);
+        a_2 = (one - alpha);
 
         break;
 
 
     case filterType::lowPass1:
 
-        b_0 = omega / (one + omega);
-        b_1 = omega / (one + omega);
-        b_2 = zero;
-        a_0 = one;
-        a_1 = minusOne * ((one - omega) / (one + omega));
-        a_2 = zero;
+        b_0 = (omega / (one + omega));
+        b_1 = (omega / (one + omega));
+        b_2 = (zero);
+        a_0 = (one);
+        a_1 = (minusOne * ((one - omega) / (one + omega)));
+        a_2 = (zero);
 
         break;
 
@@ -395,155 +426,155 @@ void AudioPluginAudioProcessorWrapper<SampleType>::calculateCoefficients()
     case filterType::highPass2:
 
         b_0 = (one + cos) / two;
-        b_1 = minusOne * (one + cos);
-        b_2 = (one + cos) / two;
-        a_0 = one + alpha;
-        a_1 = minusTwo * cos;
-        a_2 = one - alpha;
+        b_1 = (minusOne * (one + cos));
+        b_2 = ((one + cos) / two);
+        a_0 = (one + alpha);
+        a_1 = (minusTwo * cos);
+        a_2 = (one - alpha);
 
         break;
 
 
     case filterType::highPass1:
 
-        b_0 = one / (one + omega);
-        b_1 = (one / (one + omega)) * minusOne;
-        b_2 = zero;
-        a_0 = one;
-        a_1 = ((one - omega) / (one + omega)) * minusOne;
-        a_2 = zero;
+        b_0 = (one / (one + omega));
+        b_1 = ((one / (one + omega)) * minusOne);
+        b_2 = (zero);
+        a_0 = (one);
+        a_1 = (((one - omega) / (one + omega)) * minusOne);
+        a_2 = (zero);
 
         break;
 
 
     case filterType::bandPass:
 
-        b_0 = sin / two;
-        b_1 = zero;
-        b_2 = minusOne * (sin / two);
-        a_0 = one + alpha;
-        a_1 = minusTwo * cos;
-        a_2 = one - alpha;
+        b_0 = (sin / two);
+        b_1 = (zero);
+        b_2 = (minusOne * (sin / two));
+        a_0 = (one + alpha);
+        a_1 = (minusTwo * cos);
+        a_2 = (one - alpha);
 
         break;
 
 
     case filterType::bandPassQ:
 
-        b_0 = alpha;
-        b_1 = zero;
-        b_2 = minusOne * alpha;
-        a_0 = one + alpha;
-        a_1 = minusTwo * cos;
-        a_2 = one - alpha;
+        b_0 = (alpha);
+        b_1 = (zero);
+        b_2 = (minusOne * alpha);
+        a_0 = (one + alpha);
+        a_1 = (minusTwo * cos);
+        a_2 = (one - alpha);
 
         break;
 
 
     case filterType::lowShelf2:
 
-        b_0 = (((a + one) - ((a - one) * cos)) + sqrtA) * a;
-        b_1 = (((a - one) - ((a + one) * cos)) * two) * a;
-        b_2 = (((a + one) - ((a - one) * cos)) - sqrtA) * a;
-        a_0 = ((a + one) + ((a - one) * cos)) + sqrtA;
-        a_1 = ((a - one) + ((a + one) * cos)) * minusTwo;
-        a_2 = ((a + one) + ((a - one) * cos)) - sqrtA;
+        b_0 = ((((a + one) - ((a - one) * cos)) + sqrtA) * a);
+        b_1 = ((((a - one) - ((a + one) * cos)) * two) * a);
+        b_2 = ((((a + one) - ((a - one) * cos)) - sqrtA) * a);
+        a_0 = (((a + one) + ((a - one) * cos)) + sqrtA);
+        a_1 = (((a - one) + ((a + one) * cos)) * minusTwo);
+        a_2 = (((a + one) + ((a - one) * cos)) - sqrtA);
 
         break;
 
 
     case filterType::lowShelf1:
 
-        b_0 = one + ((omega / (one + omega)) * (minusOne + (a * a)));
-        b_1 = (((omega / (one + omega)) * (minusOne + (a * a))) - ((one - omega) / (one + omega)));
-        b_2 = zero;
-        a_0 = one;
-        a_1 = minusOne * ((one - omega) / (one + omega));
-        a_2 = zero;
+        b_0 = (one + ((omega / (one + omega)) * (minusOne + (a * a))));
+        b_1 = ((((omega / (one + omega)) * (minusOne + (a * a))) - ((one - omega) / (one + omega))));
+        b_2 = (zero);
+        a_0 = (one);
+        a_1 = (minusOne * ((one - omega) / (one + omega)));
+        a_2 = (zero);
 
         break;
 
 
     case filterType::lowShelf1C:
 
-        b_0 = one + ((omega / a) / (one + (omega / a)) * (minusOne + (a * a)));
-        b_1 = ((((omega / a) / (one + (omega / a))) * (minusOne + (a * a))) - ((one - (omega / a)) / (one + (omega / a))));
-        b_2 = zero;
-        a_0 = one;
-        a_1 = minusOne * ((one - (omega / a)) / (one + (omega / a)));
-        a_2 = zero;
+        b_0 = (one + ((omega / a) / (one + (omega / a)) * (minusOne + (a * a))));
+        b_1 = (((((omega / a) / (one + (omega / a))) * (minusOne + (a * a))) - ((one - (omega / a)) / (one + (omega / a)))));
+        b_2 = (zero);
+        a_0 = (one);
+        a_1 = (minusOne * ((one - (omega / a)) / (one + (omega / a))));
+        a_2 = (zero);
 
         break;
 
 
     case filterType::highShelf2:
 
-        b_0 = (((a + one) + ((a - one) * cos)) + sqrtA) * a;
-        b_1 = (((a - one) + ((a + one) * cos)) * minusTwo) * a;
-        b_2 = (((a + one) + ((a - one) * cos)) - sqrtA) * a;
-        a_0 = ((a + one) - ((a - one) * cos)) + sqrtA;
-        a_1 = ((a - one) - ((a + one) * cos)) * two;
-        a_2 = ((a + one) - ((a - one) * cos)) - sqrtA;
+        b_0 = ((((a + one) + ((a - one) * cos)) + sqrtA) * a);
+        b_1 = ((((a - one) + ((a + one) * cos)) * minusTwo) * a);
+        b_2 = ((((a + one) + ((a - one) * cos)) - sqrtA) * a);
+        a_0 = (((a + one) - ((a - one) * cos)) + sqrtA);
+        a_1 = (((a - one) - ((a + one) * cos)) * two);
+        a_2 = (((a + one) - ((a - one) * cos)) - sqrtA);
 
         break;
 
 
     case filterType::highShelf1:
 
-        b_0 = one + ((minusOne + (a * a)) / (one + omega));
-        b_1 = minusOne * (((one - omega) / (one + omega)) + ((minusOne + (a * a)) / (one + omega)));
-        b_2 = zero;
-        a_0 = one;
-        a_1 = minusOne * ((one - omega) / (one + omega));
-        a_2 = zero;
+        b_0 = (one + ((minusOne + (a * a)) / (one + omega)));
+        b_1 = (minusOne * (((one - omega) / (one + omega)) + ((minusOne + (a * a)) / (one + omega))));
+        b_2 = (zero);
+        a_0 = (one);
+        a_1 = (minusOne * ((one - omega) / (one + omega)));
+        a_2 = (zero);
 
         break;
 
 
     case filterType::highShelf1C:
 
-        b_0 = one + ((minusOne + (a * a)) / (one + (omega * a)));
-        b_1 = minusOne * (((one - (omega * a)) / (one + (omega * a))) + ((minusOne + (a * a)) / (one + (omega * a))));
-        b_2 = zero;
-        a_0 = one;
-        a_1 = minusOne * ((one - (omega * a)) / (one + (omega * a)));
-        a_2 = zero;
+        b_0 = (one + ((minusOne + (a * a)) / (one + (omega * a))));
+        b_1 = (minusOne * (((one - (omega * a)) / (one + (omega * a))) + ((minusOne + (a * a)) / (one + (omega * a)))));
+        b_2 = (zero);
+        a_0 = (one);
+        a_1 = (minusOne * ((one - (omega * a)) / (one + (omega * a))));
+        a_2 = (zero);
 
         break;
 
 
     case filterType::peak:
 
-        b_0 = one + (alpha * a);
-        b_1 = minusTwo * cos;
-        b_2 = one - (alpha * a);
-        a_0 = one + (alpha / a);
-        a_1 = minusTwo * cos;
-        a_2 = one - (alpha / a);
+        b_0 = (one + (alpha * a));
+        b_1 = (minusTwo * cos);
+        b_2 = (one - (alpha * a));
+        a_0 = (one + (alpha / a));
+        a_1 = (minusTwo * cos);
+        a_2 = (one - (alpha / a));
 
         break;
 
 
     case filterType::notch:
 
-        b_0 = one;
-        b_1 = minusTwo * cos;
-        b_2 = one;
-        a_0 = one + alpha;
-        a_1 = minusTwo * cos;
-        a_2 = one - alpha;
+        b_0 = (one);
+        b_1 = (minusTwo * cos);
+        b_2 = (one);
+        a_0 = (one + alpha);
+        a_1 = (minusTwo * cos);
+        a_2 = (one - alpha);
 
         break;
 
 
     case filterType::allPass:
 
-        b_0 = one - alpha;
-        b_1 = minusTwo * cos;
-        b_2 = one + alpha;
-        a_0 = one + alpha;
-        a_1 = minusTwo * cos;
-        a_2 = one - alpha;
+        b_0 = (one - alpha);
+        b_1 = (minusTwo * cos);
+        b_2 = (one + alpha);
+        a_0 = (one + alpha);
+        a_1 = (minusTwo * cos);
+        a_2 = (one - alpha);
 
         break;
 
@@ -560,12 +591,12 @@ void AudioPluginAudioProcessorWrapper<SampleType>::calculateCoefficients()
         break;
     }
 
-    a0 = (one / a_0);
+    a0 = (  one  / a_0);
     a1 = ((-a_1) * a0);
     a2 = ((-a_2) * a0);
-    b0 = (b_0 * a0);
-    b1 = (b_1 * a0);
-    b2 = (b_2 * a0);
+    b0 = (  b_0  * a0);
+    b1 = (  b_1  * a0);
+    b2 = (  b_2  * a0);
 }
 
 template <typename SampleType>

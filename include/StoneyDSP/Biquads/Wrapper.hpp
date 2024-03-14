@@ -35,7 +35,7 @@ namespace Biquads
 
 class AudioPluginAudioProcessor;
 
-class AudioPluginAudioProcessorParameters;
+// class AudioPluginAudioProcessorParameters;
 
 template <typename SampleType>
 class AudioPluginAudioProcessorWrapper
@@ -166,6 +166,7 @@ private:
     AudioPluginAudioProcessor& audioProcessor;
     juce::AudioProcessorValueTreeState& state;
     juce::dsp::ProcessSpec& setup;
+    // AudioPluginAudioProcessorParameters& parameters;
 
     // juce::dsp::DryWetMixer<SampleType> mixer;
 
@@ -180,25 +181,43 @@ private:
     /** Coefficient calculation(s). */
     StoneyDSP::Maths::Coefficient<SampleType> b_0, b_1, b_2, a_0, a_1, a_2;
 
+    //==========================================================================
+    /** Parameter pointers. */
+    juce::AudioParameterFloat* frequencyPtr;
+    juce::AudioParameterFloat* resonancePtr;
+    juce::AudioParameterFloat* gainPtr;
+    juce::AudioParameterChoice* typePtr;
+    juce::AudioParameterChoice* transformPtr;
+    juce::AudioParameterChoice* osPtr;
+    juce::AudioParameterFloat* outputPtr;
+    juce::AudioParameterFloat* mixPtr;
+
+    filterType filterTypeParamValue { filterType::lowPass2 };
+    transformationType transformationParamValue { transformationType::directFormIItransposed };
+
+    bool bypassParamValue { false };
+
     /** Initialised parameter(s) */
     SampleType
-        loop = 0.0
-        , outputSample = 0.0
-        , minFreq = 20.0
-        , maxFreq = 20000.0
-        , hz = 1000.0
-        , q = 0.5
-        , g = 0.0
+        loop = static_cast<SampleType>(0.0)
+        , outputSample = static_cast<SampleType>(0.0)
+        , minFreq = static_cast<SampleType>(20.0)
+        , maxFreq = static_cast<SampleType>(20000.0)
+        , hz = static_cast<SampleType>(1000.0)
+        , q = static_cast<SampleType>(0.5)
+        , g = static_cast<SampleType>(0.0)
     ;
 
-    filterType filtType = filterType::lowPass2;
-    transformationType transformType = transformationType::directFormIItransposed;
-
-    SampleType omega, cos, sin, tan, alpha, a, sqrtA { 0.0 };
+    SampleType omega, cos, sin, tan, alpha, a, sqrtA { static_cast<SampleType>(0.0) };
 
     //==========================================================================
     /** Initialised constant */
-    const SampleType zero = 0.0, one = 1.0, two = 2.0, minusOne = -1.0, minusTwo = -2.0;
+    const SampleType zero = StoneyDSP::Maths::Constants<SampleType>::zero;
+    const SampleType one  = StoneyDSP::Maths::Constants<SampleType>::one;
+    const SampleType two  = StoneyDSP::Maths::Constants<SampleType>::two;
+    const SampleType minusOne = StoneyDSP::Maths::Constants<SampleType>::minusOne;
+    const SampleType minusTwo = StoneyDSP::Maths::Constants<SampleType>::minusTwo;
+
     const SampleType pi = juce::MathConstants<SampleType>::pi;
     double sampleRate = 0.0;
 

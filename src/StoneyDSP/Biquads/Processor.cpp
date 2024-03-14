@@ -40,13 +40,41 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
 )
 , undoManager()
 , apvts(*this, &undoManager, "Parameters", createParameterLayout())
-, spec ()
+, spec()
 , parameters(*this, getAPVTS())
 , processorFlt(*this, getAPVTS(), getSpec())
 , processorDbl(*this, getAPVTS(), getSpec())
-, bypassState (dynamic_cast<juce::AudioParameterBool*> (getAPVTS().getParameter("bypassID")))
+, frequencyPtr (dynamic_cast <juce::AudioParameterFloat*> (apvts.getParameter("frequencyID")))
+, resonancePtr (dynamic_cast <juce::AudioParameterFloat*> (apvts.getParameter("resonanceID")))
+, gainPtr (dynamic_cast <juce::AudioParameterFloat*> (apvts.getParameter("gainID")))
+, typePtr(dynamic_cast <juce::AudioParameterChoice*> (apvts.getParameter("typeID")))
+, transformPtr (dynamic_cast <juce::AudioParameterChoice*> (apvts.getParameter("transformID")))
+// , osPtr (dynamic_cast <juce::AudioParameterChoice*> (apvts.getParameter("osID")))
+, outputPtr (dynamic_cast <juce::AudioParameterFloat*> (apvts.getParameter("outputID")))
+// , mixPtr (dynamic_cast <juce::AudioParameterFloat*> (apvts.getParameter("mixID")))
+, bypassPtr (dynamic_cast<juce::AudioParameterBool*> (apvts.getParameter("bypassID")))
+, bypassState (dynamic_cast<juce::AudioParameterBool*> (apvts.getParameter("bypassID")))
 // , processingPrecision(singlePrecision)
 {
+    frequencyPtr = dynamic_cast <juce::AudioParameterFloat*> (apvts.getParameter("frequencyID"));
+    resonancePtr = dynamic_cast <juce::AudioParameterFloat*> (apvts.getParameter("resonanceID"));
+    gainPtr = dynamic_cast <juce::AudioParameterFloat*> (apvts.getParameter("gainID"));
+    typePtr = dynamic_cast <juce::AudioParameterChoice*> (apvts.getParameter("typeID"));
+    // osPtr = dynamic_cast <juce::AudioParameterChoice*> (apvts.getParameter("osID"));
+    outputPtr = dynamic_cast <juce::AudioParameterFloat*> (apvts.getParameter("outputID"));
+    // mixPtr = dynamic_cast <juce::AudioParameterFloat*> (apvts.getParameter("mixID"));
+    bypassPtr = dynamic_cast <juce::AudioParameterBool*> (apvts.getParameter("bypassID"));
+
+    jassert(frequencyPtr != nullptr);
+    jassert(resonancePtr != nullptr);
+    jassert(gainPtr != nullptr);
+    jassert(typePtr != nullptr);
+    jassert(transformPtr != nullptr);
+    // jassert(osPtr != nullptr);
+    jassert(outputPtr != nullptr);
+    // jassert(mixPtr != nullptr);
+    jassert(bypassPtr != nullptr);
+
     jassert(bypassState != nullptr);
 }
 
@@ -222,19 +250,6 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, 
 {
     jassert (! isUsingDoublePrecision());
 
-    // auto byp = bypassState->get() == false;
-
-    // if (!byp)
-    // {
-    //     juce::ScopedNoDenormals noDenormals;
-
-    //     processorFlt.process(buffer, midiMessages);
-    // }
-    // else
-    // {
-    //     processBlockBypassed(buffer, midiMessages);
-    // }
-
     juce::ScopedNoDenormals noDenormals;
 
     processorFlt.process(buffer, midiMessages);
@@ -243,19 +258,6 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, 
 void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<double>& buffer, juce::MidiBuffer& midiMessages)
 {
     jassert (isUsingDoublePrecision());
-
-    // auto byp = bypassState->get() == false;
-
-    // if (!byp)
-    // {
-    //     juce::ScopedNoDenormals noDenormals;
-
-    //     processorDbl.process(buffer, midiMessages);
-    // }
-    // else
-    // {
-    //     processBlockBypassed(buffer, midiMessages);
-    // }
 
     juce::ScopedNoDenormals noDenormals;
 
