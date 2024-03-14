@@ -151,6 +151,12 @@ public:
     /** Updates the internal state variables of the processor. */
     void update();
 
+    // //==========================================================================
+    // /** Sets the oversampling factor. */
+    // void setOversampling();
+
+    // SampleType getLatencySamples() const noexcept;
+
 private:
     void calculateCoefficients();
 
@@ -166,12 +172,12 @@ private:
     AudioPluginAudioProcessor& audioProcessor;
     juce::AudioProcessorValueTreeState& state;
     juce::dsp::ProcessSpec& setup;
-    // AudioPluginAudioProcessorParameters& parameters;
 
+    //==============================================================================
+    // std::unique_ptr<juce::dsp::Oversampling<SampleType>> oversampler[5];
     juce::dsp::DryWetMixer<SampleType> mixer;
 
-    // StoneyDSP::Audio::Biquads<SampleType> biquad;
-
+    //==============================================================================
     /** Unit-delay object(s). */
     std::vector<SampleType> Wn_1, Wn_2, Xn_1, Xn_2, Yn_1, Yn_2;
 
@@ -181,14 +187,14 @@ private:
     /** Coefficient calculation(s). */
     StoneyDSP::Maths::Coefficient<SampleType> b_0, b_1, b_2, a_0, a_1, a_2;
 
-    //==========================================================================
+    //==============================================================================
     /** Parameter pointers. */
     juce::AudioParameterFloat* frequencyPtr;
     juce::AudioParameterFloat* resonancePtr;
     juce::AudioParameterFloat* gainPtr;
     juce::AudioParameterChoice* typePtr;
     juce::AudioParameterChoice* transformPtr;
-    juce::AudioParameterChoice* osPtr;
+    // juce::AudioParameterChoice* osPtr;
     juce::AudioParameterFloat* outputPtr;
     juce::AudioParameterFloat* mixPtr;
 
@@ -197,6 +203,7 @@ private:
 
     bool bypassParamValue { false };
 
+    //==============================================================================
     /** Initialised parameter(s) */
     SampleType
         loop = static_cast<SampleType>(0.0)
@@ -210,16 +217,18 @@ private:
 
     SampleType omega, cos, sin, tan, alpha, a, sqrtA { static_cast<SampleType>(0.0) };
 
-    //==========================================================================
+    //==============================================================================
     /** Initialised constant */
-    const SampleType zero = StoneyDSP::Maths::Constants<SampleType>::zero;
-    const SampleType one  = StoneyDSP::Maths::Constants<SampleType>::one;
-    const SampleType two  = StoneyDSP::Maths::Constants<SampleType>::two;
-    const SampleType minusOne = StoneyDSP::Maths::Constants<SampleType>::minusOne;
-    const SampleType minusTwo = StoneyDSP::Maths::Constants<SampleType>::minusTwo;
+    const SampleType zero       = StoneyDSP::Maths::Constants<SampleType>::zero;
+    const SampleType one        = StoneyDSP::Maths::Constants<SampleType>::one;
+    const SampleType two        = StoneyDSP::Maths::Constants<SampleType>::two;
+    const SampleType minusOne   = StoneyDSP::Maths::Constants<SampleType>::minusOne;
+    const SampleType minusTwo   = StoneyDSP::Maths::Constants<SampleType>::minusTwo;
 
-    const SampleType pi = juce::MathConstants<SampleType>::pi;
+    const SampleType pi         = juce::MathConstants<SampleType>::pi;
     double sampleRate = 0.0;
+
+    // int curOS = 0, prevOS = 0, oversamplingFactor = 1;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(AudioPluginAudioProcessorWrapper)
 };

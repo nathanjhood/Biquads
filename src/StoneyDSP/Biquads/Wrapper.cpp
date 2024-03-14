@@ -57,14 +57,14 @@ AudioPluginAudioProcessorWrapper<SampleType>::AudioPluginAudioProcessorWrapper(A
 , hz            (static_cast <SampleType>(1000.0))
 , q             (static_cast <SampleType>(0.5))
 , g             (zero)
-, frequencyPtr  (dynamic_cast <juce::AudioParameterFloat*> (p.getAPVTS().getParameter("frequencyID")))
-, resonancePtr  (dynamic_cast <juce::AudioParameterFloat*> (p.getAPVTS().getParameter("resonanceID")))
-, gainPtr       (dynamic_cast <juce::AudioParameterFloat*> (p.getAPVTS().getParameter("gainID")))
-, typePtr       (dynamic_cast <juce::AudioParameterChoice*> (p.getAPVTS().getParameter("typeID")))
-, transformPtr  (dynamic_cast <juce::AudioParameterChoice*> (p.getAPVTS().getParameter("transformID")))
-// , osPtr (dynamic_cast <juce::AudioParameterChoice*> (p.getAPVTS().getParameter("osID")))
-, outputPtr     (dynamic_cast <juce::AudioParameterFloat*> (p.getAPVTS().getParameter("outputID")))
-, mixPtr (dynamic_cast <juce::AudioParameterFloat*> (p.getAPVTS().getParameter("mixID")))
+, frequencyPtr  (dynamic_cast <juce::AudioParameterFloat*> (p.getAPVTS().getParameter("Band_A_frequencyID")))
+, resonancePtr  (dynamic_cast <juce::AudioParameterFloat*> (p.getAPVTS().getParameter("Band_A_resonanceID")))
+, gainPtr       (dynamic_cast <juce::AudioParameterFloat*> (p.getAPVTS().getParameter("Band_A_gainID")))
+, typePtr       (dynamic_cast <juce::AudioParameterChoice*> (p.getAPVTS().getParameter("Band_A_typeID")))
+, transformPtr  (dynamic_cast <juce::AudioParameterChoice*> (p.getAPVTS().getParameter("Master_transformID")))
+// , osPtr         (dynamic_cast <juce::AudioParameterChoice*> (p.getAPVTS().getParameter("Master_osID")))
+, outputPtr     (dynamic_cast <juce::AudioParameterFloat*> (p.getAPVTS().getParameter("Master_outputID")))
+, mixPtr        (dynamic_cast <juce::AudioParameterFloat*> (p.getAPVTS().getParameter("Master_mixID")))
 {
 
     jassert(frequencyPtr != nullptr);
@@ -75,6 +75,12 @@ AudioPluginAudioProcessorWrapper<SampleType>::AudioPluginAudioProcessorWrapper(A
     // jassert(osPtr != nullptr);
     jassert(outputPtr != nullptr);
     jassert(mixPtr != nullptr);
+
+    // auto osFilter = juce::dsp::Oversampling<SampleType>::filterHalfBandFIREquiripple;
+
+    // for (int i = 0; i < 5; ++i)
+    //     oversampler[i] = std::make_unique<juce::dsp::Oversampling<SampleType>>
+    //     (audioProcessor.getTotalNumInputChannels(), i, osFilter, true, false);
 
     reset(zero);
 }
@@ -148,6 +154,15 @@ void AudioPluginAudioProcessorWrapper<SampleType>::prepare(juce::dsp::ProcessSpe
 
     sampleRate = spec.sampleRate;
 
+    // oversamplingFactor = 1 << curOS;
+    // prevOS = curOS;
+
+    // for (int i = 0; i < 5; ++i)
+    //     oversampler[i]->initProcessing(spec.maximumBlockSize);
+
+    // for (int i = 0; i < 5; ++i)
+    //     oversampler[i]->numChannels = (size_t)spec.numChannels;
+
     Wn_1.resize(spec.numChannels);
     Wn_2.resize(spec.numChannels);
     Xn_1.resize(spec.numChannels);
@@ -185,6 +200,9 @@ void AudioPluginAudioProcessorWrapper<SampleType>::reset()
 
     for (auto v : { &Wn_1, &Wn_2, &Xn_1, &Xn_2, &Yn_1, &Yn_2 })
         std::fill(v->begin(), v->end(), initialValue);
+
+    // for (int i = 0; i < 5; ++i)
+    //     oversampler[i]->reset();
 }
 
 template <typename SampleType>
@@ -194,6 +212,9 @@ void AudioPluginAudioProcessorWrapper<SampleType>::reset(SampleType initialValue
 
     for (auto v : { &Wn_1, &Wn_2, &Xn_1, &Xn_2, &Yn_1, &Yn_2 })
         std::fill(v->begin(), v->end(), initialValue);
+
+    // for (int i = 0; i < 5; ++i)
+    //     oversampler[i]->reset();
 }
 
 //==============================================================================
@@ -226,6 +247,7 @@ void AudioPluginAudioProcessorWrapper<SampleType>::process(juce::AudioBuffer<Sam
         // ..do something to the data... (mixer push wet samples)?
     }
 
+    // setOversampling();
     update();
 
     processBlock(buffer, midiMessages);
@@ -242,6 +264,8 @@ void AudioPluginAudioProcessorWrapper<SampleType>::processBlock(juce::AudioBuffe
 
     mixer.pushDrySamples(dryBlock);
 
+    // wetBlock = oversampler[curOS]->processSamplesUp(dryBlock);
+
     // This context is intended for use in situations where two different blocks
     // are being used as the input and output to the process algorithm, so the
     // processor must read from the block returned by getInputBlock() and write
@@ -250,6 +274,8 @@ void AudioPluginAudioProcessorWrapper<SampleType>::processBlock(juce::AudioBuffe
 
     // biquad.process(context);
     processContext(context);
+
+    // oversampler[curOS]->processSamplesDown(wetBlock);
 
     for (auto channel = 0; channel < audioProcessor.getTotalNumOutputChannels(); ++channel)
         buffer.applyGain (channel, 0, buffer.getNumSamples(), static_cast<SampleType>(juce::Decibels::decibelsToGain(static_cast<SampleType>(outputPtr->get()), static_cast<SampleType>(-120.00))));
@@ -620,6 +646,26 @@ void AudioPluginAudioProcessorWrapper<SampleType>::update()
     setFilterType    (static_cast   <StoneyDSP::Audio::FilterType>          (typePtr->getIndex()));
     setTransformType (static_cast   <StoneyDSP::Audio::TransformationType>  (transformPtr->getIndex()));
 }
+
+// template <typename SampleType>
+// void AudioPluginAudioProcessorWrapper<SampleType>::setOversampling()
+// {
+//     curOS = (int)osPtr->getIndex();
+//     if (curOS != prevOS)
+//     {
+//         oversamplingFactor = 1 << curOS;
+//         prevOS = curOS;
+//         mixer.reset();
+//         // biquad.reset();
+//         // output.reset();
+//     }
+// }
+
+// template <typename SampleType>
+// SampleType AudioPluginAudioProcessorWrapper<SampleType>::getLatencySamples() const noexcept
+// {
+//     return oversampler[curOS]->getLatencyInSamples();
+// }
 //==============================================================================
 template class AudioPluginAudioProcessorWrapper<float>;
 template class AudioPluginAudioProcessorWrapper<double>;
