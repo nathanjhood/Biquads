@@ -19,7 +19,7 @@ env:
   CMAKE_BUILD_PARALLEL_LEVEL: 3 # Use up to 3 cpus to build juceaide, etc
   VCPKG_MAX_CONCURRENCY: 3
   SCCACHE_GHA_ENABLED: "true"
-  STONEYDSP_BIQUADS_CURRENT_VERSION: 0.0.1
+  STONEYDSP_BIQUADS_CURRENT_VERSION: 1.2.0
   STONEYDSP_CURRENT_JUCE_VERSION: 7.0.9
 
 jobs:
@@ -160,26 +160,26 @@ jobs:
     - name: Upload Zip Source
       uses: actions/upload-artifact@v4
       with:
-        name: StoneyDSP-v${{ env.STONEYDSP_BIQUADS_CURRENT_VERSION }}-Source.zip
-        path: '${{ github.workspace }}/install/StoneyDSP-v${{ env.STONEYDSP_BIQUADS_CURRENT_VERSION }}-Source.zip'
+        name: StoneyDSP-Biquads-v${{ env.STONEYDSP_BIQUADS_CURRENT_VERSION }}-Source.zip
+        path: '${{ github.workspace }}/install/StoneyDSP-Biquads-v${{ env.STONEYDSP_BIQUADS_CURRENT_VERSION }}-Source.zip'
         
     - name: Upload Tar Source
       uses: actions/upload-artifact@v4
       with:
-        name: StoneyDSP-v${{ env.STONEYDSP_BIQUADS_CURRENT_VERSION }}-Source.tar.gz
-        path: '${{ github.workspace }}/install/StoneyDSP-v${{ env.STONEYDSP_BIQUADS_CURRENT_VERSION }}-Source.tar.gz'
+        name: StoneyDSP-Biquads-v${{ env.STONEYDSP_BIQUADS_CURRENT_VERSION }}-Source.tar.gz
+        path: '${{ github.workspace }}/install/StoneyDSP-Biquads-v${{ env.STONEYDSP_BIQUADS_CURRENT_VERSION }}-Source.tar.gz'
 
     - name: Upload Zip Build
       uses: actions/upload-artifact@v4
       with:
-        name: StoneyDSP-v${{ env.STONEYDSP_BIQUADS_CURRENT_VERSION }}-Linux-x86_64-JUCE-v${{ env.STONEYDSP_CURRENT_JUCE_VERSION }}.zip
-        path: '${{ github.workspace }}/install/StoneyDSP-v${{ env.STONEYDSP_BIQUADS_CURRENT_VERSION }}-Linux-x86_64-JUCE-v${{ env.STONEYDSP_CURRENT_JUCE_VERSION }}.zip'
+        name: StoneyDSP-Biquads-v${{ env.STONEYDSP_BIQUADS_CURRENT_VERSION }}-Linux-x86_64-JUCE-v${{ env.STONEYDSP_CURRENT_JUCE_VERSION }}.zip
+        path: '${{ github.workspace }}/install/StoneyDSP-Biquads-v${{ env.STONEYDSP_BIQUADS_CURRENT_VERSION }}-Linux-x86_64-JUCE-v${{ env.STONEYDSP_CURRENT_JUCE_VERSION }}.zip'
 
     - name: Upload Tar Build
       uses: actions/upload-artifact@v4
       with:
-        name: StoneyDSP-v${{ env.STONEYDSP_BIQUADS_CURRENT_VERSION }}-Linux-x86_64-JUCE-v${{ env.STONEYDSP_CURRENT_JUCE_VERSION }}.tar.gz
-        path: '${{ github.workspace }}/install/StoneyDSP-v${{ env.STONEYDSP_BIQUADS_CURRENT_VERSION }}-Linux-x86_64-JUCE-v${{ env.STONEYDSP_CURRENT_JUCE_VERSION }}.tar.gz'
+        name: StoneyDSP-Biquads-v${{ env.STONEYDSP_BIQUADS_CURRENT_VERSION }}-Linux-x86_64-JUCE-v${{ env.STONEYDSP_CURRENT_JUCE_VERSION }}.tar.gz
+        path: '${{ github.workspace }}/install/StoneyDSP-Biquads-v${{ env.STONEYDSP_BIQUADS_CURRENT_VERSION }}-Linux-x86_64-JUCE-v${{ env.STONEYDSP_CURRENT_JUCE_VERSION }}.tar.gz'
 
     - name: Get Artifacts
       uses: actions/download-artifact@v4
