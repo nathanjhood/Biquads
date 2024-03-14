@@ -51,7 +51,7 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
 , transformPtr (dynamic_cast <juce::AudioParameterChoice*> (apvts.getParameter("transformID")))
 // , osPtr (dynamic_cast <juce::AudioParameterChoice*> (apvts.getParameter("osID")))
 , outputPtr (dynamic_cast <juce::AudioParameterFloat*> (apvts.getParameter("outputID")))
-// , mixPtr (dynamic_cast <juce::AudioParameterFloat*> (apvts.getParameter("mixID")))
+, mixPtr (dynamic_cast <juce::AudioParameterFloat*> (apvts.getParameter("mixID")))
 , bypassPtr (dynamic_cast<juce::AudioParameterBool*> (apvts.getParameter("bypassID")))
 , bypassState (dynamic_cast<juce::AudioParameterBool*> (apvts.getParameter("bypassID")))
 // , processingPrecision(singlePrecision)
@@ -62,7 +62,7 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
     typePtr = dynamic_cast <juce::AudioParameterChoice*> (apvts.getParameter("typeID"));
     // osPtr = dynamic_cast <juce::AudioParameterChoice*> (apvts.getParameter("osID"));
     outputPtr = dynamic_cast <juce::AudioParameterFloat*> (apvts.getParameter("outputID"));
-    // mixPtr = dynamic_cast <juce::AudioParameterFloat*> (apvts.getParameter("mixID"));
+    mixPtr = dynamic_cast <juce::AudioParameterFloat*> (apvts.getParameter("mixID"));
     bypassPtr = dynamic_cast <juce::AudioParameterBool*> (apvts.getParameter("bypassID"));
 
     jassert(frequencyPtr != nullptr);
@@ -72,7 +72,7 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
     jassert(transformPtr != nullptr);
     // jassert(osPtr != nullptr);
     jassert(outputPtr != nullptr);
-    // jassert(mixPtr != nullptr);
+    jassert(mixPtr != nullptr);
     jassert(bypassPtr != nullptr);
 
     jassert(bypassState != nullptr);

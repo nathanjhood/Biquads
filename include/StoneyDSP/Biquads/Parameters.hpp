@@ -13,8 +13,6 @@
 
 #define STONEYDSP_BIQUADS_PARAMETERS_HPP_INCLUDED
 
-// #include <JuceHeader.h>
-
 #include "StoneyDSP/Biquads.hpp"
 
 namespace StoneyDSP

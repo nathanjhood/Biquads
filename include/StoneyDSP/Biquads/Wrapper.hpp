@@ -168,7 +168,7 @@ private:
     juce::dsp::ProcessSpec& setup;
     // AudioPluginAudioProcessorParameters& parameters;
 
-    // juce::dsp::DryWetMixer<SampleType> mixer;
+    juce::dsp::DryWetMixer<SampleType> mixer;
 
     // StoneyDSP::Audio::Biquads<SampleType> biquad;
 

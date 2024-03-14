@@ -36,35 +36,35 @@ AudioPluginAudioProcessorWrapper<SampleType>::AudioPluginAudioProcessorWrapper(A
 , setup(spec)
 // , parameters(p)
 // , parameters(audioProcessor, state)
-// , mixer()
+, mixer()
 // , biquad()
-, b0           (one)
-, b1           (zero)
-, b2           (zero)
-, a0           (one)
-, a1           (zero)
-, a2           (zero)
-, b_0          (one)
-, b_1          (zero)
-, b_2          (zero)
-, a_0          (one)
-, a_1          (zero)
-, a_2          (zero)
-, loop         (zero)
-, outputSample (zero)
-, minFreq      (static_cast <SampleType>(20.0))
-, maxFreq      (static_cast <SampleType>(20000.0))
-, hz           (static_cast <SampleType>(1000.0))
-, q            (static_cast <SampleType>(0.5))
-, g            (zero)
-, frequencyPtr (dynamic_cast <juce::AudioParameterFloat*> (p.getAPVTS().getParameter("frequencyID")))
-, resonancePtr (dynamic_cast <juce::AudioParameterFloat*> (p.getAPVTS().getParameter("resonanceID")))
-, gainPtr (dynamic_cast <juce::AudioParameterFloat*> (p.getAPVTS().getParameter("gainID")))
-, typePtr(dynamic_cast <juce::AudioParameterChoice*> (p.getAPVTS().getParameter("typeID")))
-, transformPtr (dynamic_cast <juce::AudioParameterChoice*> (p.getAPVTS().getParameter("transformID")))
+, b0            (one)
+, b1            (zero)
+, b2            (zero)
+, a0            (one)
+, a1            (zero)
+, a2            (zero)
+, b_0           (one)
+, b_1           (zero)
+, b_2           (zero)
+, a_0           (one)
+, a_1           (zero)
+, a_2           (zero)
+, loop          (zero)
+, outputSample  (zero)
+, minFreq       (static_cast <SampleType>(20.0))
+, maxFreq       (static_cast <SampleType>(20000.0))
+, hz            (static_cast <SampleType>(1000.0))
+, q             (static_cast <SampleType>(0.5))
+, g             (zero)
+, frequencyPtr  (dynamic_cast <juce::AudioParameterFloat*> (p.getAPVTS().getParameter("frequencyID")))
+, resonancePtr  (dynamic_cast <juce::AudioParameterFloat*> (p.getAPVTS().getParameter("resonanceID")))
+, gainPtr       (dynamic_cast <juce::AudioParameterFloat*> (p.getAPVTS().getParameter("gainID")))
+, typePtr       (dynamic_cast <juce::AudioParameterChoice*> (p.getAPVTS().getParameter("typeID")))
+, transformPtr  (dynamic_cast <juce::AudioParameterChoice*> (p.getAPVTS().getParameter("transformID")))
 // , osPtr (dynamic_cast <juce::AudioParameterChoice*> (p.getAPVTS().getParameter("osID")))
-, outputPtr (dynamic_cast <juce::AudioParameterFloat*> (p.getAPVTS().getParameter("outputID")))
-// , mixPtr (dynamic_cast <juce::AudioParameterFloat*> (p.getAPVTS().getParameter("mixID")))
+, outputPtr     (dynamic_cast <juce::AudioParameterFloat*> (p.getAPVTS().getParameter("outputID")))
+, mixPtr (dynamic_cast <juce::AudioParameterFloat*> (p.getAPVTS().getParameter("mixID")))
 {
 
     jassert(frequencyPtr != nullptr);
@@ -74,7 +74,7 @@ AudioPluginAudioProcessorWrapper<SampleType>::AudioPluginAudioProcessorWrapper(A
     jassert(transformPtr != nullptr);
     // jassert(osPtr != nullptr);
     jassert(outputPtr != nullptr);
-    // jassert(mixPtr != nullptr);
+    jassert(mixPtr != nullptr);
 
     reset(zero);
 }
@@ -164,7 +164,7 @@ void AudioPluginAudioProcessorWrapper<SampleType>::prepare(juce::dsp::ProcessSpe
 
     reset(zero);
 
-    // mixer.prepare(setup);
+    mixer.prepare(spec);
     // biquad.prepare(spec);
     setFrequency(hz);
     setResonance(q);
@@ -178,7 +178,7 @@ void AudioPluginAudioProcessorWrapper<SampleType>::prepare(juce::dsp::ProcessSpe
 template <typename SampleType>
 void AudioPluginAudioProcessorWrapper<SampleType>::reset()
 {
-    // mixer.reset();
+    mixer.reset();
     // biquad.reset();
 
     SampleType initialValue = zero;
@@ -190,6 +190,8 @@ void AudioPluginAudioProcessorWrapper<SampleType>::reset()
 template <typename SampleType>
 void AudioPluginAudioProcessorWrapper<SampleType>::reset(SampleType initialValue)
 {
+    mixer.reset();
+
     for (auto v : { &Wn_1, &Wn_2, &Xn_1, &Xn_2, &Yn_1, &Yn_2 })
         std::fill(v->begin(), v->end(), initialValue);
 }
@@ -224,9 +226,10 @@ void AudioPluginAudioProcessorWrapper<SampleType>::process(juce::AudioBuffer<Sam
         // ..do something to the data... (mixer push wet samples)?
     }
 
-    // update();
+    update();
 
     processBlock(buffer, midiMessages);
+    return;
 }
 
 template <typename SampleType>
@@ -234,18 +237,10 @@ void AudioPluginAudioProcessorWrapper<SampleType>::processBlock(juce::AudioBuffe
 {
     juce::ignoreUnused(midiMessages);
 
-    // auto outputParamValue = static_cast<SampleType>(state.getParameter ("outputID")->getValue());
-    // auto freqParamValue = static_cast<SampleType> (state.getParameter ("frequencyID")->getValue() /** / oversamplingFactor */)
-    setFrequency     (static_cast   <SampleType>    (frequencyPtr->get()));
-    setResonance     (static_cast   <SampleType>    (resonancePtr->get()));
-    setGain          (static_cast   <SampleType>    (gainPtr->get()));
-    setFilterType    (static_cast   <StoneyDSP::Audio::FilterType>          (typePtr->getIndex()));
-    setTransformType (static_cast   <StoneyDSP::Audio::TransformationType>  (transformPtr->getIndex()));
-
-    // juce::dsp::AudioBlock<SampleType> dryBlock(buffer);
+    juce::dsp::AudioBlock<SampleType> dryBlock(buffer);
     juce::dsp::AudioBlock<SampleType> wetBlock(buffer);
 
-    // mixer.pushDrySamples(dryBlock);
+    mixer.pushDrySamples(dryBlock);
 
     // This context is intended for use in situations where two different blocks
     // are being used as the input and output to the process algorithm, so the
@@ -257,9 +252,10 @@ void AudioPluginAudioProcessorWrapper<SampleType>::processBlock(juce::AudioBuffe
     processContext(context);
 
     for (auto channel = 0; channel < audioProcessor.getTotalNumOutputChannels(); ++channel)
-        buffer.applyGain (channel, 0, buffer.getNumSamples(), static_cast<SampleType>(outputPtr->get()));
+        buffer.applyGain (channel, 0, buffer.getNumSamples(), static_cast<SampleType>(juce::Decibels::decibelsToGain(static_cast<SampleType>(outputPtr->get()), static_cast<SampleType>(-120.00))));
 
-    // mixer.mixWetSamples(wetBlock);
+    mixer.mixWetSamples(wetBlock);
+    return;
 }
 
 template <typename SampleType>
@@ -277,8 +273,15 @@ void AudioPluginAudioProcessorWrapper<SampleType>::processBypass(juce::AudioBuff
 
     const auto& inputBlock = context.getInputBlock();
     auto& outputBlock = context.getOutputBlock();
+    const auto numChannels = outputBlock.getNumChannels();
+    const auto numSamples = outputBlock.getNumSamples();
+    //const auto len = inputBlock.getNumSamples();
+
+    jassert(inputBlock.getNumChannels() == numChannels);
+    jassert(inputBlock.getNumSamples() == numSamples);
 
     outputBlock.copyFrom(inputBlock);
+    return;
 }
 
 template <typename SampleType>
@@ -343,7 +346,7 @@ SampleType AudioPluginAudioProcessorWrapper<SampleType>::directFormII(int channe
     auto& Xn = inputSample;
     auto& Yn = outputSample;
 
-    Wn = (Xn + ((Wn1 * a1) + (Wn2 * a2)));
+    Wn = ( Xn + ((Wn1 * a1) + (Wn2 * a2)));
     Yn = ((Wn * b0) + (Wn1 * b1) + (Wn2 * b2));
 
     Wn2 = Wn1;
@@ -364,11 +367,11 @@ SampleType AudioPluginAudioProcessorWrapper<SampleType>::directFormITransposed(i
     auto& Xn = inputSample;
     auto& Yn = outputSample;
 
-    Wn = (Xn + Wn2);
+    Wn = ( Xn + Wn2);
     Yn = ((Wn * b0) + Xn2);
 
     Xn2 = ((Wn * b1) + Xn1), Wn2 = ((Wn * a1) + Wn1);
-    Xn1 = (Wn * b2), Wn1 = (Wn * a2);
+    Xn1 = ( Wn * b2),        Wn1 = ( Wn * a2);
 
     return Yn;
 }
@@ -382,10 +385,10 @@ SampleType AudioPluginAudioProcessorWrapper<SampleType>::directFormIITransposed(
     auto& Xn = inputSample;
     auto& Yn = outputSample;
 
-    Yn = ((Xn * b0) + (Xn2));
+    Yn  = ((Xn * b0) + (Xn2));
 
     Xn2 = ((Xn * b1) + (Xn1) + (Yn * a1));
-    Xn1 = ((Xn * b2) + (Yn * a2));
+    Xn1 = ((Xn * b2) +         (Yn * a2));
 
     return Yn;
 }
@@ -610,12 +613,12 @@ void AudioPluginAudioProcessorWrapper<SampleType>::snapToZero() noexcept
 template <typename SampleType>
 void AudioPluginAudioProcessorWrapper<SampleType>::update()
 {
-    // mixer.setWetMixProportion(mixPtr->get() * 0.01f);
-    setFrequency     (static_cast    <SampleType>                            (state.getParameter ("frequencyID")->getValue() /** / oversamplingFactor */));
-    setResonance     (static_cast    <SampleType>                            (state.getParameter ("resonanceID")->getValue()));
-    setGain          (static_cast    <SampleType>                            (state.getParameter ("gainID")->getValue()));
-    setFilterType    (static_cast    <StoneyDSP::Audio::FilterType>          (state.getParameter ("typeID")->getValue()));
-    setTransformType (static_cast    <StoneyDSP::Audio::TransformationType>  (state.getParameter ("transformID")->getValue()));
+    mixer.setWetMixProportion(static_cast   <SampleType> (mixPtr->get() * 0.01));
+    setFrequency     (static_cast   <SampleType>    (frequencyPtr->get()));
+    setResonance     (static_cast   <SampleType>    (resonancePtr->get()));
+    setGain          (static_cast   <SampleType>    (gainPtr->get()));
+    setFilterType    (static_cast   <StoneyDSP::Audio::FilterType>          (typePtr->getIndex()));
+    setTransformType (static_cast   <StoneyDSP::Audio::TransformationType>  (transformPtr->getIndex()));
 }
 //==============================================================================
 template class AudioPluginAudioProcessorWrapper<float>;

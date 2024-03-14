@@ -14,9 +14,6 @@
 
 #define STONEYDSP_BIQUADS_PROCESSOR_HPP_INCLUDED
 
-// #define DONT_SET_USING_JUCE_NAMESPACE 1
-// #include <JuceHeader.h>
-
 #include "StoneyDSP/Biquads.hpp"
 
 #include "Parameters.hpp"
@@ -114,10 +111,10 @@ private:
     juce::AudioParameterChoice*     transformPtr    { nullptr };
     // juce::AudioParameterChoice*  osPtr           { nullptr };
     juce::AudioParameterFloat*      outputPtr       { nullptr };
-    // juce::AudioParameterFloat*   mixPtr          { nullptr };
+    juce::AudioParameterFloat*      mixPtr          { nullptr };
     juce::AudioParameterBool*       bypassPtr       { nullptr };
 
-    juce::AudioParameterBool* bypassState { nullptr };
+    juce::AudioParameterBool*       bypassState     { nullptr };
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioPluginAudioProcessor)

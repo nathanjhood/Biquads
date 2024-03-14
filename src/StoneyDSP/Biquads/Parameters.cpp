@@ -30,37 +30,8 @@ namespace Biquads
 
 AudioPluginAudioProcessorParameters::AudioPluginAudioProcessorParameters(AudioPluginAudioProcessor& p, juce::AudioProcessorValueTreeState& apvts)
 : audioProcessor (p)
-// , undoManager()
-// , apvts(p, &undoManager, "Parameters", createParameterLayout())
 , state(apvts)
-// , frequencyPtr (dynamic_cast <juce::AudioParameterFloat*> (apvts.getParameter("frequencyID")))
-// , resonancePtr (dynamic_cast <juce::AudioParameterFloat*> (apvts.getParameter("resonanceID")))
-// , gainPtr (dynamic_cast <juce::AudioParameterFloat*> (apvts.getParameter("gainID")))
-// , typePtr(dynamic_cast <juce::AudioParameterChoice*> (apvts.getParameter("typeID")))
-// , transformPtr (dynamic_cast <juce::AudioParameterChoice*> (apvts.getParameter("transformID")))
-// , osPtr (dynamic_cast <juce::AudioParameterChoice*> (apvts.getParameter("osID")))
-// , outputPtr (dynamic_cast <juce::AudioParameterFloat*> (apvts.getParameter("outputID")))
-// , mixPtr (dynamic_cast <juce::AudioParameterFloat*> (apvts.getParameter("mixID")))
-// , bypassPtr (dynamic_cast<juce::AudioParameterBool*> (apvts.getParameter("bypassID")))
 {
-    // frequencyPtr = dynamic_cast <juce::AudioParameterFloat*> (apvts.getParameter("frequencyID"));
-    // resonancePtr = dynamic_cast <juce::AudioParameterFloat*> (apvts.getParameter("resonanceID"));
-    // gainPtr = dynamic_cast <juce::AudioParameterFloat*> (apvts.getParameter("gainID"));
-    // typePtr = dynamic_cast <juce::AudioParameterChoice*> (apvts.getParameter("typeID"));
-    // // osPtr = dynamic_cast <juce::AudioParameterChoice*> (apvts.getParameter("osID"));
-    // outputPtr = dynamic_cast <juce::AudioParameterFloat*> (apvts.getParameter("outputID"));
-    // // mixPtr = dynamic_cast <juce::AudioParameterFloat*> (apvts.getParameter("mixID"));
-    // bypassPtr = dynamic_cast <juce::AudioParameterBool*> (apvts.getParameter("bypassID"));
-
-    // jassert(frequencyPtr != nullptr);
-    // jassert(resonancePtr != nullptr);
-    // jassert(gainPtr != nullptr);
-    // jassert(typePtr != nullptr);
-    // jassert(transformPtr != nullptr);
-    // // jassert(osPtr != nullptr);
-    // jassert(outputPtr != nullptr);
-    // // jassert(mixPtr != nullptr);
-    // jassert(bypassPtr != nullptr);
 }
 
 void AudioPluginAudioProcessorParameters::setParameterLayout(juce::AudioProcessorValueTreeState::ParameterLayout& params)
@@ -72,7 +43,7 @@ void AudioPluginAudioProcessorParameters::setParameterLayout(juce::AudioProcesso
     const auto freqRange = juce::NormalisableRange<float>(20.00f, 20000.00f, 0.001f, 00.198894f);
     const auto resRange = juce::NormalisableRange<float>(00.00f, 1.00f, 0.01f, 1.00f);
     const auto gainRange = juce::NormalisableRange<float>(dBMin, dBMax, 0.01f, 1.00f);
-    // const auto mixRange = juce::NormalisableRange<float>(00.00f, 100.00f, 0.01f, 1.00f);
+    const auto mixRange = juce::NormalisableRange<float>(00.00f, 100.00f, 0.01f, 1.00f);
     const auto outputRange = juce::NormalisableRange<float>(dBOut, dBMax, 0.01f, 1.00f);
 
     const auto fString = juce::StringArray({ "LP2", "LP1", "HP2", "HP1" , "BP2", "BP2c", "LS2", "LS1c", "LS1", "HS2", "HS1c", "HS1", "PK2", "NX2", "AP2" });
@@ -104,9 +75,9 @@ void AudioPluginAudioProcessorParameters::setParameterLayout(juce::AudioProcesso
         .withLabel(decibels)
         .withCategory(genParam);
 
-    // auto mixAttributes = juce::AudioParameterFloatAttributes()
-    //     .withLabel(percentage)
-    //     .withCategory(genParam);
+    auto mixAttributes = juce::AudioParameterFloatAttributes()
+        .withLabel(percentage)
+        .withCategory(genParam);
 
     auto outputAttributes = juce::AudioParameterFloatAttributes()
         .withLabel(decibels)
@@ -122,7 +93,7 @@ void AudioPluginAudioProcessorParameters::setParameterLayout(juce::AudioProcesso
             //==================================================================
               std::make_unique<juce::AudioParameterBool>  ("bypassID", "Bypass", false)
             , std::make_unique<juce::AudioParameterFloat> ("outputID", "Output", outputRange, 00.00f, outputAttributes)
-            // , std::make_unique<juce::AudioParameterFloat> ("mixID", "Mix", mixRange, 100.00f, mixAttributes)
+            , std::make_unique<juce::AudioParameterFloat> ("mixID", "Mix", mixRange, 100.00f, mixAttributes)
     );
 
     params.add(
@@ -145,17 +116,6 @@ void AudioPluginAudioProcessorParameters::setParameterLayout(juce::AudioProcesso
             //==================================================================
     );
 }
-
-// juce::AudioProcessorValueTreeState::ParameterLayout AudioPluginAudioProcessorParameters::createParameterLayout()
-// {
-//     juce::AudioProcessorValueTreeState::ParameterLayout parameterLayout;
-
-//     setParameterLayout(parameterLayout);
-
-//     // parameterLayout.add(std::make_unique<juce::AudioParameterBool> (juce::ParameterID{ "bypassID", 1}, "Bypass", false));
-
-//     return parameterLayout;
-// }
 
   /// @} group Biquads
 } // namespace Biquads
