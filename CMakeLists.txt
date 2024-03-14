@@ -195,7 +195,7 @@ write_basic_package_version_file(
 set(STONEYDSP_BIQUADS_INSTALL_DESTINATION "lib/cmake/StoneyDSP-Biquads-v${STONEYDSP_BIQUADS_VERSION}" CACHE STRING "The location, relative to the install prefix, where the StoneyDSP Biquads config file will be installed")
 
 configure_package_config_file(
-    "${STONEYDSP_BIQUADS_SOURCE_DIR}/share/cmake/Modules/StoneyDSPBiquadsConfig.cmake.in"
+    "${STONEYDSP_BIQUADS_SOURCE_DIR}/share/StoneyDSP/Biquads/StoneyDSPBiquadsConfig.cmake.in"
     "${STONEYDSP_BIQUADS_BINARY_DIR}/StoneyDSPBiquadsConfig.cmake"
     INSTALL_DESTINATION "${STONEYDSP_BIQUADS_INSTALL_DESTINATION}"
 )
