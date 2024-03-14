@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Feature request
+    url: https://github.com/StoneyDSP/StoneyDSP/discussions/categories/feature-requests
+    about: Request a new feature or example.
+  - name: Ask a question
+    url: https://github.com/StoneyDSP/StoneyDSP/discussions/category_choices
+    about: Ask questions and discuss with other community members.
+  - name: Want to work with us?
+    url: https://github.com/StoneyDSP/StoneyDSP/discussions
+    about: Want to work with us? Get in touch!

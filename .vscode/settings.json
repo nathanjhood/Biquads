@@ -1,0 +1,276 @@
+{
+	"editor.rulers": [80],
+
+  "cmake.configureOnEdit": false,
+	"cmake.configureOnOpen": false,
+	"cmake.automaticReconfigure": false,
+
+	"cmake.cmakePath": "cmake",
+
+	"cmake.sourceDirectory": "${workspaceFolder}",
+	"cmake.buildDirectory": "${workspaceFolder}/build",
+	"cmake.installPrefix": "${workspaceFolder}/.local",
+	"cmake.generator": "Unix Makefiles",
+	"cmake.configureSettings": {
+		// "VCPKG_ROOT": "${workspaceFolder}/vcpkg",
+		"VCPKG_MANIFEST_MODE": false,
+		"VCPKG_PREFER_SYSTEM_INSTALLED_BINARIES": true,
+		// "CMAKE_TOOLCHAIN_FILE": "${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+		"CMAKE_MAKE_PROGRAM": "make",
+		"CMAKE_C_COMPILER_LAUNCHER": "ccache",
+		"CMAKE_CXX_COMPILER_LAUNCHER": "ccache",
+		"STONEYDSP_BIQUADS_BUILD_TESTS": true
+	},
+	"cmake.debugConfig": {
+		"cwd": "${workspaceFolder}",
+		"symbolSearchPath": "${workspaceFolder}",
+		"miDebuggerPath": "/usr/bin/gdb",
+		"MIMode": "gdb",
+		"console": "newExternalWindow",
+		"stopAtEntry": false,
+		"logging": {
+			"engineLogging": false,
+			"exceptions": true,
+			"moduleLoad": true,
+			"trace": false,
+			"traceResponse": false,
+			"programOutput": true
+		}
+	},
+
+	"json.format.enable": true,
+	"json.schemaDownload.enable": true,
+	"json.validate.enable": true,
+	"json.schemas": [
+		{
+			"fileMatch": [
+				"vcpkg.json"
+			],
+			"url": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json"
+		},
+		{
+			"fileMatch": [
+				"vcpkg-configuration.json"
+			],
+			"url": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg-configuration.schema.json"
+		}
+	],
+
+	"doxdocgen.generic.useGitUserName": true,
+  "doxdocgen.generic.useGitUserEmail": true,
+
+	"terminal.integrated.profiles.windows": {
+		"MSYS2 UCRT64": {
+			"path": "cmd.exe",
+			"args": [
+				"/c",
+				"C:\\msys64\\msys2_shell.cmd -defterm -here -no-start -ucrt64"
+			]
+		},
+		"MSYS2 MINGW64": {
+			"path": "cmd.exe",
+			"args": [
+				"/c",
+				"C:\\msys64\\msys2_shell.cmd -defterm -here -no-start -mingw64"
+			]
+		},
+		"MSYS2 CLANG64": {
+			"path": "cmd.exe",
+			"args": [
+				"/c",
+				"C:\\msys64\\msys2_shell.cmd -defterm -here -no-start -clang64"
+			]
+		},
+		"MSYS2 MINGW32": {
+			"path": "cmd.exe",
+			"args": [
+				"/c",
+				"C:\\msys64\\msys2_shell.cmd -defterm -here -no-start -mingw32"
+			]
+		},
+		"MSYS2 CLANG32": {
+			"path": "cmd.exe",
+			"args": [
+				"/c",
+				"C:\\msys64\\msys2_shell.cmd -defterm -here -no-start -clang32"
+			]
+		},
+		"MSYS2 CLANGARM64": {
+			"path": "cmd.exe",
+			"args": [
+				"/c",
+				"C:\\msys64\\msys2_shell.cmd -defterm -here -no-start -clangarm64"
+			]
+		},
+		"MSYS2 MSYS64": {
+			"path": "cmd.exe",
+			"args": [
+				"/c",
+				"C:\\msys64\\msys2_shell.cmd -defterm -here -no-start -msys2"
+			]
+		}
+  },
+
+  "C_Cpp.vcpkg.enabled": true,
+  "C_Cpp.autoAddFileAssociations": true,
+  "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
+
+	"files.exclude": {
+		"**/.git": true,
+		"**/.svn": true,
+		"**/.hg": true,
+		"**/CVS": true,
+		"**/.DS_Store": true,
+		"**/Thumbs.db": true,
+
+		"Desktop": true,
+		"Development": true,
+		"Documents": true,
+		"Downloads": true,
+		"Music": true,
+		"Pictures": true,
+		"Templates": true,
+		"Videos": true
+	},
+
+  "C_Cpp.files.exclude": {
+		// "**/.bak": true,
+		"**/.bash_history": true,
+		"**/.bash_logout": true,
+		"**/.bash_profile": true,
+		"**/.bashrc": true,
+		"**/.certs": true,
+		"**/.designer": true,
+		"**/.docker": true,
+		"**/.dotnet": true,
+		"**/.gnome": true,
+		"**/.gnupg": true,
+		"**/.idlerc": true,
+		"**/.lv2": true,
+		"**/.modules": true,
+		"**/.npm": true,
+		"**/.nvm": true,
+		"**/.subversion": true,
+		"**/.password-store": true,
+		"**/.pgadmin": true,
+		"**/.pki": true,
+		"**/.postman": true,
+		"**/.profile": true,
+		"**/.ssh": true,
+		"**/.ssl": true,
+		"**/.sudo_as_admin_successful": true,
+		"**/.supabase": true,
+		"**/.wget-hsts": true,
+		"**/.vscode": true,
+		"**/.vscode-remote-containers": true,
+		"**/.vscode-server": true,
+		"**/.vs": true
+	},
+
+	"files.associations": {
+		"**.bash**": "shellscript",
+		"**.cmake": "cmake",
+		".editorconfig": "editorconfig",
+		"ignore": "ignore",
+		"array": "cpp",
+		"atomic": "cpp",
+		"bit": "cpp",
+		"*.tcc": "cpp",
+		"cctype": "cpp",
+		"clocale": "cpp",
+		"cmath": "cpp",
+		"compare": "cpp",
+		"complex": "cpp",
+		"concepts": "cpp",
+		"cstdarg": "cpp",
+		"cstddef": "cpp",
+		"cstdint": "cpp",
+		"cstdio": "cpp",
+		"cstdlib": "cpp",
+		"cstring": "cpp",
+		"ctime": "cpp",
+		"cwchar": "cpp",
+		"exception": "cpp",
+		"initializer_list": "cpp",
+		"ios": "cpp",
+		"iosfwd": "cpp",
+		"istream": "cpp",
+		"iterator": "cpp",
+		"limits": "cpp",
+		"memory": "cpp",
+		"new": "cpp",
+		"ostream": "cpp",
+		"sstream": "cpp",
+		"stdexcept": "cpp",
+		"streambuf": "cpp",
+		"string": "cpp",
+		"system_error": "cpp",
+		"tuple": "cpp",
+		"type_traits": "cpp",
+		"typeinfo": "cpp",
+		"utility": "cpp",
+		"vector": "cpp",
+		"xfacet": "cpp",
+		"xiosbase": "cpp",
+		"xlocale": "cpp",
+		"xlocinfo": "cpp",
+		"xlocnum": "cpp",
+		"xmemory": "cpp",
+		"xstddef": "cpp",
+		"xstring": "cpp",
+		"xtr1common": "cpp",
+		"xutility": "cpp",
+		"algorithm": "cpp",
+		"any": "cpp",
+		"charconv": "cpp",
+		"chrono": "cpp",
+		"codecvt": "cpp",
+		"condition_variable": "cpp",
+		"coroutine": "cpp",
+		"csignal": "cpp",
+		"cwctype": "cpp",
+		"deque": "cpp",
+		"filesystem": "cpp",
+		"format": "cpp",
+		"forward_list": "cpp",
+		"fstream": "cpp",
+		"functional": "cpp",
+		"future": "cpp",
+		"iomanip": "cpp",
+		"iostream": "cpp",
+		"list": "cpp",
+		"locale": "cpp",
+		"map": "cpp",
+		"mutex": "cpp",
+		"numeric": "cpp",
+		"optional": "cpp",
+		"queue": "cpp",
+		"random": "cpp",
+		"ratio": "cpp",
+		"regex": "cpp",
+		"set": "cpp",
+		"shared_mutex": "cpp",
+		"source_location": "cpp",
+		"stack": "cpp",
+		"stop_token": "cpp",
+		"strstream": "cpp",
+		"thread": "cpp",
+		"typeindex": "cpp",
+		"unordered_map": "cpp",
+		"unordered_set": "cpp",
+		"variant": "cpp",
+		"xhash": "cpp",
+		"xlocbuf": "cpp",
+		"xlocmes": "cpp",
+		"xlocmon": "cpp",
+		"xloctime": "cpp",
+		"xtree": "cpp",
+		"*.mm": "cpp",
+		"bitset": "cpp",
+		"memory_resource": "cpp",
+		"string_view": "cpp",
+		"numbers": "cpp",
+		"semaphore": "cpp",
+		"cinttypes": "cpp"
+	}
+}

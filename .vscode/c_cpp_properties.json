@@ -1,0 +1,88 @@
+{
+	"configurations": [
+		{
+			"name": "GCC 11.4.0 x86_64-linux-gnu",
+			"includePath": [
+				"${workspaceFolder}/extras/**",
+				"${workspaceFolder}/examples/**",
+				"${workspaceFolder}/modules/**",
+				"${workspaceFolder}/.local/include/**",
+				"${workspaceFolder}/vcpkg_installed/x64-linux/include"
+			],
+			"defines": [],
+			"compilerPath": "/usr/bin/gcc",
+			"cStandard": "gnu17",
+			"cppStandard": "gnu++17",
+			"intelliSenseMode": "linux-gcc-x64",
+			"configurationProvider": "ms-vscode.cmake-tools",
+			"mergeConfigurations": true
+			// "compileCommands": "${workspaceFolder}/build/compile_commands.json"
+		},
+		{
+			"name": "Clang 14.0.0 x86_64-pc-linux-gnu",
+			"includePath": [
+				"${workspaceFolder}/extras/**",
+				"${workspaceFolder}/examples/**",
+				"${workspaceFolder}/modules/**",
+				"${workspaceFolder}/.local/include/**",
+				"${workspaceFolder}/vcpkg_installed/x64-linux/include"
+			],
+			"defines": [],
+			"compilerPath": "/usr/bin/clang",
+			"cStandard": "c17",
+			"cppStandard": "c++17",
+			"intelliSenseMode": "linux-clang-x64",
+			"configurationProvider": "ms-vscode.cmake-tools",
+			"mergeConfigurations": true,
+			"compileCommands": "${workspaceFolder}/build/compile_commands.json"
+		},
+		{
+			"name": "MSYS2 MSYS64 GCC 13.2.0 x86_64-pc-msys",
+			"includePath": [
+				"${workspaceFolder}/extras/**",
+				"${workspaceFolder}/examples/**",
+				"${workspaceFolder}/modules/**",
+				"${workspaceFolder}/.local/include/**"
+			],
+			"defines": [],
+			"compilerPath": "C:/msys64/usr/bin/gcc",
+			"cStandard": "gnu17",
+			"cppStandard": "gnu++17",
+			"intelliSenseMode": "linux-gcc-x64",
+			"configurationProvider": "ms-vscode.cmake-tools",
+			"mergeConfigurations": true
+		},
+		{
+			"name": "MSYS2 MSYS64 Clang x86_64-pc-msys",
+			"includePath": [
+				"${workspaceFolder}/extras/**",
+				"${workspaceFolder}/examples/**",
+				"${workspaceFolder}/modules/**",
+				"${workspaceFolder}/.local/include/**"
+			],
+			"defines": [],
+			"compilerPath": "C:/msys64/usr/bin/clang",
+			"cStandard": "c17",
+			"cppStandard": "c++17",
+			"intelliSenseMode": "linux-gcc-x64",
+			"configurationProvider": "ms-vscode.cmake-tools",
+			"mergeConfigurations": true
+		},
+		{
+			"name": "MSYS2 MINGW64 GCC x86_64-pc-mingw64",
+			"includePath": [
+				"${workspaceFolder}/extras/**",
+				"${workspaceFolder}/examples/**",
+				"${workspaceFolder}/modules/**",
+				"${workspaceFolder}/.local/include/**"
+			],
+			"compilerPath": "C:/msys64/mingw64/bin/gcc",
+			"cStandard": "c17",
+			"cppStandard": "c++17",
+			"intelliSenseMode": "windows-gcc-x64",
+			"configurationProvider": "ms-vscode.cmake-tools",
+			"mergeConfigurations": true
+		}
+	],
+	"version": 4
+}
