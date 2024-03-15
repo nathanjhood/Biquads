@@ -46,6 +46,13 @@ if (NOT DEFINED JUCE_VERSION)
     message (STATUS "  Found JUCE v${JUCE_VERSION}...")
 endif ()
 
+set_directory_properties(PROPERTIES
+    JUCE_COMPANY_NAME       "StoneyDSP"
+    JUCE_COMPANY_WEBSITE    "https://stoneydsp.com"
+    JUCE_COMPANY_EMAIL      "nathanjhood@googlemail.com"
+    JUCE_COMPANY_COPYRIGHT  "Copyright (c) 2024 - StoneyDSP <nathanjhood@googlemail.com>"
+)
+
 option (STONEYDSP_BIQUADS_TARGET_IS_INSTALLABLE "" OFF)
 option (STONEYDSP_BIQUADS_USING_JUCE_RECOMMENDED_CONFIG_FLAGS "" ON)
 option (STONEYDSP_BIQUADS_USING_JUCE_RECOMMENDED_LTO_FLAGS "" ON)
@@ -341,4 +348,3 @@ include(CPack)
 ]=============================================================================]#
 
 message (STATUS "Configuring StoneyDSP Biquads v${STONEYDSP_BIQUADS_VERSION} - done.")
-message (STATUS "JUCE DIR ${JUCE_DIR}")
