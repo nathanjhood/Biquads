@@ -1,13 +1,26 @@
-/**
+/***************************************************************************//**
  * @file Biquads.hpp
- * @author  ()
- * @brief
- * @version 0.1
- * @date 2024-03-11
+ * @author Nathan J. Hood (nathanjhood@googlemail.com)
+ * @brief Simple two-pole equalizer with variable oversampling.
+ * @version 1.2.0
+ * @date 2024-03-13
  *
- * @copyright Copyright (c) 2024
- *
- */
+ * @copyright Copyright (c) 2024 - Nathan J. Hood
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+ ******************************************************************************/
 
 #pragma once
 
@@ -34,12 +47,6 @@
  #include "BinaryData.h"
 #endif
 
-// #if ! DONT_SET_USING_JUCE_NAMESPACE
-//  // If your code uses a lot of JUCE classes, then this will obviously save you
-//  // a lot of typing, but can be disabled by setting DONT_SET_USING_JUCE_NAMESPACE.
-//  using namespace juce;
-// #endif
-
 namespace StoneyDSP
 {
 /** @addtogroup StoneyDSP
@@ -65,14 +72,8 @@ namespace ProjectInfo
     const int          versionNumber  =  0x10200;
 }
 
-// class AudioPluginAudioProcessor;
-
   /// @} group Biquads
 } // namespace Biquads
 
   /// @} group StoneyDSP
 } // namespace StoneyDSP
-
-// #include "Biquads/Processor.hpp"
-// #include "Biquads/Wrapper.hpp"
-// #include "Biquads/Parameters.hpp"

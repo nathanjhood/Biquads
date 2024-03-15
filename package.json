@@ -12,17 +12,17 @@
 		"type": "git"
 	},
 	"readme": "https://github.com/StoneyDSP/Biquads/README.md",
-  "license": "MIT",
+  "license": "GPL-3.0",
   "scripts": {
-    "configure":    "cmake         -S . -B ./build -DSTONEYDSP_BIQUADS_BUILD_TESTS:BOOL=FALSE -DSTONEYDSP_BIQUADS_BUILD_EXTRAS:BOOL=TRUE -DSTONEYDSP_BIQUADS_BUILD_EXAMPLES:BOOL=TRUE -DCMAKE_INSTALL_PREFIX:PATH=./install -GNinja",
-    "reconfigure":  "cmake --fresh -S . -B ./build -DSTONEYDSP_BIQUADS_BUILD_TESTS:BOOL=FALSE -DSTONEYDSP_BIQUADS_BUILD_EXTRAS:BOOL=TRUE -DSTONEYDSP_BIQUADS_BUILD_EXAMPLES:BOOL=TRUE -DCMAKE_INSTALL_PREFIX:PATH=./install -GNinja",
+    "configure":    "cmake         -S . -B ./build -DSTONEYDSP_BIQUADS_BUILD_TESTS:BOOL=TRUE -DSTONEYDSP_BIQUADS_BUILD_EXTRAS:BOOL=TRUE -DSTONEYDSP_BIQUADS_BUILD_EXAMPLES:BOOL=TRUE -DCMAKE_INSTALL_PREFIX:PATH=./install -GNinja",
+    "reconfigure":  "cmake --fresh -S . -B ./build -DSTONEYDSP_BIQUADS_BUILD_TESTS:BOOL=TRUE -DSTONEYDSP_BIQUADS_BUILD_EXTRAS:BOOL=TRUE -DSTONEYDSP_BIQUADS_BUILD_EXAMPLES:BOOL=TRUE -DCMAKE_INSTALL_PREFIX:PATH=./install -GNinja",
     "build":        "cmake --build         ./build",
     "postbuild":    "cmake --install       ./build",
     "ctest":        "ctest --test-dir      ./build --rerun-failed --output-on-failure --verbose",
     "cpack":        "cpack --config        ./build/CPackSourceConfig.cmake -B ./install",
     "cdist":        "cpack --config        ./build/CPackConfig.cmake       -B ./install",
 
-		"sys:config":   "cmake --fresh -S . -B ./build -DSTONEYDSP_BIQUADS_BUILD_TESTS:BOOL=FALSE -DSTONEYDSP_BIQUADS_BUILD_EXTRAS:BOOL=TRUE -DSTONEYDSP_BIQUADS_BUILD_EXAMPLES:BOOL=TRUE -GNinja",
+		"sys:config":   "cmake --fresh -S . -B ./build -DSTONEYDSP_BIQUADS_BUILD_TESTS:BOOL=TRUE -DSTONEYDSP_BIQUADS_BUILD_EXTRAS:BOOL=TRUE -DSTONEYDSP_BIQUADS_BUILD_EXAMPLES:BOOL=TRUE -GNinja",
 		"sys:install":  "cmake --build         ./build && cmake --build         ./build --target install"
   },
 	"engines": {

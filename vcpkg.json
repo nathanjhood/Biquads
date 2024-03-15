@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "name": "stoneydsp-biquads",
-  "version": "0.0.1",
+  "version": "1.2.0",
   "homepage": "https://github.com/Stoneydsp/Biquads",
   "maintainers": [
     "Nathan J. Hood <nathanjhood@googlemail.com>"
@@ -17,34 +17,9 @@
       "name": "vcpkg-cmake-config",
       "host": true
     },
-    {
-      "name": "vcpkg-tool-nodejs",
-			"host": true
-    },
-		{
-			"name": "node-addon-api"
-		},
-		{
-			"name": "node-api-headers"
-		},
-    {
-      "name": "cmakerc"
-    },
 		{
 			"name": "7zip"
 		},
-		{
-			"name": "fmt"
-		},
-    {
-      "name": "openssl"
-    },
-    {
-      "name": "curl",
-			"features": [
-        "ssl"
-      ]
-    },
 		{
       "name": "alsa",
       "platform": "linux"
