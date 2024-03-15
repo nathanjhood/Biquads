@@ -1,0 +1,6 @@
+[submodule "modules/StoneyDSP"]
+	path = modules/StoneyDSP
+	url = https://github.com/StoneyDSP/StoneyDSP
+[submodule "modules/JUCE"]
+	path = modules/JUCE
+	url = https://github.com/juce-framework/JUCE.git

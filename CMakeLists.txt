@@ -205,7 +205,10 @@ list (APPEND STONEYDSP_BIQUADS_TARGETS Biquads)
 #[=============================================================================[
     Helpers
 ]=============================================================================]#
+
 juce_generate_juce_header (Biquads)
+
+juce_enable_vst3_manifest_step (Biquads)
 
 unset(STONEYDSP_BIQUADS_INCLUDEDIR)
 set(STONEYDSP_BIQUADS_INCLUDEDIR
