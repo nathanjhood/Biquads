@@ -2,7 +2,7 @@
  * @file Editor.cpp
  * @author Nathan J. Hood (nathanjhood@googlemail.com)
  * @brief Simple two-pole equalizer with variable oversampling.
- * @version 1.2.0
+ * @version 1.2.1.138
  * @date 2024-03-13
  *
  * @copyright Copyright (c) 2024 - Nathan J. Hood
@@ -22,24 +22,13 @@
 
  ******************************************************************************/
 
-#include "StoneyDSP/Biquads/Processor.hpp"
-#include "StoneyDSP/Biquads/Editor.hpp"
+#include "StoneyDSP/Biquads.hpp"
 
-namespace StoneyDSP
-{
-/** @addtogroup StoneyDSP
- *  @{
- */
+namespace StoneyDSP {
+/** @addtogroup StoneyDSP @{ */
 
-/**
- * @brief The ```StoneyDSP::Biquads``` namespace.
- *
- */
-namespace Biquads
-{
-/** @addtogroup Biquads
- *  @{
- */
+namespace Biquads {
+/** @addtogroup Biquads @{ */
 
 //==============================================================================
 AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAudioProcessor& p)

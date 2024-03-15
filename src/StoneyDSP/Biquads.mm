@@ -1,5 +1,5 @@
 /***************************************************************************//**
- * @file Biquads.cpp
+ * @file Biquads.mm
  * @author Nathan J. Hood (nathanjhood@googlemail.com)
  * @brief Simple two-pole equalizer with variable oversampling.
  * @version 1.2.1.138
@@ -22,39 +22,4 @@
 
  ******************************************************************************/
 
-#ifdef STONEYDSP_BIQUADS_HPP_INCLUDED
- #error "Incorrect usage of 'Biquads.cpp'!"
-#endif
-
-#include "StoneyDSP/Biquads.hpp"
-
-// #include "Biquads/Processor.cpp"
-// #include "Biquads/Wrapper.cpp"
-// #include "Biquads/Parameters.cpp"
-
-namespace StoneyDSP {
-/** @addtogroup StoneyDSP @{ */
-
-namespace Biquads {
-/** @addtogroup Biquads @{ */
-
-namespace ProjectInfo
-{
-    extern const char* const  projectName    = "Biquads";
-    extern const char* const  companyName    = "StoneyDSP";
-    extern const char* const  versionString  = "1.2.1.138";
-    extern const int          versionNumber  =  0x102018a;
-}
-
-  /// @} group Biquads
-} // namespace Biquads
-
-  /// @} group StoneyDSP
-} // namespace StoneyDSP
-
-// //==============================================================================
-// // This creates new instances of the plugin..
-// juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
-// {
-//     return new StoneyDSP::Biquads::AudioPluginAudioProcessor();
-// }
+#include "Biquads.cpp"
