@@ -28,10 +28,6 @@
 
 #include "StoneyDSP/Biquads.hpp"
 
-// #include "Biquads/Processor.cpp"
-// #include "Biquads/Wrapper.cpp"
-// #include "Biquads/Parameters.cpp"
-
 namespace StoneyDSP {
 /** @addtogroup StoneyDSP @{ */
 
@@ -51,6 +47,13 @@ namespace ProjectInfo
 
   /// @} group StoneyDSP
 } // namespace StoneyDSP
+
+#ifdef STONEYDSP_BIQUADS_MODULE
+ #include "Biquads/Parameters.cpp"
+ #include "Biquads/Wrapper.cpp"
+ #include "Biquads/Processor.cpp"
+ #include "Biquads/Editor.cpp"
+#endif
 
 // //==============================================================================
 // // This creates new instances of the plugin..

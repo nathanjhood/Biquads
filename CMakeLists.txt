@@ -46,6 +46,12 @@ if (NOT DEFINED JUCE_VERSION)
     message (STATUS "  Found JUCE v${JUCE_VERSION}...")
 endif ()
 
+option (STONEYDSP_BIQUADS_USING_JUCE_RECOMMENDED_CONFIG_FLAGS "" ON)
+option (STONEYDSP_BIQUADS_USING_JUCE_RECOMMENDED_LTO_FLAGS "" ON)
+option (STONEYDSP_BIQUADS_USING_JUCE_RECOMMENDED_WARNING_FLAGS "" ON)
+
+set (STONEYDSP_BIQUADS_TARGETS "")
+
 #find_package (StoneyDSP CONFIG REQUIRED)
 
 #[=============================================================================[
@@ -79,26 +85,35 @@ juce_add_plugin (Biquads
     COMPANY_NAME StoneyDSP                      # Specify the name of the plugin's author
 )
 
-set (STONEYDSP_BIQUADS_UNITS "")
-list (APPEND STONEYDSP_BIQUADS_UNITS
-    "StoneyDSP/Biquads"
-    "StoneyDSP/Biquads/Editor"
-    "StoneyDSP/Biquads/Parameters"
-    "StoneyDSP/Biquads/Processor"
-    "StoneyDSP/Biquads/Wrapper"
+set (STONEYDSP_BIQUADS_INCLUDEDIR "")
+set (STONEYDSP_BIQUADS_INCLUDEDIR "${STONEYDSP_BIQUADS_BINARY_DIR}/include") # dont CACHE FORCE this yet, it will change again soon...
+
+set (STONEYDSP_BIQUADS_UNIT             "StoneyDSP/Biquads")
+set (STONEYDSP_BIQUADS_UNIT_EDITOR      "StoneyDSP/Biquads/Editor")
+set (STONEYDSP_BIQUADS_UNIT_PARAMETERS  "StoneyDSP/Biquads/Parameters")
+set (STONEYDSP_BIQUADS_UNIT_PROCESSOR   "StoneyDSP/Biquads/Processor")
+set (STONEYDSP_BIQUADS_UNIT_WRAPPER     "StoneyDSP/Biquads/Wrapper")
+
+set (STONEYDSP_BIQUADS_UNIT_FILES "")
+list (APPEND STONEYDSP_BIQUADS_UNIT_FILES
+    "${STONEYDSP_BIQUADS_UNIT}"
+    "${STONEYDSP_BIQUADS_UNIT_EDITOR}"
+    "${STONEYDSP_BIQUADS_UNIT_PARAMETERS}"
+    "${STONEYDSP_BIQUADS_UNIT_PROCESSOR}"
+    "${STONEYDSP_BIQUADS_UNIT_WRAPPER}"
 )
 
-foreach (STONEYDSP_BIQUADS_UNIT IN LISTS STONEYDSP_BIQUADS_UNITS)
+foreach (STONEYDSP_BIQUADS_UNIT_FILE IN LISTS STONEYDSP_BIQUADS_UNIT_FILES)
 
-    string (REGEX REPLACE "[/]" "_" _stoneydsp_biquads_unit_transformed "${STONEYDSP_BIQUADS_UNIT}")
+    string (REGEX REPLACE "[/]" "_" _stoneydsp_biquads_unit_transformed "${STONEYDSP_BIQUADS_UNIT_FILE}")
     # set (_stoneydsp_biquads_unit_transformed ${_stoneydsp_biquads_unit_transformed})
     string (TOUPPER "${_stoneydsp_biquads_unit_transformed}" _stoneydsp_biquads_unit_transformed_upper)
 
-    message (STATUS "Biquads: ${_stoneydsp_biquads_unit_transformed_upper} found at ${_stoneydsp_biquads_unit_transformed}")
+    message (DEBUG "Biquads: ${_stoneydsp_biquads_unit_transformed_upper} found at ${_stoneydsp_biquads_unit_transformed}")
 
     configure_file (
-        "include/${STONEYDSP_BIQUADS_UNIT}.hpp" # SRC_DIR
-        "include/${STONEYDSP_BIQUADS_UNIT}.hpp" # BIN_DIR
+        "include/${STONEYDSP_BIQUADS_UNIT_FILE}.hpp" # SRC_DIR
+        "include/${STONEYDSP_BIQUADS_UNIT_FILE}.hpp" # BIN_DIR
     )
     target_sources (Biquads
         PUBLIC
@@ -108,18 +123,27 @@ foreach (STONEYDSP_BIQUADS_UNIT IN LISTS STONEYDSP_BIQUADS_UNITS)
                 $<BUILD_INTERFACE:${STONEYDSP_BIQUADS_BINARY_DIR}/include>
                 $<INSTALL_INTERFACE:include>
             FILES
-                $<BUILD_INTERFACE:${STONEYDSP_BIQUADS_BINARY_DIR}/include/${STONEYDSP_BIQUADS_UNIT}.hpp>
-                $<INSTALL_INTERFACE:include/${STONEYDSP_BIQUADS_UNIT}.hpp>
+                $<BUILD_INTERFACE:${STONEYDSP_BIQUADS_BINARY_DIR}/include/${STONEYDSP_BIQUADS_UNIT_FILE}.hpp>
+                $<INSTALL_INTERFACE:include/${STONEYDSP_BIQUADS_UNIT_FILE}.hpp>
     )
+    if (NOT DEFINED STONEYDSP_BIQUADS_MODULE OR (NOT STONEYDSP_BIQUADS_MODULE))
+        target_sources (Biquads
+            PRIVATE
+                "src/${STONEYDSP_BIQUADS_UNIT_FILE}.cpp"
+        )
+    endif ()
+    # target_compile_definitions (Biquads
+    #     PRIVATE
+    #         "${_stoneydsp_biquads_unit_transformed_upper}_HPP_INCLUDED"
+    # )
+endforeach ()
+
+if (DEFINED STONEYDSP_BIQUADS_MODULE AND (STONEYDSP_BIQUADS_MODULE))
     target_sources (Biquads
         PRIVATE
             "src/${STONEYDSP_BIQUADS_UNIT}.cpp"
     )
-    # target_compile_definitions (Biquads
-    #     PRIVATE
-    #         "${STONEYDSP_BIQUADS_UNIT_UPPERCASE}_H_INCLUDED"
-    # )
-endforeach ()
+endif ()
 
 target_compile_definitions (Biquads
     PUBLIC
@@ -148,16 +172,40 @@ target_link_libraries (Biquads
         juce::juce_graphics
         juce::juce_gui_basics
         juce::juce_gui_extra
-    PUBLIC
-        juce::juce_recommended_config_flags
-        juce::juce_recommended_lto_flags
-        juce::juce_recommended_warning_flags
 )
+if (STONEYDSP_BIQUADS_USING_JUCE_RECOMMENDED_CONFIG_FLAGS)
+    target_link_libraries (Biquads
+        PUBLIC
+            juce::juce_recommended_config_flags
+    )
+endif ()
+if (STONEYDSP_BIQUADS_USING_JUCE_RECOMMENDED_LTO_FLAGS)
+    target_link_libraries (Biquads
+        PUBLIC
+            juce::juce_recommended_lto_flags
+    )
+endif ()
+if (STONEYDSP_BIQUADS_USING_JUCE_RECOMMENDED_WARNING_FLAGS)
+    target_link_libraries (Biquads
+        PUBLIC
+            juce::juce_recommended_warning_flags
+    )
+endif ()
+
+list (APPEND STONEYDSP_BIQUADS_TARGETS Biquads)
 
 #[=============================================================================[
     Helpers
 ]=============================================================================]#
 juce_generate_juce_header (Biquads)
+
+unset(STONEYDSP_BIQUADS_INCLUDEDIR)
+set(STONEYDSP_BIQUADS_INCLUDEDIR
+  $<BUILD_INTERFACE:${STONEYDSP_BIQUADS_BINARY_DIR}/include>
+  $<INSTALL_INTERFACE:include>
+#   CACHE PATH "Installation directory for include files, a relative path that will be joined with ${CMAKE_INSTALL_PREFIX} or an absolute path."
+#   FORCE
+)
 
 #[=============================================================================[
     CTest configuration
@@ -170,10 +218,22 @@ if (STONEYDSP_BIQUADS_BUILD_TESTS AND (STONEYDSP_BIQUADS_SOURCE_DIR STREQUAL CMA
 endif ()
 
 #[=============================================================================[
-    Install & CPack configuration
+    Export targets configuration
 ]=============================================================================]#
 
 include(CMakePackageConfigHelpers)
+
+export (
+  TARGETS ${STONEYDSP_BIQUADS_TARGETS}
+  FILE share/cmake/StoneyDSPBiquadsTargets.cmake
+  NAMESPACE StoneyDSP::
+)
+
+#[=============================================================================[
+    Install & CPack configuration
+]=============================================================================]#
+
+
 include(GNUInstallDirs)
 # set(STONEYDSP_BIQUADS_HEADER "${CMAKE_INSTALL_INCLUDEDIR}/StoneyDSP/Biquads.hpp")
 
@@ -185,10 +245,28 @@ write_basic_package_version_file(
 
 set(STONEYDSP_BIQUADS_INSTALL_DESTINATION "lib/cmake/StoneyDSP-Biquads-v${STONEYDSP_BIQUADS_VERSION}" CACHE STRING "The location, relative to the install prefix, where the StoneyDSP Biquads config file will be installed")
 
+unset(STONEYDSP_BIQUADS_INCLUDEDIR)
+set(STONEYDSP_BIQUADS_INCLUDEDIR "${CMAKE_INSTALL_INCLUDEDIR}" CACHE PATH "Installation directory for include files, a relative path that will be joined with ${CMAKE_INSTALL_PREFIX} or an absolute path." FORCE)
+
+foreach (STONEYDSP_BIQUADS_UNIT_FILE IN LISTS STONEYDSP_BIQUADS_UNIT_FILES)
+    install(FILES
+        "${STONEYDSP_BIQUADS_BINARY_DIR}/include/${STONEYDSP_BIQUADS_UNIT_FILE}.hpp"
+        DESTINATION "${STONEYDSP_BIQUADS_INCLUDEDIR}"
+    )
+endforeach ()
+
 configure_package_config_file(
     "${STONEYDSP_BIQUADS_SOURCE_DIR}/share/StoneyDSP/Biquads/StoneyDSPBiquadsConfig.cmake.in"
     "${STONEYDSP_BIQUADS_BINARY_DIR}/StoneyDSPBiquadsConfig.cmake"
     INSTALL_DESTINATION "${STONEYDSP_BIQUADS_INSTALL_DESTINATION}"
+)
+
+install(TARGETS ${STONEYDSP_BIQUADS_TARGETS}
+    EXPORT StoneyDSPBiquadsTargets
+    LIBRARY DESTINATION  "${CMAKE_INSTALL_LIBDIR}"
+    ARCHIVE DESTINATION  "${CMAKE_INSTALL_LIBDIR}"
+    RUNTIME DESTINATION  "${CMAKE_INSTALL_BINDIR}"
+    INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
 )
 
 install(FILES
@@ -204,6 +282,13 @@ install(FILES
     "${STONEYDSP_BIQUADS_SOURCE_DIR}/LICENSE"
     "${STONEYDSP_BIQUADS_SOURCE_DIR}/README.md"
     DESTINATION "${STONEYDSP_BIQUADS_INSTALL_DESTINATION}"
+)
+
+install(
+  EXPORT StoneyDSPBiquadsTargets
+  FILE StoneyDSPBiquadsTargets.cmake
+  NAMESPACE StoneyDSP::
+  DESTINATION lib/cmake/StoneyDSP
 )
 
 # offer a basic/messy CPack
