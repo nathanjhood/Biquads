@@ -46,6 +46,7 @@ if (NOT DEFINED JUCE_VERSION)
     message (STATUS "  Found JUCE v${JUCE_VERSION}...")
 endif ()
 
+option (STONEYDSP_BIQUADS_TARGET_IS_INSTALLABLE "" OFF)
 option (STONEYDSP_BIQUADS_USING_JUCE_RECOMMENDED_CONFIG_FLAGS "" ON)
 option (STONEYDSP_BIQUADS_USING_JUCE_RECOMMENDED_LTO_FLAGS "" ON)
 option (STONEYDSP_BIQUADS_USING_JUCE_RECOMMENDED_WARNING_FLAGS "" ON)
@@ -203,8 +204,6 @@ unset(STONEYDSP_BIQUADS_INCLUDEDIR)
 set(STONEYDSP_BIQUADS_INCLUDEDIR
   $<BUILD_INTERFACE:${STONEYDSP_BIQUADS_BINARY_DIR}/include>
   $<INSTALL_INTERFACE:include>
-#   CACHE PATH "Installation directory for include files, a relative path that will be joined with ${CMAKE_INSTALL_PREFIX} or an absolute path."
-#   FORCE
 )
 
 #[=============================================================================[
@@ -223,12 +222,13 @@ endif ()
 
 include(CMakePackageConfigHelpers)
 
-export (
-  TARGETS ${STONEYDSP_BIQUADS_TARGETS}
-  FILE share/cmake/StoneyDSPBiquadsTargets.cmake
-  NAMESPACE StoneyDSP::
-)
-
+if (STONEYDSP_BIQUADS_TARGET_IS_INSTALLABLE)
+    export (
+        TARGETS ${STONEYDSP_BIQUADS_TARGETS}
+        FILE share/cmake/StoneyDSPBiquadsTargets.cmake
+        NAMESPACE StoneyDSP::
+    )
+endif ()
 #[=============================================================================[
     Install & CPack configuration
 ]=============================================================================]#
@@ -261,15 +261,24 @@ configure_package_config_file(
     INSTALL_DESTINATION "${STONEYDSP_BIQUADS_INSTALL_DESTINATION}"
 )
 
-install(TARGETS ${STONEYDSP_BIQUADS_TARGETS}
-    EXPORT StoneyDSPBiquadsTargets
-    LIBRARY DESTINATION  "${CMAKE_INSTALL_LIBDIR}"
-    ARCHIVE DESTINATION  "${CMAKE_INSTALL_LIBDIR}"
-    RUNTIME DESTINATION  "${CMAKE_INSTALL_BINDIR}"
-    INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/StoneyDSP"
-    PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/StoneyDSP"
-    FILE_SET biquads_HEADERS
-)
+if (STONEYDSP_BIQUADS_TARGET_IS_INSTALLABLE)
+    install(
+        TARGETS ${STONEYDSP_BIQUADS_TARGETS}
+        EXPORT StoneyDSPBiquadsTargets
+        LIBRARY DESTINATION  "${CMAKE_INSTALL_LIBDIR}"
+        ARCHIVE DESTINATION  "${CMAKE_INSTALL_LIBDIR}"
+        RUNTIME DESTINATION  "${CMAKE_INSTALL_BINDIR}"
+        INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/StoneyDSP"
+        PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/StoneyDSP"
+        FILE_SET biquads_HEADERS
+    )
+    install(
+        EXPORT StoneyDSPBiquadsTargets
+        FILE StoneyDSPBiquadsTargets.cmake
+        NAMESPACE StoneyDSP::
+        DESTINATION lib/cmake/StoneyDSP
+    )
+endif ()
 
 install(FILES
     "${STONEYDSP_BIQUADS_BINARY_DIR}/StoneyDSPBiquadsConfigVersion.cmake"
@@ -284,13 +293,6 @@ install(FILES
     "${STONEYDSP_BIQUADS_SOURCE_DIR}/LICENSE"
     "${STONEYDSP_BIQUADS_SOURCE_DIR}/README.md"
     DESTINATION "${STONEYDSP_BIQUADS_INSTALL_DESTINATION}"
-)
-
-install(
-  EXPORT StoneyDSPBiquadsTargets
-  FILE StoneyDSPBiquadsTargets.cmake
-  NAMESPACE StoneyDSP::
-  DESTINATION lib/cmake/StoneyDSP
 )
 
 # offer a basic/messy CPack
