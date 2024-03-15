@@ -3,11 +3,8 @@
 		{
 			"name": "GCC 11.4.0 x86_64-linux-gnu",
 			"includePath": [
-				"${workspaceFolder}/extras/**",
-				"${workspaceFolder}/examples/**",
+				"${workspaceFolder}/include/**",
 				"${workspaceFolder}/modules/**",
-				"${workspaceFolder}/.local/include/**",
-				"${workspaceFolder}/vcpkg_installed/x64-linux/include"
 			],
 			"defines": [],
 			"compilerPath": "/usr/bin/gcc",
@@ -21,11 +18,8 @@
 		{
 			"name": "Clang 14.0.0 x86_64-pc-linux-gnu",
 			"includePath": [
-				"${workspaceFolder}/extras/**",
-				"${workspaceFolder}/examples/**",
+				"${workspaceFolder}/include/**",
 				"${workspaceFolder}/modules/**",
-				"${workspaceFolder}/.local/include/**",
-				"${workspaceFolder}/vcpkg_installed/x64-linux/include"
 			],
 			"defines": [],
 			"compilerPath": "/usr/bin/clang",
@@ -39,10 +33,8 @@
 		{
 			"name": "MSYS2 MSYS64 GCC 13.2.0 x86_64-pc-msys",
 			"includePath": [
-				"${workspaceFolder}/extras/**",
-				"${workspaceFolder}/examples/**",
+				"${workspaceFolder}/include/**",
 				"${workspaceFolder}/modules/**",
-				"${workspaceFolder}/.local/include/**"
 			],
 			"defines": [],
 			"compilerPath": "C:/msys64/usr/bin/gcc",
@@ -55,10 +47,8 @@
 		{
 			"name": "MSYS2 MSYS64 Clang x86_64-pc-msys",
 			"includePath": [
-				"${workspaceFolder}/extras/**",
-				"${workspaceFolder}/examples/**",
+				"${workspaceFolder}/include/**",
 				"${workspaceFolder}/modules/**",
-				"${workspaceFolder}/.local/include/**"
 			],
 			"defines": [],
 			"compilerPath": "C:/msys64/usr/bin/clang",
@@ -71,10 +61,8 @@
 		{
 			"name": "MSYS2 MINGW64 GCC x86_64-pc-mingw64",
 			"includePath": [
-				"${workspaceFolder}/extras/**",
-				"${workspaceFolder}/examples/**",
+				"${workspaceFolder}/include/**",
 				"${workspaceFolder}/modules/**",
-				"${workspaceFolder}/.local/include/**"
 			],
 			"compilerPath": "C:/msys64/mingw64/bin/gcc",
 			"cStandard": "c17",
