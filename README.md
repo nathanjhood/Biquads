@@ -16,6 +16,14 @@
 
 <hr>
 
+<b>Verified by [Pluginval](https://www.tracktion.com/develop/pluginval)</b>
+
+![pluginval](https://stoneydsp.com/resources/projects/biquads/develop-logo-pluginval.png)
+
+<hr>
+
+<b>Created with the [StoneyDSP C++ library for JUCE](https://www.tracktion.com/develop/pluginval)</b>
+
 [![StoneyDSP](https://raw.githubusercontent.com/StoneyDSP/StoneyDSP/production/extras/Icons/images/w_icon__384x256.png)](https://www.stoneydsp.com)
 
 <hr>

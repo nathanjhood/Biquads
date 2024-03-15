@@ -21,11 +21,18 @@ cmake_minimum_required (VERSION 3.22...3.28 FATAL_ERROR)
 
 list (APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/share/cmake/Modules")
 
-project (STONEYDSP_BIQUADS VERSION 1.2.0
+include(GetGitRevListCount)
+get_git_rev_list_count()
+
+project (STONEYDSP_BIQUADS VERSION 1.2.0.${_git_rev_list_count}
     DESCRIPTION "Simple two-pole equalizer with variable oversampling."
     HOMEPAGE_URL "https://github.com/nathanjhood/Biquads"
     LANGUAGES C;CXX
 )
+
+include(StoneyDSPBiquadsWriteVersionFile)
+stoneydsp_biquads_write_version_file()
+unset(_git_rev_list_count)
 
 message (STATUS "Configuring StoneyDSP Biquads v${STONEYDSP_BIQUADS_VERSION}...")
 
@@ -150,14 +157,6 @@ target_link_libraries (Biquads
     Helpers
 ]=============================================================================]#
 juce_generate_juce_header (Biquads)
-# if (STONEYDSP_BIQUADS_IS_TOP_LEVEL)
-#     execute_process (
-#         COMMAND "${CMAKE_COMMAND}"
-#         "--build ${STONEYDSP_BIQUADS_BINARY_DIR}"
-#         "--config ${CMAKE_BUILD_TYPE}"
-#         "--target juce_vst3_helper"
-#     )
-# endif ()
 
 #[=============================================================================[
     CTest configuration
@@ -194,15 +193,15 @@ configure_package_config_file(
 install(FILES
     "${STONEYDSP_BIQUADS_BINARY_DIR}/StoneyDSPBiquadsConfigVersion.cmake"
     "${STONEYDSP_BIQUADS_BINARY_DIR}/StoneyDSPBiquadsConfig.cmake"
-    # "${STONEYDSP_CMAKE_UTILS_DIR}/CMakeRC.cmake"
-    # "${STONEYDSP_CMAKE_UTILS_DIR}/FindCMakeRC.cmake"
-    # "${STONEYDSP_CMAKE_UTILS_DIR}/Findfmt.cmake"
-    # "${STONEYDSP_CMAKE_UTILS_DIR}/GetGitRef.cmake"
-    # "${STONEYDSP_CMAKE_UTILS_DIR}/JoinPaths.cmake"
-    # "${STONEYDSP_CMAKE_UTILS_DIR}/StoneyDSPCPackIgnoreList.cmake"
-    # "${STONEYDSP_CMAKE_UTILS_DIR}/StoneyDSPModuleSupport.cmake"
-    # "${STONEYDSP_CMAKE_UTILS_DIR}/WriteVersionFile.cmake"
-    # "${STONEYDSP_CMAKE_UTILS_DIR}/WriteVersionHeader.cmake"
+    "${STONEYDSP_BIQUADS_SOURCE_DIR}/share/cmake/Modules/GetGitRevListCount.cmake"
+    "${STONEYDSP_BIQUADS_SOURCE_DIR}/share/cmake/Modules/StoneyDSPBiquadsCPackIgnoreList.cmake"
+    "${STONEYDSP_BIQUADS_SOURCE_DIR}/share/cmake/Modules/JoinPaths.cmake"
+    "${STONEYDSP_BIQUADS_SOURCE_DIR}/share/cmake/Modules/WriteVersionFile.cmake"
+    "${STONEYDSP_BIQUADS_SOURCE_DIR}/share/cmake/Modules/WriteVersionHeader.cmake"
+    "${STONEYDSP_BIQUADS_SOURCE_DIR}/share/StoneyDSP/Biquads/copyright"
+    "${STONEYDSP_BIQUADS_SOURCE_DIR}/VERSION"
+    "${STONEYDSP_BIQUADS_SOURCE_DIR}/LICENSE"
+    "${STONEYDSP_BIQUADS_SOURCE_DIR}/README.md"
     DESTINATION "${STONEYDSP_BIQUADS_INSTALL_DESTINATION}"
 )
 

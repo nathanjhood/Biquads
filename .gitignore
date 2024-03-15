@@ -1,6 +1,7 @@
 !package.json
 node_modules
 !/.vscode/c_cpp_properties.json
+!**/develop-logo-pluginval.png
 
 # Windows Temp Cache Files
 [Tt]humbs.db

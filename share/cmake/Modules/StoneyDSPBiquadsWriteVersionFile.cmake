@@ -17,30 +17,30 @@
 .
 ]=============================================================================]#
 
-include (GetGitRef)
+include(GetGitRevListCount)
 
-if (NOT DEFINED STONEYDSP_GIT_COMMIT_REF)
-    stoneydsp_get_git_ref ()
-endif ()
+if (NOT DEFINED STONEYDSP_BIQUADS_VERSION_TWEAK_NUMBER)
+    get_git_rev_list_count()
+endif()
 
 #[=============================================================================[
 Provides:
 
-    STONEYDSP_VERSION_FILE
+    STONEYDSP_BIQUADS_VERSION_FILE
 
 ]=============================================================================]#
-macro (stoneydsp_write_version_file)
-    set(_stoneydsp_tweak "")
-    set(_stoneydsp_tweak ${STONEYDSP_GIT_COMMIT_REF})
-    if(DEFINED StoneyDSP_VERSION_TWEAK AND (NOT StoneyDSP_VERSION_TWEAK STREQUAL ""))
-        set(_stoneydsp_tweak ${StoneyDSP_VERSION_TWEAK})
+macro (stoneydsp_biquads_write_version_file)
+    set(_stoneydsp_biquads_version_tweak "")
+    set(_stoneydsp_biquads_version_tweak ${_git_rev_list_count})
+    if(DEFINED STONEYDSP_BIQUADS_VERSION_TWEAK AND (NOT STONEYDSP_BIQUADS_VERSION_TWEAK STREQUAL ""))
+        set(_stoneydsp_biquads_version_tweak ${STONEYDSP_BIQUADS_VERSION_TWEAK})
     endif()
-    set(STONEYDSP_VERSION_FILE "${StoneyDSP_SOURCE_DIR}/VERSION")
-    file(WRITE "${STONEYDSP_VERSION_FILE}.tmp" "${StoneyDSP_VERSION_MAJOR}.${StoneyDSP_VERSION_MINOR}.${StoneyDSP_VERSION_PATCH}.${_stoneydsp_tweak}\n")
+    set(STONEYDSP_BIQUADS_VERSION_FILE "${STONEYDSP_BIQUADS_SOURCE_DIR}/VERSION")
+    file(WRITE "${STONEYDSP_BIQUADS_VERSION_FILE}.tmp" "${STONEYDSP_BIQUADS_VERSION_MAJOR}.${STONEYDSP_BIQUADS_VERSION_MINOR}.${STONEYDSP_BIQUADS_VERSION_PATCH}.${_stoneydsp_biquads_version_tweak}\n")
 
     #Copy the file only if it has changed.
-    execute_process(COMMAND ${CMAKE_COMMAND} -E copy_if_different "${STONEYDSP_VERSION_FILE}.tmp" "${STONEYDSP_VERSION_FILE}")
-    file(REMOVE "${STONEYDSP_VERSION_FILE}.tmp")
-    set(STONEYDSP_VERSION_FILE "${STONEYDSP_VERSION_FILE}" CACHE INTERNAL "StoneyDSP current version file." FORCE)
-    unset(_stoneydsp_tweak)
+    execute_process(COMMAND ${CMAKE_COMMAND} -E copy_if_different "${STONEYDSP_BIQUADS_VERSION_FILE}.tmp" "${STONEYDSP_BIQUADS_VERSION_FILE}")
+    file(REMOVE "${STONEYDSP_BIQUADS_VERSION_FILE}.tmp")
+    set(STONEYDSP_BIQUADS_VERSION_FILE "${STONEYDSP_BIQUADS_VERSION_FILE}" CACHE INTERNAL "StoneyDSP Biquads current version file." FORCE)
+    unset(_stoneydsp_biquads_version_tweak)
 endmacro ()
