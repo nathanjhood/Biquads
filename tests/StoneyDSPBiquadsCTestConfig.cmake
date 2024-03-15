@@ -1,29 +1,19 @@
 #[=============================================================================[
-This file is part of the StoneyDSP library.
-Copyright (c) 2024 - StoneyDSP
-Home: https://www.stoneydsp.com
-Source: https://github.com/StoneyDSP/StoneyDSP
+    Simple two-pole equalizer with variable oversampling.
+    Copyright (c) 2024 - Nathan J. Hood
 
-StoneyDSP is an open source library subject to open-source licensing.
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
 
-By using StoneyDSP, you agree to the terms of the StoneyDSP End-User License
-Agreement and also the StoneyDSP Privacy Policy.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
 
-End User License Agreement: www.stoneydsp.com/LICENSE
-Privacy Policy: www.stoneydsp.com/privacy-policy
-
-By using StoneyDSP, you must also agree to the terms of both the JUCE 7 End-User
-License Agreement and JUCE Privacy Policy.
-
-End User License Agreement: www.juce.com/juce-7-licence
-Privacy Policy: www.juce.com/juce-privacy-policy
-
-Or: You may also use this code under the terms of the GPL v3 (see
-www.gnu.org/licenses).
-
-STONEYDSP IS PROVIDED "AS IS" WITHOUT ANY WARRANTY, AND ALL WARRANTIES, WHETHER
-EXPRESSED OR IMPLIED, INCLUDING MERCHANTABILITY AND FITNESS FOR PURPOSE, ARE
-DISCLAIMED.
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 ]=============================================================================]#
 
 if(STONEYDSP_BIQUADS_BUILD_TESTS)

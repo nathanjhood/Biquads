@@ -1,6 +1,11 @@
-#[=============================================================================[
-    Simple two-pole equalizer with variable oversampling.
-    Copyright (c) 2024 - Nathan J. Hood
+/***************************************************************************//**
+ * @file Biquads.mm
+ * @author Nathan J. Hood (nathanjhood@googlemail.com)
+ * @brief Simple two-pole equalizer with variable oversampling.
+ * @version 1.2.1.148
+ * @date 2024-03-13
+ *
+ * @copyright Copyright (c) 2024 - Nathan J. Hood
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -14,13 +19,7 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
-]=============================================================================]#
 
-add_test(
-    NAME test_pluginval_vst3
-    COMMAND "${NODE_EXECUTABLE}" "./tests/demo/${arg}.js"
-    WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
-)
-set_tests_properties(test_${arg}
-    PROPERTIES PASS_REGULAR_EXPRESSION " passed."
-)
+ ******************************************************************************/
+
+#include "Biquads.cpp"

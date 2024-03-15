@@ -4,9 +4,9 @@
 
 <div align="center">
 
-![Biquads-1-1-0b](https://stoneydsp.com/resources/projects/biquads/biquad-1-1-0.png)
+![Biquads-1-2-1](https://stoneydsp.com/resources/projects/biquads/biquad-1-1-0.png)
 
-| Latest release: | [v.1.1.0](https://github.com/nathanjhood/Biquads/tree/v1.1.0) |
+| Latest release: | [v.1.2.1](https://github.com/nathanjhood/Biquads/tree/v1.2.1) |
 | :-: | :-: |
 | Latest development: | Formats: |
 [![windows-latest](https://github.com/nathanjhood/Biquads/actions/workflows/windows-latest.yaml/badge.svg?branch=development&event=push)](https://github.com/nathanjhood/Biquads/actions/workflows/windows-latest.yaml) | VST3, Standalone |
@@ -15,6 +15,14 @@
 [![macos-arm-latest](https://github.com/nathanjhood/Biquads/actions/workflows/macos-arm-latest.yaml/badge.svg?branch=development&event=push)](https://github.com/nathanjhood/Biquads/actions/workflows/macos-arm-latest.yaml) | AU, VST3, Standalone |
 
 <hr>
+
+<b>Verified by [Pluginval](https://www.tracktion.com/develop/pluginval)</b>
+
+![pluginval](https://stoneydsp.com/resources/projects/biquads/develop-logo-pluginval.png)
+
+<hr>
+
+<b>Created with the [StoneyDSP C++ library for JUCE](https://www.tracktion.com/develop/pluginval)</b>
 
 [![StoneyDSP](https://raw.githubusercontent.com/StoneyDSP/StoneyDSP/production/extras/Icons/images/w_icon__384x256.png)](https://www.stoneydsp.com)
 

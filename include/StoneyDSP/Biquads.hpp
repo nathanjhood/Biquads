@@ -1,16 +1,28 @@
-/**
+/***************************************************************************//**
  * @file Biquads.hpp
- * @author  ()
- * @brief
- * @version 0.1
- * @date 2024-03-11
+ * @author Nathan J. Hood (nathanjhood@googlemail.com)
+ * @brief Simple two-pole equalizer with variable oversampling.
+ * @version 1.2.1.148
+ * @date 2024-03-13
  *
- * @copyright Copyright (c) 2024
- *
- */
+ * @copyright Copyright (c) 2024 - Nathan J. Hood
 
-#pragma once
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
 
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+ ******************************************************************************/
+
+#ifndef STONEYDSP_BIQUADS_HPP_INCLUDED
 #define STONEYDSP_BIQUADS_HPP_INCLUDED
 
 #include <juce_audio_plugin_client/juce_audio_plugin_client.h>
@@ -34,12 +46,6 @@
  #include "BinaryData.h"
 #endif
 
-// #if ! DONT_SET_USING_JUCE_NAMESPACE
-//  // If your code uses a lot of JUCE classes, then this will obviously save you
-//  // a lot of typing, but can be disabled by setting DONT_SET_USING_JUCE_NAMESPACE.
-//  using namespace juce;
-// #endif
-
 namespace StoneyDSP
 {
 /** @addtogroup StoneyDSP
@@ -59,13 +65,11 @@ namespace Biquads
 
 namespace ProjectInfo
 {
-    const char* const  projectName    = "Biquads";
-    const char* const  companyName    = "StoneyDSP";
-    const char* const  versionString  = "1.2.0";
-    const int          versionNumber  =  0x10200;
+    extern const char* const  projectName;
+    extern const char* const  companyName;
+    extern const char* const  versionString;
+    extern const int          versionNumber;
 }
-
-// class AudioPluginAudioProcessor;
 
   /// @} group Biquads
 } // namespace Biquads
@@ -73,6 +77,9 @@ namespace ProjectInfo
   /// @} group StoneyDSP
 } // namespace StoneyDSP
 
-// #include "Biquads/Processor.hpp"
-// #include "Biquads/Wrapper.hpp"
-// #include "Biquads/Parameters.hpp"
+#include "Biquads/Parameters.hpp"
+#include "Biquads/Wrapper.hpp"
+#include "Biquads/Processor.hpp"
+#include "Biquads/Editor.hpp"
+
+#endif // STONEYDSP_BIQUADS_HPP_INCLUDED

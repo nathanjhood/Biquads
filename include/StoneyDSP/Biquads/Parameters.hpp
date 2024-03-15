@@ -1,35 +1,37 @@
-/**
+/***************************************************************************//**
  * @file Parameters.hpp
  * @author Nathan J. Hood (nathanjhood@googlemail.com)
- * @brief
- * @version 1.2.0
- * @date 2023-09-07
+ * @brief Simple two-pole equalizer with variable oversampling.
+ * @version 1.2.1.148
+ * @date 2024-03-13
  *
- * @copyright Copyright (c) 2023
- *
- */
+ * @copyright Copyright (c) 2024 - Nathan J. Hood
 
-#pragma once
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
 
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+ ******************************************************************************/
+
+#ifndef STONEYDSP_BIQUADS_PARAMETERS_HPP_INCLUDED
 #define STONEYDSP_BIQUADS_PARAMETERS_HPP_INCLUDED
 
-#include "StoneyDSP/Biquads.hpp"
+// #include "StoneyDSP/Biquads.hpp"
 
-namespace StoneyDSP
-{
-/** @addtogroup StoneyDSP
- *  @{
- */
+namespace StoneyDSP {
+/** @addtogroup StoneyDSP @{ */
 
-/**
- * @brief The ```StoneyDSP::Biquads``` namespace.
- *
- */
-namespace Biquads
-{
-/** @addtogroup Biquads
- *  @{
- */
+namespace Biquads {
+/** @addtogroup Biquads @{ */
 
 class AudioPluginAudioProcessor;
 
@@ -60,3 +62,5 @@ private:
 
   /// @} group StoneyDSP
 } // namespace StoneyDSP
+
+#endif // STONEYDSP_BIQUADS_PARAMETERS_HPP_INCLUDED
