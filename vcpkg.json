@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "name": "stoneydsp-biquads",
-  "version": "1.2.0",
+  "version": "1.2.1.138",
   "homepage": "https://github.com/Stoneydsp/Biquads",
   "maintainers": [
     "Nathan J. Hood <nathanjhood@googlemail.com>"
