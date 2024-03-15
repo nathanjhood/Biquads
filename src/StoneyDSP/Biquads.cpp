@@ -2,7 +2,7 @@
  * @file Biquads.cpp
  * @author Nathan J. Hood (nathanjhood@googlemail.com)
  * @brief Simple two-pole equalizer with variable oversampling.
- * @version 1.2.1.138
+ * @version 1.2.1.148
  * @date 2024-03-13
  *
  * @copyright Copyright (c) 2024 - Nathan J. Hood
@@ -38,8 +38,8 @@ namespace ProjectInfo
 {
     extern const char* const  projectName    = "Biquads";
     extern const char* const  companyName    = "StoneyDSP";
-    extern const char* const  versionString  = "1.2.1.138";
-    extern const int          versionNumber  =  0x102018a;
+    extern const char* const  versionString  = "1.2.1.148";
+    extern const int          versionNumber  =  0x1020194;
 }
 
   /// @} group Biquads

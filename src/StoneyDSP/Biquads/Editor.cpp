@@ -2,7 +2,7 @@
  * @file Editor.cpp
  * @author Nathan J. Hood (nathanjhood@googlemail.com)
  * @brief Simple two-pole equalizer with variable oversampling.
- * @version 1.2.1.138
+ * @version 1.2.1.148
  * @date 2024-03-13
  *
  * @copyright Copyright (c) 2024 - Nathan J. Hood

@@ -249,10 +249,17 @@ unset(STONEYDSP_BIQUADS_INCLUDEDIR)
 set(STONEYDSP_BIQUADS_INCLUDEDIR "${CMAKE_INSTALL_INCLUDEDIR}" CACHE PATH "Installation directory for include files, a relative path that will be joined with ${CMAKE_INSTALL_PREFIX} or an absolute path." FORCE)
 
 foreach (STONEYDSP_BIQUADS_UNIT_FILE IN LISTS STONEYDSP_BIQUADS_UNIT_FILES)
+    if (STONEYDSP_BIQUADS_UNIT_FILE STREQUAL "StoneyDSP/Biquads")
+        install(FILES
+            "${STONEYDSP_BIQUADS_BINARY_DIR}/include/${STONEYDSP_BIQUADS_UNIT_FILE}.hpp"
+            DESTINATION "${STONEYDSP_BIQUADS_INCLUDEDIR}/StoneyDSP"
+        )
+    else ()
     install(FILES
         "${STONEYDSP_BIQUADS_BINARY_DIR}/include/${STONEYDSP_BIQUADS_UNIT_FILE}.hpp"
-        DESTINATION "${STONEYDSP_BIQUADS_INCLUDEDIR}"
+        DESTINATION "${STONEYDSP_BIQUADS_INCLUDEDIR}/StoneyDSP/Biquads"
     )
+    endif ()
 endforeach ()
 
 configure_package_config_file(
@@ -334,3 +341,4 @@ include(CPack)
 ]=============================================================================]#
 
 message (STATUS "Configuring StoneyDSP Biquads v${STONEYDSP_BIQUADS_VERSION} - done.")
+message (STATUS "JUCE DIR ${JUCE_DIR}")

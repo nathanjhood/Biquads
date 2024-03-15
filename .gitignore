@@ -2,6 +2,7 @@
 node_modules
 !/.vscode/c_cpp_properties.json
 !**/develop-logo-pluginval.png
+install
 
 # Windows Temp Cache Files
 [Tt]humbs.db
