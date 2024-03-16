@@ -14,25 +14,26 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
-.
+
 ]=============================================================================]#
 
 cmake_minimum_required (VERSION 3.22...3.29 FATAL_ERROR)
 
 list (APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/share/cmake/Modules")
 
-include(GetGitRevListCount)
-get_git_rev_list_count()
+include (GetGitRevListCount)
+get_git_rev_list_count ()
 
-project (STONEYDSP_BIQUADS VERSION 1.2.1.${_git_rev_list_count}
+project (STONEYDSP_BIQUADS
+    VERSION 1.2.2.${_git_rev_list_count}
     DESCRIPTION "Simple two-pole equalizer with variable oversampling."
     HOMEPAGE_URL "https://github.com/nathanjhood/Biquads"
     LANGUAGES C;CXX
 )
 
-include(StoneyDSPBiquadsWriteVersionFile)
-stoneydsp_biquads_write_version_file()
-unset(_git_rev_list_count)
+include (StoneyDSPBiquadsWriteVersionFile)
+stoneydsp_biquads_write_version_file ()
+unset (_git_rev_list_count)
 
 message (STATUS "Configuring StoneyDSP Biquads v${STONEYDSP_BIQUADS_VERSION}...")
 
@@ -78,6 +79,8 @@ juce_add_plugin (Biquads
     # ICON_BIG ...                              # ICON_* arguments specify a path to an image file to use as an icon for the Standalone
     # ICON_SMALL ...
 
+    VST3_AUTO_MANIFEST FALSE
+
     IS_SYNTH FALSE                              # Is this a synth or an effect?
     NEEDS_MIDI_INPUT FALSE                      # Does the plugin need midi input?
     NEEDS_MIDI_OUTPUT FALSE                     # Does the plugin need midi output?
@@ -90,7 +93,7 @@ juce_add_plugin (Biquads
     FORMATS AU VST3 Standalone                  # The formats to build. Other valid formats are: AAX Unity VST AU AUv3
 
     PRODUCT_NAME "Biquads"                      # The name of the final executable, which can differ from the target name
-    COMPANY_NAME StoneyDSP                      # Specify the name of the plugin's author
+    COMPANY_NAME "StoneyDSP"                    # Specify the name of the plugin's author
 )
 
 set (STONEYDSP_BIQUADS_INCLUDEDIR "")
@@ -114,7 +117,6 @@ list (APPEND STONEYDSP_BIQUADS_UNIT_FILES
 foreach (STONEYDSP_BIQUADS_UNIT_FILE IN LISTS STONEYDSP_BIQUADS_UNIT_FILES)
 
     string (REGEX REPLACE "[/]" "_" _stoneydsp_biquads_unit_transformed "${STONEYDSP_BIQUADS_UNIT_FILE}")
-    # set (_stoneydsp_biquads_unit_transformed ${_stoneydsp_biquads_unit_transformed})
     string (TOUPPER "${_stoneydsp_biquads_unit_transformed}" _stoneydsp_biquads_unit_transformed_upper)
 
     message (DEBUG "Biquads: ${_stoneydsp_biquads_unit_transformed_upper} found at ${_stoneydsp_biquads_unit_transformed}")
@@ -210,10 +212,10 @@ juce_generate_juce_header (Biquads)
 
 juce_enable_vst3_manifest_step (Biquads)
 
-unset(STONEYDSP_BIQUADS_INCLUDEDIR)
-set(STONEYDSP_BIQUADS_INCLUDEDIR
-  $<BUILD_INTERFACE:${STONEYDSP_BIQUADS_BINARY_DIR}/include>
-  $<INSTALL_INTERFACE:include>
+unset (STONEYDSP_BIQUADS_INCLUDEDIR)
+set (STONEYDSP_BIQUADS_INCLUDEDIR
+    $<BUILD_INTERFACE:${STONEYDSP_BIQUADS_BINARY_DIR}/include>
+    $<INSTALL_INTERFACE:include>
 )
 
 #[=============================================================================[
@@ -245,7 +247,6 @@ endif ()
 
 
 include(GNUInstallDirs)
-# set(STONEYDSP_BIQUADS_HEADER "${CMAKE_INSTALL_INCLUDEDIR}/StoneyDSP/Biquads.hpp")
 
 write_basic_package_version_file(
     "${STONEYDSP_BIQUADS_BINARY_DIR}/StoneyDSPBiquadsConfigVersion.cmake"
@@ -312,7 +313,6 @@ install(FILES
     DESTINATION "${STONEYDSP_BIQUADS_INSTALL_DESTINATION}"
 )
 
-# offer a basic/messy CPack
 set(STONEYDSP_BIQUADS_CPACK_GENERATORS "")
 list(APPEND STONEYDSP_BIQUADS_CPACK_GENERATORS
     "ZIP"

@@ -2,8 +2,8 @@
  * @file Processor.hpp
  * @author Nathan J. Hood (nathanjhood@googlemail.com)
  * @brief Simple two-pole equalizer with variable oversampling.
- * @version 1.2.1.148
- * @date 2024-03-13
+ * @version 1.2.2.151
+ * @date 2024-03-16
  *
  * @copyright Copyright (c) 2024 - Nathan J. Hood
 
@@ -24,11 +24,6 @@
 
 #ifndef STONEYDSP_BIQUADS_PROCESSOR_HPP_INCLUDED
 #define STONEYDSP_BIQUADS_PROCESSOR_HPP_INCLUDED
-
-// #include "StoneyDSP/Biquads.hpp"
-
-// #include "Parameters.hpp"
-// #include "Wrapper.hpp"
 
 namespace StoneyDSP {
 /** @addtogroup StoneyDSP @{ */
@@ -110,7 +105,7 @@ private:
     juce::AudioParameterFloat*      gainPtr         { nullptr };
     juce::AudioParameterChoice*     typePtr         { nullptr };
     juce::AudioParameterChoice*     transformPtr    { nullptr };
-    // juce::AudioParameterChoice*     osPtr           { nullptr };
+    juce::AudioParameterChoice*     osPtr           { nullptr };
     juce::AudioParameterFloat*      outputPtr       { nullptr };
     juce::AudioParameterFloat*      mixPtr          { nullptr };
     juce::AudioParameterBool*       bypassPtr       { nullptr };

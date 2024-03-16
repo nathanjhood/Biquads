@@ -1,6 +1,6 @@
 {
   "name": "@stoneydsp/biquads",
-  "version": "1.2.1.148",
+  "version": "1.2.2.151",
   "main": "index.js",
   "author": {
 		"email": "nathanjhood@googlemail.com",

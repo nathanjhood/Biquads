@@ -2,8 +2,8 @@
  * @file Processor.cpp
  * @author Nathan J. Hood (nathanjhood@googlemail.com)
  * @brief Simple two-pole equalizer with variable oversampling.
- * @version 1.2.1.148
- * @date 2024-03-13
+ * @version 1.2.2.151
+ * @date 2024-03-16
  *
  * @copyright Copyright (c) 2024 - Nathan J. Hood
 
@@ -51,7 +51,7 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
 , gainPtr (dynamic_cast <juce::AudioParameterFloat*> (apvts.getParameter("Band_A_gainID")))
 , typePtr(dynamic_cast <juce::AudioParameterChoice*> (apvts.getParameter("Band_A_typeID")))
 , transformPtr (dynamic_cast <juce::AudioParameterChoice*> (apvts.getParameter("Master_transformID")))
-// , osPtr (dynamic_cast <juce::AudioParameterChoice*> (apvts.getParameter("Master_osID")))
+, osPtr (dynamic_cast <juce::AudioParameterChoice*> (apvts.getParameter("Master_osID")))
 , outputPtr (dynamic_cast <juce::AudioParameterFloat*> (apvts.getParameter("Master_outputID")))
 , mixPtr (dynamic_cast <juce::AudioParameterFloat*> (apvts.getParameter("Master_mixID")))
 , bypassPtr (dynamic_cast<juce::AudioParameterBool*> (apvts.getParameter("Master_bypassID")))
@@ -62,7 +62,7 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
     resonancePtr = dynamic_cast <juce::AudioParameterFloat*> (apvts.getParameter("Band_A_resonanceID"));
     gainPtr = dynamic_cast <juce::AudioParameterFloat*> (apvts.getParameter("Band_A_gainID"));
     typePtr = dynamic_cast <juce::AudioParameterChoice*> (apvts.getParameter("Band_A_typeID"));
-    // osPtr = dynamic_cast <juce::AudioParameterChoice*> (apvts.getParameter("Master_osID"));
+    osPtr = dynamic_cast <juce::AudioParameterChoice*> (apvts.getParameter("Master_osID"));
     outputPtr = dynamic_cast <juce::AudioParameterFloat*> (apvts.getParameter("Master_outputID"));
     mixPtr = dynamic_cast <juce::AudioParameterFloat*> (apvts.getParameter("Master_mixID"));
     bypassPtr = dynamic_cast <juce::AudioParameterBool*> (apvts.getParameter("Master_bypassID"));
@@ -72,7 +72,7 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
     jassert(gainPtr != nullptr);
     jassert(typePtr != nullptr);
     jassert(transformPtr != nullptr);
-    // jassert(osPtr != nullptr);
+    jassert(osPtr != nullptr);
     jassert(outputPtr != nullptr);
     jassert(mixPtr != nullptr);
     jassert(bypassPtr != nullptr);
@@ -209,8 +209,8 @@ void AudioPluginAudioProcessor::prepareToPlay (double sampleRate, int samplesPer
     processingPrecision = getProcessingPrecision();
 
     spec.sampleRate = sampleRate;
-    spec.maximumBlockSize = samplesPerBlock;
-    spec.numChannels = getTotalNumOutputChannels();
+    spec.maximumBlockSize = static_cast<juce::uint32>(samplesPerBlock);
+    spec.numChannels = static_cast<juce::uint32>(getTotalNumOutputChannels());
 
     processorFlt.prepare(getSpec());
     processorDbl.prepare(getSpec());
@@ -363,10 +363,3 @@ void AudioPluginAudioProcessor::setCurrentProgramStateInformation(const void* da
 
   /// @} group StoneyDSP
 } // namespace StoneyDSP
-
-//==============================================================================
-// This creates new instances of the plugin..
-juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
-{
-    return new StoneyDSP::Biquads::AudioPluginAudioProcessor();
-}
