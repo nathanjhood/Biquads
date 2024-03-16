@@ -268,8 +268,7 @@ void AudioPluginAudioProcessorWrapper<SampleType>::processBlock(juce::AudioBuffe
 
     // oversampler[curOS]->processSamplesDown(wetBlock);
 
-    for (auto channel = 0; channel < audioProcessor.getTotalNumOutputChannels(); ++channel)
-        buffer.applyGain (channel, 0, buffer.getNumSamples(), static_cast<SampleType>(juce::Decibels::decibelsToGain(static_cast<SampleType>(masterOutputPtr->get()), static_cast<SampleType>(-120.00))));
+    // applyGain(buffer, static_cast<SampleType>(juce::Decibels::decibelsToGain(static_cast<SampleType>(masterOutputPtr->get()), static_cast<SampleType>(-120.00))))
 
     mixer.mixWetSamples(wetBlock);
     return;

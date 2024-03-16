@@ -7,24 +7,14 @@
               companyEmail="nathanjhood@googlemail.com">
   <MAINGROUP id="butqEA" name="Biquads">
     <GROUP id="{B7BEB523-13AE-DC81-1072-78BF4CC3A396}" name="Biquads">
-      <!-- <GROUP id="{19BEE9C3-82E8-891C-7BCF-623477F38C0E}" name="Components">
-        <FILE id="NxF6lP" name="AutoComponent.cpp" compile="1" resource="0" file="src/StoneyDSP/Biquads/Components/AutoComponent.cpp"/>
-        <FILE id="oNSzMK" name="AutoComponent.h" compile="0" resource="0" file="include/StoneyDSP/Biquads/Components/AutoComponent.h"/>
-      </GROUP> -->
-      <!-- <GROUP id="{9CCA4E58-A6DF-778D-0E47-615CE5201735}" name="Modules">
-        <FILE id="CkmJBA" name="Coefficient.cpp" compile="1" resource="0" file="src/StoneyDSP/Biquads/Modules/Coefficient.cpp"/>
-        <FILE id="cfbQWO" name="Coefficient.h" compile="0" resource="0" file="include/StoneyDSP/Biquads/Modules/Coefficient.h"/>
-        <FILE id="unuiPg" name="SecondOrderBiquads.cpp" compile="1" resource="0" file="src/StoneyDSP/Biquads/Modules/SecondOrderBiquads.cpp"/>
-        <FILE id="fw6I4S" name="SecondOrderBiquads.h" compile="0" resource="0" file="include/StoneyDSP/Biquads/Modules/SecondOrderBiquads.h"/>
-      </GROUP> -->
       <FILE id="VST2bi" name="Parameters.cpp" compile="1" resource="0" file="src/StoneyDSP/Biquads/Parameters.cpp"/>
       <FILE id="wSuuDB" name="Parameters.hpp" compile="0" resource="0" file="include/StoneyDSP/Biquads/Parameters.hpp"/>
       <FILE id="pvZewN" name="Wrapper.cpp" compile="1" resource="0" file="src/StoneyDSP/Biquads/Wrapper.cpp"/>
       <FILE id="irQxwW" name="Wrapper.hpp" compile="0" resource="0" file="include/StoneyDSP/Biquads/Wrapper.hpp"/>
       <FILE id="vmXpNV" name="Processor.cpp" compile="1" resource="0" file="src/StoneyDSP/Biquads/Processor.cpp"/>
       <FILE id="qN9OPw" name="Processor.hpp" compile="0" resource="0" file="include/StoneyDSP/Biquads/Processor.h"/>
-      <!-- <FILE id="TI9DHC" name="PluginEditor.cpp" compile="1" resource="0" file="src/StoneyDSP/Biquads/PluginEditor.cpp"/>
-      <FILE id="fgFCra" name="PluginEditor.h" compile="0" resource="0" file="include/StoneyDSP/Biquads/PluginEditor.h"/> -->
+      <FILE id="TI9DHC" name="Editor.cpp" compile="1" resource="0" file="src/StoneyDSP/Biquads/Editor.cpp"/>
+      <FILE id="fgFCra" name="Editor.hpp" compile="0" resource="0" file="include/StoneyDSP/Biquads/Editor.hpp"/>
     </GROUP>
   </MAINGROUP>
   <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1" JUCE_VST3_CAN_REPLACE_VST2="0"/>

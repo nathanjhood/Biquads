@@ -100,6 +100,12 @@ public:
 
     SampleType processSample(int channel, SampleType inputValue);
 
+    // void applyGain(juce::AudioBuffer<SampleType>& buffer, SampleType gainLevel = static_cast<SampleType>(1.0))
+    // {
+    //     for (auto channel = 0; channel < audioProcessor.getTotalNumOutputChannels(); ++channel)
+    //         buffer.applyGain (channel, 0, buffer.getNumSamples(), gainLevel);
+    // }
+
     //==============================================================================
     /** Updates the internal state variables of the processor. */
     void update();
