@@ -130,7 +130,7 @@ target_include_directories(Biquads_Audio_Plugin_Dependencies
     INTERFACE
         $<TARGET_PROPERTY:Biquads_Audio_Plugin_Dependencies,INCLUDE_DIRECTORIES>
 )
-
+target_compile_features(Biquads_Audio_Plugin_Dependencies PRIVATE cxx_std_17)
 set_target_properties(Biquads_Audio_Plugin_Dependencies PROPERTIES
     POSITION_INDEPENDENT_CODE TRUE
     VISIBILITY_INLINES_HIDDEN TRUE
@@ -200,7 +200,7 @@ else ()
                 $<INSTALL_INTERFACE:include/${STONEYDSP_BIQUADS_UNIT_EDITOR}.hpp>
     )
 endif()
-
+target_compile_features(Biquads_Audio_Plugin_Interface INTERFACE cxx_std_17)
 set_target_properties(Biquads_Audio_Plugin_Interface PROPERTIES
     POSITION_INDEPENDENT_CODE TRUE
     VISIBILITY_INLINES_HIDDEN TRUE
@@ -237,7 +237,7 @@ target_link_libraries (Biquads_Audio_Plugin_Library
     INTERFACE
         StoneyDSP::Biquads_Audio_Plugin_Interface
 )
-
+target_compile_features(Biquads_Audio_Plugin_Library PRIVATE cxx_std_17)
 set_target_properties(Biquads_Audio_Plugin_Library PROPERTIES
     POSITION_INDEPENDENT_CODE TRUE
     VISIBILITY_INLINES_HIDDEN TRUE
