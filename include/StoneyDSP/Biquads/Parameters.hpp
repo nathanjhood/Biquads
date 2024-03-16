@@ -33,8 +33,6 @@ namespace StoneyDSP {
 namespace Biquads {
 /** @addtogroup Biquads @{ */
 
-class AudioPluginAudioProcessor;
-
 class AudioPluginAudioProcessorParameters
 {
 public:

@@ -62,7 +62,6 @@ namespace Biquads
  *  @{
  */
 
-
 namespace ProjectInfo
 {
     extern const char* const  projectName;
@@ -70,6 +69,8 @@ namespace ProjectInfo
     extern const char* const  versionString;
     extern const int          versionNumber;
 }
+
+class AudioPluginAudioProcessor;
 
   /// @} group Biquads
 } // namespace Biquads

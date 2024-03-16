@@ -100,17 +100,37 @@ private:
 
     //==========================================================================
     /** Parameter pointers. */
-    juce::AudioParameterFloat*      frequencyPtr    { nullptr };
-    juce::AudioParameterFloat*      resonancePtr    { nullptr };
-    juce::AudioParameterFloat*      gainPtr         { nullptr };
-    juce::AudioParameterChoice*     typePtr         { nullptr };
-    juce::AudioParameterChoice*     transformPtr    { nullptr };
-    juce::AudioParameterChoice*     osPtr           { nullptr };
-    juce::AudioParameterFloat*      outputPtr       { nullptr };
-    juce::AudioParameterFloat*      mixPtr          { nullptr };
-    juce::AudioParameterBool*       bypassPtr       { nullptr };
+    juce::AudioParameterBool*       masterBypassPtr         { nullptr };
+    juce::AudioParameterFloat*      masterOutputPtr         { nullptr };
+    juce::AudioParameterFloat*      masterMixPtr            { nullptr };
+    juce::AudioParameterChoice*     masterOsPtr             { nullptr };
+    juce::AudioParameterChoice*     masterTransformPtr      { nullptr };
 
-    juce::AudioParameterBool*       bypassState     { nullptr };
+    juce::AudioParameterBool*       biquadsABypassPtr       { nullptr };
+    juce::AudioParameterFloat*      biquadsAFrequencyPtr    { nullptr };
+    juce::AudioParameterFloat*      biquadsAResonancePtr    { nullptr };
+    juce::AudioParameterFloat*      biquadsAGainPtr         { nullptr };
+    juce::AudioParameterChoice*     biquadsATypePtr         { nullptr };
+
+    juce::AudioParameterBool*       biquadsBBypassPtr       { nullptr };
+    juce::AudioParameterFloat*      biquadsBFrequencyPtr    { nullptr };
+    juce::AudioParameterFloat*      biquadsBResonancePtr    { nullptr };
+    juce::AudioParameterFloat*      biquadsBGainPtr         { nullptr };
+    juce::AudioParameterChoice*     biquadsBTypePtr         { nullptr };
+
+    juce::AudioParameterBool*       biquadsCBypassPtr       { nullptr };
+    juce::AudioParameterFloat*      biquadsCFrequencyPtr    { nullptr };
+    juce::AudioParameterFloat*      biquadsCResonancePtr    { nullptr };
+    juce::AudioParameterFloat*      biquadsCGainPtr         { nullptr };
+    juce::AudioParameterChoice*     biquadsCTypePtr         { nullptr };
+
+    juce::AudioParameterBool*       biquadsDBypassPtr       { nullptr };
+    juce::AudioParameterFloat*      biquadsDFrequencyPtr    { nullptr };
+    juce::AudioParameterFloat*      biquadsDResonancePtr    { nullptr };
+    juce::AudioParameterFloat*      biquadsDGainPtr         { nullptr };
+    juce::AudioParameterChoice*     biquadsDTypePtr         { nullptr };
+
+    juce::AudioParameterBool*       bypassState             { nullptr };
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioPluginAudioProcessor)
