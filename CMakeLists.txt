@@ -113,6 +113,44 @@ list (APPEND STONEYDSP_BIQUADS_UNIT_FILES
     "${STONEYDSP_BIQUADS_UNIT_PROCESSOR}"
     "${STONEYDSP_BIQUADS_UNIT_WRAPPER}"
 )
+foreach (STONEYDSP_BIQUADS_UNIT_FILE IN LISTS STONEYDSP_BIQUADS_UNIT_FILES)
+    configure_file (
+        "include/${STONEYDSP_BIQUADS_UNIT_FILE}.hpp" # SRC_DIR
+        "include/${STONEYDSP_BIQUADS_UNIT_FILE}.hpp" # BIN_DIR
+    )
+endforeach()
+
+unset (STONEYDSP_BIQUADS_INCLUDEDIR)
+set (STONEYDSP_BIQUADS_INCLUDEDIR
+    $<BUILD_INTERFACE:${STONEYDSP_BIQUADS_BINARY_DIR}/include>
+    $<INSTALL_INTERFACE:include>
+)
+
+if (CMAKE_MAJOR_VERSION GREATER_EQUAL 3 AND (CMAKE_MINOR_VERSION LESS 23))
+    target_include_directories (Biquads PUBLIC ${STONEYDSP_BIQUADS_INCLUDEDIR})
+else ()
+    target_sources (Biquads
+        PUBLIC
+            FILE_SET biquads_HEADERS
+            TYPE HEADERS
+            BASE_DIRS ${STONEYDSP_BIQUADS_INCLUDEDIR}
+            FILES
+                $<BUILD_INTERFACE:${STONEYDSP_BIQUADS_BINARY_DIR}/include/${STONEYDSP_BIQUADS_UNIT}.hpp>
+                $<INSTALL_INTERFACE:include/${STONEYDSP_BIQUADS_UNIT}.hpp>
+
+                $<BUILD_INTERFACE:${STONEYDSP_BIQUADS_BINARY_DIR}/include/${STONEYDSP_BIQUADS_UNIT_PARAMETERS}.hpp>
+                $<INSTALL_INTERFACE:include/${STONEYDSP_BIQUADS_UNIT_PARAMETERS}.hpp>
+
+                $<BUILD_INTERFACE:${STONEYDSP_BIQUADS_BINARY_DIR}/include/${STONEYDSP_BIQUADS_UNIT_WRAPPER}.hpp>
+                $<INSTALL_INTERFACE:include/${STONEYDSP_BIQUADS_UNIT_WRAPPER}.hpp>
+
+                $<BUILD_INTERFACE:${STONEYDSP_BIQUADS_BINARY_DIR}/include/${STONEYDSP_BIQUADS_UNIT_PROCESSOR}.hpp>
+                $<INSTALL_INTERFACE:include/${STONEYDSP_BIQUADS_UNIT_PROCESSOR}.hpp>
+
+                $<BUILD_INTERFACE:${STONEYDSP_BIQUADS_BINARY_DIR}/include/${STONEYDSP_BIQUADS_UNIT_EDITOR}.hpp>
+                $<INSTALL_INTERFACE:include/${STONEYDSP_BIQUADS_UNIT_EDITOR}.hpp>
+    )
+endif()
 
 foreach (STONEYDSP_BIQUADS_UNIT_FILE IN LISTS STONEYDSP_BIQUADS_UNIT_FILES)
 
@@ -121,21 +159,6 @@ foreach (STONEYDSP_BIQUADS_UNIT_FILE IN LISTS STONEYDSP_BIQUADS_UNIT_FILES)
 
     message (DEBUG "Biquads: ${_stoneydsp_biquads_unit_transformed_upper} found at ${_stoneydsp_biquads_unit_transformed}")
 
-    configure_file (
-        "include/${STONEYDSP_BIQUADS_UNIT_FILE}.hpp" # SRC_DIR
-        "include/${STONEYDSP_BIQUADS_UNIT_FILE}.hpp" # BIN_DIR
-    )
-    target_sources (Biquads
-        PUBLIC
-            FILE_SET biquads_HEADERS
-            TYPE HEADERS
-            BASE_DIRS
-                $<BUILD_INTERFACE:${STONEYDSP_BIQUADS_BINARY_DIR}/include>
-                $<INSTALL_INTERFACE:include>
-            FILES
-                $<BUILD_INTERFACE:${STONEYDSP_BIQUADS_BINARY_DIR}/include/${STONEYDSP_BIQUADS_UNIT_FILE}.hpp>
-                $<INSTALL_INTERFACE:include/${STONEYDSP_BIQUADS_UNIT_FILE}.hpp>
-    )
     if (NOT DEFINED STONEYDSP_BIQUADS_MODULE OR (NOT STONEYDSP_BIQUADS_MODULE))
         target_sources (Biquads
             PRIVATE
@@ -146,6 +169,8 @@ foreach (STONEYDSP_BIQUADS_UNIT_FILE IN LISTS STONEYDSP_BIQUADS_UNIT_FILES)
     #     PRIVATE
     #         "${_stoneydsp_biquads_unit_transformed_upper}_HPP_INCLUDED"
     # )
+    unset (_stoneydsp_biquads_unit_transformed)
+    unset (_stoneydsp_biquads_unit_transformed_upper)
 endforeach ()
 
 if (DEFINED STONEYDSP_BIQUADS_MODULE AND (STONEYDSP_BIQUADS_MODULE))
@@ -211,12 +236,6 @@ list (APPEND STONEYDSP_BIQUADS_TARGETS Biquads)
 juce_generate_juce_header (Biquads)
 
 juce_enable_vst3_manifest_step (Biquads)
-
-unset (STONEYDSP_BIQUADS_INCLUDEDIR)
-set (STONEYDSP_BIQUADS_INCLUDEDIR
-    $<BUILD_INTERFACE:${STONEYDSP_BIQUADS_BINARY_DIR}/include>
-    $<INSTALL_INTERFACE:include>
-)
 
 #[=============================================================================[
     CTest configuration
