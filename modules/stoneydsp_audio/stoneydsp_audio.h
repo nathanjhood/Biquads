@@ -67,6 +67,8 @@ namespace Audio
 } // namespace Audio
 } // namespace StoneyDSP
 
-#include "filter/stoneydsp_FilterTypes.hpp"
-#include "filter/stoneydsp_TransformationTypes.hpp"
-#include "filter/stoneydsp_Biquads.hpp"
+// #include "filter/stoneydsp_FilterTypes.hpp"
+// #include "filter/stoneydsp_TransformationTypes.hpp"
+// #include "filter/stoneydsp_Biquads.hpp"
+
+#include "widgets/stoneydsp_Biquads.hpp"

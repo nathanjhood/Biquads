@@ -7,6 +7,25 @@
       "cmakeDebugType": "external",
       "pipeName": "/tmp/vcpkg_ext_portfile_dbg",
       "preLaunchTask": "Debug vcpkg commands"
-    }
+    },
+		{
+			"name": "Reaper",
+			"request": "launch",
+			"type": "cppdbg",
+			"program": "/usr/local/bin/reaper",
+			"args": [],
+			"stopAtEntry": false,
+			"cwd": "${fileDirname}",
+			"environment": [],
+			"externalConsole": false,
+			"MIMode": "gdb",
+			"setupCommands": [
+				{
+					"description": "Enable pretty-printing for gdb",
+					"text": "-enable-pretty-printing",
+					"ignoreFailures": true
+				}
+			]
+		}
   ]
 }
