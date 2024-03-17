@@ -110,11 +110,11 @@ public:
     /** Updates the internal state variables of the processor. */
     void update();
 
-    // //==========================================================================
-    // /** Sets the oversampling factor. */
-    // void setOversampling();
+    //==============================================================================
+    /** Sets the oversampling factor. */
+    void setOversampling();
 
-    // SampleType getLatencySamples() const noexcept;
+    SampleType getLatencySamples() const noexcept;
 
 private:
     //==============================================================================

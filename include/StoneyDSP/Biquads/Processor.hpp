@@ -80,56 +80,24 @@ public:
     juce::UndoManager undoManager;
     juce::UndoManager& getUndoManager() { return undoManager; }
     //==============================================================================
-    juce::AudioProcessorValueTreeState apvts;
     juce::AudioProcessorValueTreeState& getAPVTS() { return apvts; }
     static juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
     //==============================================================================
-    juce::dsp::ProcessSpec spec;
     juce::dsp::ProcessSpec& getSpec() { return spec; }
-
 
 private:
     //==============================================================================
     /** Audio processor members. */
+    juce::AudioProcessorValueTreeState apvts;
+    juce::dsp::ProcessSpec spec;
     juce::AudioProcessor::ProcessingPrecision processingPrecision;
-
+    //==============================================================================
     AudioPluginAudioProcessorParameters parameters;
-
     AudioPluginAudioProcessorWrapper<float> processorFlt;
     AudioPluginAudioProcessorWrapper<double> processorDbl;
 
-    //==========================================================================
+    //==============================================================================
     /** Parameter pointers. */
-    juce::AudioParameterBool*       masterBypassPtr         { nullptr };
-    juce::AudioParameterFloat*      masterOutputPtr         { nullptr };
-    juce::AudioParameterFloat*      masterMixPtr            { nullptr };
-    juce::AudioParameterChoice*     masterOsPtr             { nullptr };
-    juce::AudioParameterChoice*     masterTransformPtr      { nullptr };
-
-    juce::AudioParameterBool*       biquadsABypassPtr       { nullptr };
-    juce::AudioParameterFloat*      biquadsAFrequencyPtr    { nullptr };
-    juce::AudioParameterFloat*      biquadsAResonancePtr    { nullptr };
-    juce::AudioParameterFloat*      biquadsAGainPtr         { nullptr };
-    juce::AudioParameterChoice*     biquadsATypePtr         { nullptr };
-
-    juce::AudioParameterBool*       biquadsBBypassPtr       { nullptr };
-    juce::AudioParameterFloat*      biquadsBFrequencyPtr    { nullptr };
-    juce::AudioParameterFloat*      biquadsBResonancePtr    { nullptr };
-    juce::AudioParameterFloat*      biquadsBGainPtr         { nullptr };
-    juce::AudioParameterChoice*     biquadsBTypePtr         { nullptr };
-
-    juce::AudioParameterBool*       biquadsCBypassPtr       { nullptr };
-    juce::AudioParameterFloat*      biquadsCFrequencyPtr    { nullptr };
-    juce::AudioParameterFloat*      biquadsCResonancePtr    { nullptr };
-    juce::AudioParameterFloat*      biquadsCGainPtr         { nullptr };
-    juce::AudioParameterChoice*     biquadsCTypePtr         { nullptr };
-
-    juce::AudioParameterBool*       biquadsDBypassPtr       { nullptr };
-    juce::AudioParameterFloat*      biquadsDFrequencyPtr    { nullptr };
-    juce::AudioParameterFloat*      biquadsDResonancePtr    { nullptr };
-    juce::AudioParameterFloat*      biquadsDGainPtr         { nullptr };
-    juce::AudioParameterChoice*     biquadsDTypePtr         { nullptr };
-
     juce::AudioParameterBool*       bypassState             { nullptr };
 
     //==============================================================================
