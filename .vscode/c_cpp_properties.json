@@ -3,8 +3,9 @@
 		{
 			"name": "GCC 11.4.0 x86_64-linux-gnu",
 			"includePath": [
-				"${workspaceFolder}/include/**",
 				"${workspaceFolder}/modules/**",
+				"${workspaceFolder}/JuceLibraryCode/**",
+				"${workspaceFolder}/include/**",
 			],
 			"defines": [],
 			"compilerPath": "/usr/bin/gcc",
@@ -18,8 +19,9 @@
 		{
 			"name": "Clang 14.0.0 x86_64-pc-linux-gnu",
 			"includePath": [
-				"${workspaceFolder}/include/**",
 				"${workspaceFolder}/modules/**",
+				"${workspaceFolder}/JuceLibraryCode/**",
+				"${workspaceFolder}/include/**",
 			],
 			"defines": [],
 			"compilerPath": "/usr/bin/clang",
