@@ -47,10 +47,11 @@ if (NOT DEFINED JUCE_VERSION)
     message (STATUS "  Found JUCE v${JUCE_VERSION}...")
 endif ()
 
+option (STONEYDSP_BIQUADS_BUILD_TESTS "Collect Tracktion Pluginval and configure with CTest (requires <CURL> and <7ZIP>)." ON)
 option (STONEYDSP_BIQUADS_TARGET_IS_INSTALLABLE "" OFF)
-option (STONEYDSP_BIQUADS_USING_JUCE_RECOMMENDED_CONFIG_FLAGS "" ON)
-option (STONEYDSP_BIQUADS_USING_JUCE_RECOMMENDED_LTO_FLAGS "" ON)
-option (STONEYDSP_BIQUADS_USING_JUCE_RECOMMENDED_WARNING_FLAGS "" ON)
+option (STONEYDSP_BIQUADS_USING_JUCE_RECOMMENDED_CONFIG_FLAGS "Link with juce::juce_recommended_config_flags." ON)
+option (STONEYDSP_BIQUADS_USING_JUCE_RECOMMENDED_LTO_FLAGS "Link with juce::juce_recommended_lto_flags." ON)
+option (STONEYDSP_BIQUADS_USING_JUCE_RECOMMENDED_WARNING_FLAGS "Link with juce::juce_recommended_warning_flags." ON)
 
 set (STONEYDSP_BIQUADS_TARGETS "")
 
@@ -67,13 +68,14 @@ set_directory_properties(PROPERTIES
     JUCE_COMPANY_NAME       "StoneyDSP"
     JUCE_COMPANY_WEBSITE    "https://stoneydsp.com"
     JUCE_COMPANY_EMAIL      "nathanjhood@googlemail.com"
-    JUCE_COMPANY_COPYRIGHT  "Copyright (c) 2024 - StoneyDSP <nathanjhood@googlemail.com>"
+    JUCE_COMPANY_COPYRIGHT  "Copyright (c) 2024 - Nathan J. Hood <nathanjhood@googlemail.com>"
 )
 
 #[=============================================================================[
 #   target: StoneyDSP::Biquads_Audio_Plugin_Dependencies
 #]=============================================================================]
 
+# Note: all linkage MUST be marked PRIVATE
 add_library (Biquads_Audio_Plugin_Dependencies STATIC)
 add_library (StoneyDSP::Biquads_Audio_Plugin_Dependencies ALIAS Biquads_Audio_Plugin_Dependencies)
 
@@ -145,6 +147,7 @@ set_target_properties(Biquads_Audio_Plugin_Dependencies PROPERTIES
 #   target: StoneyDSP::Biquads_Audio_Plugin_Interface
 #]=============================================================================]
 
+# Note: all linkage MUST be marked INTERFACE
 add_library (Biquads_Audio_Plugin_Interface INTERFACE)
 add_library (StoneyDSP::Biquads_Audio_Plugin_Interface ALIAS Biquads_Audio_Plugin_Interface)
 
@@ -230,12 +233,10 @@ target_sources (Biquads_Audio_Plugin_Library
         "src/${STONEYDSP_BIQUADS_UNIT_EDITOR}.cpp"
 )
 target_link_libraries (Biquads_Audio_Plugin_Library
-    PUBLIC
-        StoneyDSP::Biquads_Audio_Plugin_Dependencies
-)
-target_link_libraries (Biquads_Audio_Plugin_Library
+    PRIVATE
+        StoneyDSP::Biquads_Audio_Plugin_Dependencies # MUST be PRIVATE!
     INTERFACE
-        StoneyDSP::Biquads_Audio_Plugin_Interface
+        StoneyDSP::Biquads_Audio_Plugin_Interface # MUST be INTERFACE!
 )
 target_compile_features(Biquads_Audio_Plugin_Library PRIVATE cxx_std_17)
 set_target_properties(Biquads_Audio_Plugin_Library PROPERTIES
@@ -258,6 +259,14 @@ juce_add_plugin (Biquads_Audio_Plugin
     # ICON_SMALL ...
 
     VST3_AUTO_MANIFEST FALSE
+    BUNDLE_ID "com.StoneyDSP.Biquads"
+
+    MICROPHONE_PERMISSION_ENABLED FALSE
+    CAMERA_PERMISSION_ENABLED FALSE
+    BLUETOOTH_PERMISSION_ENABLED FALSE
+
+    VST2_CATEGORY "kPlugCategEffect"
+    VST3_CATEGORIES "Fx" "EQ"
 
     IS_SYNTH FALSE                              # Is this a synth or an effect?
     NEEDS_MIDI_INPUT FALSE                      # Does the plugin need midi input?
@@ -265,13 +274,16 @@ juce_add_plugin (Biquads_Audio_Plugin
     IS_MIDI_EFFECT FALSE                        # Is this plugin a MIDI effect?
     EDITOR_WANTS_KEYBOARD_FOCUS FALSE           # Does the editor need keyboard focus?
     COPY_PLUGIN_AFTER_BUILD FALSE               # Should the plugin be installed to a default location after building?
-    PLUGIN_MANUFACTURER_CODE Sdsp               # A four-character manufacturer id with at least one upper-case character
-    PLUGIN_CODE Biq0                            # A unique four-character plugin id with exactly one upper-case character
+    PLUGIN_MANUFACTURER_CODE Manu               # A four-character manufacturer id with at least one upper-case character
+    PLUGIN_CODE Jer3                            # A unique four-character plugin id with exactly one upper-case character
                                                 # GarageBand 10.3 requires the first letter to be upper-case, and the remaining letters to be lower-case
     FORMATS AU VST3 Standalone                  # The formats to build. Other valid formats are: AAX Unity VST AU AUv3
 
     PRODUCT_NAME "Biquads"                      # The name of the final executable, which can differ from the target name
     COMPANY_NAME "StoneyDSP"                    # Specify the name of the plugin's author
+    COMPANY_WEBSITE "https://stoneydsp.com"
+    COMPANY_EMAIL "nathanjhood@googlemail.com"
+    COMPANY_COPYRIGHT "Copyright (c) 2024 - Nathan J. Hood <nathanjhood@googlemail.com>"
 )
 
 if (CMAKE_MAJOR_VERSION GREATER_EQUAL 3 AND (CMAKE_MINOR_VERSION LESS 23))
@@ -293,12 +305,10 @@ target_sources (Biquads_Audio_Plugin
 )
 target_link_libraries (Biquads_Audio_Plugin
     PRIVATE
-        StoneyDSP::Biquads_Audio_Plugin_Dependencies
+        StoneyDSP::Biquads_Audio_Plugin_Dependencies # MUST be PRIVATE!
         StoneyDSP::Biquads_Audio_Plugin_Library
-)
-target_link_libraries (Biquads_Audio_Plugin
     INTERFACE
-        StoneyDSP::Biquads_Audio_Plugin_Interface
+        StoneyDSP::Biquads_Audio_Plugin_Interface # MUST be INTERFACE!
 )
 
 list (APPEND STONEYDSP_BIQUADS_TARGETS Biquads_Audio_Plugin_Dependencies)
@@ -307,15 +317,13 @@ list (APPEND STONEYDSP_BIQUADS_TARGETS Biquads_Audio_Plugin_Dependencies)
 #   Helpers
 #]=============================================================================]
 
-juce_generate_juce_header (Biquads_Audio_Plugin)
+juce_generate_juce_header       (Biquads_Audio_Plugin)
 
-juce_enable_vst3_manifest_step (Biquads_Audio_Plugin)
+juce_enable_vst3_manifest_step  (Biquads_Audio_Plugin)
 
 #[=============================================================================[
 #   CTest configuration
 #]=============================================================================]
-
-option (STONEYDSP_BIQUADS_BUILD_TESTS "Build tests" ON)
 
 if (STONEYDSP_BIQUADS_BUILD_TESTS AND (STONEYDSP_BIQUADS_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR))
     enable_testing ()
