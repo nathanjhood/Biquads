@@ -180,7 +180,7 @@ private:
     /** Coefficient calculation(s). */
     StoneyDSP::Maths::Coefficient<SampleType> b_0, b_1, b_2, a_0, a_1, a_2;
 
-    filterType filterTypeParamValue = { filterType::lowPass2 };
+    filterType filterTypeParamValue = { filterType::peak };
     transformationType transformationParamValue = { transformationType::directFormIItransposed };
 
     //==============================================================================
