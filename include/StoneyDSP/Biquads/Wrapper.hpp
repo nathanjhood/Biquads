@@ -22,8 +22,15 @@
 
  ******************************************************************************/
 
-#ifndef STONEYDSP_BIQUADS_WRAPPER_HPP_INCLUDED
+#pragma once
 #define STONEYDSP_BIQUADS_WRAPPER_HPP_INCLUDED
+
+// #include <juce_audio_processors/juce_audio_processors.h>
+// #include <juce_core/juce_core.h>
+// #include <juce_audio_basics/juce_audio_basics.h>
+// #include <stoneydsp_core/stoneydsp_core.h>
+// #include <stoneydsp_audio/stoneydsp_audio.h>
+// #include <juce_dsp/juce_dsp.h>
 
 namespace StoneyDSP {
 /** @addtogroup StoneyDSP @{ */
@@ -181,5 +188,3 @@ private:
 
   /// @} group StoneyDSP
 } // namespace StoneyDSP
-
-#endif // STONEYDSP_BIQUADS_WRAPPER_HPP_INCLUDED

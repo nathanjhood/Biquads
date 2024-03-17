@@ -36,7 +36,7 @@ AudioPluginAudioProcessorParameters::AudioPluginAudioProcessorParameters(AudioPl
 {
 }
 
-void AudioPluginAudioProcessorParameters::setParameterLayout(juce::AudioProcessorValueTreeState::ParameterLayout& params)
+void AudioPluginAudioProcessorParameters::setParameterLayout(juce::AudioProcessorValueTreeState::ParameterLayout& newParameterLayout)
 {
     const auto dBMax        = juce::Decibels::gainToDecibels(16.0f);
     const auto dBMin        = juce::Decibels::gainToDecibels(0.0625f);
@@ -85,7 +85,7 @@ void AudioPluginAudioProcessorParameters::setParameterLayout(juce::AudioProcesso
         .withLabel(decibels)
         .withCategory(outParam);
 
-    params.add(
+    newParameterLayout.add(
         //==============================================================================
         std::make_unique<juce::AudioProcessorParameterGroup>("Biquads_ID", ProjectInfo::projectName, "seperatorBiquads",
             //==============================================================================
