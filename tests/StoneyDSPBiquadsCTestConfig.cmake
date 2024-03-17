@@ -70,7 +70,7 @@ if(STONEYDSP_BIQUADS_BUILD_TESTS)
     macro(_stoneydsp_biquads_test_audiopluginexample_pluginval_vst3_validation)
         add_test(
         NAME test_pluginval_vst3_validation
-        COMMAND "${STONEYDSP_BIQUADS_BINARY_DIR}/${_pluginval_binary}" "--output-dir ${STONEYDSP_BIQUADS_BINARY_DIR}" "--strictness-level 10" "--verbose" "--validate" "${STONEYDSP_BIQUADS_BINARY_DIR}/Biquads_artefacts/${CMAKE_BUILD_TYPE}/VST3/Biquads.vst3/" "${_pluginval_fail}"
+        COMMAND "${STONEYDSP_BIQUADS_BINARY_DIR}/${_pluginval_binary}" "--output-dir ${STONEYDSP_BIQUADS_BINARY_DIR}" "--strictness-level 10" "--verbose" "--validate" "${STONEYDSP_BIQUADS_BINARY_DIR}/Biquads_Audio_Plugin_artefacts/${CMAKE_BUILD_TYPE}/VST3/Biquads.vst3/" "${_pluginval_fail}"
         WORKING_DIRECTORY "${STONEYDSP_BIQUADS_BINARY_DIR}"
         )
     endmacro()
@@ -78,7 +78,7 @@ if(STONEYDSP_BIQUADS_BUILD_TESTS)
     macro(_stoneydsp_biquads_test_audiopluginexample_pluginval_vst3_unit_tests)
         add_test(
             NAME test_pluginval_vst3_unit_tests
-            COMMAND "${STONEYDSP_BIQUADS_BINARY_DIR}/${_pluginval_binary}" "--output-dir ${STONEYDSP_BIQUADS_BINARY_DIR}" "--strictness-level 10" "--verbose" "--run-tests" "${StoneyDSP_BINARY_DIR}/Biquads_artefacts/${CMAKE_BUILD_TYPE}/VST3/Biquads.vst3/" "${_pluginval_fail}"
+            COMMAND "${STONEYDSP_BIQUADS_BINARY_DIR}/${_pluginval_binary}" "--output-dir ${STONEYDSP_BIQUADS_BINARY_DIR}" "--strictness-level 10" "--verbose" "--run-tests" "${StoneyDSP_BINARY_DIR}/Biquads_Audio_Plugin_artefacts/${CMAKE_BUILD_TYPE}/VST3/Biquads.vst3/" "${_pluginval_fail}"
             WORKING_DIRECTORY "${STONEYDSP_BIQUADS_BINARY_DIR}"
         )
     endmacro()

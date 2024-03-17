@@ -2,8 +2,8 @@
  * @file Processor.hpp
  * @author Nathan J. Hood (nathanjhood@googlemail.com)
  * @brief Simple two-pole equalizer with variable oversampling.
- * @version 1.2.1.148
- * @date 2024-03-13
+ * @version 1.2.2.151
+ * @date 2024-03-16
  *
  * @copyright Copyright (c) 2024 - Nathan J. Hood
 
@@ -24,11 +24,6 @@
 
 #ifndef STONEYDSP_BIQUADS_PROCESSOR_HPP_INCLUDED
 #define STONEYDSP_BIQUADS_PROCESSOR_HPP_INCLUDED
-
-// #include "StoneyDSP/Biquads.hpp"
-
-// #include "Parameters.hpp"
-// #include "Wrapper.hpp"
 
 namespace StoneyDSP {
 /** @addtogroup StoneyDSP @{ */
@@ -85,37 +80,25 @@ public:
     juce::UndoManager undoManager;
     juce::UndoManager& getUndoManager() { return undoManager; }
     //==============================================================================
-    juce::AudioProcessorValueTreeState apvts;
     juce::AudioProcessorValueTreeState& getAPVTS() { return apvts; }
     static juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
     //==============================================================================
-    juce::dsp::ProcessSpec spec;
     juce::dsp::ProcessSpec& getSpec() { return spec; }
-
 
 private:
     //==============================================================================
     /** Audio processor members. */
+    juce::AudioProcessorValueTreeState apvts;
+    juce::dsp::ProcessSpec spec;
     juce::AudioProcessor::ProcessingPrecision processingPrecision;
-
+    //==============================================================================
     AudioPluginAudioProcessorParameters parameters;
-
     AudioPluginAudioProcessorWrapper<float> processorFlt;
     AudioPluginAudioProcessorWrapper<double> processorDbl;
 
-    //==========================================================================
+    //==============================================================================
     /** Parameter pointers. */
-    juce::AudioParameterFloat*      frequencyPtr    { nullptr };
-    juce::AudioParameterFloat*      resonancePtr    { nullptr };
-    juce::AudioParameterFloat*      gainPtr         { nullptr };
-    juce::AudioParameterChoice*     typePtr         { nullptr };
-    juce::AudioParameterChoice*     transformPtr    { nullptr };
-    // juce::AudioParameterChoice*     osPtr           { nullptr };
-    juce::AudioParameterFloat*      outputPtr       { nullptr };
-    juce::AudioParameterFloat*      mixPtr          { nullptr };
-    juce::AudioParameterBool*       bypassPtr       { nullptr };
-
-    juce::AudioParameterBool*       bypassState     { nullptr };
+    juce::AudioParameterBool*       bypassState             { nullptr };
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioPluginAudioProcessor)
