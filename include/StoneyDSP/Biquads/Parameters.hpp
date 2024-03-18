@@ -2,7 +2,7 @@
  * @file Parameters.hpp
  * @author Nathan J. Hood (nathanjhood@googlemail.com)
  * @brief Simple two-pole equalizer with variable oversampling.
- * @version 1.2.2.151
+ * @version 1.2.2.167
  * @date 2024-03-16
  *
  * @copyright Copyright (c) 2024 - Nathan J. Hood
@@ -22,7 +22,7 @@
 
  ******************************************************************************/
 
-#ifndef STONEYDSP_BIQUADS_PARAMETERS_HPP_INCLUDED
+#pragma once
 #define STONEYDSP_BIQUADS_PARAMETERS_HPP_INCLUDED
 
 // #include "StoneyDSP/Biquads.hpp"
@@ -60,5 +60,3 @@ private:
 
   /// @} group StoneyDSP
 } // namespace StoneyDSP
-
-#endif // STONEYDSP_BIQUADS_PARAMETERS_HPP_INCLUDED

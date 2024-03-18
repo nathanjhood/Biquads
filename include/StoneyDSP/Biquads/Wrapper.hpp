@@ -2,7 +2,7 @@
  * @file Wrapper.hpp
  * @author Nathan J. Hood (nathanjhood@googlemail.com)
  * @brief Simple two-pole equalizer with variable oversampling.
- * @version 1.2.2.151
+ * @version 1.2.2.167
  * @date 2024-03-16
  *
  * @copyright Copyright (c) 2024 - Nathan J. Hood
@@ -25,13 +25,6 @@
 #pragma once
 #define STONEYDSP_BIQUADS_WRAPPER_HPP_INCLUDED
 
-// #include <juce_audio_processors/juce_audio_processors.h>
-// #include <juce_core/juce_core.h>
-// #include <juce_audio_basics/juce_audio_basics.h>
-// #include <stoneydsp_core/stoneydsp_core.h>
-// #include <stoneydsp_audio/stoneydsp_audio.h>
-// #include <juce_dsp/juce_dsp.h>
-
 namespace StoneyDSP {
 /** @addtogroup StoneyDSP @{ */
 
@@ -51,7 +44,7 @@ public:
      * @param spec
      */
     AudioPluginAudioProcessorWrapper(AudioPluginAudioProcessor& p, juce::AudioProcessorValueTreeState& apvts, juce::dsp::ProcessSpec& spec);
-
+    ~AudioPluginAudioProcessorWrapper();
     //==============================================================================
     /** Initialises the processor. */
     void prepare(juce::dsp::ProcessSpec& spec);
@@ -138,7 +131,11 @@ private:
     //==============================================================================
     // std::unique_ptr<juce::dsp::Oversampling<SampleType>> oversampler[5];
     juce::dsp::DryWetMixer<SampleType> mixer;
-    StoneyDSP::Audio::Biquads<SampleType> biquadsA, biquadsB, biquadsC, biquadsD;
+
+    const std::size_t biquadArraySize;
+    // std::vector<StoneyDSP::Audio::Biquads<SampleType>> biquadArray;
+    // std::vector<std::unique_ptr<StoneyDSP::Audio::Biquads<SampleType>>> biquadArray;
+    std::unique_ptr<StoneyDSP::Audio::Biquads<SampleType>> biquadArray[4];
 
     //==========================================================================
     /** Parameter pointers. */
