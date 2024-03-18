@@ -46,9 +46,9 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
   , parametersPtr(std::make_unique<AudioPluginAudioProcessorParameters>(*this, getAPVTS()))
   , processorFltPtr(std::make_unique<AudioPluginAudioProcessorWrapper<float>> (*this, getAPVTS(), getSpec()))
   , processorDblPtr(std::make_unique<AudioPluginAudioProcessorWrapper<double>>(*this, getAPVTS(), getSpec()))
-  , parameters      (*parametersPtr.get())
-  , processorFlt    (*processorFltPtr.get())
-  , processorDbl    (*processorDblPtr.get())
+//   , parameters      (*parametersPtr.get())
+//   , processorFlt    (*processorFltPtr.get())
+//   , processorDbl    (*processorDblPtr.get())
 // , processingPrecision(singlePrecision)
   , bypassState           (dynamic_cast<juce::AudioParameterBool*>   (apvts.getParameter("Master_bypassID")))
 {
@@ -188,6 +188,9 @@ void AudioPluginAudioProcessor::changeProgramName (int index, const juce::String
 //==============================================================================
 void AudioPluginAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
+    AudioPluginAudioProcessorWrapper<float>& processorFlt = *processorFltPtr.get();
+    AudioPluginAudioProcessorWrapper<double>& processorDbl = *processorDblPtr.get();
+
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
     processingPrecision = getProcessingPrecision();
@@ -210,6 +213,9 @@ void AudioPluginAudioProcessor::prepareToPlay (double sampleRate, int samplesPer
 
 void AudioPluginAudioProcessor::releaseResources()
 {
+    AudioPluginAudioProcessorWrapper<float>& processorFlt = *processorFltPtr.get();
+    AudioPluginAudioProcessorWrapper<double>& processorDbl = *processorDblPtr.get();
+
     // When playback stops, you can use this as an opportunity to free up any
     // spare memory, etc.
     if(!isUsingDoublePrecision())
@@ -252,6 +258,8 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, 
     {
         jassert (! isUsingDoublePrecision());
 
+        AudioPluginAudioProcessorWrapper<float>& processorFlt = *processorFltPtr.get();
+
         juce::ScopedNoDenormals noDenormals;
 
         processorFlt.process(buffer, midiMessages);
@@ -268,6 +276,8 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<double>& buffer,
     {
         jassert (isUsingDoublePrecision());
 
+        AudioPluginAudioProcessorWrapper<double>& processorDbl = *processorDblPtr.get();
+
         juce::ScopedNoDenormals noDenormals;
 
         processorDbl.process(buffer, midiMessages);
@@ -282,12 +292,16 @@ void AudioPluginAudioProcessor::processBlockBypassed(juce::AudioBuffer<float>& b
 {
     jassert (! isUsingDoublePrecision());
 
+    AudioPluginAudioProcessorWrapper<float>& processorFlt = *processorFltPtr.get();
+
     processorFlt.processBypass(buffer, midiMessages);
 }
 
 void AudioPluginAudioProcessor::processBlockBypassed(juce::AudioBuffer<double>& buffer, juce::MidiBuffer& midiMessages)
 {
     jassert (isUsingDoublePrecision());
+
+    AudioPluginAudioProcessorWrapper<double>& processorDbl = *processorDblPtr.get();
 
     processorDbl.processBypass(buffer, midiMessages);
 }

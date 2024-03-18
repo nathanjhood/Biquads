@@ -97,9 +97,9 @@ private:
     std::unique_ptr<AudioPluginAudioProcessorWrapper<float>> processorFltPtr;
     std::unique_ptr<AudioPluginAudioProcessorWrapper<double>> processorDblPtr;
 
-    AudioPluginAudioProcessorParameters& parameters;
-    AudioPluginAudioProcessorWrapper<float>& processorFlt;
-    AudioPluginAudioProcessorWrapper<double>& processorDbl;
+    // AudioPluginAudioProcessorParameters& parameters;
+    // AudioPluginAudioProcessorWrapper<float>& processorFlt;
+    // AudioPluginAudioProcessorWrapper<double>& processorDbl;
 
     //==============================================================================
     /** Parameter pointers. */
