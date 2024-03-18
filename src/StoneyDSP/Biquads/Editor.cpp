@@ -34,7 +34,7 @@ namespace Biquads {
 AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAudioProcessor& p)
 : juce::AudioProcessorEditor(&p)
 , audioProcessor(p)
-, state(p.getAPVTS())
+// , state(p.getAPVTS())
 , undoManager(p.getUndoManager())
 {
     // juce::ignoreUnused (processorRef);

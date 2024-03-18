@@ -2,7 +2,7 @@
  * @file Processor.hpp
  * @author Nathan J. Hood (nathanjhood@googlemail.com)
  * @brief Simple two-pole equalizer with variable oversampling.
- * @version 1.2.2.151
+ * @version 1.2.2.167
  * @date 2024-03-16
  *
  * @copyright Copyright (c) 2024 - Nathan J. Hood
@@ -22,7 +22,7 @@
 
  ******************************************************************************/
 
-#ifndef STONEYDSP_BIQUADS_PROCESSOR_HPP_INCLUDED
+#pragma once
 #define STONEYDSP_BIQUADS_PROCESSOR_HPP_INCLUDED
 
 namespace StoneyDSP {
@@ -77,7 +77,6 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
     void setCurrentProgramStateInformation(const void* data, int sizeInBytes) override;
     //==============================================================================
-    juce::UndoManager undoManager;
     juce::UndoManager& getUndoManager() { return undoManager; }
     //==============================================================================
     juce::AudioProcessorValueTreeState& getAPVTS() { return apvts; }
@@ -88,13 +87,19 @@ public:
 private:
     //==============================================================================
     /** Audio processor members. */
+    juce::UndoManager undoManager;
     juce::AudioProcessorValueTreeState apvts;
+
     juce::dsp::ProcessSpec spec;
     juce::AudioProcessor::ProcessingPrecision processingPrecision;
     //==============================================================================
-    AudioPluginAudioProcessorParameters parameters;
-    AudioPluginAudioProcessorWrapper<float> processorFlt;
-    AudioPluginAudioProcessorWrapper<double> processorDbl;
+    std::unique_ptr<AudioPluginAudioProcessorParameters> parametersPtr;
+    std::unique_ptr<AudioPluginAudioProcessorWrapper<float>> processorFltPtr;
+    std::unique_ptr<AudioPluginAudioProcessorWrapper<double>> processorDblPtr;
+
+    // AudioPluginAudioProcessorParameters& parameters;
+    // AudioPluginAudioProcessorWrapper<float>& processorFlt;
+    // AudioPluginAudioProcessorWrapper<double>& processorDbl;
 
     //==============================================================================
     /** Parameter pointers. */
@@ -109,5 +114,3 @@ private:
 
   /// @} group StoneyDSP
 } // namespace StoneyDSP
-
-#endif // STONEYDSP_BIQUADS_PROCESSOR_HPP_INCLUDED

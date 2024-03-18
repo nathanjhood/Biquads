@@ -2,7 +2,7 @@
  * @file Biquads.hpp
  * @author Nathan J. Hood (nathanjhood@googlemail.com)
  * @brief Simple two-pole equalizer with variable oversampling.
- * @version 1.2.2.151
+ * @version 1.2.2.167
  * @date 2024-03-16
  *
  * @copyright Copyright (c) 2024 - Nathan J. Hood
@@ -22,7 +22,7 @@
 
  ******************************************************************************/
 
-#ifndef STONEYDSP_BIQUADS_HPP_INCLUDED
+#pragma once
 #define STONEYDSP_BIQUADS_HPP_INCLUDED
 
 #include <juce_audio_plugin_client/juce_audio_plugin_client.h>
@@ -82,5 +82,3 @@ class AudioPluginAudioProcessor;
 #include "Biquads/Wrapper.hpp"
 #include "Biquads/Processor.hpp"
 #include "Biquads/Editor.hpp"
-
-#endif // STONEYDSP_BIQUADS_HPP_INCLUDED
