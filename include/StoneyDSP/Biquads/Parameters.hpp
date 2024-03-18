@@ -41,11 +41,21 @@ public:
     AudioPluginAudioProcessorParameters(AudioPluginAudioProcessor& p, juce::AudioProcessorValueTreeState& apvts);
 
     //==========================================================================
-    /** Create Parameter Layout. */
+
+    /**
+     * @param juce::AudioProcessorValueTreeState::ParameterLayout& params
+    */
     static void setParameterLayout(juce::AudioProcessorValueTreeState::ParameterLayout& params);
 
+    /**
+     * @brief Create a ParameterLayout object.
+     *
+     * @return juce::AudioProcessorValueTreeState::ParameterLayout
+     */
+    static juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
 
 private:
+
     //==========================================================================
     // This reference is provided as a quick way for the wrapper to
     // access the processor object that created it.

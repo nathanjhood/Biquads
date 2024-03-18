@@ -51,9 +51,9 @@ public:
     void releaseResources() override;
     //==============================================================================
     bool isBusesLayoutSupported (const BusesLayout& layouts) const override;
-    void processBlock(juce::AudioBuffer<float>&, juce::MidiBuffer&) override;
+    void processBlock(juce::AudioBuffer<float>&,  juce::MidiBuffer&) override;
     void processBlock(juce::AudioBuffer<double>&, juce::MidiBuffer&) override;
-    void processBlockBypassed(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages) override;
+    void processBlockBypassed(juce::AudioBuffer<float>& buffer,  juce::MidiBuffer& midiMessages) override;
     void processBlockBypassed(juce::AudioBuffer<double>& buffer, juce::MidiBuffer& midiMessages) override;
     using juce::AudioProcessor::processBlock;
     //==============================================================================
@@ -84,35 +84,35 @@ public:
     juce::dsp::ProcessSpec& getSpec() { return spec; }
     //==============================================================================
     static juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
-    const AudioPluginAudioProcessorParameters& getParameters() { return parameters; }
+    const AudioPluginAudioProcessorParameters& getParameters()  { return parameters; }
 
 private:
     //==============================================================================
-    AudioPluginAudioProcessorWrapper<float>& getProcessorFlt() { return processorFlt; }
+    AudioPluginAudioProcessorWrapper<float>&  getProcessorFlt() { return processorFlt; }
     AudioPluginAudioProcessorWrapper<double>& getProcessorDbl() { return processorDbl; }
 
     //==============================================================================
     /** Audio processor members. */
-    std::unique_ptr<juce::UndoManager> undoManagerPtr;
+    std::unique_ptr<juce::UndoManager> undoManagerPtr                           { nullptr };
     juce::UndoManager& undoManager;
 
-    std::unique_ptr<juce::AudioProcessorValueTreeState> apvtsPtr;
+    std::unique_ptr<juce::AudioProcessorValueTreeState> apvtsPtr                { nullptr };
     juce::AudioProcessorValueTreeState& apvts;
 
     juce::dsp::ProcessSpec spec;
     juce::AudioProcessor::ProcessingPrecision processingPrecision;
     //==============================================================================
-    std::unique_ptr<AudioPluginAudioProcessorParameters> parametersPtr;
-    std::unique_ptr<AudioPluginAudioProcessorWrapper<float>> processorFltPtr;
-    std::unique_ptr<AudioPluginAudioProcessorWrapper<double>> processorDblPtr;
+    std::unique_ptr<AudioPluginAudioProcessorParameters>        parametersPtr   { nullptr };
+    std::unique_ptr<AudioPluginAudioProcessorWrapper<float>>    processorFltPtr { nullptr };
+    std::unique_ptr<AudioPluginAudioProcessorWrapper<double>>   processorDblPtr { nullptr };
 
-    AudioPluginAudioProcessorParameters& parameters;
-    AudioPluginAudioProcessorWrapper<float>& processorFlt;
-    AudioPluginAudioProcessorWrapper<double>& processorDbl;
+    AudioPluginAudioProcessorParameters&                        parameters;
+    AudioPluginAudioProcessorWrapper<float>&                    processorFlt;
+    AudioPluginAudioProcessorWrapper<double>&                   processorDbl;
 
     //==============================================================================
     /** Parameter pointers. */
-    juce::AudioParameterBool*       bypassState             { nullptr };
+    juce::AudioParameterBool*                                   bypassState     { nullptr };
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioPluginAudioProcessor)

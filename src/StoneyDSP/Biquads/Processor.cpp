@@ -40,21 +40,21 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
     .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
 #endif
 )
-  , undoManagerPtr(std::make_unique<juce::UndoManager>())
-  , undoManager(*undoManagerPtr.get())
-  , apvtsPtr(std::make_unique<juce::AudioProcessorValueTreeState>(*this, &undoManager, juce::Identifier { "Parameters" }, createParameterLayout()))
-  , apvts(*apvtsPtr.get())
-  , spec()
-  , parametersPtr   (std::make_unique<AudioPluginAudioProcessorParameters>(*this, getApvts()))
+  , undoManagerPtr  (std::make_unique<juce::UndoManager>())
+  , undoManager     (*undoManagerPtr.get())
+  , apvtsPtr        (std::make_unique<juce::AudioProcessorValueTreeState>(*this, &undoManager, juce::Identifier { "Parameters" }, createParameterLayout()))
+  , apvts           (*apvtsPtr.get())
+  , spec            ()
+  , parametersPtr   (std::make_unique<AudioPluginAudioProcessorParameters>     (*this, getApvts()))
   , processorFltPtr (std::make_unique<AudioPluginAudioProcessorWrapper<float>> (*this, getApvts(), getSpec()))
   , processorDblPtr (std::make_unique<AudioPluginAudioProcessorWrapper<double>>(*this, getApvts(), getSpec()))
   , parameters      (*parametersPtr.get())
   , processorFlt    (*processorFltPtr.get())
   , processorDbl    (*processorDblPtr.get())
 // , processingPrecision(singlePrecision)
-  , bypassState           (dynamic_cast<juce::AudioParameterBool*>   (getApvts().getParameter("Master_bypassID")))
+  , bypassState     (dynamic_cast <juce::AudioParameterBool*>  (getApvts().getParameter("Master_bypassID")))
 {
-    bypassState          = dynamic_cast <juce::AudioParameterBool*>  (getApvts().getParameter("Master_bypassID"));
+    bypassState    = dynamic_cast <juce::AudioParameterBool*>  (getApvts().getParameter("Master_bypassID"));
 
     jassert(undoManagerPtr      != nullptr);
     jassert(apvtsPtr            != nullptr);
@@ -67,11 +67,6 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
 
 AudioPluginAudioProcessor::~AudioPluginAudioProcessor()
 {
-    // processorFltPtr.release();
-    // processorDblPtr.release();
-    // parametersPtr.release();
-    // apvtsPtr.release();
-    // undoManagerPtr.release();
 }
 
 //==============================================================================

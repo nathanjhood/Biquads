@@ -146,6 +146,15 @@ void AudioPluginAudioProcessorParameters::setParameterLayout(juce::AudioProcesso
         //==============================================================================
     );
 }
+
+juce::AudioProcessorValueTreeState::ParameterLayout AudioPluginAudioProcessorParameters::createParameterLayout()
+{
+    juce::AudioProcessorValueTreeState::ParameterLayout parameterLayout;
+
+    setParameterLayout(parameterLayout);
+
+    return parameterLayout;
+}
 //==============================================================================
   /// @} group Biquads
 } // namespace Biquads
