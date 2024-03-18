@@ -42,9 +42,10 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
 )
   , undoManager()
   , apvts(*this, &undoManager, juce::Identifier { "Parameters" }, createParameterLayout())
+  , valueTree(apvts.copyState())
   , spec()
-  , parameters  (*this, getAPVTS())
-  , processorFlt(*this, getAPVTS(), getSpec())
+  , parameters(std::make_unique<AudioPluginAudioProcessorParameters>(*this, getAPVTS()))
+  , processorFlt(std::make_unique<AudioPluginAudioProcessorWrapper<float>> (*this, getAPVTS(), getSpec()))
   , processorDbl(std::make_unique<AudioPluginAudioProcessorWrapper<double>>(*this, getAPVTS(), getSpec()))
 // , processingPrecision(singlePrecision)
   , bypassState           (dynamic_cast<juce::AudioParameterBool*>   (apvts.getParameter("Master_bypassID")))
@@ -56,6 +57,7 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
 
 AudioPluginAudioProcessor::~AudioPluginAudioProcessor()
 {
+    processorFlt.release();
     processorDbl.release();
 }
 
@@ -189,11 +191,11 @@ void AudioPluginAudioProcessor::prepareToPlay (double sampleRate, int samplesPer
 
     if(!isUsingDoublePrecision())
     {
-        processorFlt.prepare(getSpec());
+        processorFlt.get()->prepare(getSpec());
     }
     else
     {
-        processorDbl->prepare(getSpec());
+        processorDbl.get()->prepare(getSpec());
     }
 }
 
@@ -203,11 +205,11 @@ void AudioPluginAudioProcessor::releaseResources()
     // spare memory, etc.
     if(!isUsingDoublePrecision())
     {
-        processorFlt.reset(0.0f);
+        processorFlt.get()->reset(0.0f);
     }
     else
     {
-        processorDbl->reset(0.0);
+        processorDbl.get()->reset(0.0);
     }
 }
 
@@ -237,20 +239,34 @@ bool AudioPluginAudioProcessor::isBusesLayoutSupported (const BusesLayout& layou
 
 void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
-    jassert (! isUsingDoublePrecision());
+    if(!isBypassed())
+    {
+        jassert (! isUsingDoublePrecision());
 
-    juce::ScopedNoDenormals noDenormals;
+        juce::ScopedNoDenormals noDenormals;
 
-    processorFlt.process(buffer, midiMessages);
+        processorFlt.get()->process(buffer, midiMessages);
+    }
+    else
+    {
+        processBlockBypassed(buffer, midiMessages);
+    }
 }
 
 void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<double>& buffer, juce::MidiBuffer& midiMessages)
 {
-    jassert (isUsingDoublePrecision());
+    if(!isBypassed())
+    {
+        jassert (isUsingDoublePrecision());
 
-    juce::ScopedNoDenormals noDenormals;
+        juce::ScopedNoDenormals noDenormals;
 
-    processorDbl->process(buffer, midiMessages);
+        processorDbl.get()->process(buffer, midiMessages);
+    }
+    else
+    {
+        processBlockBypassed(buffer, midiMessages);
+    }
 
 }
 
@@ -258,14 +274,14 @@ void AudioPluginAudioProcessor::processBlockBypassed(juce::AudioBuffer<float>& b
 {
     jassert (! isUsingDoublePrecision());
 
-    processorFlt.processBypass(buffer, midiMessages);
+    processorFlt.get()->processBypass(buffer, midiMessages);
 }
 
 void AudioPluginAudioProcessor::processBlockBypassed(juce::AudioBuffer<double>& buffer, juce::MidiBuffer& midiMessages)
 {
     jassert (isUsingDoublePrecision());
 
-    processorDbl->processBypass(buffer, midiMessages);
+    processorDbl.get()->processBypass(buffer, midiMessages);
 }
 
 //==============================================================================

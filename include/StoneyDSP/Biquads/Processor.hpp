@@ -77,7 +77,6 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
     void setCurrentProgramStateInformation(const void* data, int sizeInBytes) override;
     //==============================================================================
-    juce::UndoManager undoManager;
     juce::UndoManager& getUndoManager() { return undoManager; }
     //==============================================================================
     juce::AudioProcessorValueTreeState& getAPVTS() { return apvts; }
@@ -88,12 +87,14 @@ public:
 private:
     //==============================================================================
     /** Audio processor members. */
+    juce::UndoManager undoManager;
     juce::AudioProcessorValueTreeState apvts;
+    juce::ValueTree valueTree;
     juce::dsp::ProcessSpec spec;
     juce::AudioProcessor::ProcessingPrecision processingPrecision;
     //==============================================================================
-    AudioPluginAudioProcessorParameters parameters;
-    AudioPluginAudioProcessorWrapper<float> processorFlt;
+    std::unique_ptr<AudioPluginAudioProcessorParameters> parameters;
+    std::unique_ptr<AudioPluginAudioProcessorWrapper<float>> processorFlt;
     std::unique_ptr<AudioPluginAudioProcessorWrapper<double>> processorDbl;
 
     //==============================================================================

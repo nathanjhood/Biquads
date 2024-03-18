@@ -50,7 +50,7 @@ private:
     // access the processor object that created it.
     AudioPluginAudioProcessor& audioProcessor;
 
-    juce::AudioProcessorValueTreeState& state;
+    // juce::AudioProcessorValueTreeState& state;
 
     juce::UndoManager& undoManager;
 
