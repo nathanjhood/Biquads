@@ -45,7 +45,7 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
   , spec()
   , parameters  (*this, getAPVTS())
   , processorFlt(*this, getAPVTS(), getSpec())
-  , processorDbl(*this, getAPVTS(), getSpec())
+  , processorDbl(std::make_unique<AudioPluginAudioProcessorWrapper<double>>(*this, getAPVTS(), getSpec()))
 // , processingPrecision(singlePrecision)
   , bypassState           (dynamic_cast<juce::AudioParameterBool*>   (apvts.getParameter("Master_bypassID")))
 {
@@ -56,6 +56,7 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
 
 AudioPluginAudioProcessor::~AudioPluginAudioProcessor()
 {
+    processorDbl.release();
 }
 
 //==============================================================================
@@ -192,7 +193,7 @@ void AudioPluginAudioProcessor::prepareToPlay (double sampleRate, int samplesPer
     }
     else
     {
-        processorDbl.prepare(getSpec());
+        processorDbl->prepare(getSpec());
     }
 }
 
@@ -206,7 +207,7 @@ void AudioPluginAudioProcessor::releaseResources()
     }
     else
     {
-        processorDbl.reset(0.0);
+        processorDbl->reset(0.0);
     }
 }
 
@@ -249,7 +250,7 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<double>& buffer,
 
     juce::ScopedNoDenormals noDenormals;
 
-    processorDbl.process(buffer, midiMessages);
+    processorDbl->process(buffer, midiMessages);
 
 }
 
@@ -264,7 +265,7 @@ void AudioPluginAudioProcessor::processBlockBypassed(juce::AudioBuffer<double>& 
 {
     jassert (isUsingDoublePrecision());
 
-    processorDbl.processBypass(buffer, midiMessages);
+    processorDbl->processBypass(buffer, midiMessages);
 }
 
 //==============================================================================

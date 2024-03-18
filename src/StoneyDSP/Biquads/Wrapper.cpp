@@ -70,13 +70,8 @@ AudioPluginAudioProcessorWrapper<SampleType>::AudioPluginAudioProcessorWrapper(A
 , bypassState           (dynamic_cast <juce::AudioParameterBool*>   (apvts.getParameter("Master_bypassID")))
 , biquadArraySize(static_cast<std::size_t>(4)) // cannot ‘dynamic_cast’ this - target  typeis not pointer or reference...
 // , biquadArray( biquadArraySize, {})
-, biquadArray({
-    std::make_unique<StoneyDSP::Audio::Biquads<SampleType>>()
-  , std::make_unique<StoneyDSP::Audio::Biquads<SampleType>>()
-  , std::make_unique<StoneyDSP::Audio::Biquads<SampleType>>()
-  , std::make_unique<StoneyDSP::Audio::Biquads<SampleType>>()
-}) // list-initializer for non-class type must not be parenthesized...
 {
+
     masterBypassPtr         = dynamic_cast <juce::AudioParameterBool*>  (apvts.getParameter("Master_bypassID"));
     masterOutputPtr         = dynamic_cast <juce::AudioParameterFloat*> (apvts.getParameter("Master_outputID"));
     masterMixPtr            = dynamic_cast <juce::AudioParameterFloat*> (apvts.getParameter("Master_mixID"));
@@ -155,8 +150,8 @@ AudioPluginAudioProcessorWrapper<SampleType>::AudioPluginAudioProcessorWrapper(A
     // for(std::size_t i = 0; i < biquadArraySize; ++i)
     //     biquadArray.emplace_back();
 
-    // for (std::size_t i = 0; i < biquadArraySize; ++i)
-    //     biquadArray[i] = std::make_unique<StoneyDSP::Audio::Biquads<SampleType>>();
+    for (std::size_t i = 0; i < biquadArraySize; ++i)
+        biquadArray[i] = std::make_unique<StoneyDSP::Audio::Biquads<SampleType>>();
 
     reset(static_cast<SampleType>(0.0));
 }
