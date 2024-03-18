@@ -79,16 +79,25 @@ public:
     //==============================================================================
     juce::UndoManager& getUndoManager() { return undoManager; }
     //==============================================================================
-    juce::AudioProcessorValueTreeState& getAPVTS() { return apvts; }
-    static juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
+    juce::AudioProcessorValueTreeState& getApvts() { return apvts; }
     //==============================================================================
     juce::dsp::ProcessSpec& getSpec() { return spec; }
+    //==============================================================================
+    static juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
+    const AudioPluginAudioProcessorParameters& getParameters() { return parameters; }
 
 private:
     //==============================================================================
+    AudioPluginAudioProcessorWrapper<float>& getProcessorFlt() { return processorFlt; }
+    AudioPluginAudioProcessorWrapper<double>& getProcessorDbl() { return processorDbl; }
+
+    //==============================================================================
     /** Audio processor members. */
-    juce::UndoManager undoManager;
-    juce::AudioProcessorValueTreeState apvts;
+    std::unique_ptr<juce::UndoManager> undoManagerPtr;
+    juce::UndoManager& undoManager;
+
+    std::unique_ptr<juce::AudioProcessorValueTreeState> apvtsPtr;
+    juce::AudioProcessorValueTreeState& apvts;
 
     juce::dsp::ProcessSpec spec;
     juce::AudioProcessor::ProcessingPrecision processingPrecision;
@@ -97,9 +106,9 @@ private:
     std::unique_ptr<AudioPluginAudioProcessorWrapper<float>> processorFltPtr;
     std::unique_ptr<AudioPluginAudioProcessorWrapper<double>> processorDblPtr;
 
-    // AudioPluginAudioProcessorParameters& parameters;
-    // AudioPluginAudioProcessorWrapper<float>& processorFlt;
-    // AudioPluginAudioProcessorWrapper<double>& processorDbl;
+    AudioPluginAudioProcessorParameters& parameters;
+    AudioPluginAudioProcessorWrapper<float>& processorFlt;
+    AudioPluginAudioProcessorWrapper<double>& processorDbl;
 
     //==============================================================================
     /** Parameter pointers. */

@@ -158,11 +158,11 @@ AudioPluginAudioProcessorWrapper<SampleType>::AudioPluginAudioProcessorWrapper(A
 
 template<class SampleType> StoneyDSP::Biquads::AudioPluginAudioProcessorWrapper<SampleType>::~AudioPluginAudioProcessorWrapper()
 {
-    // biquadArray.clear();
-    mixer.release();
+    // // biquadArray.clear();
+    // mixer.release();
 
-    for (std::size_t i = 0; i < biquadArraySize; ++i)
-        biquadArray[i].release();
+    // for (std::size_t i = 0; i < biquadArraySize; ++i)
+    //     biquadArray[i].release();
 }
 
 template <typename SampleType>
