@@ -89,13 +89,17 @@ private:
     /** Audio processor members. */
     juce::UndoManager undoManager;
     juce::AudioProcessorValueTreeState apvts;
-    juce::ValueTree valueTree;
+
     juce::dsp::ProcessSpec spec;
     juce::AudioProcessor::ProcessingPrecision processingPrecision;
     //==============================================================================
-    std::unique_ptr<AudioPluginAudioProcessorParameters> parameters;
-    std::unique_ptr<AudioPluginAudioProcessorWrapper<float>> processorFlt;
-    std::unique_ptr<AudioPluginAudioProcessorWrapper<double>> processorDbl;
+    std::unique_ptr<AudioPluginAudioProcessorParameters> parametersPtr;
+    std::unique_ptr<AudioPluginAudioProcessorWrapper<float>> processorFltPtr;
+    std::unique_ptr<AudioPluginAudioProcessorWrapper<double>> processorDblPtr;
+
+    AudioPluginAudioProcessorParameters& parameters;
+    AudioPluginAudioProcessorWrapper<float>& processorFlt;
+    AudioPluginAudioProcessorWrapper<double>& processorDbl;
 
     //==============================================================================
     /** Parameter pointers. */

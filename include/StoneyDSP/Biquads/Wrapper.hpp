@@ -130,7 +130,7 @@ private:
 
     //==============================================================================
     // std::unique_ptr<juce::dsp::Oversampling<SampleType>> oversampler[5];
-    juce::dsp::DryWetMixer<SampleType> mixer;
+    std::unique_ptr<juce::dsp::DryWetMixer<SampleType>> mixer;
 
     const std::size_t biquadArraySize;
     // std::vector<StoneyDSP::Audio::Biquads<SampleType>> biquadArray;

@@ -36,7 +36,7 @@ AudioPluginAudioProcessorWrapper<SampleType>::AudioPluginAudioProcessorWrapper(A
 , state(apvts)
 , setup(spec)
 
-, mixer()
+, mixer(std::make_unique<juce::dsp::DryWetMixer<SampleType>>())
 , masterBypassPtr       (dynamic_cast <juce::AudioParameterBool*>   (apvts.getParameter("Master_bypassID")))
 , masterOutputPtr       (dynamic_cast <juce::AudioParameterFloat*>  (apvts.getParameter("Master_outputID")))
 , masterMixPtr          (dynamic_cast <juce::AudioParameterFloat*>  (apvts.getParameter("Master_mixID")))
@@ -68,7 +68,7 @@ AudioPluginAudioProcessorWrapper<SampleType>::AudioPluginAudioProcessorWrapper(A
 , biquadsDTypePtr       (dynamic_cast <juce::AudioParameterChoice*> (apvts.getParameter("Band_D_typeID")))
 
 , bypassState           (dynamic_cast <juce::AudioParameterBool*>   (apvts.getParameter("Master_bypassID")))
-, biquadArraySize(static_cast<std::size_t>(4)) // cannot ‘dynamic_cast’ this - target  typeis not pointer or reference...
+, biquadArraySize       (static_cast<std::size_t>(4)) // cannot ‘dynamic_cast’ this - target  typeis not pointer or reference...
 // , biquadArray( biquadArraySize, {})
 {
 
@@ -159,6 +159,10 @@ AudioPluginAudioProcessorWrapper<SampleType>::AudioPluginAudioProcessorWrapper(A
 template<class SampleType> StoneyDSP::Biquads::AudioPluginAudioProcessorWrapper<SampleType>::~AudioPluginAudioProcessorWrapper()
 {
     // biquadArray.clear();
+    mixer.release();
+
+    for (std::size_t i = 0; i < biquadArraySize; ++i)
+        biquadArray[i].release();
 }
 
 template <typename SampleType>
@@ -182,7 +186,7 @@ void AudioPluginAudioProcessorWrapper<SampleType>::prepare(juce::dsp::ProcessSpe
 
     reset(static_cast<SampleType>(0.0));
 
-    mixer.prepare(spec);
+    mixer->prepare(spec);
 
     for(auto& biquad : biquadArray)
         biquad->prepare(spec);
@@ -195,7 +199,7 @@ void AudioPluginAudioProcessorWrapper<SampleType>::reset()
 {
     SampleType initialValue = static_cast<SampleType>(0.0);
 
-    mixer.reset();
+    mixer->reset();
 
     for(auto& biquad : biquadArray)
         biquad->reset(initialValue);
@@ -207,7 +211,7 @@ void AudioPluginAudioProcessorWrapper<SampleType>::reset()
 template <typename SampleType>
 void AudioPluginAudioProcessorWrapper<SampleType>::reset(SampleType initialValue)
 {
-    mixer.reset();
+    mixer->reset();
 
     for(auto& biquad : biquadArray)
         biquad->reset(initialValue);
@@ -261,7 +265,7 @@ void AudioPluginAudioProcessorWrapper<SampleType>::processBlock(juce::AudioBuffe
     juce::dsp::AudioBlock<SampleType> dryBlock(buffer);
     juce::dsp::AudioBlock<SampleType> wetBlock(buffer);
 
-    mixer.pushDrySamples(dryBlock);
+    mixer->pushDrySamples(dryBlock);
 
     // wetBlock = oversampler[curOS]->processSamplesUp(dryBlock);
 
@@ -280,7 +284,7 @@ void AudioPluginAudioProcessorWrapper<SampleType>::processBlock(juce::AudioBuffe
 
     // applyGain(buffer, static_cast<SampleType>(juce::Decibels::decibelsToGain(static_cast<SampleType>(masterOutputPtr->get()), static_cast<SampleType>(-120.00))))
 
-    mixer.mixWetSamples(wetBlock);
+    mixer->mixWetSamples(wetBlock);
     return;
 }
 
@@ -326,6 +330,8 @@ SampleType AudioPluginAudioProcessorWrapper<SampleType>::processSample(int chann
 template <typename SampleType>
 void AudioPluginAudioProcessorWrapper<SampleType>::snapToZero() noexcept
 {
+    // mixer->snapToZero(); // ?
+
     for(auto& biquad : biquadArray)
         biquad->snapToZero();
 }
@@ -333,7 +339,7 @@ void AudioPluginAudioProcessorWrapper<SampleType>::snapToZero() noexcept
 template <typename SampleType>
 void AudioPluginAudioProcessorWrapper<SampleType>::update()
 {
-    mixer.setWetMixProportion(static_cast   <SampleType>    (0.01f * masterMixPtr->get()));
+    mixer->setWetMixProportion(static_cast   <SampleType>    (0.01f * masterMixPtr->get()));
 
     for(auto& biquad : biquadArray)
         biquad->setTransformType(static_cast   <StoneyDSP::Audio::BiquadsBiLinearTransformationType>  (masterTransformPtr->getIndex()));
