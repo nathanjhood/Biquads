@@ -47,7 +47,7 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
   , apvts(parameters.getApvts())
   , processorFltPtr(std::make_unique<AudioPluginAudioProcessorWrapper<float>>(*this, parameters.getApvts(), getSpec()))
   , processorDblPtr(std::make_unique<AudioPluginAudioProcessorWrapper<double>>(*this, parameters.getApvts(), getSpec()))
-  , processorFl(*processorFltPtr.get())
+  , processorFlt(*processorFltPtr.get())
   , processorDbl(*processorDblPtr.get())
   , bypassState(dynamic_cast <juce::AudioParameterBool*>(parameters.getApvts().getParameter("Master_bypassID")))
 {
