@@ -2,7 +2,7 @@
  * @file Wrapper.hpp
  * @author Nathan J. Hood (nathanjhood@googlemail.com)
  * @brief Simple two-pole equalizer with variable oversampling.
- * @version 1.2.2.167
+ * @version 1.2.2.174
  * @date 2024-03-16
  *
  * @copyright Copyright (c) 2024 - Nathan J. Hood
@@ -46,7 +46,11 @@ public:
     AudioPluginAudioProcessorWrapper(AudioPluginAudioProcessor& p, juce::AudioProcessorValueTreeState& apvts, juce::dsp::ProcessSpec& spec);
     ~AudioPluginAudioProcessorWrapper();
     //==============================================================================
-    /** Initialises the processor. */
+    /**
+     * @brief Initialises the processor.
+     *
+     * @param spec
+     */
     void prepare(juce::dsp::ProcessSpec& spec);
 
     /** Resets the internal state variables of the processor. */
@@ -55,10 +59,27 @@ public:
     void snapToZero() noexcept;
 
     //==============================================================================
+    /**
+     * @brief
+     *
+     * @param buffer
+     * @param midiMessages
+     */
     void process(juce::AudioBuffer<SampleType>& buffer, juce::MidiBuffer& midiMessages);
+    /**
+     * @brief
+     *
+     * @param buffer
+     * @param midiMessages
+     */
     void processBlock(juce::AudioBuffer<SampleType>& buffer, juce::MidiBuffer& midiMessages);
+    /**
+     * @brief
+     *
+     * @param buffer
+     * @param midiMessages
+     */
     void processBypass(juce::AudioBuffer<SampleType>& buffer, juce::MidiBuffer& midiMessages);
-
     /**
      * @brief  Processes the input and output samples supplied in the
      * processing context.
@@ -123,7 +144,6 @@ private:
     //==============================================================================
     // This reference is provided as a quick way for the wrapper to
     // access the processor object that created it.
-
     AudioPluginAudioProcessor& audioProcessor;
     juce::AudioProcessorValueTreeState& state;
     juce::dsp::ProcessSpec& setup;
@@ -133,8 +153,6 @@ private:
     std::unique_ptr<juce::dsp::DryWetMixer<SampleType>> mixer;
 
     const std::size_t biquadArraySize;
-    // std::vector<StoneyDSP::Audio::Biquads<SampleType>> biquadArray;
-    // std::vector<std::unique_ptr<StoneyDSP::Audio::Biquads<SampleType>>> biquadArray;
     std::unique_ptr<StoneyDSP::Audio::Biquads<SampleType>> biquadArray[4];
 
     //==========================================================================
