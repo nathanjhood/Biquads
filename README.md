@@ -4,9 +4,9 @@
 
 <div align="center">
 
-![Biquads-1-2-2](https://stoneydsp.com/resources/projects/biquads/biquad-1-1-0.png)
+![Biquads-1-2-3](https://stoneydsp.com/resources/projects/biquads/biquad-1-1-0.png)
 
-| Latest release: | [v.1.2.2](https://github.com/nathanjhood/Biquads/tree/v1.2.2) |
+| Latest release: | [v.1.2.3](https://github.com/nathanjhood/Biquads/tree/v1.2.3) |
 | :-: | :-: |
 | Latest development: | Formats: |
 [![windows-latest](https://github.com/nathanjhood/Biquads/actions/workflows/windows-latest.yaml/badge.svg?branch=development&event=push)](https://github.com/nathanjhood/Biquads/actions/workflows/windows-latest.yaml) | VST3, Standalone |

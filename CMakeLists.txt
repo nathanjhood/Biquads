@@ -25,7 +25,7 @@ include (GetGitRevListCount)
 get_git_rev_list_count ()
 
 project (STONEYDSP_BIQUADS
-    VERSION 1.2.2.${_git_rev_list_count}
+    VERSION 1.2.3.${_git_rev_list_count}
     DESCRIPTION "Simple two-pole equalizer with variable oversampling."
     HOMEPAGE_URL "https://github.com/nathanjhood/Biquads"
     LANGUAGES C;CXX
@@ -494,7 +494,9 @@ configure_package_config_file(
 # endif ()
 
 install (
-    DIRECTORY "${STONEYDSP_BIQUADS_BINARY_DIR}/Biquads_Audio_Plugin_artefacts"  DESTINATION "Builds")
+    DIRECTORY "${STONEYDSP_BIQUADS_BINARY_DIR}/Biquads_Audio_Plugin_artefacts"
+    DESTINATION "Builds"
+)
 
 install (FILES
     "${STONEYDSP_BIQUADS_BINARY_DIR}/share/StoneyDSP/Biquads/StoneyDSPBiquadsConfigVersion.cmake"

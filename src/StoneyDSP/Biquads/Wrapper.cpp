@@ -2,7 +2,7 @@
  * @file Wrapper.cpp
  * @author Nathan J. Hood (nathanjhood@googlemail.com)
  * @brief Simple two-pole equalizer with variable oversampling.
- * @version 1.2.2.174
+ * @version 1.2.3.155
  * @date 2024-03-16
  *
  * @copyright Copyright (c) 2024 - Nathan J. Hood
