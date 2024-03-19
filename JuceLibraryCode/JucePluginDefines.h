@@ -77,13 +77,13 @@
  #define JucePlugin_EditorRequiresKeyboardFocus  0
 #endif
 #ifndef  JucePlugin_Version
- #define JucePlugin_Version                1.2.2.156
+ #define JucePlugin_Version                1.2.2.174
 #endif
 #ifndef  JucePlugin_VersionCode
- #define JucePlugin_VersionCode            0x102029c
+ #define JucePlugin_VersionCode            0x10202ae
 #endif
 #ifndef  JucePlugin_VersionString
- #define JucePlugin_VersionString          "1.2.2.156"
+ #define JucePlugin_VersionString          "1.2.2.174"
 #endif
 #ifndef  JucePlugin_VSTUniqueID
  #define JucePlugin_VSTUniqueID            JucePlugin_PluginCode
@@ -155,7 +155,7 @@
  #define JucePlugin_ARAFactoryID           "com.StoneyDSP.Biquads.factory"
 #endif
 #ifndef  JucePlugin_ARADocumentArchiveID
- #define JucePlugin_ARADocumentArchiveID   "com.StoneyDSP.Biquads.aradocumentarchive.1.2.2.156"
+ #define JucePlugin_ARADocumentArchiveID   "com.StoneyDSP.Biquads.aradocumentarchive.1.2.2.174"
 #endif
 #ifndef  JucePlugin_ARACompatibleArchiveIDs
  #define JucePlugin_ARACompatibleArchiveIDs  ""

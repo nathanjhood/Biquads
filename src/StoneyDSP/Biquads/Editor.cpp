@@ -2,7 +2,7 @@
  * @file Editor.cpp
  * @author Nathan J. Hood (nathanjhood@googlemail.com)
  * @brief Simple two-pole equalizer with variable oversampling.
- * @version 1.2.2.151
+ * @version 1.2.2.174
  * @date 2024-03-16
  *
  * @copyright Copyright (c) 2024 - Nathan J. Hood
@@ -34,10 +34,8 @@ namespace Biquads {
 AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAudioProcessor& p)
 : juce::AudioProcessorEditor(&p)
 , audioProcessor(p)
-, state(p.getAPVTS())
 , undoManager(p.getUndoManager())
 {
-    // juce::ignoreUnused (processorRef);
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
     setSize(500, 300);

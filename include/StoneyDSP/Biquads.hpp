@@ -2,7 +2,7 @@
  * @file Biquads.hpp
  * @author Nathan J. Hood (nathanjhood@googlemail.com)
  * @brief Simple two-pole equalizer with variable oversampling.
- * @version 1.2.2.151
+ * @version 1.2.2.174
  * @date 2024-03-16
  *
  * @copyright Copyright (c) 2024 - Nathan J. Hood
@@ -22,24 +22,28 @@
 
  ******************************************************************************/
 
-#ifndef STONEYDSP_BIQUADS_HPP_INCLUDED
+#pragma once
 #define STONEYDSP_BIQUADS_HPP_INCLUDED
 
+#if __has_include("AppConfig.h")
+ #include "AppConfig.h"
+#endif
+
+#include <juce_audio_basics/juce_audio_basics.h>
+#include <juce_audio_devices/juce_audio_devices.h>
+#include <juce_audio_formats/juce_audio_formats.h>
 #include <juce_audio_plugin_client/juce_audio_plugin_client.h>
 #include <juce_audio_processors/juce_audio_processors.h>
-#include <juce_gui_extra/juce_gui_extra.h>
-#include <juce_gui_basics/juce_gui_basics.h>
-#include <juce_graphics/juce_graphics.h>
-#include <juce_events/juce_events.h>
+#include <juce_audio_utils/juce_audio_utils.h>
 #include <juce_core/juce_core.h>
 #include <juce_data_structures/juce_data_structures.h>
-#include <juce_audio_basics/juce_audio_basics.h>
-#include <stoneydsp_core/stoneydsp_core.h>
-#include <stoneydsp_audio/stoneydsp_audio.h>
 #include <juce_dsp/juce_dsp.h>
-#include <juce_audio_formats/juce_audio_formats.h>
-#include <juce_audio_devices/juce_audio_devices.h>
-#include <juce_audio_utils/juce_audio_utils.h>
+#include <juce_events/juce_events.h>
+#include <juce_graphics/juce_graphics.h>
+#include <juce_gui_basics/juce_gui_basics.h>
+#include <juce_gui_extra/juce_gui_extra.h>
+#include <stoneydsp_audio/stoneydsp_audio.h>
+#include <stoneydsp_core/stoneydsp_core.h>
 
 
 #if JUCE_TARGET_HAS_BINARY_DATA
@@ -82,5 +86,3 @@ class AudioPluginAudioProcessor;
 #include "Biquads/Wrapper.hpp"
 #include "Biquads/Processor.hpp"
 #include "Biquads/Editor.hpp"
-
-#endif // STONEYDSP_BIQUADS_HPP_INCLUDED
