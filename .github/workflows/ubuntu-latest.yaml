@@ -141,7 +141,7 @@ jobs:
       run: >-
         cmake --fresh -S${{github.workspace}}
         -B${{github.workspace}}/${{ env.BUILD_DIR }}
-        -DCMAKE_BUILD_TYPE:STRING=Debug
+        -DCMAKE_BUILD_TYPE:STRING=Release
         -DCMAKE_C_COMPILER_LAUNCHER=sccache
         -DCMAKE_CXX_COMPILER_LAUNCHER=sccache
         -DSTONEYDSP_BIQUADS_BUILD_TESTS:BOOL=TRUE
