@@ -127,6 +127,12 @@ jobs:
         --output-on-failure
         --verbose 
 
+    - name: Install (Debug)
+      shell: bash
+      working-directory: ${{ github.workspace }}
+      # Install StoneyDSP Biquads with the given configuration
+      run: cmake --config Debug --install ${{ github.workspace }}/${{ env.BUILD_DIR }}
+
     - name: Configure (Release)
       working-directory: ${{github.workspace}}
       shell: bash
@@ -171,11 +177,11 @@ jobs:
         --output-on-failure
         --verbose 
 
-    - name: Install
+    - name: Install (Release)
       shell: bash
       working-directory: ${{ github.workspace }}
       # Install StoneyDSP Biquads with the given configuration
-      run: cmake --install ${{ github.workspace }}/${{ env.BUILD_DIR }}
+      run: cmake --config Release --install ${{ github.workspace }}/${{ env.BUILD_DIR }}
 
     - name: Zip Source 
       shell: bash
