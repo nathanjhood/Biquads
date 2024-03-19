@@ -37,6 +37,9 @@ AudioPluginAudioProcessorWrapper<SampleType>::AudioPluginAudioProcessorWrapper(A
 , setup(spec)
 
 , mixer(std::make_unique<juce::dsp::DryWetMixer<SampleType>>())
+
+, biquadArraySize(static_cast<std::size_t>(4)) // cannot ‘dynamic_cast’ this - target  typeis not pointer or reference...
+
 , masterBypassPtr(dynamic_cast <juce::AudioParameterBool*>(apvts.getParameter("Master_bypassID")))
 , masterOutputPtr(dynamic_cast <juce::AudioParameterFloat*>(apvts.getParameter("Master_outputID")))
 , masterMixPtr(dynamic_cast <juce::AudioParameterFloat*>(apvts.getParameter("Master_mixID")))
@@ -68,7 +71,6 @@ AudioPluginAudioProcessorWrapper<SampleType>::AudioPluginAudioProcessorWrapper(A
 , biquadsDTypePtr(dynamic_cast <juce::AudioParameterChoice*>(apvts.getParameter("Band_D_typeID")))
 
 , bypassState(dynamic_cast <juce::AudioParameterBool*>(apvts.getParameter("Master_bypassID")))
-, biquadArraySize(static_cast<std::size_t>(4)) // cannot ‘dynamic_cast’ this - target  typeis not pointer or reference...
 {
 
     masterBypassPtr         = dynamic_cast <juce::AudioParameterBool*>  (apvts.getParameter("Master_bypassID"));
@@ -149,7 +151,7 @@ AudioPluginAudioProcessorWrapper<SampleType>::AudioPluginAudioProcessorWrapper(A
     reset(static_cast<SampleType>(0.0));
 }
 
-template<class SampleType> StoneyDSP::Biquads::AudioPluginAudioProcessorWrapper<SampleType>::~AudioPluginAudioProcessorWrapper()
+template<class SampleType> AudioPluginAudioProcessorWrapper<SampleType>::~AudioPluginAudioProcessorWrapper()
 {
 }
 
