@@ -91,12 +91,12 @@ list(APPEND STONEYDSP_BIQUADS_CPACK_IGNORE_LIST
     /install
     #/out
 
-    /Builds
+    #/Builds
 
-    /Release
-    /Debug
-    /MinSizeRel
-    /RelWithDebInfo
+    #/Release
+    #/Debug
+    #/MinSizeRel
+    #/RelWithDebInfo
 
     /downloads
     /packages
