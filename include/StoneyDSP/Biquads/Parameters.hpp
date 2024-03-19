@@ -2,7 +2,7 @@
  * @file Parameters.hpp
  * @author Nathan J. Hood (nathanjhood@googlemail.com)
  * @brief Simple two-pole equalizer with variable oversampling.
- * @version 1.2.2.167
+ * @version 1.2.2.174
  * @date 2024-03-16
  *
  * @copyright Copyright (c) 2024 - Nathan J. Hood
@@ -25,7 +25,7 @@
 #pragma once
 #define STONEYDSP_BIQUADS_PARAMETERS_HPP_INCLUDED
 
-// #include "StoneyDSP/Biquads.hpp"
+#include "StoneyDSP/Biquads.hpp"
 
 namespace StoneyDSP {
 /** @addtogroup StoneyDSP @{ */
@@ -38,7 +38,7 @@ class AudioPluginAudioProcessorParameters
 public:
     //==========================================================================
     /** Constructor. */
-    AudioPluginAudioProcessorParameters(AudioPluginAudioProcessor& p, juce::AudioProcessorValueTreeState& apvts);
+    AudioPluginAudioProcessorParameters(AudioPluginAudioProcessor& p);
 
     //==========================================================================
 
@@ -54,13 +54,22 @@ public:
      */
     static juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
 
-private:
+    //==============================================================================
+    juce::UndoManager& getUndoManager() { return undoManager; }
+    //==============================================================================
+    juce::AudioProcessorValueTreeState& getApvts() { return apvts; }
 
+private:
     //==========================================================================
     // This reference is provided as a quick way for the wrapper to
     // access the processor object that created it.
     AudioPluginAudioProcessor& audioProcessor;
-    juce::AudioProcessorValueTreeState& state;
+
+    std::unique_ptr<juce::UndoManager> undoManagerPtr                           { nullptr };
+    juce::UndoManager& undoManager;
+
+    std::unique_ptr<juce::AudioProcessorValueTreeState> apvtsPtr                { nullptr };
+    juce::AudioProcessorValueTreeState& apvts;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(AudioPluginAudioProcessorParameters)
 };

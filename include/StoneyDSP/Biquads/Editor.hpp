@@ -2,7 +2,7 @@
  * @file Editor.hpp
  * @author Nathan J. Hood (nathanjhood@googlemail.com)
  * @brief Simple two-pole equalizer with variable oversampling.
- * @version 1.2.2.167
+ * @version 1.2.2.174
  * @date 2024-03-16
  *
  * @copyright Copyright (c) 2024 - Nathan J. Hood
@@ -49,8 +49,6 @@ private:
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
     AudioPluginAudioProcessor& audioProcessor;
-
-    // juce::AudioProcessorValueTreeState& state;
 
     juce::UndoManager& undoManager;
 

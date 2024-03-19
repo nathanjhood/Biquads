@@ -2,7 +2,7 @@
  * @file Processor.cpp
  * @author Nathan J. Hood (nathanjhood@googlemail.com)
  * @brief Simple two-pole equalizer with variable oversampling.
- * @version 1.2.2.151
+ * @version 1.2.2.174
  * @date 2024-03-16
  *
  * @copyright Copyright (c) 2024 - Nathan J. Hood
@@ -40,24 +40,19 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
     .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
 #endif
 )
-  , undoManagerPtr  (std::make_unique<juce::UndoManager>())
-  , undoManager     (*undoManagerPtr.get())
-  , apvtsPtr        (std::make_unique<juce::AudioProcessorValueTreeState>(*this, &undoManager, juce::Identifier { "Parameters" }, createParameterLayout()))
-  , apvts           (*apvtsPtr.get())
-  , spec            ()
-  , parametersPtr   (std::make_unique<AudioPluginAudioProcessorParameters>     (*this, getApvts()))
-  , processorFltPtr (std::make_unique<AudioPluginAudioProcessorWrapper<float>> (*this, getApvts(), getSpec()))
-  , processorDblPtr (std::make_unique<AudioPluginAudioProcessorWrapper<double>>(*this, getApvts(), getSpec()))
-  , parameters      (*parametersPtr.get())
-  , processorFlt    (*processorFltPtr.get())
-  , processorDbl    (*processorDblPtr.get())
-// , processingPrecision(singlePrecision)
-  , bypassState     (dynamic_cast <juce::AudioParameterBool*>  (getApvts().getParameter("Master_bypassID")))
+  , spec()
+  , parametersPtr(std::make_unique<AudioPluginAudioProcessorParameters>(*this))
+  , parameters(*parametersPtr.get())
+  , undoManager(parameters.getUndoManager())
+  , apvts(parameters.getApvts())
+  , processorFltPtr(std::make_unique<AudioPluginAudioProcessorWrapper<float>>(*this, parameters.getApvts(), getSpec()))
+  , processorDblPtr(std::make_unique<AudioPluginAudioProcessorWrapper<double>>(*this, parameters.getApvts(), getSpec()))
+  , processorFl(*processorFltPtr.get())
+  , processorDbl(*processorDblPtr.get())
+  , bypassState(dynamic_cast <juce::AudioParameterBool*>(parameters.getApvts().getParameter("Master_bypassID")))
 {
-    bypassState    = dynamic_cast <juce::AudioParameterBool*>  (getApvts().getParameter("Master_bypassID"));
+    bypassState = dynamic_cast <juce::AudioParameterBool*>(parameters.getApvts().getParameter("Master_bypassID"));
 
-    jassert(undoManagerPtr      != nullptr);
-    jassert(apvtsPtr            != nullptr);
     jassert(parametersPtr       != nullptr);
     jassert(processorFltPtr     != nullptr);
     jassert(processorFltPtr     != nullptr);
@@ -319,36 +314,34 @@ juce::AudioProcessorEditor* AudioPluginAudioProcessor::createEditor()
     return new juce::GenericAudioProcessorEditor (*this);
 }
 
-juce::AudioProcessorValueTreeState::ParameterLayout AudioPluginAudioProcessor::createParameterLayout()
-{
-    juce::AudioProcessorValueTreeState::ParameterLayout parameterLayout;
-
-    AudioPluginAudioProcessorParameters::setParameterLayout(parameterLayout);
-
-    return parameterLayout;
-}
-
 //==============================================================================
 void AudioPluginAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
 {
+    auto& valueTreeState = parameters.getApvts();
+    auto state = valueTreeState.copyState();
+
     // You should use this method to store your parameters in the memory block.
     // You could do that either as raw data, or use the XML or ValueTree classes
     // as intermediaries to make it easy to save and load complex data.
-    auto state = apvts.copyState();
     std::unique_ptr<juce::XmlElement> xml(state.createXml());
     copyXmlToBinary(*xml, destData);
 }
 
 void AudioPluginAudioProcessor::getCurrentProgramStateInformation(juce::MemoryBlock& destData)
 {
-    auto state = apvts.copyState();
+    auto& valueTreeState = parameters.getApvts();
+    auto state = valueTreeState.copyState();
+
+    // You should use this method to store your parameters in the memory block.
+    // You could do that either as raw data, or use the XML or ValueTree classes
+    // as intermediaries to make it easy to save and load complex data.
     std::unique_ptr<juce::XmlElement> xml(state.createXml());
     copyXmlToBinary(*xml.get(), destData);
 }
 
 void AudioPluginAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
-    auto& valueTreeState = getApvts();
+    auto& valueTreeState = parameters.getApvts();
 
     // You should use this method to restore your parameters from this memory block,
     // whose contents will have been created by the getStateInformation() call.
@@ -361,8 +354,10 @@ void AudioPluginAudioProcessor::setStateInformation (const void* data, int sizeI
 
 void AudioPluginAudioProcessor::setCurrentProgramStateInformation(const void* data, int sizeInBytes)
 {
-    auto& valueTreeState = getApvts();
+    auto& valueTreeState = parameters.getApvts();
 
+    // You should use this method to restore your parameters from this memory block,
+    // whose contents will have been created by the getStateInformation() call.
     std::unique_ptr<juce::XmlElement> xmlState(getXmlFromBinary(data, sizeInBytes));
 
     if (xmlState.get() != nullptr)

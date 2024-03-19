@@ -2,7 +2,7 @@
  * @file Processor.hpp
  * @author Nathan J. Hood (nathanjhood@googlemail.com)
  * @brief Simple two-pole equalizer with variable oversampling.
- * @version 1.2.2.167
+ * @version 1.2.2.174
  * @date 2024-03-16
  *
  * @copyright Copyright (c) 2024 - Nathan J. Hood
@@ -76,44 +76,36 @@ public:
     void getCurrentProgramStateInformation(juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
     void setCurrentProgramStateInformation(const void* data, int sizeInBytes) override;
-    //==============================================================================
+    // //==============================================================================
     juce::UndoManager& getUndoManager() { return undoManager; }
-    //==============================================================================
+    // //==============================================================================
     juce::AudioProcessorValueTreeState& getApvts() { return apvts; }
     //==============================================================================
     juce::dsp::ProcessSpec& getSpec() { return spec; }
     //==============================================================================
-    static juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
-    const AudioPluginAudioProcessorParameters& getParameters()  { return parameters; }
+    const AudioPluginAudioProcessorParameters& getParameters() { return parameters; }
 
 private:
     //==============================================================================
-    AudioPluginAudioProcessorWrapper<float>&  getProcessorFlt() { return processorFlt; }
+    AudioPluginAudioProcessorWrapper<float>& getProcessorFlt() { return processorFlt; }
     AudioPluginAudioProcessorWrapper<double>& getProcessorDbl() { return processorDbl; }
-
     //==============================================================================
-    /** Audio processor members. */
-    std::unique_ptr<juce::UndoManager> undoManagerPtr                           { nullptr };
-    juce::UndoManager& undoManager;
-
-    std::unique_ptr<juce::AudioProcessorValueTreeState> apvtsPtr                { nullptr };
-    juce::AudioProcessorValueTreeState& apvts;
-
-    juce::dsp::ProcessSpec spec;
     juce::AudioProcessor::ProcessingPrecision processingPrecision;
+    juce::dsp::ProcessSpec spec;
     //==============================================================================
-    std::unique_ptr<AudioPluginAudioProcessorParameters>        parametersPtr   { nullptr };
-    std::unique_ptr<AudioPluginAudioProcessorWrapper<float>>    processorFltPtr { nullptr };
-    std::unique_ptr<AudioPluginAudioProcessorWrapper<double>>   processorDblPtr { nullptr };
-
-    AudioPluginAudioProcessorParameters&                        parameters;
-    AudioPluginAudioProcessorWrapper<float>&                    processorFlt;
-    AudioPluginAudioProcessorWrapper<double>&                   processorDbl;
-
+    std::unique_ptr<AudioPluginAudioProcessorParameters> parametersPtr { nullptr };
+    AudioPluginAudioProcessorParameters& parameters;
     //==============================================================================
-    /** Parameter pointers. */
-    juce::AudioParameterBool*                                   bypassState     { nullptr };
-
+    juce::UndoManager& undoManager;
+    juce::AudioProcessorValueTreeState& apvts;
+    //==============================================================================
+    std::unique_ptr<AudioPluginAudioProcessorWrapper<float>> processorFltPtr { nullptr };
+    std::unique_ptr<AudioPluginAudioProcessorWrapper<double>> processorDblPtr { nullptr };
+    //==============================================================================
+    AudioPluginAudioProcessorWrapper<float>& processorFlt;
+    AudioPluginAudioProcessorWrapper<double>& processorDbl;
+    //==============================================================================
+    juce::AudioParameterBool* bypassState { nullptr };
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioPluginAudioProcessor)
 };

@@ -2,7 +2,7 @@
  * @file Parameters.cpp
  * @author Nathan J. Hood (nathanjhood@googlemail.com)
  * @brief Simple two-pole equalizer with variable oversampling.
- * @version 1.2.2.151
+ * @version 1.2.2.174
  * @date 2024-03-16
  *
  * @copyright Copyright (c) 2024 - Nathan J. Hood
@@ -30,10 +30,15 @@ namespace StoneyDSP {
 namespace Biquads {
 /** @addtogroup Biquads  @{ */
 
-AudioPluginAudioProcessorParameters::AudioPluginAudioProcessorParameters(AudioPluginAudioProcessor& p, juce::AudioProcessorValueTreeState& apvts)
-: audioProcessor (p)
-, state(apvts)
+AudioPluginAudioProcessorParameters::AudioPluginAudioProcessorParameters(AudioPluginAudioProcessor& p /* , juce::AudioProcessorValueTreeState& apvts */)
+: audioProcessor  (p)
+, undoManagerPtr  (std::make_unique<juce::UndoManager>())
+, undoManager     (*undoManagerPtr.get())
+, apvtsPtr        (std::make_unique<juce::AudioProcessorValueTreeState>(p, &undoManager, juce::Identifier { "Parameters" }, createParameterLayout()))
+, apvts           (*apvtsPtr.get())
 {
+    jassert(undoManagerPtr      != nullptr);
+    jassert(apvtsPtr            != nullptr);
 }
 
 void AudioPluginAudioProcessorParameters::setParameterLayout(juce::AudioProcessorValueTreeState::ParameterLayout& newParameterLayout)

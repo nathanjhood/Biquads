@@ -2,7 +2,7 @@
 
 <JUCERPROJECT id="jER3fq" name="Biquads" projectType="audioplug" useAppConfig="1"
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
-              companyName="StoneyDSP" cppLanguageStandard="latest" version="1.2.2.156"
+              companyName="StoneyDSP" cppLanguageStandard="latest" version="1.2.2.174"
               pluginAUMainType="'aufx'" pluginVST3Category="EQ,Fx" pluginFormats="buildAU,buildStandalone,buildVST3"
               companyEmail="nathanjhood@googlemail.com" companyWebsite="https://stoneydsp.com"
               pluginName="Biquads" pluginManufacturer="StoneyDSP" pluginManufacturerCode="Manu"
