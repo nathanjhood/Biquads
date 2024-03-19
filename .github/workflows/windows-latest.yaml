@@ -11,7 +11,7 @@ concurrency:
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
-  CMAKE_CONFIGURATION_TYPES: Debug;Release;RelWithDebInfo;MinSizeRel
+  MULTI_CONFIG_TYPES: Debug;Release
   BUILD_TYPE: Release
   BUILD_DIR: Builds
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -110,13 +110,13 @@ jobs:
       # Configure CMake in a 'bin' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
       # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
       run: >-
-        cmake --fresh -S${{github.workspace}}
-        -B${{github.workspace}}/${{ env.BUILD_DIR }}
+        cmake --fresh -S${PWD}
+        -B${PWD}/${{ env.BUILD_DIR }}
         -DCMAKE_BUILD_TYPE:STRING=Debug
         -DCMAKE_C_COMPILER_LAUNCHER=sccache
         -DCMAKE_CXX_COMPILER_LAUNCHER=sccache
         -DSTONEYDSP_BIQUADS_BUILD_TESTS:BOOL=TRUE
-        -DCMAKE_INSTALL_PREFIX:PATH=${{github.workspace}}/install
+        -DCMAKE_INSTALL_PREFIX:PATH=${PWD}/install
         -DVCPKG_HOST_TRIPLET:STRING=x64-windows
         -DVCPKG_TARGET_TRIPLET:STRING=x64-windows
         -DVCPKG_MANIFEST_MODE:BOOL=FALSE
@@ -129,7 +129,7 @@ jobs:
       # Build your program with the given configuration
       run: >-
         cmake
-        --build ${{github.workspace}}/${{ env.BUILD_DIR }}
+        --build ${PWD}/${{ env.BUILD_DIR }}
         --config Debug
         --parallel 4
         --target all
@@ -141,7 +141,7 @@ jobs:
       # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
       run: >-
         ctest
-        --test-dir ${{ github.workspace }}/${{ env.BUILD_DIR }}
+        --test-dir ${PWD}/${{ env.BUILD_DIR }}
         -j4
         -C Debug
         --rerun-failed
@@ -152,7 +152,7 @@ jobs:
       shell: bash
       working-directory: ${{ github.workspace }}
       # Install StoneyDSP Biquads with the given configuration
-      run: cmake --install ${{ github.workspace }}/${{ env.BUILD_DIR }} --config Debug
+      run: cmake --install ${PWD}/${{ env.BUILD_DIR }} --config Debug
 
     - name: Configure (Release)
       working-directory: ${{github.workspace}}
@@ -160,13 +160,13 @@ jobs:
       # Configure CMake in a 'bin' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
       # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
       run: >-
-        cmake --fresh -S${{github.workspace}}
-        -B${{github.workspace}}/${{ env.BUILD_DIR }}
+        cmake --fresh -S${PWD}
+        -B${PWD}/${{ env.BUILD_DIR }}
         -DCMAKE_BUILD_TYPE:STRING=Release
         -DCMAKE_C_COMPILER_LAUNCHER=sccache
         -DCMAKE_CXX_COMPILER_LAUNCHER=sccache
         -DSTONEYDSP_BIQUADS_BUILD_TESTS:BOOL=TRUE
-        -DCMAKE_INSTALL_PREFIX:PATH=${{github.workspace}}/install
+        -DCMAKE_INSTALL_PREFIX:PATH=${PWD}/install
         -DVCPKG_HOST_TRIPLET:STRING=x64-windows
         -DVCPKG_TARGET_TRIPLET:STRING=x64-windows
         -DVCPKG_MANIFEST_MODE:BOOL=FALSE
@@ -179,7 +179,7 @@ jobs:
       # Build your program with the given configuration
       run: >-
         cmake
-        --build ${{github.workspace}}/${{ env.BUILD_DIR }}
+        --build ${PWD}/${{ env.BUILD_DIR }}
         --config Release
         --parallel 4
         --target all
@@ -191,7 +191,7 @@ jobs:
       # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
       run: >-
         ctest
-        --test-dir ${{ github.workspace }}/${{ env.BUILD_DIR }}
+        --test-dir ${PWD}/${{ env.BUILD_DIR }}
         -j4
         -C Release
         --rerun-failed
@@ -202,7 +202,7 @@ jobs:
       shell: bash
       working-directory: ${{ github.workspace }}
       # Install StoneyDSP Biquads with the given configuration
-      run: cmake --install ${{ github.workspace }}/${{ env.BUILD_DIR }} --config Release 
+      run: cmake --install ${PWD}/${{ env.BUILD_DIR }} --config Release 
 
     - name: Zip Source 
       shell: bash
