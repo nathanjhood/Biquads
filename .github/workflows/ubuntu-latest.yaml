@@ -89,7 +89,7 @@ jobs:
       # Configure CMake in a 'bin' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
       # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
       run: >-
-        cmake--fresh -S${{github.workspace}}
+        cmake --fresh -S${{github.workspace}}
         -B${{github.workspace}}/${{ env.BUILD_DIR }}
         -DCMAKE_BUILD_TYPE:STRING=Debug
         -DCMAKE_C_COMPILER_LAUNCHER=sccache
