@@ -131,7 +131,7 @@ jobs:
       shell: bash
       working-directory: ${{ github.workspace }}
       # Install StoneyDSP Biquads with the given configuration
-      run: cmake --config Debug --install ${{ github.workspace }}/${{ env.BUILD_DIR }}
+      run: cmake --install ${{ github.workspace }}/${{ env.BUILD_DIR }} --config Debug
 
     - name: Configure (Release)
       working-directory: ${{github.workspace}}
@@ -181,7 +181,7 @@ jobs:
       shell: bash
       working-directory: ${{ github.workspace }}
       # Install StoneyDSP Biquads with the given configuration
-      run: cmake --config Release --install ${{ github.workspace }}/${{ env.BUILD_DIR }}
+      run: cmake --install ${{ github.workspace }}/${{ env.BUILD_DIR }} --config Release 
 
     - name: Zip Source 
       shell: bash
