@@ -151,7 +151,7 @@ AudioPluginAudioProcessorWrapper<SampleType>::AudioPluginAudioProcessorWrapper(A
     reset(static_cast<SampleType>(0.0));
 }
 
-template<class SampleType> StoneyDSP::Biquads::AudioPluginAudioProcessorWrapper<SampleType>::~AudioPluginAudioProcessorWrapper()
+template<class SampleType> AudioPluginAudioProcessorWrapper<SampleType>::~AudioPluginAudioProcessorWrapper()
 {
 }
 
