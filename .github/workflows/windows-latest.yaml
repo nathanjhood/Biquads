@@ -120,7 +120,7 @@ jobs:
         -DVCPKG_HOST_TRIPLET:STRING=x64-windows
         -DVCPKG_TARGET_TRIPLET:STRING=x64-windows
         -DVCPKG_MANIFEST_MODE:BOOL=FALSE
-        -DCMAKE_TOOLCHAIN_FILE:FILEPATH="${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake"
+        -DCMAKE_TOOLCHAIN_FILE:FILEPATH="${PWD}/vcpkg/scripts/buildsystems/vcpkg.cmake"
         -G "Ninja"
         --compile-no-warning-as-error
         --no-warn-unused-cli
@@ -170,7 +170,7 @@ jobs:
         -DVCPKG_HOST_TRIPLET:STRING=x64-windows
         -DVCPKG_TARGET_TRIPLET:STRING=x64-windows
         -DVCPKG_MANIFEST_MODE:BOOL=FALSE
-        -DCMAKE_TOOLCHAIN_FILE:FILEPATH="${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake"
+        -DCMAKE_TOOLCHAIN_FILE:FILEPATH="${PWD}/vcpkg/scripts/buildsystems/vcpkg.cmake"
         -G "Ninja"
         --compile-no-warning-as-error
         --no-warn-unused-cli
