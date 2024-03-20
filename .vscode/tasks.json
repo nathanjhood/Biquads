@@ -1,21 +1,90 @@
 {
   "version": "2.0.0",
   "tasks": [
-    {
-      "type": "cmake",
-      "label": "CMake: build",
-      "command": "build",
-      "problemMatcher": [
-        "$gcc",
-        "$msCompile"
-      ],
-      "detail": "CMake build task",
-      "group": "build",
+		{
+			"type": "cmake",
+			"label": "CMake preset: configure",
+			"command": "configure",
+			"preset": "${command:cmake.activeConfigurePresetName}",
+			"detail": "CMake preset configure task",
+      "group": "none",
       "icon": {
         "color": "terminal.ansiGreen"
       }
-    },
-    {
+		},
+		{
+			"type": "cmake",
+			"label": "CMake preset: build",
+			"command": "build",
+			"preset": "${command:cmake.activeBuildPresetName}",
+			"detail": "CMake preset build task",
+			"group": "build",
+      "icon": {
+        "color": "terminal.ansiGreen"
+      },
+			"dependsOn": [
+				"CMake preset: configure"
+			]
+		},
+		{
+			"type": "cmake",
+			"label": "CMake preset: test",
+			"command": "test",
+			"preset": "${command:cmake.activeTestPresetName}",
+			"detail": "CMake preset test task",
+			"group": "test",
+      "icon": {
+        "color": "terminal.ansiGreen"
+      },
+			"dependsOn": [
+				"CMake preset: build"
+			]
+		},
+		{
+			"type": "cmake",
+			"label": "CMake preset: install",
+			"command": "install",
+			"preset": "${command:cmake.activeBuildPresetName}",
+			"detail": "CMake preset install task",
+			"group": "build",
+      "icon": {
+        "color": "terminal.ansiGreen"
+      },
+			"dependsOn": [
+				"CMake preset: build"
+			]
+		},
+		{
+			"type": "cmake",
+			"label": "CMake preset: clean",
+			"command": "clean",
+			"preset": "${command:cmake.activeBuildPresetName}",
+			"detail": "CMake preset clean task",
+			"group": "build",
+      "icon": {
+        "color": "terminal.ansiGreen"
+      },
+			"dependsOn": [
+				"CMake preset: configure"
+			]
+		},
+		{
+			"type": "cmake",
+			"label": "CMake preset: clean rebuild",
+			"command": "cleanRebuild",
+			"preset": "${command:cmake.activeBuildPresetName}",
+			"detail": "CMake preset clean rebuild task",
+			"group": "build",
+      "icon": {
+        "color": "terminal.ansiGreen"
+      },
+			"dependsOn": [
+				"CMake preset: configure"
+			]
+		},
+
+		//
+		{
       "type": "cmake",
       "label": "CMake: configure",
       "command": "configure",
@@ -31,17 +100,20 @@
     },
     {
       "type": "cmake",
-      "label": "CMake: install",
-      "command": "install",
+      "label": "CMake: build",
+      "command": "build",
       "problemMatcher": [
         "$gcc",
         "$msCompile"
       ],
-      "detail": "CMake install task",
-      "group": "none",
+      "detail": "CMake build task",
+      "group": "build",
       "icon": {
         "color": "terminal.ansiGreen"
-      }
+      },
+			"dependsOn": [
+				"CMake: configure"
+			]
     },
     {
       "type": "cmake",
@@ -55,7 +127,27 @@
       "group": "build",
       "icon": {
         "color": "terminal.ansiGreen"
-      }
+      },
+			"dependsOn": [
+				"CMake: build"
+			]
+    },
+		{
+      "type": "cmake",
+      "label": "CMake: install",
+      "command": "install",
+      "problemMatcher": [
+        "$gcc",
+        "$msCompile"
+      ],
+      "detail": "CMake install task",
+      "group": "none",
+      "icon": {
+        "color": "terminal.ansiGreen"
+      },
+			"dependsOn": [
+				"CMake: build"
+			]
     },
     {
       "type": "cmake",
@@ -69,7 +161,10 @@
       "group": "none",
       "icon": {
         "color": "terminal.ansiGreen"
-      }
+      },
+			"dependsOn": [
+				"CMake: configure"
+			]
     },
     {
       "type": "cmake",
@@ -86,24 +181,10 @@
       },
       "icon": {
         "color": "terminal.ansiGreen"
-      }
-    },
-    {
-      "type": "cmake",
-      "label": "CMake: test",
-      "command": "test",
-      "problemMatcher": [
-        "$gcc",
-        "$msCompile"
-      ],
-      "detail": "CMake test task",
-      "group": {
-        "kind": "test",
-        "isDefault": true
       },
-      "icon": {
-        "color": "terminal.ansiGreen"
-      }
+			"dependsOn": [
+				"CMake: configure"
+			]
     }
   ]
 }
