@@ -2,10 +2,10 @@
 	"editor.rulers": [80],
 
 	"C_Cpp.vcpkg.enabled": true,
-  "C_Cpp.autoAddFileAssociations": true,
-  "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
+	"C_Cpp.autoAddFileAssociations": true,
+	"C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
 
-  "cmake.configureOnEdit": false,
+	"cmake.configureOnEdit": false,
 	"cmake.configureOnOpen": false,
 	"cmake.automaticReconfigure": false,
 
