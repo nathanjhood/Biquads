@@ -1,56 +1,56 @@
 {
-  "version": 6,
+	"version": 6,
   "cmakeMinimumRequired": {
     "major": 3,
     "minor": 23,
     "patch": 0
   },
-  "include": [
-  ],
-  "configurePresets": [
+	"configurePresets": [
 		{
-      "name": "linux-only",
-			"inherits": "default",
+			"name": "linux-base",
 			"hidden": true,
-      "displayName": "Linux-only configuration",
-      "description": "This build is only available on Linux",
-      "condition": {
-        "type": "equals",
-        "lhs": "${hostSystemName}",
-        "rhs": "Linux"
-      },
+			"displayName": "Linux-base configuration",
+			"description": "This build is only available on Linux",
+			"generator": "Ninja",
+      "binaryDir": "${sourceDir}/Builds",
+			"installDir": "${sourceDir}/Installed",
 			"environment": {
 				"DISPLAY": ":0",
 				"VCPKG_DEFAULT_TRIPLET": "x64-linux",
 				"VCPKG_DEFAULT_HOST_TRIPLET": "x64-linux"
-      }
-    },
+			},
+			"condition": {
+				"type": "equals",
+				"lhs": "${hostSystemName}",
+				"rhs": "Linux"
+			},
+			"vendor": {
+				"microsoft.com/VisualStudioSettings/CMake/1.0": {
+					"hostOS": [ "Linux" ],
+					"intelliSenseMode": "linux-gcc-x64",
+					"intelliSenseOptions": {
+						"useCompilerDefaults": true,
+						"additionalCompilerArgs": []
+					}
+				},
+				"microsoft.com/VisualStudioRemoteSettings/CMake/1.0": {
+					"sourceDir": "$env{HOME}/.vs/$ms{projectDirName}"
+			 	}
+			}
+		},
 		{
-      "name": "linux-only-multi-config",
+      "name": "linux-base-multi-config",
 			"hidden": true,
-      "inherits": "linux-only",
+      "inherits": "linux-base",
       "displayName": "Ninja Multi-Config",
       "description": "Default Linux build using Ninja Multi-Config generator",
       "generator": "Ninja Multi-Config"
     },
 
 		{
-			"name": "linux-ninja-multi-config",
-			"inherits": "linux-only-multi-config",
-			"displayName": "Ninja Multi-Config",
-			"description": "Default Linux Release build using Ninja Multi-Config generator",
-			"cacheVariables": {
-				"CMAKE_CONFIGURATION_TYPES": {
-					"type": "STRING",
-					"value": "Debug;Release"
-				}
-			}
-		},
-
-		{
       "name": "unix-makefiles",
 			"hidden": true,
-      "inherits": "linux-only",
+      "inherits": "linux-base",
       "displayName": "Unix Makefiles",
       "description": "Default build using Unix Makefiles generator",
       "generator": "Unix Makefiles",
@@ -75,6 +75,7 @@
 				}
 			}
 		},
+
 		{
 			"name": "linux-make-release",
 			"inherits": "unix-makefiles",
@@ -89,7 +90,7 @@
 		},
 		{
 			"name": "linux-ninja-debug",
-			"inherits": "linux-only",
+			"inherits": "linux-base",
 			"displayName": "Ninja (Debug)",
 			"description": "Default Linux Debug build using Ninja generator",
 			"cacheVariables": {
@@ -101,7 +102,7 @@
 		},
 		{
 			"name": "linux-ninja-release",
-			"inherits": "linux-only",
+			"inherits": "linux-base",
 			"displayName": "Ninja (Release)",
 			"description": "Default Linux Release build using Ninja generator",
 			"cacheVariables": {
@@ -110,21 +111,50 @@
 					"value": "Release"
 				}
 			}
+		},
+
+		{
+			"name": "linux-ninja-multi-config",
+			"inherits": "linux-base-multi-config",
+			"displayName": "Ninja Multi-Config",
+			"description": "Default Linux Release build using Ninja Multi-Config generator",
+			"cacheVariables": {
+				"CMAKE_CONFIGURATION_TYPES": {
+					"type": "STRING",
+					"value": "Debug;Release"
+				}
+			}
 		}
   ],
+
 	"buildPresets": [
 		{
 			"displayName": "Linux",
-			"name": "linux-only",
-			"inherits": "default",
-			"configurePreset": "linux-only",
-			"verbose": false,
-			"hidden": true
+			"name": "linux-base",
+			"hidden": true,
+			"targets": [
+				"all",
+				"install",
+				"clean",
+				"juce_vst3_helper",
+				"Biquads_Audio_Plugin_Dependencies",
+				"Biquads_Audio_Plugin_Library",
+				"Biquads_Audio_Plugin",
+				"Biquads_Audio_Plugin_Standalone",
+				"Biquads_Audio_Plugin_VST3",
+				"Biquads_Audio_Plugin_All"
+			]
+		},
+		{
+			"name": "linux-default",
+			"hidden": true,
+			"inherits": "linux-base",
+			"verbose": false
 		},
 
 		{
 			"displayName": "Debug",
-			"inherits": "linux-only",
+			"inherits": "linux-default",
 			"configuration": "Debug",
 			"configurePreset": "linux-make-debug",
 			"name": "linux-make-debug"
@@ -137,7 +167,7 @@
 		},
 		{
 			"displayName": "Release",
-			"inherits": "linux-only",
+			"inherits": "linux-base",
 			"configuration": "Release",
 			"configurePreset": "linux-make-release",
 			"name": "linux-make-release"
@@ -151,7 +181,7 @@
 
 		{
 			"displayName": "Debug",
-			"inherits": "linux-only",
+			"inherits": "linux-base",
 			"configuration": "Debug",
 			"configurePreset": "linux-ninja-debug",
 			"name": "linux-ninja-debug"
@@ -164,7 +194,7 @@
 		},
 		{
 			"displayName": "Release",
-			"inherits": "linux-only",
+			"inherits": "linux-base",
 			"configuration": "Release",
 			"configurePreset": "linux-ninja-release",
 			"name": "linux-ninja-release"
@@ -179,14 +209,14 @@
 
 		{
 			"displayName": "Debug",
-			"inherits": "linux-only",
+			"inherits": "linux-base",
 			"configuration": "Debug",
 			"configurePreset": "linux-ninja-multi-config",
 			"name": "linux-ninja-multi-config-debug"
 		},
 		{
 			"displayName": "Release",
-			"inherits": "linux-only",
+			"inherits": "linux-base",
 			"configuration": "Release",
 			"configurePreset": "linux-ninja-multi-config",
 			"name": "linux-ninja-multi-config-release"
@@ -203,80 +233,5 @@
 			"name": "linux-ninja-multi-config-release-verbose",
 			"verbose": true
 		}
-	],
-
-	"testPresets": [
-    {
-			"displayName": "All",
-      "name": "linux-ninja-multi-config",
-      "configurePreset": "linux-ninja-multi-config",
-      "output": {
-				"outputOnFailure": true
-			},
-      "execution": {
-				"noTestsAction": "error",
-				"stopOnFailure": true
-			}
-    },
-		{
-			"displayName": "All",
-      "name": "linux-ninja-debug",
-      "configurePreset": "linux-ninja-debug",
-      "output": {
-				"outputOnFailure": true
-			},
-      "execution": {
-				"noTestsAction": "error",
-				"stopOnFailure": true
-			}
-    },
-		{
-			"displayName": "All",
-      "name": "linux-ninja-release",
-      "configurePreset": "linux-ninja-release",
-      "output": {
-				"outputOnFailure": true
-			},
-      "execution": {
-				"noTestsAction": "error",
-				"stopOnFailure": true
-			}
-    },
-		{
-			"displayName": "All",
-      "name": "linux-make-debug",
-      "configurePreset": "linux-make-debug",
-      "output": {
-				"outputOnFailure": true
-			},
-      "execution": {
-				"noTestsAction": "error",
-				"stopOnFailure": true
-			}
-    },
-		{
-			"displayName": "All",
-      "name": "linux-make-release",
-      "configurePreset": "linux-make-release",
-      "output": {
-				"outputOnFailure": true
-			},
-      "execution": {
-				"noTestsAction": "error",
-				"stopOnFailure": true
-			}
-    }
-  ],
-
-  "packagePresets": [
-    {
-      "name": "default",
-      "configurePreset": "linux-only",
-      "generators": [
-        "7Z",
-				"TGZ",
-				"ZIP"
-      ]
-    }
-  ]
+	]
 }

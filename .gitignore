@@ -4,6 +4,7 @@ node_modules
 !**/develop-logo-pluginval.png
 install
 Biquads-v1.2.1
+.bak**
 
 # Windows Temp Cache Files
 [Tt]humbs.db

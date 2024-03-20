@@ -5,37 +5,29 @@
     "minor": 23,
     "patch": 0
   },
-	"include": [
-		"./share/cmake/Presets/Linux/LinuxCMakePresets.json"
-	],
-	"vendor": {},
 	"configurePresets": [
 		{
-      "name": "default",
+      "name": "base",
 			"hidden": true,
-      "displayName": "Default Config",
-      "description": "Default build using Ninja generator",
       "generator": "Ninja",
       "binaryDir": "${sourceDir}/Builds",
-      "cacheVariables": {
-        "STONEYDSP_BIQUADS_BUILD_TESTS": { "type": "BOOL", "value": "OFF" }
-      }
+			"installDir": "${sourceDir}/Installed"
     },
-		{
-      "name": "ninja-multi-config",
-			"hidden": true,
-      "inherits": "default",
-      "displayName": "Ninja Multi-Config",
-      "description": "Default build using Ninja Multi-Config generator",
-      "generator": "Ninja Multi-Config"
-    }
-	],
-	"buildPresets": [
 		{
 			"name": "default",
 			"displayName": "Default",
-			"verbose": false,
-			"description": "An empty preset that does not add any arguments",
+			"description": "Default Configure preset",
+			"hidden": false,
+			"inherits": "base"
+		}
+	],
+	"include": [
+		"share/cmake/Presets/CMakePresets.Biquads.json"
+	],
+	"buildPresets": [
+		{
+			"name": "base",
+			"hidden": true,
 			"targets": [
 				"all",
 				"install",
@@ -50,24 +42,110 @@
 			]
 		},
 		{
-			"name": "verbose",
-			"displayName": "Verbose",
-			"description": "An verbose preset that does not add any arguments",
-			"verbose": true,
-			"inherits": "default"
+			"name": "default",
+			"hidden": false,
+			"displayName": "Default",
+			"description": "Default Build preset",
+			"inherits": "base",
+			"configurePreset": "default"
+		},
+		{
+			"name": "default-verbose",
+			"hidden": false,
+			"displayName": "Default (Verbose)",
+			"description": "Default Build preset (verbose)",
+			"inherits": "base",
+			"configurePreset": "default",
+			"verbose": true
 		}
 	],
 	"testPresets": [
-    {
-      "name": "default",
-      "configurePreset": "default",
+		{
+      "name": "global",
+			"hidden": true,
       "output": {
-				"outputOnFailure": true
+				"outputOnFailure": true,
+				"verbosity": "default"
 			},
       "execution": {
 				"noTestsAction": "error",
 				"stopOnFailure": true
 			}
+    },
+		{
+      "name": "default",
+			"hidden": false,
+			"displayName": "Default",
+			"description": "Default Test preset",
+      "configurePreset": "default",
+			"inherits": "global"
     }
-  ]
+	],
+	"packagePresets": [
+		{
+			"name": "global",
+			"hidden": true
+		},
+		{
+			"name": "default",
+			"hidden": false,
+			"displayName": "Default",
+			"description": "Default Package Preset",
+			"inherits": "global",
+			"configurePreset": "default"
+		}
+	],
+	"workflowPresets": [
+    {
+      "name": "default",
+			"displayName": "Default",
+			"description": "Default Workflow preset",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "default"
+        },
+        {
+          "type": "build",
+          "name": "default"
+        },
+        {
+          "type": "test",
+          "name": "default"
+        },
+        {
+          "type": "package",
+          "name": "default"
+        }
+      ]
+    }
+  ],
+	"vendor": {
+		"microsoft.com/VisualStudioSettings/CMake/1.0": {
+			"intelliSenseOptions": {
+				"useCompilerDefaults": true,
+				"additionalCompilerArgs": []
+			}
+		},
+		"microsoft.com/VisualStudioRemoteSettings/CMake/1.0": {
+			"sourceDir": "$env{HOME}/.vs/$ms{projectDirName}",
+			"copySources": true,
+			"copySourcesOptions": {
+				"exclusionList": [ ".vs", ".git", "out" ],
+				"method": "rsync",
+				"concurrentCopies": 5,
+				"outputVerbosity": "Normal"
+			},
+			"rsyncCommandArgs": [ "-t", "--delete", "--delete-excluded" ],
+			"copyBuildOutput": false,
+			"copyOptimizations": {
+				"maxSmallChange": 10,
+				"useOptimizations": "RsyncAndSftp",
+				"rsyncSingleDirectoryCommandArgs": [ "-t", "-d" ]
+			},
+			"copyAdditionalIncludeDirectoriesList": [],
+			"copyExcludeDirectoriesList": [],
+			"forceWSL1Toolset": false
+		}
+	}
 }
