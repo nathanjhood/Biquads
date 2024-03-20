@@ -100,48 +100,56 @@ void AudioPluginAudioProcessorParameters::setParameterLayout(juce::AudioProcesso
                 , std::make_unique<juce::AudioParameterFloat> (juce::ParameterID{ "Master_outputID",    ProjectInfo::versionNumber}, "Output",          outputRange,    00.00f, outputAttributes)
                 , std::make_unique<juce::AudioParameterFloat> (juce::ParameterID{ "Master_mixID",       ProjectInfo::versionNumber}, "Mix",             mixRange,       100.00f, mixAttributes)
                 , std::make_unique<juce::AudioParameterChoice>(juce::ParameterID{ "Master_osID",        ProjectInfo::versionNumber}, "Oversampling",    osString,       0)
-                , std::make_unique<juce::AudioParameterChoice>(juce::ParameterID{ "Master_transformID", ProjectInfo::versionNumber}, "Transform",       tString,        3)
+
             ),
             //==============================================================================
-            std::make_unique<juce::AudioProcessorParameterGroup>("Processor_ID", ProjectInfo::versionString, "seperatorProcessor",
+            std::make_unique<juce::AudioProcessorParameterGroup>("Processor_A_ID", ProjectInfo::versionString, "seperatorProcessorA",
                 //==============================================================================
-                std::make_unique<juce::AudioProcessorParameterGroup>("Band_A_ID", "Band A", "seperatorA"
+                std::make_unique<juce::AudioProcessorParameterGroup>("Buss_A_ID", "Buss A", "seperatorBussA"
                     //==============================================================================
-                    , std::make_unique<juce::AudioParameterBool>  (juce::ParameterID{ "Band_A_bypassID",    ProjectInfo::versionNumber}, "Bypass",                  false)
-                    , std::make_unique<juce::AudioParameterFloat> (juce::ParameterID{ "Band_A_frequencyID", ProjectInfo::versionNumber}, "Frequency",   freqRange,  632.455f,   freqAttributes)
-                    , std::make_unique<juce::AudioParameterFloat> (juce::ParameterID{ "Band_A_resonanceID", ProjectInfo::versionNumber}, "Resonance",   resRange,   00.10f,     resoAttributes)
-                    , std::make_unique<juce::AudioParameterFloat> (juce::ParameterID{ "Band_A_gainID",      ProjectInfo::versionNumber}, "Gain",        gainRange,  00.00f,     gainAttributes)
-                    , std::make_unique<juce::AudioParameterChoice>(juce::ParameterID{ "Band_A_typeID",      ProjectInfo::versionNumber}, "Type",        fString,    12)
+                    , std::make_unique<juce::AudioParameterChoice>(juce::ParameterID{ "Master_transformID", ProjectInfo::versionNumber}, "Transform",       tString,        3)
                     //==============================================================================
-                ),
-                //==============================================================================
-                std::make_unique<juce::AudioProcessorParameterGroup>("Band_B_ID", "Band B", "seperatorB"
+                    ,
                     //==============================================================================
-                    , std::make_unique<juce::AudioParameterBool>  (juce::ParameterID{ "Band_B_bypassID",    ProjectInfo::versionNumber}, "Bypass",                  true)
-                    , std::make_unique<juce::AudioParameterFloat> (juce::ParameterID{ "Band_B_frequencyID", ProjectInfo::versionNumber}, "Frequency",   freqRange,  632.455f,   freqAttributes)
-                    , std::make_unique<juce::AudioParameterFloat> (juce::ParameterID{ "Band_B_resonanceID", ProjectInfo::versionNumber}, "Resonance",   resRange,   00.10f,     resoAttributes)
-                    , std::make_unique<juce::AudioParameterFloat> (juce::ParameterID{ "Band_B_gainID",      ProjectInfo::versionNumber}, "Gain",        gainRange,  00.00f,     gainAttributes)
-                    , std::make_unique<juce::AudioParameterChoice>(juce::ParameterID{ "Band_B_typeID",      ProjectInfo::versionNumber}, "Type",        fString,    12)
+                    std::make_unique<juce::AudioProcessorParameterGroup>("Band_A_ID", "Band A", "seperatorA"
+                        //==============================================================================
+                        , std::make_unique<juce::AudioParameterBool>  (juce::ParameterID{ "Band_A_bypassID",    ProjectInfo::versionNumber}, "Bypass",                  false)
+                        , std::make_unique<juce::AudioParameterFloat> (juce::ParameterID{ "Band_A_frequencyID", ProjectInfo::versionNumber}, "Frequency",   freqRange,  632.455f,   freqAttributes)
+                        , std::make_unique<juce::AudioParameterFloat> (juce::ParameterID{ "Band_A_resonanceID", ProjectInfo::versionNumber}, "Resonance",   resRange,   00.10f,     resoAttributes)
+                        , std::make_unique<juce::AudioParameterFloat> (juce::ParameterID{ "Band_A_gainID",      ProjectInfo::versionNumber}, "Gain",        gainRange,  00.00f,     gainAttributes)
+                        , std::make_unique<juce::AudioParameterChoice>(juce::ParameterID{ "Band_A_typeID",      ProjectInfo::versionNumber}, "Type",        fString,    12)
+                        //==============================================================================
+                    ),
                     //==============================================================================
-                ),
-                //==============================================================================
-                std::make_unique<juce::AudioProcessorParameterGroup>("Band_C_ID", "Band C", "seperatorC"
+                    std::make_unique<juce::AudioProcessorParameterGroup>("Band_B_ID", "Band B", "seperatorB"
+                        //==============================================================================
+                        , std::make_unique<juce::AudioParameterBool>  (juce::ParameterID{ "Band_B_bypassID",    ProjectInfo::versionNumber}, "Bypass",                  true)
+                        , std::make_unique<juce::AudioParameterFloat> (juce::ParameterID{ "Band_B_frequencyID", ProjectInfo::versionNumber}, "Frequency",   freqRange,  632.455f,   freqAttributes)
+                        , std::make_unique<juce::AudioParameterFloat> (juce::ParameterID{ "Band_B_resonanceID", ProjectInfo::versionNumber}, "Resonance",   resRange,   00.10f,     resoAttributes)
+                        , std::make_unique<juce::AudioParameterFloat> (juce::ParameterID{ "Band_B_gainID",      ProjectInfo::versionNumber}, "Gain",        gainRange,  00.00f,     gainAttributes)
+                        , std::make_unique<juce::AudioParameterChoice>(juce::ParameterID{ "Band_B_typeID",      ProjectInfo::versionNumber}, "Type",        fString,    12)
+                        //==============================================================================
+                    ),
                     //==============================================================================
-                    , std::make_unique<juce::AudioParameterBool>  (juce::ParameterID{ "Band_C_bypassID",    ProjectInfo::versionNumber}, "Bypass",                  true)
-                    , std::make_unique<juce::AudioParameterFloat> (juce::ParameterID{ "Band_C_frequencyID", ProjectInfo::versionNumber}, "Frequency",   freqRange,  632.455f,   freqAttributes)
-                    , std::make_unique<juce::AudioParameterFloat> (juce::ParameterID{ "Band_C_resonanceID", ProjectInfo::versionNumber}, "Resonance",   resRange,   00.10f,     resoAttributes)
-                    , std::make_unique<juce::AudioParameterFloat> (juce::ParameterID{ "Band_C_gainID",      ProjectInfo::versionNumber}, "Gain",        gainRange,  00.00f,     gainAttributes)
-                    , std::make_unique<juce::AudioParameterChoice>(juce::ParameterID{ "Band_C_typeID",      ProjectInfo::versionNumber}, "Type",        fString,    12)
+                    std::make_unique<juce::AudioProcessorParameterGroup>("Band_C_ID", "Band C", "seperatorC"
+                        //==============================================================================
+                        , std::make_unique<juce::AudioParameterBool>  (juce::ParameterID{ "Band_C_bypassID",    ProjectInfo::versionNumber}, "Bypass",                  true)
+                        , std::make_unique<juce::AudioParameterFloat> (juce::ParameterID{ "Band_C_frequencyID", ProjectInfo::versionNumber}, "Frequency",   freqRange,  632.455f,   freqAttributes)
+                        , std::make_unique<juce::AudioParameterFloat> (juce::ParameterID{ "Band_C_resonanceID", ProjectInfo::versionNumber}, "Resonance",   resRange,   00.10f,     resoAttributes)
+                        , std::make_unique<juce::AudioParameterFloat> (juce::ParameterID{ "Band_C_gainID",      ProjectInfo::versionNumber}, "Gain",        gainRange,  00.00f,     gainAttributes)
+                        , std::make_unique<juce::AudioParameterChoice>(juce::ParameterID{ "Band_C_typeID",      ProjectInfo::versionNumber}, "Type",        fString,    12)
+                        //==============================================================================
+                    ),
                     //==============================================================================
-                ),
-                //==============================================================================
-                std::make_unique<juce::AudioProcessorParameterGroup>("Band_D_ID", "Band D", "seperatorD"
-                    //==============================================================================
-                    , std::make_unique<juce::AudioParameterBool>  (juce::ParameterID{ "Band_D_bypassID",    ProjectInfo::versionNumber}, "Bypass",                  true)
-                    , std::make_unique<juce::AudioParameterFloat> (juce::ParameterID{ "Band_D_frequencyID", ProjectInfo::versionNumber}, "Frequency",   freqRange,  632.455f,   freqAttributes)
-                    , std::make_unique<juce::AudioParameterFloat> (juce::ParameterID{ "Band_D_resonanceID", ProjectInfo::versionNumber}, "Resonance",   resRange,   00.10f,     resoAttributes)
-                    , std::make_unique<juce::AudioParameterFloat> (juce::ParameterID{ "Band_D_gainID",      ProjectInfo::versionNumber}, "Gain",        gainRange,  00.00f,     gainAttributes)
-                    , std::make_unique<juce::AudioParameterChoice>(juce::ParameterID{ "Band_D_typeID",      ProjectInfo::versionNumber}, "Type",        fString,    12)
+                    std::make_unique<juce::AudioProcessorParameterGroup>("Band_D_ID", "Band D", "seperatorD"
+                        //==============================================================================
+                        , std::make_unique<juce::AudioParameterBool>  (juce::ParameterID{ "Band_D_bypassID",    ProjectInfo::versionNumber}, "Bypass",                  true)
+                        , std::make_unique<juce::AudioParameterFloat> (juce::ParameterID{ "Band_D_frequencyID", ProjectInfo::versionNumber}, "Frequency",   freqRange,  632.455f,   freqAttributes)
+                        , std::make_unique<juce::AudioParameterFloat> (juce::ParameterID{ "Band_D_resonanceID", ProjectInfo::versionNumber}, "Resonance",   resRange,   00.10f,     resoAttributes)
+                        , std::make_unique<juce::AudioParameterFloat> (juce::ParameterID{ "Band_D_gainID",      ProjectInfo::versionNumber}, "Gain",        gainRange,  00.00f,     gainAttributes)
+                        , std::make_unique<juce::AudioParameterChoice>(juce::ParameterID{ "Band_D_typeID",      ProjectInfo::versionNumber}, "Type",        fString,    12)
+                        //==============================================================================
+                    )
                     //==============================================================================
                 )
                 //==============================================================================
@@ -159,6 +167,13 @@ juce::AudioProcessorValueTreeState::ParameterLayout AudioPluginAudioProcessorPar
     setParameterLayout(parameterLayout);
 
     return parameterLayout;
+}
+
+juce::AudioProcessorParameterGroup AudioPluginAudioProcessorParameters::createParameterGroup()
+{
+    juce::AudioProcessorParameterGroup parameterGroup;
+
+    return parameterGroup;
 }
 //==============================================================================
   /// @} group Biquads

@@ -1,0 +1,282 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 23,
+    "patch": 0
+  },
+  "include": [
+  ],
+  "configurePresets": [
+		{
+      "name": "linux-only",
+			"inherits": "default",
+			"hidden": true,
+      "displayName": "Linux-only configuration",
+      "description": "This build is only available on Linux",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      },
+			"environment": {
+				"DISPLAY": ":0",
+				"VCPKG_DEFAULT_TRIPLET": "x64-linux",
+				"VCPKG_DEFAULT_HOST_TRIPLET": "x64-linux"
+      }
+    },
+		{
+      "name": "linux-only-multi-config",
+			"hidden": true,
+      "inherits": "linux-only",
+      "displayName": "Ninja Multi-Config",
+      "description": "Default Linux build using Ninja Multi-Config generator",
+      "generator": "Ninja Multi-Config"
+    },
+
+		{
+			"name": "linux-ninja-multi-config",
+			"inherits": "linux-only-multi-config",
+			"displayName": "Ninja Multi-Config",
+			"description": "Default Linux Release build using Ninja Multi-Config generator",
+			"cacheVariables": {
+				"CMAKE_CONFIGURATION_TYPES": {
+					"type": "STRING",
+					"value": "Debug;Release"
+				}
+			}
+		},
+
+		{
+      "name": "unix-makefiles",
+			"hidden": true,
+      "inherits": "linux-only",
+      "displayName": "Unix Makefiles",
+      "description": "Default build using Unix Makefiles generator",
+      "generator": "Unix Makefiles",
+			"environment": {},
+			"cacheVariables": {
+				"CMAKE_MAKE_PROGRAM": {
+					"type": "PATH",
+					"value": "make"
+				}
+			}
+    },
+
+		{
+			"name": "linux-make-debug",
+			"inherits": "unix-makefiles",
+			"displayName": "Make (Debug)",
+			"description": "Default Linux Debug build using Unix Makefiles generator",
+			"cacheVariables": {
+				"CMAKE_BUILD_TYPE": {
+					"type": "STRING",
+					"value": "Debug"
+				}
+			}
+		},
+		{
+			"name": "linux-make-release",
+			"inherits": "unix-makefiles",
+			"displayName": "Make (Release)",
+			"description": "Default Linux Release build using Unix Makefiles generator",
+			"cacheVariables": {
+				"CMAKE_BUILD_TYPE": {
+					"type": "STRING",
+					"value": "Release"
+				}
+			}
+		},
+		{
+			"name": "linux-ninja-debug",
+			"inherits": "linux-only",
+			"displayName": "Ninja (Debug)",
+			"description": "Default Linux Debug build using Ninja generator",
+			"cacheVariables": {
+				"CMAKE_BUILD_TYPE": {
+					"type": "STRING",
+					"value": "Debug"
+				}
+			}
+		},
+		{
+			"name": "linux-ninja-release",
+			"inherits": "linux-only",
+			"displayName": "Ninja (Release)",
+			"description": "Default Linux Release build using Ninja generator",
+			"cacheVariables": {
+				"CMAKE_BUILD_TYPE": {
+					"type": "STRING",
+					"value": "Release"
+				}
+			}
+		}
+  ],
+	"buildPresets": [
+		{
+			"displayName": "Linux",
+			"name": "linux-only",
+			"inherits": "default",
+			"configurePreset": "linux-only",
+			"verbose": false,
+			"hidden": true
+		},
+
+		{
+			"displayName": "Debug",
+			"inherits": "linux-only",
+			"configuration": "Debug",
+			"configurePreset": "linux-make-debug",
+			"name": "linux-make-debug"
+		},
+		{
+			"displayName": "Debug (Verbose)",
+			"inherits": "linux-make-debug",
+			"name": "linux-make-debug-verbose",
+			"verbose": true
+		},
+		{
+			"displayName": "Release",
+			"inherits": "linux-only",
+			"configuration": "Release",
+			"configurePreset": "linux-make-release",
+			"name": "linux-make-release"
+		},
+		{
+			"displayName": "Release (Verbose)",
+			"inherits": "linux-make-release",
+			"name": "linux-make-release-verbose",
+			"verbose": true
+		},
+
+		{
+			"displayName": "Debug",
+			"inherits": "linux-only",
+			"configuration": "Debug",
+			"configurePreset": "linux-ninja-debug",
+			"name": "linux-ninja-debug"
+		},
+		{
+			"displayName": "Debug (Verbose)",
+			"inherits": "linux-ninja-debug",
+			"name": "linux-ninja-debug-verbose",
+			"verbose": true
+		},
+		{
+			"displayName": "Release",
+			"inherits": "linux-only",
+			"configuration": "Release",
+			"configurePreset": "linux-ninja-release",
+			"name": "linux-ninja-release"
+		},
+		{
+			"displayName": "Release (Verbose)",
+			"inherits": "linux-ninja-release",
+			"name": "linux-ninja-release-verbose",
+			"verbose": true
+		},
+
+
+		{
+			"displayName": "Debug",
+			"inherits": "linux-only",
+			"configuration": "Debug",
+			"configurePreset": "linux-ninja-multi-config",
+			"name": "linux-ninja-multi-config-debug"
+		},
+		{
+			"displayName": "Release",
+			"inherits": "linux-only",
+			"configuration": "Release",
+			"configurePreset": "linux-ninja-multi-config",
+			"name": "linux-ninja-multi-config-release"
+		},
+		{
+			"displayName": "Debug (Verbose)",
+			"inherits": "linux-ninja-multi-config-debug",
+			"name": "linux-ninja-multi-config-debug-verbose",
+			"verbose": true
+		},
+		{
+			"displayName": "Release (Verbose)",
+			"inherits": "linux-ninja-multi-config-release",
+			"name": "linux-ninja-multi-config-release-verbose",
+			"verbose": true
+		}
+	],
+
+	"testPresets": [
+    {
+			"displayName": "All",
+      "name": "linux-ninja-multi-config",
+      "configurePreset": "linux-ninja-multi-config",
+      "output": {
+				"outputOnFailure": true
+			},
+      "execution": {
+				"noTestsAction": "error",
+				"stopOnFailure": true
+			}
+    },
+		{
+			"displayName": "All",
+      "name": "linux-ninja-debug",
+      "configurePreset": "linux-ninja-debug",
+      "output": {
+				"outputOnFailure": true
+			},
+      "execution": {
+				"noTestsAction": "error",
+				"stopOnFailure": true
+			}
+    },
+		{
+			"displayName": "All",
+      "name": "linux-ninja-release",
+      "configurePreset": "linux-ninja-release",
+      "output": {
+				"outputOnFailure": true
+			},
+      "execution": {
+				"noTestsAction": "error",
+				"stopOnFailure": true
+			}
+    },
+		{
+			"displayName": "All",
+      "name": "linux-make-debug",
+      "configurePreset": "linux-make-debug",
+      "output": {
+				"outputOnFailure": true
+			},
+      "execution": {
+				"noTestsAction": "error",
+				"stopOnFailure": true
+			}
+    },
+		{
+			"displayName": "All",
+      "name": "linux-make-release",
+      "configurePreset": "linux-make-release",
+      "output": {
+				"outputOnFailure": true
+			},
+      "execution": {
+				"noTestsAction": "error",
+				"stopOnFailure": true
+			}
+    }
+  ],
+
+  "packagePresets": [
+    {
+      "name": "default",
+      "configurePreset": "linux-only",
+      "generators": [
+        "7Z",
+				"TGZ",
+				"ZIP"
+      ]
+    }
+  ]
+}

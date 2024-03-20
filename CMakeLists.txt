@@ -56,12 +56,12 @@ option (STONEYDSP_BIQUADS_USING_JUCE_RECOMMENDED_WARNING_FLAGS "Link with juce::
 
 set (STONEYDSP_BIQUADS_TARGETS "")
 
-#find_package (StoneyDSP CONFIG REQUIRED)
-
 #[=============================================================================[
 #   target: StoneyDSP::stoneydsp_core
 #   target: StoneyDSP::stoneydsp_audio
 #]=============================================================================]
+
+# find_package (StoneyDSP CONFIG REQUIRED)
 
 add_subdirectory(modules)
 
@@ -492,6 +492,21 @@ configure_package_config_file(
 #         DESTINATION lib/cmake/StoneyDSP
 #     )
 # endif ()
+
+install (
+    DIRECTORY "${STONEYDSP_BIQUADS_BINARY_DIR}/bin"
+    DESTINATION "Builds"
+)
+
+install (
+    DIRECTORY "${STONEYDSP_BIQUADS_BINARY_DIR}/lib"
+    DESTINATION "Builds"
+)
+
+install (
+    DIRECTORY "${STONEYDSP_BIQUADS_BINARY_DIR}/share"
+    DESTINATION "Builds"
+)
 
 install (
     DIRECTORY "${STONEYDSP_BIQUADS_BINARY_DIR}/Biquads_Audio_Plugin_artefacts"

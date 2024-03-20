@@ -1,0 +1,73 @@
+{
+	"version": 6,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 23,
+    "patch": 0
+  },
+	"include": [
+		"./share/cmake/Presets/Linux/LinuxCMakePresets.json"
+	],
+	"vendor": {},
+	"configurePresets": [
+		{
+      "name": "default",
+			"hidden": true,
+      "displayName": "Default Config",
+      "description": "Default build using Ninja generator",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/Builds",
+      "cacheVariables": {
+        "STONEYDSP_BIQUADS_BUILD_TESTS": { "type": "BOOL", "value": "OFF" }
+      }
+    },
+		{
+      "name": "ninja-multi-config",
+			"hidden": true,
+      "inherits": "default",
+      "displayName": "Ninja Multi-Config",
+      "description": "Default build using Ninja Multi-Config generator",
+      "generator": "Ninja Multi-Config"
+    }
+	],
+	"buildPresets": [
+		{
+			"name": "default",
+			"displayName": "Default",
+			"verbose": false,
+			"description": "An empty preset that does not add any arguments",
+			"targets": [
+				"all",
+				"install",
+				"clean",
+				"juce_vst3_helper",
+				"Biquads_Audio_Plugin_Dependencies",
+				"Biquads_Audio_Plugin_Library",
+				"Biquads_Audio_Plugin",
+				"Biquads_Audio_Plugin_Standalone",
+				"Biquads_Audio_Plugin_VST3",
+				"Biquads_Audio_Plugin_All"
+			]
+		},
+		{
+			"name": "verbose",
+			"displayName": "Verbose",
+			"description": "An verbose preset that does not add any arguments",
+			"verbose": true,
+			"inherits": "default"
+		}
+	],
+	"testPresets": [
+    {
+      "name": "default",
+      "configurePreset": "default",
+      "output": {
+				"outputOnFailure": true
+			},
+      "execution": {
+				"noTestsAction": "error",
+				"stopOnFailure": true
+			}
+    }
+  ]
+}

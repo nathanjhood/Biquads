@@ -54,6 +54,8 @@ public:
      */
     static juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
 
+    static juce::AudioProcessorParameterGroup createParameterGroup();
+
     //==============================================================================
     juce::UndoManager& getUndoManager() { return undoManager; }
     //==============================================================================

@@ -1,9 +1,17 @@
 {
 	"editor.rulers": [80],
 
+	"C_Cpp.vcpkg.enabled": true,
+  "C_Cpp.autoAddFileAssociations": true,
+  "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
+
   "cmake.configureOnEdit": false,
 	"cmake.configureOnOpen": false,
 	"cmake.automaticReconfigure": false,
+
+	"cmake.setBuildTypeOnMultiConfig": true,
+	"cmake.loadCompileCommands": true,
+	"cmake.useCMakePresets": "auto",
 
 	"cmake.cmakePath": "cmake",
 
@@ -15,10 +23,10 @@
 		// "VCPKG_ROOT": "${workspaceFolder}/vcpkg",
 		"VCPKG_MANIFEST_MODE": false,
 		"VCPKG_PREFER_SYSTEM_INSTALLED_BINARIES": true,
-		// "CMAKE_TOOLCHAIN_FILE": "${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
-		"CMAKE_MAKE_PROGRAM": "make",
-		"CMAKE_CONFIGURATION_TYPES": "Debug;Release",
-		"CMAKE_BUILD_TYPE": "Debug",
+		"CMAKE_TOOLCHAIN_FILE": "~/vcpkg/scripts/buildsystems/vcpkg.cmake",
+		// "CMAKE_MAKE_PROGRAM": "make",
+		// "CMAKE_CONFIGURATION_TYPES": "Debug;Release",
+		// "CMAKE_BUILD_TYPE": "Debug",
 		"CMAKE_C_COMPILER_LAUNCHER": "ccache",
 		"CMAKE_CXX_COMPILER_LAUNCHER": "ccache",
 		"STONEYDSP_BIQUADS_BUILD_TESTS": true
@@ -112,10 +120,6 @@
 			]
 		}
   },
-
-  "C_Cpp.vcpkg.enabled": true,
-  "C_Cpp.autoAddFileAssociations": true,
-  "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
 
 	"files.exclude": {
 		"**/.git": true,
