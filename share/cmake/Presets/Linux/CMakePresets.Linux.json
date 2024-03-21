@@ -14,6 +14,7 @@
 			"generator": "Ninja",
       "binaryDir": "${sourceDir}/Builds",
 			"installDir": "${sourceDir}/Installed",
+			"toolchainFile": "$penv{HOME}/vcpkg/scripts/buildsystems/vcpkg.cmake",
 			"environment": {
 				"DISPLAY": ":0",
 				"VCPKG_DEFAULT_TRIPLET": "x64-linux",
@@ -54,6 +55,7 @@
       "displayName": "Unix Makefiles",
       "description": "Default build using Unix Makefiles generator",
       "generator": "Unix Makefiles",
+			"binaryDir": "${sourceDir}/Builds/LinuxMakefile",
 			"environment": {},
 			"cacheVariables": {
 				"CMAKE_MAKE_PROGRAM": {
@@ -72,6 +74,10 @@
 				"CMAKE_BUILD_TYPE": {
 					"type": "STRING",
 					"value": "Debug"
+				},
+				"CMAKE_INTDIR": {
+					"type": "STRING",
+					"value": "Debug"
 				}
 			}
 		},
@@ -83,6 +89,10 @@
 			"description": "Default Linux Release build using Unix Makefiles generator",
 			"cacheVariables": {
 				"CMAKE_BUILD_TYPE": {
+					"type": "STRING",
+					"value": "Release"
+				},
+				"CMAKE_INTDIR": {
 					"type": "STRING",
 					"value": "Release"
 				}
@@ -97,6 +107,10 @@
 				"CMAKE_BUILD_TYPE": {
 					"type": "STRING",
 					"value": "Debug"
+				},
+				"CMAKE_INTDIR": {
+					"type": "STRING",
+					"value": "Debug"
 				}
 			}
 		},
@@ -107,6 +121,10 @@
 			"description": "Default Linux Release build using Ninja generator",
 			"cacheVariables": {
 				"CMAKE_BUILD_TYPE": {
+					"type": "STRING",
+					"value": "Release"
+				},
+				"CMAKE_INTDIR": {
 					"type": "STRING",
 					"value": "Release"
 				}
@@ -137,8 +155,7 @@
 				"install",
 				"clean",
 				"juce_vst3_helper",
-				"Biquads_Audio_Plugin_Dependencies",
-				"Biquads_Audio_Plugin_Library",
+
 				"Biquads_Audio_Plugin",
 				"Biquads_Audio_Plugin_Standalone",
 				"Biquads_Audio_Plugin_VST3",

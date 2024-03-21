@@ -10,7 +10,7 @@
       "name": "base",
 			"hidden": true,
       "generator": "Ninja",
-      "binaryDir": "${sourceDir}/Builds",
+      "binaryDir": "${sourceDir}/Builds/Default",
 			"installDir": "${sourceDir}/Installed"
     },
 		{
@@ -33,8 +33,7 @@
 				"install",
 				"clean",
 				"juce_vst3_helper",
-				"Biquads_Audio_Plugin_Dependencies",
-				"Biquads_Audio_Plugin_Library",
+
 				"Biquads_Audio_Plugin",
 				"Biquads_Audio_Plugin_Standalone",
 				"Biquads_Audio_Plugin_VST3",
