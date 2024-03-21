@@ -17,20 +17,20 @@
 	"cmake.cmakePath": "cmake",
 
 	"cmake.sourceDirectory": "${workspaceFolder}",
-	"cmake.buildDirectory": "${workspaceFolder}/build",
-	"cmake.installPrefix": "${workspaceFolder}/.local",
-	"cmake.generator": "Unix Makefiles",
+	// "cmake.buildDirectory": "${workspaceFolder}/build",
+	// "cmake.installPrefix": "${workspaceFolder}/.local",
+	// "cmake.generator": "Unix Makefiles",
 	"cmake.configureSettings": {
 		// "VCPKG_ROOT": "${workspaceFolder}/vcpkg",
-		"VCPKG_MANIFEST_MODE": false,
-		"VCPKG_PREFER_SYSTEM_INSTALLED_BINARIES": true,
-		"CMAKE_TOOLCHAIN_FILE": "~/vcpkg/scripts/buildsystems/vcpkg.cmake",
+		// "VCPKG_MANIFEST_MODE": false,
+		// "VCPKG_PREFER_SYSTEM_INSTALLED_BINARIES": true,
+		// "CMAKE_TOOLCHAIN_FILE": "~/vcpkg/scripts/buildsystems/vcpkg.cmake",
 		// "CMAKE_MAKE_PROGRAM": "make",
 		// "CMAKE_CONFIGURATION_TYPES": "Debug;Release",
 		// "CMAKE_BUILD_TYPE": "Debug",
-		"CMAKE_C_COMPILER_LAUNCHER": "ccache",
-		"CMAKE_CXX_COMPILER_LAUNCHER": "ccache",
-		"STONEYDSP_BIQUADS_BUILD_TESTS": true
+		// "CMAKE_C_COMPILER_LAUNCHER": "ccache",
+		// "CMAKE_CXX_COMPILER_LAUNCHER": "ccache",
+		// "STONEYDSP_BIQUADS_BUILD_TESTS": true
 	},
 	"cmake.debugConfig": {
 		"cwd": "${workspaceFolder}",

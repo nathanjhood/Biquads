@@ -25,7 +25,7 @@
 #pragma once
 #define STONEYDSP_BIQUADS_EDITOR_HPP_INCLUDED
 
-#include "Biquads.hpp"
+// #include "Biquads.hpp"
 
 // #include "Processor.hpp"
 // #include "Components/AutoComponent.hpp"
