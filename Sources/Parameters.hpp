@@ -25,13 +25,24 @@
 #pragma once
 #define STONEYDSP_BIQUADS_PARAMETERS_HPP_INCLUDED
 
-#include "StoneyDSP/Biquads.hpp"
+#include <juce_audio_basics/juce_audio_basics.h>                                // depends: juce_core
+#include <juce_audio_processors/juce_audio_processors.h>                        // depends: juce_gui_extra, juce_audio_basics
+#include <juce_core/juce_core.h>                                                //
+#include <juce_data_structures/juce_data_structures.h>                          // depends: juce_events
+#include <juce_events/juce_events.h>                                            // depends: juce_core
+#include <juce_graphics/juce_graphics.h>                                        // depends: juce_events
+#include <juce_gui_basics/juce_gui_basics.h>                                    // depends: juce_graphics, juce_data_structures
+#include <juce_gui_extra/juce_gui_extra.h>                                      // depends: juce_gui_basics
+
+#include "Biquads.hpp"
 
 namespace StoneyDSP {
 /** @addtogroup StoneyDSP @{ */
 
 namespace Biquads {
 /** @addtogroup Biquads @{ */
+
+class AudioPluginAudioProcessor;
 
 class AudioPluginAudioProcessorParameters
 {
@@ -40,28 +51,34 @@ public:
     /** Constructor. */
     AudioPluginAudioProcessorParameters(AudioPluginAudioProcessor& p);
 
-    //==========================================================================
-
-    /**
-     * @param juce::AudioProcessorValueTreeState::ParameterLayout& params
-    */
-    static void setParameterLayout(juce::AudioProcessorValueTreeState::ParameterLayout& params);
-
-    /**
-     * @brief Create a ParameterLayout object.
-     *
-     * @return juce::AudioProcessorValueTreeState::ParameterLayout
-     */
-    static juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
-
-    static juce::AudioProcessorParameterGroup createParameterGroup();
-
     //==============================================================================
     juce::UndoManager& getUndoManager() { return undoManager; }
     //==============================================================================
     juce::AudioProcessorValueTreeState& getApvts() { return apvts; }
 
 private:
+    //==========================================================================
+    /**
+     * @brief Set the ```ParameterLayout``` object.
+     *
+     * @param params
+     */
+    static void setParameterLayout(juce::AudioProcessorValueTreeState::ParameterLayout& params);
+
+    /**
+     * @brief Create a ```ParameterLayout``` object.
+     *
+     * @return juce::AudioProcessorValueTreeState::ParameterLayout
+     */
+    static juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
+
+    /**
+     * @brief Create a ```AudioProcessorParameterGroup``` object.
+     *
+     * @return juce::AudioProcessorParameterGroup
+     */
+    static juce::AudioProcessorParameterGroup createParameterGroup();
+
     //==========================================================================
     // This reference is provided as a quick way for the wrapper to
     // access the processor object that created it.

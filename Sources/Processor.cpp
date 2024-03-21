@@ -22,7 +22,11 @@
 
  ******************************************************************************/
 
-#include "StoneyDSP/Biquads.hpp"
+#ifdef STONEYDSP_BIQUADS_PROCESSOR_HPP_INCLUDED
+ #error "Incorrect usage of 'Processor.cpp'!"
+#endif
+
+#include "Processor.hpp"
 
 namespace StoneyDSP {
 /** @addtogroup StoneyDSP @{ */

@@ -22,7 +22,7 @@
 
  ******************************************************************************/
 
-#include "StoneyDSP/Biquads.hpp"
+#include "Parameters.hpp"
 
 namespace StoneyDSP {
 /** @addtogroup StoneyDSP @{ */
@@ -158,6 +158,26 @@ void AudioPluginAudioProcessorParameters::setParameterLayout(juce::AudioProcesso
         )
         //==============================================================================
     );
+
+    enum bandEnum {
+        A = 0,
+        B,
+        C,
+        D,
+        E,
+        F,
+        G,
+        H,
+        I,
+        J,
+        K,
+        L,
+        M,
+        N,
+        O
+    };
+
+    const auto bandsString = juce::StringArray({ "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O" });
 }
 
 juce::AudioProcessorValueTreeState::ParameterLayout AudioPluginAudioProcessorParameters::createParameterLayout()

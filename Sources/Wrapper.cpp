@@ -22,7 +22,11 @@
 
  ******************************************************************************/
 
-#include "StoneyDSP/Biquads.hpp"
+#ifdef STONEYDSP_BIQUADS_WRAPPER_HPP_INCLUDED
+ #error "Incorrect usage of 'Wrapper.cpp'!"
+#endif
+
+#include "Wrapper.hpp"
 
 namespace StoneyDSP {
 /** @addtogroup StoneyDSP @{ */

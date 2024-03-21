@@ -22,7 +22,7 @@
 
  ******************************************************************************/
 
-#include "StoneyDSP/Biquads.hpp"
+#include "Editor.hpp"
 
 namespace StoneyDSP {
 /** @addtogroup StoneyDSP @{ */

@@ -1,5 +1,5 @@
 /***************************************************************************//**
- * @file Editor.hpp
+ * @file Biquads.cpp
  * @author Nathan J. Hood (nathanjhood@googlemail.com)
  * @brief Simple two-pole equalizer with variable oversampling.
  * @version 1.2.3.155
@@ -22,11 +22,11 @@
 
  ******************************************************************************/
 
-#pragma once
-#define STONEYDSP_BIQUADS_EDITOR_HPP_INCLUDED
+#ifdef STONEYDSP_BIQUADS_HPP_INCLUDED
+ #error "Incorrect usage of 'Biquads.cpp'!"
+#endif
 
-// #include "Processor.hpp"
-// #include "Components/AutoComponent.hpp"
+#include "Biquads.hpp"
 
 namespace StoneyDSP {
 /** @addtogroup StoneyDSP @{ */
@@ -34,32 +34,30 @@ namespace StoneyDSP {
 namespace Biquads {
 /** @addtogroup Biquads @{ */
 
-//==============================================================================
-class JUCE_API AudioPluginAudioProcessorEditor final : public juce::AudioProcessorEditor
+namespace ProjectInfo
 {
-public:
-    explicit AudioPluginAudioProcessorEditor (AudioPluginAudioProcessor& p);
-    ~AudioPluginAudioProcessorEditor() override;
-
-    //==============================================================================
-    void paint (juce::Graphics&) override;
-    void resized() override;
-
-private:
-    // This reference is provided as a quick way for your editor to
-    // access the processor object that created it.
-    AudioPluginAudioProcessor& audioProcessor;
-
-    juce::UndoManager& undoManager;
-
-    juce::ArrowButton undoButton { "Undo", 0.5f , juce::Colours::white };
-    juce::ArrowButton redoButton { "Redo", 0.0f , juce::Colours::white };
-
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioPluginAudioProcessorEditor)
-};
+    extern const char* const  projectName    = "Biquads";
+    extern const char* const  companyName    = "StoneyDSP";
+    extern const char* const  versionString  = "1.2.2.174";
+    extern const int          versionNumber  =  0x10202ae;
+}
 
   /// @} group Biquads
 } // namespace Biquads
 
   /// @} group StoneyDSP
 } // namespace StoneyDSP
+
+// #ifdef STONEYDSP_BIQUADS_MODULE
+//  #include "Biquads/Parameters.cpp"
+//  #include "Biquads/Wrapper.cpp"
+//  #include "Biquads/Processor.cpp"
+//  #include "Biquads/Editor.cpp"
+// #endif
+
+//==============================================================================
+// This creates new instances of the plugin..
+juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
+{
+    return new StoneyDSP::Biquads::AudioPluginAudioProcessor();
+}

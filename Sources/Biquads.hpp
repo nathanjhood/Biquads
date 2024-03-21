@@ -62,6 +62,9 @@ namespace StoneyDSP
  */
 namespace Biquads
 {
+
+// class AudioPluginAudioProcessor;
+
 /** @addtogroup Biquads
  *  @{
  */
@@ -74,7 +77,26 @@ namespace ProjectInfo
     extern const int          versionNumber;
 }
 
-class AudioPluginAudioProcessor;
+/** Will need these later... */
+template <typename FloatType>
+struct Cartesian
+{
+  inline Cartesian(FloatType x, FloatType y) : _x(x), _y(y) {}
+private:
+  FloatType _x, _y;
+};
+template struct Cartesian<float>;
+template struct Cartesian<double>;
+
+template <typename FloatType>
+struct Polar
+{
+  inline Polar(FloatType angle, FloatType magnitude) : _angle(angle), _magnitude(magnitude) {}
+private:
+  FloatType _angle, _magnitude;
+};
+template struct Polar<float>;
+template struct Polar<double>;
 
   /// @} group Biquads
 } // namespace Biquads
@@ -82,7 +104,7 @@ class AudioPluginAudioProcessor;
   /// @} group StoneyDSP
 } // namespace StoneyDSP
 
-#include "Biquads/Parameters.hpp"
-#include "Biquads/Wrapper.hpp"
-#include "Biquads/Processor.hpp"
-#include "Biquads/Editor.hpp"
+#include "Parameters.hpp"
+#include "Wrapper.hpp"
+#include "Processor.hpp"
+#include "Editor.hpp"
