@@ -177,11 +177,11 @@ private:
 
     //==========================================================================
     /** Parameter pointers. */
-    std::unique_ptr<bool> masterBypassPtr { nullptr };
-    std::unique_ptr<SampleType> masterOutputPtr { nullptr };
-    std::unique_ptr<SampleType> masterMixPtr { nullptr };
-    std::unique_ptr<SampleType> masterOsPtr { nullptr };
-    std::unique_ptr<SampleType> masterTransformPtr { nullptr };
+    juce::AudioParameterBool* masterBypassPtr { nullptr };
+    juce::AudioParameterFloat* masterOutputPtr { nullptr };
+    juce::AudioParameterFloat* masterMixPtr { nullptr };
+    juce::AudioParameterChoice* masterOsPtr { nullptr };
+    juce::AudioParameterChoice* masterTransformPtr { nullptr };
 
     // juce::AudioParameterBool*       biquadsABypassPtr       { nullptr };
     // juce::AudioParameterFloat*      biquadsAFrequencyPtr    { nullptr };
@@ -207,14 +207,14 @@ private:
     // juce::AudioParameterFloat*      biquadsDGainPtr         { nullptr };
     // juce::AudioParameterChoice*     biquadsDTypePtr         { nullptr };
 
-    juce::AudioParameterBool*       bypassState             { nullptr };
+    juce::AudioParameterBool* bypassState { nullptr };
 
-    std::unique_ptr<bool>            biquadsBypassPtrArray[4];
-    std::unique_ptr<SampleType>      biquadsFrequencyPtrArray[4];
-    std::unique_ptr<SampleType>      biquadsResonancePtrArray[4];
-    std::unique_ptr<SampleType>      biquadsGainPtrArray[4];
+    juce::AudioParameterBool* biquadsBypassPtrArray[4];
+    juce::AudioParameterFloat* biquadsFrequencyPtrArray[4];
+    juce::AudioParameterFloat* biquadsResonancePtrArray[4];
+    juce::AudioParameterFloat* biquadsGainPtrArray[4];
 
-    std::unique_ptr<int> biquadsFilterTypePtrArray[4];
+    juce::AudioParameterChoice* biquadsFilterTypePtrArray[4];
 
     //==============================================================================
     /** Initialised constant */

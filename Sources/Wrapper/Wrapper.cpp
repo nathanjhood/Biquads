@@ -44,13 +44,13 @@ AudioPluginAudioProcessorWrapper<SampleType>::AudioPluginAudioProcessorWrapper(A
 
 , biquadArraySize(static_cast<std::size_t>(4)) // cannot ‘dynamic_cast’ this - target  type is not pointer or reference...
 
-, masterBypassPtr(static_cast <bool>(apvts.getParameter("Master_bypassID")))
-, masterOutputPtr(static_cast <SampleType>(apvts.getParameter("Master_outputID")))
-, masterMixPtr(static_cast <SampleType>(apvts.getParameter("Master_mixID")))
-, masterOsPtr(static_cast <int>(apvts.getParameter("Master_osID")))
-, masterTransformPtr(static_cast <int>(apvts.getParameter("Master_transformID")))
+, masterBypassPtr(static_cast <juce::AudioParameterBool*>(apvts.getParameter("Master_bypassID")))
+, masterOutputPtr(static_cast <juce::AudioParameterFloat*>(apvts.getParameter("Master_outputID")))
+, masterMixPtr(static_cast <juce::AudioParameterFloat*>(apvts.getParameter("Master_mixID")))
+, masterOsPtr(static_cast <juce::AudioParameterChoice*>(apvts.getParameter("Master_osID")))
+, masterTransformPtr(static_cast <juce::AudioParameterChoice*>(apvts.getParameter("Master_transformID")))
 
-, bypassState(static_cast <bool>(apvts.getParameter("Master_bypassID")))
+, bypassState(static_cast <juce::AudioParameterBool*>(apvts.getParameter("Master_bypassID")))
 , biquadsBypassPtrArray()
 , biquadsFrequencyPtrArray()
 , biquadsResonancePtrArray()
@@ -87,10 +87,10 @@ AudioPluginAudioProcessorWrapper<SampleType>::AudioPluginAudioProcessorWrapper(A
 
 {
 
-    masterBypassPtr         = static_cast <bool>  (apvts.getParameter("Master_bypassID"));
-    masterOutputPtr         = static_cast <SampleType> (apvts.getParameter("Master_outputID"));
-    masterMixPtr            = static_cast <SampleType> (apvts.getParameter("Master_mixID"));
-    masterOsPtr             = static_cast <int>(apvts.getParameter("Master_osID"));
+    masterBypassPtr         = static_cast <juce::AudioParameterBool*>  (apvts.getParameter("Master_bypassID"));
+    masterOutputPtr         = static_cast <juce::AudioParameterFloat*> (apvts.getParameter("Master_outputID"));
+    masterMixPtr            = static_cast <juce::AudioParameterFloat*> (apvts.getParameter("Master_mixID"));
+    masterOsPtr             = static_cast <juce::AudioParameterChoice*>(apvts.getParameter("Master_osID"));
     masterTransformPtr      = static_cast <juce::AudioParameterChoice*>(apvts.getParameter("Master_transformID"));
 
     // biquadsABypassPtr       = dynamic_cast <juce::AudioParameterBool*>  (apvts.getParameter("Band_A_bypassID"));
@@ -403,7 +403,7 @@ void AudioPluginAudioProcessorWrapper<SampleType>::update()
             biquad->setGain(static_cast<SampleType>(biquadsGainPtr->get()));
 
         for(auto& biquadsTypePtr : biquadsFilterTypePtrArray)
-            biquad->setFilterType(static_cast<StoneyDSP::Audio::BiquadsFilterType>(biquadsTypePtr->get()));
+            biquad->setFilterType(static_cast<StoneyDSP::Audio::BiquadsFilterType>(biquadsTypePtr->getIndex()));
     }
 
     // biquadArray[0]->setFrequency     (static_cast   <SampleType>                                           (biquadsAFrequencyPtr->get()));
