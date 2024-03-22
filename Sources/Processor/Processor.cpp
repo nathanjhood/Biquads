@@ -22,9 +22,9 @@
 
  ******************************************************************************/
 
-#ifdef STONEYDSP_BIQUADS_PROCESSOR_HPP_INCLUDED
- #error "Incorrect usage of 'Processor.cpp'!"
-#endif
+// #ifdef STONEYDSP_BIQUADS_PROCESSOR_HPP_INCLUDED
+//  #error "Incorrect usage of 'Processor.cpp'!"
+// #endif
 
 #include "Processor.hpp"
 

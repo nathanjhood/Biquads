@@ -22,9 +22,9 @@
 
  ******************************************************************************/
 
-#ifdef STONEYDSP_BIQUADS_HPP_INCLUDED
- #error "Incorrect usage of 'Biquads.cpp'!"
-#endif
+// #ifdef STONEYDSP_BIQUADS_HPP_INCLUDED
+//  #error "Incorrect usage of 'Biquads.cpp'!"
+// #endif
 
 #include "Biquads.hpp"
 
@@ -49,10 +49,10 @@ namespace ProjectInfo
 } // namespace StoneyDSP
 
 // #ifdef STONEYDSP_BIQUADS_MODULE
-//  #include "Biquads/Parameters.cpp"
-//  #include "Biquads/Wrapper.cpp"
-//  #include "Biquads/Processor.cpp"
-//  #include "Biquads/Editor.cpp"
+ #include "Parameters/Parameters.cpp"
+ #include "Wrapper/Wrapper.cpp"
+ #include "Processor/Processor.cpp"
+ #include "Editor/Editor.cpp"
 // #endif
 
 //==============================================================================

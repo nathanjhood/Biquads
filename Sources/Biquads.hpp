@@ -42,6 +42,7 @@
 #include <juce_graphics/juce_graphics.h>
 #include <juce_gui_basics/juce_gui_basics.h>
 #include <juce_gui_extra/juce_gui_extra.h>
+
 #include <stoneydsp_audio/stoneydsp_audio.h>
 #include <stoneydsp_core/stoneydsp_core.h>
 
@@ -63,7 +64,7 @@ namespace StoneyDSP
 namespace Biquads
 {
 
-// class AudioPluginAudioProcessor;
+class AudioPluginAudioProcessor;
 
 /** @addtogroup Biquads
  *  @{
@@ -104,7 +105,7 @@ template struct Polar<double>;
   /// @} group StoneyDSP
 } // namespace StoneyDSP
 
-#include "Parameters.hpp"
-#include "Wrapper.hpp"
-#include "Processor.hpp"
-#include "Editor.hpp"
+#include "Parameters/Parameters.hpp"
+#include "Wrapper/Wrapper.hpp"
+#include "Processor/Processor.hpp"
+#include "Editor/Editor.hpp"

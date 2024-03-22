@@ -25,16 +25,31 @@
 #pragma once
 #define STONEYDSP_BIQUADS_EDITOR_HPP_INCLUDED
 
-// #include "Biquads.hpp"
+#ifndef STONEYDSP_BIQUADS_HPP_INCLUDED
+#include <juce_audio_basics/juce_audio_basics.h>
+#include <juce_audio_devices/juce_audio_devices.h>
+#include <juce_audio_formats/juce_audio_formats.h>
+#include <juce_audio_plugin_client/juce_audio_plugin_client.h>
+#include <juce_audio_processors/juce_audio_processors.h>
+#include <juce_audio_utils/juce_audio_utils.h>
+#include <juce_core/juce_core.h>
+#include <juce_data_structures/juce_data_structures.h>
+#include <juce_dsp/juce_dsp.h>
+#include <juce_events/juce_events.h>
+#include <juce_graphics/juce_graphics.h>
+#include <juce_gui_basics/juce_gui_basics.h>
+#include <juce_gui_extra/juce_gui_extra.h>
+#endif
 
-// #include "Processor.hpp"
-// #include "Components/AutoComponent.hpp"
+// #include <Biquads.hpp>
 
 namespace StoneyDSP {
 /** @addtogroup StoneyDSP @{ */
 
 namespace Biquads {
 /** @addtogroup Biquads @{ */
+
+// class AudioPluginAudioProcessor;
 
 //==============================================================================
 class JUCE_API AudioPluginAudioProcessorEditor final : public juce::AudioProcessorEditor
