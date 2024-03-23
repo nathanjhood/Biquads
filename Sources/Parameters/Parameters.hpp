@@ -25,18 +25,18 @@
 #pragma once
 #define STONEYDSP_BIQUADS_PARAMETERS_HPP_INCLUDED
 
-#ifndef STONEYDSP_BIQUADS_HPP_INCLUDED
-#include <juce_audio_basics/juce_audio_basics.h>                                // depends: juce_core
-#include <juce_audio_processors/juce_audio_processors.h>                        // depends: juce_gui_extra, juce_audio_basics
-#include <juce_core/juce_core.h>                                                //
-#include <juce_data_structures/juce_data_structures.h>                          // depends: juce_events
-#include <juce_events/juce_events.h>                                            // depends: juce_core
-#include <juce_graphics/juce_graphics.h>                                        // depends: juce_events
-#include <juce_gui_basics/juce_gui_basics.h>                                    // depends: juce_graphics, juce_data_structures
-#include <juce_gui_extra/juce_gui_extra.h>                                      // depends: juce_gui_basics
-#endif // STONEYDSP_BIQUADS_HPP_INCLUDED
+#include "../Biquads.hpp"
 
-// #include <Biquads.hpp>
+// #ifndef STONEYDSP_BIQUADS_HPP_INCLUDED
+// #include <juce_audio_basics/juce_audio_basics.h>                                // depends: juce_core
+// #include <juce_audio_processors/juce_audio_processors.h>                        // depends: juce_gui_extra, juce_audio_basics
+// #include <juce_core/juce_core.h>                                                //
+// #include <juce_data_structures/juce_data_structures.h>                          // depends: juce_events
+// #include <juce_events/juce_events.h>                                            // depends: juce_core
+// #include <juce_graphics/juce_graphics.h>                                        // depends: juce_events
+// #include <juce_gui_basics/juce_gui_basics.h>                                    // depends: juce_graphics, juce_data_structures
+// #include <juce_gui_extra/juce_gui_extra.h>                                      // depends: juce_gui_basics
+// #endif // STONEYDSP_BIQUADS_HPP_INCLUDED
 
 namespace StoneyDSP {
 /** @addtogroup StoneyDSP @{ */

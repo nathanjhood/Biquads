@@ -25,23 +25,23 @@
 #pragma once
 #define STONEYDSP_BIQUADS_WRAPPER_HPP_INCLUDED
 
-#ifndef STONEYDSP_BIQUADS_HPP_INCLUDED
-#include <juce_audio_basics/juce_audio_basics.h>                                // depends: juce_core
-#include <juce_audio_formats/juce_audio_formats.h>                              // depends: juce_audio_basics
-#include <juce_audio_processors/juce_audio_processors.h>                        // depends: juce_gui_extra, juce_audio_basics
-#include <juce_core/juce_core.h>                                                //
-#include <juce_data_structures/juce_data_structures.h>                          // depends: juce_events
-#include <juce_dsp/juce_dsp.h>                                                  // depends: juce_audio_formats
-#include <juce_events/juce_events.h>                                            // depends: juce_core
-#include <juce_graphics/juce_graphics.h>                                        // depends: juce_events
-#include <juce_gui_basics/juce_gui_basics.h>                                    // depends: juce_graphics, juce_data_structures
-#include <juce_gui_extra/juce_gui_extra.h>                                      // depends: juce_gui_basics
+#include "../Biquads.hpp"
 
-#include <stoneydsp_audio/stoneydsp_audio.h>
-#include <stoneydsp_core/stoneydsp_core.h>
-#endif // STONEYDSP_BIQUADS_HPP_INCLUDED
+// #ifndef STONEYDSP_BIQUADS_HPP_INCLUDED
+// #include <juce_audio_basics/juce_audio_basics.h>                                // depends: juce_core
+// #include <juce_audio_formats/juce_audio_formats.h>                              // depends: juce_audio_basics
+// #include <juce_audio_processors/juce_audio_processors.h>                        // depends: juce_gui_extra, juce_audio_basics
+// #include <juce_core/juce_core.h>                                                //
+// #include <juce_data_structures/juce_data_structures.h>                          // depends: juce_events
+// #include <juce_dsp/juce_dsp.h>                                                  // depends: juce_audio_formats
+// #include <juce_events/juce_events.h>                                            // depends: juce_core
+// #include <juce_graphics/juce_graphics.h>                                        // depends: juce_events
+// #include <juce_gui_basics/juce_gui_basics.h>                                    // depends: juce_graphics, juce_data_structures
+// #include <juce_gui_extra/juce_gui_extra.h>                                      // depends: juce_gui_basics
 
-// #include <Biquads.hpp>
+// #include <stoneydsp_audio/stoneydsp_audio.h>
+// #include <stoneydsp_core/stoneydsp_core.h>
+// #endif // STONEYDSP_BIQUADS_HPP_INCLUDED
 
 namespace StoneyDSP {
 /** @addtogroup StoneyDSP @{ */
@@ -177,11 +177,11 @@ private:
 
     //==========================================================================
     /** Parameter pointers. */
-    juce::AudioParameterBool* masterBypassPtr { nullptr };
-    juce::AudioParameterFloat* masterOutputPtr { nullptr };
-    juce::AudioParameterFloat* masterMixPtr { nullptr };
-    juce::AudioParameterChoice* masterOsPtr { nullptr };
-    juce::AudioParameterChoice* masterTransformPtr { nullptr };
+    juce::AudioParameterBool*       masterBypassPtr         { nullptr };
+    juce::AudioParameterFloat*      masterOutputPtr         { nullptr };
+    juce::AudioParameterFloat*      masterMixPtr            { nullptr };
+    juce::AudioParameterChoice*     masterOsPtr             { nullptr };
+    juce::AudioParameterChoice*     masterTransformPtr      { nullptr };
 
     // juce::AudioParameterBool*       biquadsABypassPtr       { nullptr };
     // juce::AudioParameterFloat*      biquadsAFrequencyPtr    { nullptr };
@@ -207,7 +207,7 @@ private:
     // juce::AudioParameterFloat*      biquadsDGainPtr         { nullptr };
     // juce::AudioParameterChoice*     biquadsDTypePtr         { nullptr };
 
-    juce::AudioParameterBool* bypassState { nullptr };
+    juce::AudioParameterBool*       bypassState             { nullptr };
 
     juce::AudioParameterBool* biquadsBypassPtrArray[4];
     juce::AudioParameterFloat* biquadsFrequencyPtrArray[4];

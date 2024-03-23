@@ -21,6 +21,15 @@ cmake_minimum_required (VERSION 3.22...3.29 FATAL_ERROR)
 
 list (APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/share/cmake/Modules")
 
+if (NOT DEFINED CMAKE_CONFIGURATION_TYPES)
+    set (CMAKE_CONFIGURATION_TYPES "")
+    list (APPEND CMAKE_CONFIGURATION_TYPES "Debug" "Release")
+endif ()
+
+if (NOT DEFINED CMAKE_BUILD_TYPE)
+    set (CMAKE_BUILD_TYPE "Debug")
+endif ()
+
 include (GetGitRevListCount)
 get_git_rev_list_count ()
 
@@ -117,6 +126,12 @@ foreach (STONEYDSP_BIQUADS_UNIT_FILE IN LISTS STONEYDSP_BIQUADS_UNIT_FILES)
 
     add_library (${STONEYDSP_BIQUADS_UNIT_FILE} INTERFACE)
     add_library (StoneyDSP::Biquads::${STONEYDSP_BIQUADS_UNIT_FILE} ALIAS ${STONEYDSP_BIQUADS_UNIT_FILE})
+
+    # target_include_directories (${STONEYDSP_BIQUADS_UNIT_FILE}
+    #     INTERFACE
+    #         $<BUILD_INTERFACE:${STONEYDSP_BIQUADS_BINARY_DIR}/Biquads_Audio_Plugin_artefacts/Sources>
+    #         $<INSTALL_INTERFACE:include/StoneyDSP/Biquads>
+    # )
 
     if (CMAKE_MAJOR_VERSION GREATER_EQUAL 3 AND (CMAKE_MINOR_VERSION LESS 23))
 

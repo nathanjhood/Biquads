@@ -3,9 +3,9 @@
 		{
 			"name": "GCC 11.4.0 x86_64-linux-gnu",
 			"includePath": [
-				"${workspaceFolder}/modules/**",
+				"${workspaceFolder}/Modules/**",
 				"${workspaceFolder}/JuceLibraryCode/**",
-				"${workspaceFolder}/include/**",
+				"${workspaceFolder}/Sources/**",
 			],
 			"defines": [],
 			"compilerPath": "/usr/bin/gcc",

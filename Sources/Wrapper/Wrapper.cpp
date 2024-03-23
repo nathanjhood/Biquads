@@ -44,54 +44,50 @@ AudioPluginAudioProcessorWrapper<SampleType>::AudioPluginAudioProcessorWrapper(A
 
 , biquadArraySize(static_cast<std::size_t>(4)) // cannot ‘dynamic_cast’ this - target  type is not pointer or reference...
 
-, masterBypassPtr(static_cast <juce::AudioParameterBool*>(apvts.getParameter("Master_bypassID")))
-, masterOutputPtr(static_cast <juce::AudioParameterFloat*>(apvts.getParameter("Master_outputID")))
-, masterMixPtr(static_cast <juce::AudioParameterFloat*>(apvts.getParameter("Master_mixID")))
-, masterOsPtr(static_cast <juce::AudioParameterChoice*>(apvts.getParameter("Master_osID")))
-, masterTransformPtr(static_cast <juce::AudioParameterChoice*>(apvts.getParameter("Master_transformID")))
+, masterBypassPtr(dynamic_cast <juce::AudioParameterBool*>(apvts.getParameter("Master_bypassID")))
+, masterOutputPtr(dynamic_cast <juce::AudioParameterFloat*>(apvts.getParameter("Master_outputID")))
+, masterMixPtr(dynamic_cast <juce::AudioParameterFloat*>(apvts.getParameter("Master_mixID")))
+, masterOsPtr(dynamic_cast <juce::AudioParameterChoice*>(apvts.getParameter("Master_osID")))
+, masterTransformPtr(dynamic_cast <juce::AudioParameterChoice*>(apvts.getParameter("Master_transformID")))
 
-, bypassState(static_cast <juce::AudioParameterBool*>(apvts.getParameter("Master_bypassID")))
+// , biquadsABypassPtr(dynamic_cast <juce::AudioParameterBool*>(apvts.getParameter("Band_A_bypassID")))
+// , biquadsAFrequencyPtr(dynamic_cast <juce::AudioParameterFloat*>(apvts.getParameter("Band_A_frequencyID")))
+// , biquadsAResonancePtr(dynamic_cast <juce::AudioParameterFloat*>(apvts.getParameter("Band_A_resonanceID")))
+// , biquadsAGainPtr(dynamic_cast <juce::AudioParameterFloat*>(apvts.getParameter("Band_A_gainID")))
+// , biquadsATypePtr(dynamic_cast <juce::AudioParameterChoice*>(apvts.getParameter("Band_A_typeID")))
+
+// , biquadsBBypassPtr(dynamic_cast <juce::AudioParameterBool*>(apvts.getParameter("Band_B_bypassID")))
+// , biquadsBFrequencyPtr(dynamic_cast <juce::AudioParameterFloat*>(apvts.getParameter("Band_B_frequencyID")))
+// , biquadsBResonancePtr(dynamic_cast <juce::AudioParameterFloat*>(apvts.getParameter("Band_B_resonanceID")))
+// , biquadsBGainPtr(dynamic_cast <juce::AudioParameterFloat*>(apvts.getParameter("Band_B_gainID")))
+// , biquadsBTypePtr(dynamic_cast <juce::AudioParameterChoice*>(apvts.getParameter("Band_B_typeID")))
+
+// , biquadsCBypassPtr(dynamic_cast <juce::AudioParameterBool*>(apvts.getParameter("Band_C_bypassID")))
+// , biquadsCFrequencyPtr(dynamic_cast <juce::AudioParameterFloat*>(apvts.getParameter("Band_C_frequencyID")))
+// , biquadsCResonancePtr(dynamic_cast <juce::AudioParameterFloat*>(apvts.getParameter("Band_C_resonanceID")))
+// , biquadsCGainPtr(dynamic_cast <juce::AudioParameterFloat*>(apvts.getParameter("Band_C_gainID")))
+// , biquadsCTypePtr(dynamic_cast <juce::AudioParameterChoice*>(apvts.getParameter("Band_C_typeID")))
+
+// , biquadsDBypassPtr(dynamic_cast <juce::AudioParameterBool*>(apvts.getParameter("Band_D_bypassID")))
+// , biquadsDFrequencyPtr(dynamic_cast <juce::AudioParameterFloat*>(apvts.getParameter("Band_D_frequencyID")))
+// , biquadsDResonancePtr(dynamic_cast <juce::AudioParameterFloat*>(apvts.getParameter("Band_D_resonanceID")))
+// , biquadsDGainPtr(dynamic_cast <juce::AudioParameterFloat*>(apvts.getParameter("Band_D_gainID")))
+// , biquadsDTypePtr(dynamic_cast <juce::AudioParameterChoice*>(apvts.getParameter("Band_D_typeID")))
+
+, bypassState(dynamic_cast <juce::AudioParameterBool*>(apvts.getParameter("Master_bypassID")))
+
 , biquadsBypassPtrArray()
 , biquadsFrequencyPtrArray()
 , biquadsResonancePtrArray()
 , biquadsGainPtrArray()
 , biquadsFilterTypePtrArray()
-// , biquadsBypassPtrArray
-// {
-//         dynamic_cast <bool*>(apvts.getParameter("Band_A_bypassID"))
-//     ,   dynamic_cast <bool*>(apvts.getParameter("Band_B_bypassID"))
-//     ,   dynamic_cast <bool*>(apvts.getParameter("Band_C_bypassID"))
-//     ,   dynamic_cast <bool*>(apvts.getParameter("Band_D_bypassID"))
-// }
-// , biquadsFrequencyPtrArray
-// {
-//         dynamic_cast <SampleType*>(apvts.getParameter("Band_A_frequencyID"))
-//     ,   dynamic_cast <SampleType*>(apvts.getParameter("Band_B_frequencyID"))
-//     ,   dynamic_cast <SampleType*>(apvts.getParameter("Band_C_frequencyID"))
-//     ,   dynamic_cast <SampleType*>(apvts.getParameter("Band_D_frequencyID"))
-// }
-// , biquadsResonancePtrArray
-// {
-//         dynamic_cast <SampleType*>(apvts.getParameter("Band_A_resonanceID"))
-//     ,   dynamic_cast <SampleType*>(apvts.getParameter("Band_B_resonanceID"))
-//     ,   dynamic_cast <SampleType*>(apvts.getParameter("Band_C_resonanceID"))
-//     ,   dynamic_cast <SampleType*>(apvts.getParameter("Band_D_resonanceID"))
-// }
-// , biquadsGainPtrArray
-// {
-//         dynamic_cast <SampleType*>(apvts.getParameter("Band_A_gainID"))
-//     ,   dynamic_cast <SampleType*>(apvts.getParameter("Band_B_gainID"))
-//     ,   dynamic_cast <SampleType*>(apvts.getParameter("Band_C_gainID"))
-//     ,   dynamic_cast <SampleType*>(apvts.getParameter("Band_D_gainID"))
-// }
-
 {
 
-    masterBypassPtr         = static_cast <juce::AudioParameterBool*>  (apvts.getParameter("Master_bypassID"));
-    masterOutputPtr         = static_cast <juce::AudioParameterFloat*> (apvts.getParameter("Master_outputID"));
-    masterMixPtr            = static_cast <juce::AudioParameterFloat*> (apvts.getParameter("Master_mixID"));
-    masterOsPtr             = static_cast <juce::AudioParameterChoice*>(apvts.getParameter("Master_osID"));
-    masterTransformPtr      = static_cast <juce::AudioParameterChoice*>(apvts.getParameter("Master_transformID"));
+    masterBypassPtr         = dynamic_cast <juce::AudioParameterBool*>  (apvts.getParameter("Master_bypassID"));
+    masterOutputPtr         = dynamic_cast <juce::AudioParameterFloat*> (apvts.getParameter("Master_outputID"));
+    masterMixPtr            = dynamic_cast <juce::AudioParameterFloat*> (apvts.getParameter("Master_mixID"));
+    masterOsPtr             = dynamic_cast <juce::AudioParameterChoice*>(apvts.getParameter("Master_osID"));
+    masterTransformPtr      = dynamic_cast <juce::AudioParameterChoice*>(apvts.getParameter("Master_transformID"));
 
     // biquadsABypassPtr       = dynamic_cast <juce::AudioParameterBool*>  (apvts.getParameter("Band_A_bypassID"));
     // biquadsAFrequencyPtr    = dynamic_cast <juce::AudioParameterFloat*> (apvts.getParameter("Band_A_frequencyID"));
@@ -118,45 +114,6 @@ AudioPluginAudioProcessorWrapper<SampleType>::AudioPluginAudioProcessorWrapper(A
     // biquadsDTypePtr         = dynamic_cast <juce::AudioParameterChoice*>(apvts.getParameter("Band_D_typeID"));
 
     bypassState             = dynamic_cast <juce::AudioParameterBool*>  (apvts.getParameter("Master_bypassID"));
-
-    // biquadsBypassPtrArray =
-    // {
-    //         dynamic_cast <bool>(apvts.getParameter("Band_A_bypassID"))
-    //     ,   dynamic_cast <bool>(apvts.getParameter("Band_B_bypassID"))
-    //     ,   dynamic_cast <bool>(apvts.getParameter("Band_C_bypassID"))
-    //     ,   dynamic_cast <bool>(apvts.getParameter("Band_D_bypassID"))
-    // };
-
-    // biquadsFrequencyPtrArray =
-    // {
-    //         dynamic_cast <SampleType>(apvts.getParameter("Band_A_frequencyID"))
-    //     ,   dynamic_cast <SampleType>(apvts.getParameter("Band_B_frequencyID"))
-    //     ,   dynamic_cast <SampleType>(apvts.getParameter("Band_C_frequencyID"))
-    //     ,   dynamic_cast <SampleType>(apvts.getParameter("Band_D_frequencyID"))
-    // };
-
-    // biquadsResonancePtrArray =
-    // {
-    //         dynamic_cast <SampleType>(apvts.getParameter("Band_A_resonanceID"))
-    //     ,   dynamic_cast <SampleType>(apvts.getParameter("Band_B_resonanceID"))
-    //     ,   dynamic_cast <SampleType>(apvts.getParameter("Band_C_resonanceID"))
-    //     ,   dynamic_cast <SampleType>(apvts.getParameter("Band_D_resonanceID"))
-    // };
-
-    // biquadsGainPtrArray =
-    // {
-    //         dynamic_cast <SampleType>(apvts.getParameter("Band_A_gainID"))
-    //     ,   dynamic_cast <SampleType>(apvts.getParameter("Band_B_gainID"))
-    //     ,   dynamic_cast <SampleType>(apvts.getParameter("Band_C_gainID"))
-    //     ,   dynamic_cast <SampleType>(apvts.getParameter("Band_D_gainID"))
-    // };
-    // biquadsFilterTypePtrArray =
-    // {
-    //         dynamic_cast <SampleType>(apvts.getParameter("Band_A_typeID"))
-    //     ,   dynamic_cast <SampleType>(apvts.getParameter("Band_A_typeID"))
-    //     ,   dynamic_cast <SampleType>(apvts.getParameter("Band_A_typeID"))
-    //     ,   dynamic_cast <SampleType>(apvts.getParameter("Band_A_typeID"))
-    // };
 
     jassert(masterBypassPtr             != nullptr);
     jassert(masterOutputPtr             != nullptr);
@@ -189,12 +146,6 @@ AudioPluginAudioProcessorWrapper<SampleType>::AudioPluginAudioProcessorWrapper(A
     // jassert(biquadsDTypePtr             != nullptr);
 
     jassert(bypassState                 != nullptr);
-
-    // jassert(biquadsBypassPtrArray != nullptr);
-    // jassert(biquadsFrequencyPtrArray != nullptr);
-    // jassert(biquadsResonancePtrArray != nullptr);
-    // jassert(biquadsGainPtrArray != nullptr);
-    // jassert(biquadsFilterTypePtrArray != nullptr);
 
     jassert(biquadArraySize             != static_cast<std::size_t>(0));
 
@@ -390,21 +341,28 @@ void AudioPluginAudioProcessorWrapper<SampleType>::update()
     mixer->setWetMixProportion(static_cast   <SampleType>    (0.01f * masterMixPtr->get()));
 
     for(auto& biquad : biquadArray)
-    {
         biquad->setTransformType(static_cast<StoneyDSP::Audio::BiquadsBiLinearTransformationType>  (masterTransformPtr->getIndex()));
 
-        for(auto& biquadsFrequencyPtr : biquadsFrequencyPtrArray)
-            biquad->setFrequency(static_cast<SampleType>(biquadsFrequencyPtr->get()));
-
-        for(auto& biquadsResonancePtr : biquadsResonancePtrArray)
-            biquad->setFrequency(static_cast<SampleType>(biquadsResonancePtr->get()));
-
-        for(auto& biquadsGainPtr : biquadsGainPtrArray)
-            biquad->setGain(static_cast<SampleType>(biquadsGainPtr->get()));
-
-        for(auto& biquadsTypePtr : biquadsFilterTypePtrArray)
-            biquad->setFilterType(static_cast<StoneyDSP::Audio::BiquadsFilterType>(biquadsTypePtr->getIndex()));
+    for(std::size_t i = static_cast<std::size_t>(0); i < biquadArraySize; ++i)
+    {
+        biquadArray[i]->setFrequency(static_cast<SampleType>(biquadsFrequencyPtrArray[i]->get()));
+        biquadArray[i]->setResonance(static_cast<SampleType>(biquadsResonancePtrArray[i]->get()));
+        biquadArray[i]->setGain(static_cast<SampleType>(biquadsGainPtrArray[i]->get()));
+        biquadArray[i]->setFilterType(static_cast<StoneyDSP::Audio::BiquadsFilterType>(biquadsFilterTypePtrArray[i]->getIndex()));
     }
+
+    // for(auto& biquadsFrequencyPtr : biquadsFrequencyPtrArray)
+    //     biquad->setFrequency(static_cast<SampleType>(biquadsFrequencyPtr->get()));
+
+    // for(auto& biquadsResonancePtr : biquadsResonancePtrArray)
+    //     biquad->setResonance(static_cast<SampleType>(biquadsResonancePtr->get()));
+
+    // for(auto& biquadsGainPtr : biquadsGainPtrArray)
+    //     biquad->setGain(static_cast<SampleType>(biquadsGainPtr->get()));
+
+    // for(auto& biquadsTypePtr : biquadsFilterTypePtrArray)
+    //     biquad->setFilterType(static_cast<StoneyDSP::Audio::BiquadsFilterType>(biquadsTypePtr->getIndex()));
+
 
     // biquadArray[0]->setFrequency     (static_cast   <SampleType>                                           (biquadsAFrequencyPtr->get()));
     // biquadArray[0]->setResonance     (static_cast   <SampleType>                                           (biquadsAResonancePtr->get()));
