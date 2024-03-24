@@ -489,10 +489,10 @@ configure_package_config_file(
 )
 
 
-install (
-    DIRECTORY "${STONEYDSP_BIQUADS_BINARY_DIR}/share"
-    DESTINATION "Builds"
-)
+# install (
+#     DIRECTORY "${STONEYDSP_BIQUADS_BINARY_DIR}/share"
+#     DESTINATION "Builds"
+# )
 
 install (
     DIRECTORY "${STONEYDSP_BIQUADS_BINARY_DIR}/Biquads_Audio_Plugin_artefacts"
