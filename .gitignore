@@ -3,7 +3,7 @@ node_modules
 !/.vscode/c_cpp_properties.json
 !**/develop-logo-pluginval.png
 install
-Biquads-v1.2.1
+Installed
 .bak**
 
 # Windows Temp Cache Files
@@ -67,7 +67,7 @@ contents.xcworkspacedata
 .svn
 enc_temp_folder/
 **/Builds/
-# **/JuceLibraryCode/
+**/JuceLibraryCode/
 # !**/JuceLibraryCode/AppConfig.h
 install/testresults.txt
 **/bin

@@ -38,8 +38,8 @@ namespace ProjectInfo
 {
     extern const char* const  projectName    = "Biquads";
     extern const char* const  companyName    = "StoneyDSP";
-    extern const char* const  versionString  = "1.2.2.174";
-    extern const int          versionNumber  =  0x10202ae;
+    extern const char* const  versionString  = "1.2.3.167";
+    extern const int          versionNumber  =  0x10203a7;
 }
 
   /// @} group Biquads
