@@ -15,26 +15,26 @@
   "license": "GPL-3.0",
   "scripts": {
 
-    "configure":       "cmake            -S . -B ./build -G Ninja",
-    "reconfigure":     "cmake --fresh    -S . -B ./build -G Ninja",
-    "build":           "cmake --build            ./build",
-    "postbuild":       "cmake --install          ./build",
-    "ctest":           "ctest --test-dir         ./build --rerun-failed --output-on-failure --verbose",
-    "cpack":           "cpack --config           ./build/CPackSourceConfig.cmake -B ./install",
-    "cdist":           "cpack --config           ./build/CPackConfig.cmake       -B ./install",
-		"clean": 			  	 "cmake --build            ./build --target clean",
+    "configure":       "cmake            -S . -B ./Builds -G Ninja",
+    "reconfigure":     "cmake --fresh    -S . -B ./Builds -G Ninja",
+    "build":           "cmake --build            ./Builds",
+    "postbuild":       "cmake --install          ./Builds",
+    "ctest":           "ctest --test-dir         ./Builds --rerun-failed --output-on-failure --verbose",
+    "cpack":           "cpack --config           ./Builds/CPackSourceConfig.cmake -B ./Installed",
+    "cdist":           "cpack --config           ./Builds/CPackConfig.cmake       -B ./Installed",
+		"clean": 			  	 "cmake --build            ./Builds --target clean",
 
-		"dbg:configure":   "cmake            -S . -B ./build -DCMAKE_BUILD_TYPE:STRING=Debug   -G Ninja",
-		"dbg:reconfigure": "cmake --fresh    -S . -B ./build --config Debug -G Ninja",
-		"dbg:build":       "cmake --build            ./build --config Debug",
-		"dbg:postbuild":   "cmake --install          ./build --config Debug --prefix ./install",
-		"dbg:clean": 		   "cmake --build            ./build --config Debug --target clean",
+		"dbg:configure":   "cmake            -S . -B ./Builds -DCMAKE_BUILD_TYPE:STRING=Debug   -G Ninja",
+		"dbg:reconfigure": "cmake --fresh    -S . -B ./Builds --config Debug -G Ninja",
+		"dbg:build":       "cmake --build            ./Builds --config Debug",
+		"dbg:postbuild":   "cmake --install          ./Builds --config Debug --prefix ./Installed",
+		"dbg:clean": 		   "cmake --build            ./Builds --config Debug --target clean",
 
-		"rel:configure":   "cmake            -S . -B ./build -DCMAKE_BUILD_TYPE:STRING=Release -G Ninja",
-		"rel:reconfigure": "cmake --fresh    -S . -B ./build --config Debug -G Ninja",
-		"rel:build":       "cmake --build            ./build --config Release",
-		"rel:postbuild":   "cmake --install          ./build --config Release --prefix ./install",
-		"rel:clean": 		   "cmake --build            ./build --config Release --target clean"
+		"rel:configure":   "cmake            -S . -B ./Builds -DCMAKE_BUILD_TYPE:STRING=Release -G Ninja",
+		"rel:reconfigure": "cmake --fresh    -S . -B ./Builds --config Debug -G Ninja",
+		"rel:build":       "cmake --build            ./Builds --config Release",
+		"rel:postbuild":   "cmake --install          ./Builds --config Release --prefix ./Installed",
+		"rel:clean": 		   "cmake --build            ./Builds --config Release --target clean"
   },
 	"engines": {
 		"node": ">=16.8.0"

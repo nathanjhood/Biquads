@@ -20,6 +20,12 @@
 				"VCPKG_DEFAULT_TRIPLET": "x64-linux",
 				"VCPKG_DEFAULT_HOST_TRIPLET": "x64-linux"
 			},
+			"cacheVariables": {
+				"CMAKE_EXPORT_COMPILE_COMMANDS": {
+          "type": "BOOL",
+          "value": "ON"
+        }
+			},
 			"condition": {
 				"type": "equals",
 				"lhs": "${hostSystemName}",

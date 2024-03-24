@@ -4,22 +4,58 @@
 	"C_Cpp.vcpkg.enabled": true,
 	"C_Cpp.autoAddFileAssociations": true,
 	"C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
+	"C_Cpp.default.mergeConfigurations": true,
+	"C_Cpp.commentContinuationPatterns": [
+		"/**"
+	],
+
+	"C_Cpp.doxygen.generatedStyle": "/**",
+	"C_Cpp.doxygen.generateOnType": true,
+	"C_Cpp.doxygen.sectionTags": [
+		"attention",
+		"tparam",
+		"param",
+		"result",
+		"returns",
+		"retval",
+		"exception",
+		"deprecated",
+		"warning",
+		"note"
+	],
+
+	"doxdocgen.generic.boolReturnsTrueFalse": true,
+	"doxdocgen.cpp.ctorText": "Construct a new {name} object",
+	"doxdocgen.cpp.dtorText": "Destroy the {name} object",
+	"doxdocgen.cpp.tparamTemplate": "@tparam {param} ",
+	"doxdocgen.generic.paramTemplate": "@param {param} ",
+	"doxdocgen.generic.returnTemplate": "@return {type} ",
+	"doxdocgen.generic.briefTemplate": "@brief {text}",
+	"doxdocgen.generic.authorEmail": "{email}",
+	"doxdocgen.generic.authorName": "{author}",
+	"doxdocgen.generic.authorTag": "@author {author} <{email}>",
+	"doxdocgen.generic.useGitUserName": true,
+  "doxdocgen.generic.useGitUserEmail": true,
+	"doxdocgen.file.copyrightTag": [
+		"@copyright Copyright (c) {year} {author} <{email}>"
+	],
 
 	"cmake.configureOnEdit": false,
 	"cmake.configureOnOpen": false,
 	"cmake.automaticReconfigure": false,
 
 	"cmake.setBuildTypeOnMultiConfig": true,
+	"cmake.exportCompileCommandsFile": true,
 	"cmake.loadCompileCommands": true,
-	"cmake.useCMakePresets": "always",
+	"cmake.useCMakePresets": "auto",
 	"cmake.allowUnsupportedPresetsVersions": true,
 
 	"cmake.cmakePath": "cmake",
 
 	"cmake.sourceDirectory": "${workspaceFolder}",
-	// "cmake.buildDirectory": "${workspaceFolder}/build",
-	// "cmake.installPrefix": "${workspaceFolder}/.local",
-	// "cmake.generator": "Unix Makefiles",
+	"cmake.buildDirectory": "${workspaceFolder}/Builds",
+	"cmake.installPrefix": "${workspaceFolder}/Installed",
+	"cmake.generator": "Ninja",
 	"cmake.configureSettings": {
 		// "VCPKG_ROOT": "${workspaceFolder}/vcpkg",
 		// "VCPKG_MANIFEST_MODE": false,
@@ -72,9 +108,6 @@
 			"url": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg-configuration.schema.json"
 		}
 	],
-
-	"doxdocgen.generic.useGitUserName": true,
-  "doxdocgen.generic.useGitUserEmail": true,
 
 	"terminal.integrated.profiles.windows": {
 		"MSYS2 UCRT64": {

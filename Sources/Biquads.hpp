@@ -105,7 +105,7 @@ template struct Polar<double>;
   /// @} group StoneyDSP
 } // namespace StoneyDSP
 
-// #include "Parameters/Parameters.hpp"
-// #include "Wrapper/Wrapper.hpp"
-// #include "Processor/Processor.hpp"
-// #include "Editor/Editor.hpp"
+#include "Parameters/Parameters.hpp"
+#include "Wrapper/Wrapper.hpp"
+#include "Processor/Processor.hpp"
+#include "Editor/Editor.hpp"
