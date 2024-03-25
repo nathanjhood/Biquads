@@ -22,6 +22,131 @@
 
 <hr>
 
+## Build from source:
+
+These commands assume you have Ninja installed on your system.
+
+### Configure:
+
+```.sh
+cmake --fresh --preset=default
+```
+
+### Build:
+
+```.sh
+cmake --build --preset=default
+```
+
+### Test:
+
+```.sh
+ctest --preset=default
+```
+
+*uses [Tracktion Pluginval](https://github.com/Tracktion/pluginval) to validate the built plugin using a series of predetermined tests.*
+
+### Install:
+
+```.sh
+cmake --install ./Builds --prefix=</some/location/on/disk>
+```
+
+### Package:
+```.sh
+cpack --preset=default
+```
+
+## More presets:
+
+You may also check the other provided presets, such as using generators besides Ninja and other optionable configuration details which will often vary from machine to machine. For example, on Linux, these presets are currently provided and supported by ```Biquads```:
+
+```.sh
+cmake --list-presets=all
+
+Available configure presets:
+
+  "default"                  - Default
+  "linux-make-debug"         - Make (Debug)
+  "linux-make-release"       - Make (Release)
+  "linux-ninja-debug"        - Ninja (Debug)
+  "linux-ninja-release"      - Ninja (Release)
+  "linux-ninja-multi-config" - Ninja Multi-Config
+
+Available build presets:
+
+  "default"                                  - Default
+  "default-verbose"                          - Default (Verbose)
+  "linux-make-debug"                         - Debug
+  "linux-make-debug-verbose"                 - Debug (Verbose)
+  "linux-make-release"                       - Release
+  "linux-make-release-verbose"               - Release (Verbose)
+  "linux-ninja-debug"                        - Debug
+  "linux-ninja-debug-verbose"                - Debug (Verbose)
+  "linux-ninja-release"                      - Release
+  "linux-ninja-release-verbose"              - Release (Verbose)
+  "linux-ninja-multi-config-debug"           - Debug
+  "linux-ninja-multi-config-release"         - Release
+  "linux-ninja-multi-config-debug-verbose"   - Debug (Verbose)
+  "linux-ninja-multi-config-release-verbose" - Release (Verbose)
+
+Available test presets:
+
+  "default"                          - Default
+  "linux-ninja-multi-config-debug"   - Debug
+  "linux-ninja-multi-config-release" - Release
+
+Available package presets:
+
+  "default"                          - Default
+  "linux-ninja-multi-config-source"  - Source
+  "linux-ninja-multi-config-debug"   - Build (Debug)
+  "linux-ninja-multi-config-release" - Build (Release)
+  "linux-ninja-multi-config-all"     - Build (All)
+
+Available workflow presets:
+
+  "default"                          - Default
+  "linux-ninja-multi-config-all"     - Linux Ninja Multi-Config (All)
+  "linux-ninja-multi-config-debug"   - Linux Ninja Multi-Config (Debug)
+  "linux-ninja-multi-config-release" - Linux Ninja Multi-Config (Release)
+
+```
+
+CMake presets still allow you manually specify (and/or override) your own definitions on the command line using the ```-D<SOME_VAR>=<SOME_VALUE>``` flag as usual.
+
+Multi-config generators enable you to generate both a ```Debug``` *and* a ```Release``` build configuration at the same time, allowing you to decide whether you want to compile in ```Debug``` or ```Release``` mode, *without* running the configure step again. This does however require that you also specify a configuration for all commands besides the configuration generator.
+
+Below is an example of how to use the provided extended CMake presets (beyond the ```default```flag), to easily build ```Biquads``` using some simple commands:
+
+
+### Configure both ```Debug``` and ```Release``` builds at the same time, using Microsoft's ```vcpkg``` to find and acquire our dependencies (such as JUCE, etc)
+
+```.sh
+cmake --fresh --preset linux-ninja-multi-config --toolchain ${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=x64-linux
+```
+
+### Build the ```Debug``` configuration verbosely:
+
+```.sh
+cmake --build --preset linux-ninja-multi-config-debug-verbose
+```
+
+### Test the ```Debug``` build:
+
+```.sh
+ctest --preset=default -C Debug
+```
+
+### Package the ```Debug``` build:
+```.sh
+cpack --preset=default --config Debug
+```
+
+More presets will be added soon! Check out the GitHub actions for a more detailed overview of configuring and building this project - and it's requirements - with standard CMake commands for your platform.
+
+<hr>
+
 <b>Created with the [StoneyDSP C++ library for JUCE](https://www.tracktion.com/develop/pluginval)</b>
 
 [![StoneyDSP](https://raw.githubusercontent.com/StoneyDSP/StoneyDSP/production/extras/Icons/images/w_icon__384x256.png)](https://www.stoneydsp.com)
