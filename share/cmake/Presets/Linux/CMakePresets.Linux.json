@@ -26,6 +26,17 @@
           "value": "ON"
         }
 			},
+			"errors": {
+				"deprecated": false,
+				"dev": false
+			},
+			"warnings": {
+				"deprecated": false,
+				"dev": false,
+				"systemVars": false,
+				"uninitialized": false,
+				"unusedCli": false
+			},
 			"condition": {
 				"type": "equals",
 				"lhs": "${hostSystemName}",
@@ -166,7 +177,12 @@
 				"Biquads_Audio_Plugin_Standalone",
 				"Biquads_Audio_Plugin_VST3",
 				"Biquads_Audio_Plugin_All"
-			]
+			],
+			"condition": {
+				"type": "equals",
+				"lhs": "${hostSystemName}",
+				"rhs": "Linux"
+			}
 		},
 		{
 			"name": "linux-default",
@@ -256,5 +272,186 @@
 			"name": "linux-ninja-multi-config-release-verbose",
 			"verbose": true
 		}
-	]
+	],
+	"testPresets": [
+		{
+      "name": "linux-base",
+			"hidden": true,
+      "output": {
+				"outputOnFailure": true,
+				"verbosity": "default"
+			},
+      "execution": {
+				"noTestsAction": "error",
+				"stopOnFailure": true
+			},
+			"condition": {
+				"type": "equals",
+				"lhs": "${hostSystemName}",
+				"rhs": "Linux"
+			}
+    },
+		{
+      "name": "linux-ninja-multi-config-debug",
+			"hidden": false,
+			"displayName": "Debug",
+			"description": "Linux Test preset for Debug build using Ninja Multi-Config generator.",
+      "configurePreset": "linux-ninja-multi-config",
+			"inherits": "linux-base",
+			"configuration": "Debug"
+    },
+		{
+      "name": "linux-ninja-multi-config-release",
+			"hidden": false,
+			"displayName": "Release",
+			"description": "Linux Test preset for Release build using Ninja Multi-Config generator.",
+      "configurePreset": "linux-ninja-multi-config",
+			"inherits": "linux-base",
+			"configuration": "Release"
+    }
+	],
+	"packagePresets": [
+		{
+			"name": "linux-base",
+			"hidden": true,
+			"configurePreset": "linux-base",
+			"condition": {
+				"type": "equals",
+				"lhs": "${hostSystemName}",
+				"rhs": "Linux"
+			},
+			"generators": [
+				"TGZ"
+			]
+		},
+		{
+			"name": "linux-ninja-multi-config-source",
+			"hidden": false,
+			"displayName": "Source",
+			"description": "Linux Package Preset for source files using Ninja Multi-Config generator.",
+			"inherits": "linux-base",
+			"configurePreset": "linux-ninja-multi-config",
+			"configFile": "${sourceDir}/Builds/CPackSourceConfig.cmake"
+		},
+		{
+			"name": "linux-ninja-multi-config-debug",
+			"hidden": false,
+			"displayName": "Build (Debug)",
+			"description": "Linux Package Preset for Debug build using Ninja Multi-Config generator.",
+			"inherits": "linux-base",
+			"configurePreset": "linux-ninja-multi-config",
+			"configFile": "${sourceDir}/Builds/CPackConfig.cmake",
+			"configurations": ["Debug"],
+			"output": {
+				"debug": true,
+				"verbose": true
+			}
+		},
+		{
+			"name": "linux-ninja-multi-config-release",
+			"hidden": false,
+			"displayName": "Build (Release)",
+			"description": "Linux Package Preset for Release build using Ninja Multi-Config generator.",
+			"inherits": "linux-base",
+			"configurePreset": "linux-ninja-multi-config",
+			"configFile": "${sourceDir}/Builds/CPackConfig.cmake",
+			"configurations": ["Release"],
+			"output": {
+				"debug": false
+			}
+		},
+		{
+			"name": "linux-ninja-multi-config-all",
+			"hidden": false,
+			"displayName": "Build (All)",
+			"description": "Linux Package Preset for all build types using Ninja Multi-Config generator.",
+			"inherits": "linux-base",
+			"configurePreset": "linux-ninja-multi-config",
+			"configFile": "${sourceDir}/Builds/CPackConfig.cmake",
+			"configurations": [ "Debug", "Release"]
+		}
+	],
+	"workflowPresets": [
+    {
+      "name": "linux-ninja-multi-config-all",
+			"displayName": "Linux Ninja Multi-Config (All)",
+			"description": "Linux Ninja Multi-Config (All) Workflow preset",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "linux-ninja-multi-config"
+        },
+        {
+          "type": "build",
+          "name": "linux-ninja-multi-config-debug-verbose"
+        },
+        {
+          "type": "test",
+          "name": "linux-ninja-multi-config-debug"
+        },
+        {
+          "type": "build",
+          "name": "linux-ninja-multi-config-release"
+        },
+        {
+          "type": "test",
+          "name": "linux-ninja-multi-config-release"
+        },
+        {
+          "type": "package",
+          "name": "linux-ninja-multi-config-all"
+        },
+        {
+          "type": "package",
+          "name": "linux-ninja-multi-config-source"
+        }
+      ]
+    },
+		{
+      "name": "linux-ninja-multi-config-debug",
+			"displayName": "Linux Ninja Multi-Config (Debug)",
+			"description": "Linux Ninja Multi-Config (Debug) Workflow preset",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "linux-ninja-multi-config"
+        },
+        {
+          "type": "build",
+          "name": "linux-ninja-multi-config-debug-verbose"
+        },
+        {
+          "type": "test",
+          "name": "linux-ninja-multi-config-debug"
+        },
+        {
+          "type": "package",
+          "name": "linux-ninja-multi-config-debug"
+        }
+      ]
+    },
+		{
+      "name": "linux-ninja-multi-config-release",
+			"displayName": "Linux Ninja Multi-Config (Release)",
+			"description": "Linux Ninja Multi-Config (Release) Workflow preset",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "linux-ninja-multi-config"
+        },
+        {
+          "type": "build",
+          "name": "linux-ninja-multi-config-release"
+        },
+        {
+          "type": "test",
+          "name": "linux-ninja-multi-config-release"
+        },
+        {
+          "type": "package",
+          "name": "linux-ninja-multi-config-release"
+        }
+      ]
+    }
+  ]
 }
