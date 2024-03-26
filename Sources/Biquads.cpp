@@ -42,22 +42,22 @@ namespace ProjectInfo
     extern const int          versionNumber  =  0x10203a7;
 }
 
-  /// @} group Biquads
+  /** @} group Biquads */
 } // namespace Biquads
 
-  /// @} group StoneyDSP
+  /** @} group StoneyDSP */
 } // namespace StoneyDSP
 
-// #ifdef STONEYDSP_BIQUADS_MODULE
- #include "Parameters/Parameters.cpp"
- #include "Wrapper/Wrapper.cpp"
- #include "Processor/Processor.cpp"
- #include "Editor/Editor.cpp"
-// #endif
+// // #ifdef STONEYDSP_BIQUADS_MODULE
+//  #include "Parameters/Parameters.cpp"
+//  #include "Wrapper/Wrapper.cpp"
+//  #include "Processor/Processor.cpp"
+//  #include "Editor/Editor.cpp"
+// // #endif
 
 //==============================================================================
 // This creates new instances of the plugin..
 juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
-    return new StoneyDSP::Biquads::AudioPluginAudioProcessor();
+    return new StoneyDSP::Biquads::Processor();
 }

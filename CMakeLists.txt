@@ -21,6 +21,10 @@ cmake_minimum_required (VERSION 3.22...3.29 FATAL_ERROR)
 
 list (APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/share/cmake/Modules")
 
+#[=============================================================================[
+#   Initialize
+#]=============================================================================]
+
 if (NOT DEFINED CMAKE_CONFIGURATION_TYPES)
     set (CMAKE_CONFIGURATION_TYPES "" CACHE STRING "Specifies the available build types (configurations) on multi-config generators." FORCE)
     list (APPEND CMAKE_CONFIGURATION_TYPES "Debug" "Release")
@@ -36,7 +40,9 @@ set_property (CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS ${CMAKE_CONFIGURATION_TYPE
 include (GetGitRevListCount)
 get_git_rev_list_count ()
 
-set(CPACK_PACKAGE_VENDOR "StoneyDSP")
+#[=============================================================================[
+#   Project: STONEYDSP_BIQUADS
+#]=============================================================================]
 
 project (STONEYDSP_BIQUADS
     VERSION 1.2.3.${_git_rev_list_count}
@@ -44,6 +50,8 @@ project (STONEYDSP_BIQUADS
     HOMEPAGE_URL "https://github.com/nathanjhood/Biquads"
     LANGUAGES C;CXX
 )
+
+set(CPACK_PACKAGE_VENDOR "StoneyDSP")
 
 include (StoneyDSPBiquadsWriteVersionFile)
 stoneydsp_biquads_write_version_file ()
@@ -53,6 +61,11 @@ message (STATUS "Configuring StoneyDSP Biquads v${STONEYDSP_BIQUADS_VERSION}..."
 
 set_property(GLOBAL PROPERTY USE_FOLDERS YES)
 set_property(GLOBAL PROPERTY DONT_SET_USING_JUCE_NAMESPACE 1)
+# set_property(GLOBAL PROPERTY JUCE_WEB_BROWSER FALSE)
+
+#[=============================================================================[
+#   Dependency: JUCE >= v7.0.9
+#]=============================================================================]
 
 if (NOT DEFINED JUCE_VERSION)
     message (STATUS "Looking for JUCE...")
@@ -62,15 +75,86 @@ if (NOT DEFINED JUCE_VERSION)
     message (STATUS "  Found JUCE v${JUCE_VERSION}...")
 endif ()
 
-option (STONEYDSP_BIQUADS_BUILD_TESTS "Collect Tracktion Pluginval and configure with CTest (requires <CURL> and <7ZIP>)." ON)
-option (STONEYDSP_BIQUADS_TARGET_IS_INSTALLABLE "" OFF)
-option (STONEYDSP_BIQUADS_USING_JUCE_RECOMMENDED_CONFIG_FLAGS "Link with juce::juce_recommended_config_flags." ON)
-option (STONEYDSP_BIQUADS_USING_JUCE_RECOMMENDED_LTO_FLAGS "Link with juce::juce_recommended_lto_flags." ON)
-option (STONEYDSP_BIQUADS_USING_JUCE_RECOMMENDED_WARNING_FLAGS "Link with juce::juce_recommended_warning_flags." ON)
+#[=============================================================================[
+#   Options
+#]=============================================================================]
+
+include (CMakeDependentOption)
+
+cmake_dependent_option  (STONEYDSP_BIQUADS_BUILD_TESTS                          "Collect Tracktion Pluginval and configure with CTest (requires <CURL> and <7ZIP>)." ON STONEYDSP_BIQUADS_IS_TOP_LEVEL OFF)
+option                  (STONEYDSP_BIQUADS_GENERATE_JUCE_HEADER                 "Generate a 'JuceHeader.h' file for inclusion. Available by default on all platforms." ON)
+option                  (STONEYDSP_BIQUADS_COPY_PLUGIN_AFTER_BUILD              "Copy the built plugin formats specified above to their relevant directories, once the build is complete. Available by default on all platforms. (May require elevated privileges to run.)" OFF)
+option                  (STONEYDSP_BIQUADS_USING_JUCE_RECOMMENDED_CONFIG_FLAGS  "Link with juce::juce_recommended_config_flags. Available by default on all platforms."    ON)
+option                  (STONEYDSP_BIQUADS_USING_JUCE_RECOMMENDED_LTO_FLAGS     "Link with juce::juce_recommended_lto_flags. Available by default on all platforms."       ON)
+option                  (STONEYDSP_BIQUADS_USING_JUCE_RECOMMENDED_WARNING_FLAGS "Link with juce::juce_recommended_warning_flags. Available by default on all platforms."   ON)
+
+if (NOT DEFINED STONEYDSP_BIQUADS_BUILD_FORMATS)
+
+    set (STONEYDSP_BIQUADS_BUILD_FORMATS "")
+
+    option                  (STONEYDSP_BIQUADS_BUILD_STANDALONE "" ON)
+    cmake_dependent_option  (STONEYDSP_BIQUADS_BUILD_VST2       "" OFF  STONEYDSP_BIQUADS_VST2_SDK_PATH OFF)
+    option                  (STONEYDSP_BIQUADS_BUILD_VST3       "" ON)
+    cmake_dependent_option  (STONEYDSP_BIQUADS_BUILD_AAX        "" OFF  STONEYDSP_BIQUADS_AAX_SDK_PATH  OFF)
+    cmake_dependent_option  (STONEYDSP_BIQUADS_BUILD_AU         "" ON   DARWIN                          ON)
+    cmake_dependent_option  (STONEYDSP_BIQUADS_BUILD_AUV3       "" ON   DARWIN                          OFF)
+    cmake_dependent_option  (STONEYDSP_BIQUADS_BUILD_LV2        "" OFF  UNIX                            OFF)
+
+    if (STONEYDSP_BIQUADS_BUILD_STANDALONE)
+        list (APPEND STONEYDSP_BIQUADS_BUILD_FORMATS "Standalone")
+    endif ()
+
+    if (STONEYDSP_BIQUADS_BUILD_VST2) # requires <STONEYDSP_BIQUADS_VST2_SDK_PATH>
+        list (APPEND STONEYDSP_BIQUADS_BUILD_FORMATS "VST2")
+    endif ()
+
+    if (STONEYDSP_BIQUADS_BUILD_VST3)
+        list (APPEND STONEYDSP_BIQUADS_BUILD_FORMATS "VST3")
+    endif ()
+
+    if (STONEYDSP_BIQUADS_BUILD_AAX) # requires <STONEYDSP_BIQUADS_AAX_SDK_PATH>
+        list (APPEND STONEYDSP_BIQUADS_BUILD_FORMATS "AAX")
+    endif ()
+
+    if (STONEYDSP_BIQUADS_BUILD_AU) # requires <DARWIN:TRUE>
+        list (APPEND STONEYDSP_BIQUADS_BUILD_FORMATS "AU")
+    endif ()
+
+    if (STONEYDSP_BIQUADS_BUILD_AU) # requires <DARWIN:TRUE>
+        list (APPEND STONEYDSP_BIQUADS_BUILD_FORMATS "AUv3")
+    endif ()
+
+    if (STONEYDSP_BIQUADS_BUILD_LV2) # requires <UNIX:TRUE>
+        list (APPEND STONEYDSP_BIQUADS_BUILD_FORMATS "lv2")
+    endif ()
+
+    set (STONEYDSP_BIQUADS_BUILD_FORMATS "${STONEYDSP_BIQUADS_BUILD_FORMATS}" CACHE STRING "Formats to build." FORCE)
+
+endif () # STONEYDSP_BIQUADS_BUILD_FORMATS
+
+cmake_dependent_option (STONEYDSP_BIQUADS_VST3_AUTO_MANIFEST "" ON STONEYDSP_BIQUADS_BUILD_VST3 OFF)
+
+# These must be absolute paths. Maybe get_gilename_component on them...
+if (DEFINED STONEYDSP_BIQUADS_AAX_SDK_PATH)
+    set (STONEYDSP_BIQUADS_AAX_SDK_PATH "${STONEYDSP_BIQUADS_AAX_SDK_PATH}" CACHE PATH "" FORCE)
+    juce_set_aax_sdk_path   ("${STONEYDSP_BIQUADS_AAX_SDK_PATH}")
+endif ()
+if (DEFINED STONEYDSP_BIQUADS_VST2_SDK_PATH)
+    set (STONEYDSP_BIQUADS_VST2_SDK_PATH "${STONEYDSP_BIQUADS_VST2_SDK_PATH}" CACHE PATH "" FORCE)
+    juce_set_vst2_sdk_path  ("${STONEYDSP_BIQUADS_VST2_SDK_PATH}")
+endif ()
+if (DEFINED STONEYDSP_BIQUADS_VST3_SDK_PATH)
+    set (STONEYDSP_BIQUADS_VST3_SDK_PATH "${STONEYDSP_BIQUADS_VST3_SDK_PATH}" CACHE PATH "" FORCE)
+    juce_set_vst3_sdk_path   ("${STONEYDSP_BIQUADS_VST3_SDK_PATH}")
+endif ()
+if (DEFINED STONEYDSP_BIQUADS_ARA_SDK_PATH)
+    set (STONEYDSP_BIQUADS_ARA_SDK_PATH "${STONEYDSP_BIQUADS_ARA_SDK_PATH}" CACHE PATH "" FORCE)
+    juce_set_ara_sdk_path  ("${STONEYDSP_BIQUADS_ARA_SDK_PATH}")
+endif ()
 
 #[=============================================================================[
-#   target: StoneyDSP::stoneydsp_core
-#   target: StoneyDSP::stoneydsp_audio
+#   Dependency: StoneyDSP::stoneydsp_core
+#   Dependency: StoneyDSP::stoneydsp_audio
 #]=============================================================================]
 
 # find_package (StoneyDSP CONFIG REQUIRED)
@@ -78,7 +162,7 @@ option (STONEYDSP_BIQUADS_USING_JUCE_RECOMMENDED_WARNING_FLAGS "Link with juce::
 add_subdirectory (Modules)
 
 #[=============================================================================[
-#   target: StoneyDSP::Biquads_Audio_Plugin_Dependencies
+#   Configuration
 #]=============================================================================]
 
 set_directory_properties (PROPERTIES
@@ -99,110 +183,114 @@ set_directory_properties (PROPERTIES
 set (STONEYDSP_BIQUADS_INCLUDEDIR "")
 set (STONEYDSP_BIQUADS_INCLUDEDIR "${STONEYDSP_BIQUADS_BINARY_DIR}/Sources") # dont CACHE FORCE this yet, it will change again soon...
 
-set (STONEYDSP_BIQUADS_FILE_EXTENSIONS "")
-list (APPEND STONEYDSP_BIQUADS_FILE_EXTENSIONS "hpp" "cpp" "mm")
-
-set (STONEYDSP_BIQUADS_UNIT             "Biquads")
-set (STONEYDSP_BIQUADS_UNIT_EDITOR      "Editor")
-set (STONEYDSP_BIQUADS_UNIT_PARAMETERS  "Parameters")
-set (STONEYDSP_BIQUADS_UNIT_PROCESSOR   "Processor")
-set (STONEYDSP_BIQUADS_UNIT_WRAPPER     "Wrapper")
-
 set (STONEYDSP_BIQUADS_UNIT_FILES "")
 list (APPEND STONEYDSP_BIQUADS_UNIT_FILES
-    # "${STONEYDSP_BIQUADS_UNIT}"
-    "${STONEYDSP_BIQUADS_UNIT_EDITOR}"
-    "${STONEYDSP_BIQUADS_UNIT_PARAMETERS}"
-    "${STONEYDSP_BIQUADS_UNIT_PROCESSOR}"
-    "${STONEYDSP_BIQUADS_UNIT_WRAPPER}"
+    "Parameters"
+    # "Wrapper"
+    # "Editor"
+    "Processor"
 )
+
+set (STONEYDSP_BIQUADS_UNIT_FILE_EXTENSIONS "")
+list (APPEND STONEYDSP_BIQUADS_UNIT_FILE_EXTENSIONS
+    "hpp"
+    "cpp"
+    "mm"
+)
+
+include (StoneyDSPBiquadsHelpers)
+
+#[=============================================================================[
+#   target: StoneyDSP::Biquads::Parameters
+#   target: StoneyDSP::Biquads::Wrapper
+#   target: StoneyDSP::Biquads::Editor
+#   target: StoneyDSP::Biquads::Processor
+#]=============================================================================]
+
 foreach (STONEYDSP_BIQUADS_UNIT_FILE IN LISTS STONEYDSP_BIQUADS_UNIT_FILES)
-    foreach (STONEYDSP_BIQUADS_FILE_EXTENSION IN LISTS STONEYDSP_BIQUADS_FILE_EXTENSIONS)
-        configure_file (
-            "Sources/${STONEYDSP_BIQUADS_UNIT_FILE}/${STONEYDSP_BIQUADS_UNIT_FILE}.${STONEYDSP_BIQUADS_FILE_EXTENSION}" # SRC_DIR
-            "Biquads_Audio_Plugin_artefacts/Sources/${STONEYDSP_BIQUADS_UNIT_FILE}/${STONEYDSP_BIQUADS_UNIT_FILE}.${STONEYDSP_BIQUADS_FILE_EXTENSION}" # BIN_DIR
-        )
-    endforeach ()
-endforeach()
 
-set (STONEYDSP_BIQUADS_EXPORT_TARGETS "")
+    stoneydsp_biquads_add_unit (${STONEYDSP_BIQUADS_UNIT_FILE}
 
-foreach (STONEYDSP_BIQUADS_UNIT_FILE IN LISTS STONEYDSP_BIQUADS_UNIT_FILES)
+        NAMESPACE StoneyDSP::Biquads
+        VERSION "${STONEYDSP_BIQUADS_VERSION_MAJOR}.${STONEYDSP_BIQUADS_VERSION_MINOR}.${STONEYDSP_BIQUADS_VERSION_PATCH}"
+        SOVERSION "${STONEYDSP_BIQUADS_VERSION_MAJOR}"
 
-    add_library (${STONEYDSP_BIQUADS_UNIT_FILE} INTERFACE)
-    add_library (StoneyDSP::Biquads::${STONEYDSP_BIQUADS_UNIT_FILE} ALIAS ${STONEYDSP_BIQUADS_UNIT_FILE})
-
-    source_group (${STONEYDSP_BIQUADS_UNIT_FILE}
-        FILES
-            "${STONEYDSP_BIQUADS_BINARY_DIR}/Biquads_Audio_Plugin_artefacts/Sources/${STONEYDSP_BIQUADS_UNIT_FILE}/${STONEYDSP_BIQUADS_UNIT_FILE}.hpp"
-            "${STONEYDSP_BIQUADS_BINARY_DIR}/Biquads_Audio_Plugin_artefacts/Sources/${STONEYDSP_BIQUADS_UNIT_FILE}/${STONEYDSP_BIQUADS_UNIT_FILE}.cpp"
-            "${STONEYDSP_BIQUADS_BINARY_DIR}/Biquads_Audio_Plugin_artefacts/Sources/${STONEYDSP_BIQUADS_UNIT_FILE}/${STONEYDSP_BIQUADS_UNIT_FILE}.mm"
+        SOURCE_INTERFACE    "Sources/${STONEYDSP_BIQUADS_UNIT_FILE}"
+        BUILD_INTERFACE     "Sources/${STONEYDSP_BIQUADS_UNIT_FILE}"
+        INSTALL_INTERFACE   "include/StoneyDSP/Biquads/${STONEYDSP_BIQUADS_UNIT_FILE}"
     )
 
-    target_include_directories (${STONEYDSP_BIQUADS_UNIT_FILE}
-        INTERFACE
-            $<BUILD_INTERFACE:${STONEYDSP_BIQUADS_BINARY_DIR}/Biquads_Audio_Plugin_artefacts/Sources>
-            $<INSTALL_INTERFACE:include/StoneyDSP/Biquads>
-    )
-
-    if (CMAKE_MAJOR_VERSION GREATER_EQUAL 3 AND (CMAKE_MINOR_VERSION LESS 23))
-
-        target_include_directories (${STONEYDSP_BIQUADS_UNIT_FILE}
-            INTERFACE
-                $<BUILD_INTERFACE:${STONEYDSP_BIQUADS_BINARY_DIR}/Biquads_Audio_Plugin_artefacts/Sources/${STONEYDSP_BIQUADS_UNIT_FILE}>
-                $<INSTALL_INTERFACE:include/StoneyDSP/Biquads/${STONEYDSP_BIQUADS_UNIT_FILE}>
-        )
-
-    else ()
-
-        target_sources (${STONEYDSP_BIQUADS_UNIT_FILE}
-            INTERFACE
-                FILE_SET biquads_${STONEYDSP_BIQUADS_UNIT_FILE}_HEADERS
-                TYPE HEADERS
-                BASE_DIRS
-                    $<BUILD_INTERFACE:${STONEYDSP_BIQUADS_BINARY_DIR}/Biquads_Audio_Plugin_artefacts/Sources/${STONEYDSP_BIQUADS_UNIT_FILE}>
-                    $<INSTALL_INTERFACE:include/StoneyDSP/Biquads/${STONEYDSP_BIQUADS_UNIT_FILE}>
-                FILES
-                    $<BUILD_INTERFACE:${STONEYDSP_BIQUADS_BINARY_DIR}/Biquads_Audio_Plugin_artefacts/Sources/${STONEYDSP_BIQUADS_UNIT_FILE}/${STONEYDSP_BIQUADS_UNIT_FILE}.hpp>
-                    $<INSTALL_INTERFACE:include/StoneyDSP/Biquads/${STONEYDSP_BIQUADS_UNIT_FILE}/${STONEYDSP_BIQUADS_UNIT_FILE}.hpp>
-        )
-
-    endif()
-
-    # if (STONEYDSP_BIQUADS_MODULE)
-    target_sources (${STONEYDSP_BIQUADS_UNIT_FILE}
-        INTERFACE
-            $<BUILD_INTERFACE:${STONEYDSP_BIQUADS_BINARY_DIR}/Biquads_Audio_Plugin_artefacts/Sources/${STONEYDSP_BIQUADS_UNIT_FILE}/${STONEYDSP_BIQUADS_UNIT_FILE}.mm>
-            $<INSTALL_INTERFACE:include/StoneyDSP/Biquads/${STONEYDSP_BIQUADS_UNIT_FILE}/${STONEYDSP_BIQUADS_UNIT_FILE}.mm>
-    )
-    # endif ()
-
-    target_sources (${STONEYDSP_BIQUADS_UNIT_FILE}
-        INTERFACE
-            $<BUILD_INTERFACE:${STONEYDSP_BIQUADS_BINARY_DIR}/Biquads_Audio_Plugin_artefacts/Sources/${STONEYDSP_BIQUADS_UNIT_FILE}/${STONEYDSP_BIQUADS_UNIT_FILE}.cpp>
-            $<INSTALL_INTERFACE:include/StoneyDSP/Biquads/${STONEYDSP_BIQUADS_UNIT_FILE}/${STONEYDSP_BIQUADS_UNIT_FILE}.cpp>
-    )
-
-    list (APPEND STONEYDSP_BIQUADS_EXPORT_TARGETS ${STONEYDSP_BIQUADS_UNIT_FILE})
+    list (APPEND STONEYDSP_BIQUADS_EXPORT_TARGETS ${STONEYDSP_BIQUADS_UNIT_FILE}_INTERFACE)
 
 endforeach ()
 
-target_link_libraries (Wrapper INTERFACE StoneyDSP::Biquads::Parameters)
+# target_link_libraries (Wrapper_INTERFACE
+#     INTERFACE
+#         StoneyDSP::Biquads::Parameters_INTERFACE
+# )
 
-target_link_libraries (Processor INTERFACE StoneyDSP::Biquads::Wrapper StoneyDSP::Biquads::Parameters StoneyDSP::Biquads::Editor)
+# target_link_libraries (Processor_INTERFACE
+#     INTERFACE
+#         StoneyDSP::Biquads::Wrapper_INTERFACE
+#         StoneyDSP::Biquads::Parameters_INTERFACE
+#         StoneyDSP::Biquads::Editor_INTERFACE
+# )
 
-unset (STONEYDSP_BIQUADS_INCLUDEDIR)
-set (STONEYDSP_BIQUADS_INCLUDEDIR
-    $<BUILD_INTERFACE:${STONEYDSP_BIQUADS_BINARY_DIR}/Biquads_Audio_Plugin_artefacts/Sources>
-    $<INSTALL_INTERFACE:include/StoneyDSP/Biquads>
+target_link_libraries (Parameters_JUCE_DEPENDENCIES
+    INTERFACE
+        juce::juce_audio_basics # depends: juce_core
+        juce::juce_audio_processors # depends: juce_gui_extra, juce_audio_basics
+        juce::juce_core
+        juce::juce_data_structures # depends: juce_events
+        juce::juce_events # depends: juce_core
+        juce::juce_graphics # depends: juce_events
+        juce::juce_gui_basics # depends: juce_graphics, juce_data_structures
+        juce::juce_gui_extra # depends: juce_gui_basics
 )
 
+target_link_libraries (Processor_JUCE_DEPENDENCIES
+    INTERFACE
+        juce::juce_audio_basics # depends: juce_core
+        juce::juce_audio_formats # depends: juce_audio_basics
+        juce::juce_audio_processors # depends: juce_gui_extra, juce_audio_basics
+        juce::juce_core
+        juce::juce_data_structures # depends: juce_events
+        juce::juce_dsp # depends: juce_audio_formats
+        juce::juce_events # depends: juce_core
+        juce::juce_graphics # depends: juce_events
+        juce::juce_gui_basics # depends: juce_graphics, juce_data_structures
+        juce::juce_gui_extra # depends: juce_gui_basics
+)
+
+# Pretend this is a plugin... we want to see all link/include lines resolved,
+# but only one copy of each object - *and* the required JUCE modules - being built.
+# I wrapped this away because I may have to tweak the implementation further to
+# make the components compatible with CMake's install interface, which requires
+# tricky workarounds because of JUCE's CMake implementation...
+# Later, this might become a useful framework for unit tests and stuff.
+add_library (test SHARED)
+add_library (StoneyDSP::Biquads::test ALIAS test)
+
+target_link_libraries (test
+    PRIVATE
+        StoneyDSP::Biquads::Parameters_OBJECT
+        StoneyDSP::Biquads::Processor_OBJECT
+)
+
+return ()
+
+#[=============================================================================[
+#   target: StoneyDSP::Biquads_Audio_Plugin
+#]=============================================================================]
+
 juce_add_plugin (Biquads_Audio_Plugin
-    # VERSION ...                               # Set this if the plugin version is different to the project version
-    # ICON_BIG ...                              # ICON_* arguments specify a path to an image file to use as an icon for the Standalone
+    # VERSION ...                                                               # Set this if the plugin version is different to the project version
+    # ICON_BIG ...                                                              # ICON_* arguments specify a path to an image file to use as an icon for the Standalone
     # ICON_SMALL ...
 
-    VST3_AUTO_MANIFEST FALSE
+    VST3_AUTO_MANIFEST FALSE # (see 'Helpers' section below)                    # May be either TRUE or FALSE (defaults to TRUE). When TRUE, a POST_BUILD step will be added to the VST3 target which will generate a moduleinfo.json file into the Resources subdirectory of the plugin bundle. This is normally desirable, but does require that the plugin can be successfully loaded immediately after building the VST3 target. If the plugin needs further processing before it can be loaded (e.g. custom signing), then set this option to FALSE to disable the automatic manifest generation. To generate the manifest at a later point in the build, use the juce_enable_vst3_manifest_step function. It is strongly recommended to generate a manifest for your plugin, as this allows compatible hosts to scan the plugin much more quickly, leading to an improved experience for users.
+    COPY_PLUGIN_AFTER_BUILD FALSE # (see 'Helpers' section below)               # Should the plugin be installed to a default location after building?
+
     BUNDLE_ID "com.StoneyDSP.Biquads"
 
     MICROPHONE_PERMISSION_ENABLED FALSE
@@ -212,24 +300,25 @@ juce_add_plugin (Biquads_Audio_Plugin
     VST2_CATEGORY "kPlugCategEffect"
     VST3_CATEGORIES "Fx" "EQ"
 
-    IS_SYNTH FALSE                              # Is this a synth or an effect?
-    NEEDS_MIDI_INPUT FALSE                      # Does the plugin need midi input?
-    NEEDS_MIDI_OUTPUT FALSE                     # Does the plugin need midi output?
-    IS_MIDI_EFFECT FALSE                        # Is this plugin a MIDI effect?
-    EDITOR_WANTS_KEYBOARD_FOCUS FALSE           # Does the editor need keyboard focus?
-    COPY_PLUGIN_AFTER_BUILD FALSE               # Should the plugin be installed to a default location after building?
-    PLUGIN_MANUFACTURER_CODE Manu               # A four-character manufacturer id with at least one upper-case character
-    PLUGIN_CODE Jer3                            # A unique four-character plugin id with exactly one upper-case character
-                                                # GarageBand 10.3 requires the first letter to be upper-case, and the remaining letters to be lower-case
-    FORMATS AU VST3 Standalone                  # The formats to build. Other valid formats are: AAX Unity VST AU AUv3
+    IS_MIDI_EFFECT FALSE                                                        # Is this plugin a MIDI effect?
+    IS_SYNTH FALSE                                                              # Is this a synth or an effect?
+    NEEDS_MIDI_INPUT FALSE                                                      # Does the plugin need midi input?
+    NEEDS_MIDI_OUTPUT FALSE                                                     # Does the plugin need midi output?
+    NEEDS_CURL FALSE
+    NEEDS_WEB_BROWSER FALSE
+    EDITOR_WANTS_KEYBOARD_FOCUS FALSE                                           # Does the editor need keyboard focus?
 
-    PRODUCT_NAME "Biquads"                      # The name of the final executable, which can differ from the target name
-    COMPANY_NAME "StoneyDSP"                    # Specify the name of the plugin's author
+    PLUGIN_MANUFACTURER_CODE Manu                                               # A four-character manufacturer id with at least one upper-case character
+    PLUGIN_CODE Jer3                                                            # A unique four-character plugin id with exactly one upper-case character
+                                                                                # GarageBand 10.3 requires the first letter to be upper-case, and the remaining letters to be lower-case
+    FORMATS ${STONEYDSP_BIQUADS_BUILD_FORMATS}                                  # The formats to build. Other valid formats are: AAX Unity VST AU AUv3
+
+    PRODUCT_NAME "Biquads"                                                      # The name of the final executable, which can differ from the target name
+    COMPANY_NAME "StoneyDSP"                                                    # Specify the name of the plugin's author
     COMPANY_WEBSITE "https://stoneydsp.com"
     COMPANY_EMAIL "nathanjhood@googlemail.com"
     COMPANY_COPYRIGHT "Copyright (c) 2024 - Nathan J. Hood <nathanjhood@googlemail.com>"
 
-    # COPY_PLUGIN_AFTER_BUILD
     # VST_COPY_DIR
     # VST3_COPY_DIR
     # AAX_COPY_DIR
@@ -308,69 +397,34 @@ else ()
     target_sources (Biquads_Audio_Plugin
 
         PUBLIC
-            FILE_SET biquads_AUDIO_PLUGIN_HEADERS
+            FILE_SET biquads_AUDIO_PLUGIN_INTERFACE_HEADERS
             TYPE HEADERS
             BASE_DIRS
                 $<BUILD_INTERFACE:${STONEYDSP_BIQUADS_BINARY_DIR}/Biquads_Audio_Plugin_artefacts/Sources>
                 $<INSTALL_INTERFACE:include/StoneyDSP>
             FILES
-                $<BUILD_INTERFACE:${STONEYDSP_BIQUADS_BINARY_DIR}/Biquads_Audio_Plugin_artefacts/Sources/${STONEYDSP_BIQUADS_UNIT}.hpp>
-                $<INSTALL_INTERFACE:include/StoneyDSP/${STONEYDSP_BIQUADS_UNIT}.hpp>
+                $<BUILD_INTERFACE:${STONEYDSP_BIQUADS_BINARY_DIR}/Biquads_Audio_Plugin_artefacts/Sources/Biquads.hpp>
+                $<INSTALL_INTERFACE:include/StoneyDSP/Biquads.hpp>
     )
 endif()
 
 target_sources (Biquads_Audio_Plugin
     PRIVATE
-        $<BUILD_INTERFACE:${STONEYDSP_BIQUADS_BINARY_DIR}/Biquads_Audio_Plugin_artefacts/Sources/${STONEYDSP_BIQUADS_UNIT}.cpp>
-        $<INSTALL_INTERFACE:include/StoneyDSP/${STONEYDSP_BIQUADS_UNIT}.cpp>
+        $<BUILD_INTERFACE:${STONEYDSP_BIQUADS_BINARY_DIR}/Biquads_Audio_Plugin_artefacts/Sources/Biquads.cpp>
+        $<INSTALL_INTERFACE:include/StoneyDSP/Biquads.cpp>
 )
 
-
-
-# if (CMAKE_MAJOR_VERSION GREATER_EQUAL 3 AND (CMAKE_MINOR_VERSION LESS 23))
-
-#     target_include_directories (Biquads_Audio_Plugin
-#         PUBLIC
-#             $<BUILD_INTERFACE:${STONEYDSP_BIQUADS_BINARY_DIR}/Sources>
-#             $<INSTALL_INTERFACE:include/StoneyDSP/Biquads>
-#     )
-
-# else ()
-
-#     target_sources (Biquads_Audio_Plugin
-
-#         PUBLIC
-#             FILE_SET biquads_AUDIO_PLUGIN_HEADERS
-#             TYPE HEADERS
-#             BASE_DIRS
-#                 $<BUILD_INTERFACE:${STONEYDSP_BIQUADS_BINARY_DIR}/Sources>
-#                 $<INSTALL_INTERFACE:include/StoneyDSP/Biquads>
-#             FILES
-#                 $<BUILD_INTERFACE:${STONEYDSP_BIQUADS_BINARY_DIR}/Sources/${STONEYDSP_BIQUADS_UNIT_PARAMETERS}.hpp>
-#                 $<INSTALL_INTERFACE:include/StoneyDSP/Biquads/${STONEYDSP_BIQUADS_UNIT_PARAMETERS}.hpp>
-
-#                 $<BUILD_INTERFACE:${STONEYDSP_BIQUADS_BINARY_DIR}/Sources/${STONEYDSP_BIQUADS_UNIT_WRAPPER}.hpp>
-#                 $<INSTALL_INTERFACE:include/StoneyDSP/Biquads/${STONEYDSP_BIQUADS_UNIT_WRAPPER}.hpp>
-
-#                 $<BUILD_INTERFACE:${STONEYDSP_BIQUADS_BINARY_DIR}/Sources/${STONEYDSP_BIQUADS_UNIT_PROCESSOR}.hpp>
-#                 $<INSTALL_INTERFACE:include/StoneyDSP/Biquads/${STONEYDSP_BIQUADS_UNIT_PROCESSOR}.hpp>
-
-#                 $<BUILD_INTERFACE:${STONEYDSP_BIQUADS_BINARY_DIR}/Sources/${STONEYDSP_BIQUADS_UNIT_EDITOR}.hpp>
-#                 $<INSTALL_INTERFACE:include/StoneyDSP/Biquads/${STONEYDSP_BIQUADS_UNIT_EDITOR}.hpp>
-
-#                 $<BUILD_INTERFACE:${STONEYDSP_BIQUADS_BINARY_DIR}/Sources/${STONEYDSP_BIQUADS_UNIT}.hpp>
-#                 $<INSTALL_INTERFACE:include/StoneyDSP/Biquads/${STONEYDSP_BIQUADS_UNIT}.hpp>
-#     )
-# endif()
-
-# target_sources (Biquads_Audio_Plugin
-#     PRIVATE
-#         "Sources/${STONEYDSP_BIQUADS_UNIT_PARAMETERS}.cpp"
-#         "Sources/${STONEYDSP_BIQUADS_UNIT_WRAPPER}.cpp"
-#         "Sources/${STONEYDSP_BIQUADS_UNIT_PROCESSOR}.cpp"
-#         "Sources/${STONEYDSP_BIQUADS_UNIT_EDITOR}.cpp"
-#         "Sources/${STONEYDSP_BIQUADS_UNIT}.cpp"
-# )
+target_link_libraries (Biquads_Audio_Plugin
+    PRIVATE
+        # StoneyDSP::Biquads::Parameters
+        # StoneyDSP::Biquads::Wrapper
+        # StoneyDSP::Biquads::Editor
+        # StoneyDSP::Biquads::Processor
+        $<TARGET_OBJECTS:Parameters_OBJECT>
+        $<TARGET_OBJECTS:Processor_OBJECT>
+        $<TARGET_OBJECTS:Wrapper_OBJECT>
+        $<TARGET_OBJECTS:Editor_OBJECT>
+)
 
 set (STONEYDSP_BIQUADS_JUCE_FLAGS "")
 if (STONEYDSP_BIQUADS_USING_JUCE_RECOMMENDED_CONFIG_FLAGS)
@@ -399,38 +453,20 @@ target_compile_definitions (Biquads_Audio_Plugin
 )
 
 #[=============================================================================[
-#   target: StoneyDSP::Biquads_Audio_Plugin
-#]=============================================================================]
-
-# juce_add_modules(
-#     ALIAS_NAMESPACE StoneyDSP::Biquads
-#     INSTALL_PATH "include/StoneyDSP/Biquads"
-#     "${STONEYDSP_BIQUADS_SOURCE_DIR}/include/Biquads/Parameters"
-#     "${STONEYDSP_BIQUADS_SOURCE_DIR}/include/Biquads/Wrapper"
-#     "${STONEYDSP_BIQUADS_SOURCE_DIR}/include/Biquads/Editor"
-#     "${STONEYDSP_BIQUADS_SOURCE_DIR}/include/Biquads/Processor"
-# )
-
-
-# target_link_libraries (Biquads_Audio_Plugin
-#     PRIVATE
-        # StoneyDSP::Biquads_Audio_Plugin_Dependencies # MUST be PRIVATE!
-        # StoneyDSP::Biquads::Parameters
-        # StoneyDSP::Biquads::Wrapper
-        # StoneyDSP::Biquads::Editor
-        # StoneyDSP::Biquads::Processor
-    #     StoneyDSP::Biquads_Audio_Plugin_Library
-    # INTERFACE
-    #     StoneyDSP::Biquads_Audio_Plugin_Interface # MUST be INTERFACE!
-# )
-
-#[=============================================================================[
 #   Helpers
 #]=============================================================================]
 
-juce_generate_juce_header       (Biquads_Audio_Plugin)
+if (STONEYDSP_BIQUADS_GENERATE_JUCE_HEADER)
+    juce_generate_juce_header       (Biquads_Audio_Plugin)
+endif ()
 
-juce_enable_vst3_manifest_step  (Biquads_Audio_Plugin)
+if (STONEYDSP_BIQUADS_VST3_AUTO_MANIFEST)
+    juce_enable_vst3_manifest_step  (Biquads_Audio_Plugin)
+endif ()
+
+if (STONEYDSP_BIQUADS_COPY_PLUGIN_AFTER_BUILD)
+    juce_enable_copy_plugin_step    (Biquads_Audio_Plugin)
+endif ()
 
 #[=============================================================================[
 #   CTest configuration
@@ -445,39 +481,49 @@ endif ()
 #   Export configuration
 #]=============================================================================]
 
+unset (STONEYDSP_BIQUADS_INCLUDEDIR)
+set (STONEYDSP_BIQUADS_INCLUDEDIR
+    $<BUILD_INTERFACE:${STONEYDSP_BIQUADS_BINARY_DIR}/Biquads_Audio_Plugin_artefacts/Sources>
+    $<INSTALL_INTERFACE:include/StoneyDSP/Biquads>
+)
+
 export (
     TARGETS ${STONEYDSP_BIQUADS_EXPORT_TARGETS}
     NAMESPACE StoneyDSP::Biquads::
     FILE StoneyDSPBiquadsTargets.cmake
 )
 
-foreach (STONEYDSP_BIQUADS_EXPORT_TARGET IN LISTS STONEYDSP_BIQUADS_EXPORT_TARGETS)
-    if (CMAKE_MAJOR_VERSION GREATER_EQUAL 3 AND (CMAKE_MINOR_VERSION LESS 23))
-        install (TARGETS ${STONEYDSP_BIQUADS_EXPORT_TARGET}
-            EXPORT StoneyDSPBiquadsTargets
-            LIBRARY DESTINATION  "${CMAKE_INSTALL_LIBDIR}"
-            ARCHIVE DESTINATION  "${CMAKE_INSTALL_LIBDIR}"
-            RUNTIME DESTINATION  "${CMAKE_INSTALL_BINDIR}"
-            INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/StoneyDSP/Biquads"
-            PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/StoneyDSP/Biquads/${STONEYDSP_BIQUADS_EXPORT_TARGET}"
-        )
-    else ()
-        install (TARGETS ${STONEYDSP_BIQUADS_EXPORT_TARGET}
-            EXPORT StoneyDSPBiquadsTargets
-            LIBRARY DESTINATION  "${CMAKE_INSTALL_LIBDIR}"
-            ARCHIVE DESTINATION  "${CMAKE_INSTALL_LIBDIR}"
-            RUNTIME DESTINATION  "${CMAKE_INSTALL_BINDIR}"
-            INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/StoneyDSP/Biquads"
-            FILE_SET biquads_${STONEYDSP_BIQUADS_EXPORT_TARGET}_HEADERS
-        )
-    endif ()
-endforeach ()
+if (CMAKE_MAJOR_VERSION GREATER_EQUAL 3 AND (CMAKE_MINOR_VERSION GREATER_EQUAL 23))
+    install (TARGETS ${STONEYDSP_BIQUADS_EXPORT_TARGETS}
+        EXPORT StoneyDSPBiquadsTargets
+        LIBRARY DESTINATION  "${CMAKE_INSTALL_LIBDIR}"
+        ARCHIVE DESTINATION  "${CMAKE_INSTALL_LIBDIR}"
+        RUNTIME DESTINATION  "${CMAKE_INSTALL_BINDIR}"
+        INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/StoneyDSP/Biquads"
+
+        FILE_SET biquads_Wrapper_INTERFACE_HEADERS DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/StoneyDSP/Biquads/Wrapper"
+        FILE_SET biquads_Parameters_INTERFACE_HEADERS DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/StoneyDSP/Biquads/Parameters"
+        FILE_SET biquads_Editor_INTERFACE_HEADERS DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/StoneyDSP/Biquads/Editor"
+        FILE_SET biquads_Processor_INTERFACE_HEADERS DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/StoneyDSP/Biquads/Processor"
+    )
+else ()
+    install (TARGETS ${STONEYDSP_BIQUADS_EXPORT_TARGETS}
+        EXPORT StoneyDSPBiquadsTargets
+        LIBRARY DESTINATION  "${CMAKE_INSTALL_LIBDIR}"
+        ARCHIVE DESTINATION  "${CMAKE_INSTALL_LIBDIR}"
+        RUNTIME DESTINATION  "${CMAKE_INSTALL_BINDIR}"
+        INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/StoneyDSP/Biquads"
+
+        PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/StoneyDSP/Biquads" # hmmm... not right.
+    )
+endif ()
 
 install(
   EXPORT StoneyDSPBiquadsTargets
   FILE StoneyDSPBiquadsTargets.cmake
   NAMESPACE StoneyDSP::Biquads::
   DESTINATION "lib/cmake/StoneyDSP/Biquads"
+  EXPORT_LINK_INTERFACE_LIBRARIES
 )
 
 #[=============================================================================[
@@ -502,26 +548,11 @@ set(STONEYDSP_BIQUADS_INCLUDEDIR       ${CMAKE_INSTALL_INCLUDEDIR} CACHE PATH "I
 
 set(STONEYDSP_BIQUADS_INSTALL_CMAKEDIR "${STONEYDSP_BIQUADS_INSTALL_LIBDIR}/cmake/StoneyDSP/Biquads" CACHE STRING "The location, relative to the install prefix, where the StoneyDSP Biquads config file will be installed")
 
-# foreach (STONEYDSP_BIQUADS_UNIT_FILE IN LISTS STONEYDSP_BIQUADS_UNIT_FILES)
-#     install(FILES
-#         "${STONEYDSP_BIQUADS_BINARY_DIR}/include/StoneyDSP/Biquads/${STONEYDSP_BIQUADS_UNIT_FILE}.hpp"
-#         "${STONEYDSP_BIQUADS_BINARY_DIR}/include/StoneyDSP/Biquads/${STONEYDSP_BIQUADS_UNIT_FILE}.cpp"
-#         "${STONEYDSP_BIQUADS_BINARY_DIR}/include/StoneyDSP/Biquads/${STONEYDSP_BIQUADS_UNIT_FILE}.mm"
-#         DESTINATION "include/StoneyDSP/Biquads"
-#     )
-# endforeach ()
-
 configure_package_config_file(
     "${STONEYDSP_BIQUADS_SOURCE_DIR}/share/StoneyDSP/Biquads/StoneyDSPBiquadsConfig.cmake.in"
     "${STONEYDSP_BIQUADS_BINARY_DIR}/StoneyDSPBiquadsConfig.cmake"
     INSTALL_DESTINATION "lib/cmake/StoneyDSP/Biquads"
 )
-
-
-# install (
-#     DIRECTORY "${STONEYDSP_BIQUADS_BINARY_DIR}/share"
-#     DESTINATION "Builds"
-# )
 
 install (
     DIRECTORY "${STONEYDSP_BIQUADS_BINARY_DIR}/Biquads_Audio_Plugin_artefacts"
@@ -532,6 +563,7 @@ install (FILES
     "${STONEYDSP_BIQUADS_BINARY_DIR}/StoneyDSPBiquadsConfigVersion.cmake"
     "${STONEYDSP_BIQUADS_BINARY_DIR}/StoneyDSPBiquadsConfig.cmake"
     "${STONEYDSP_BIQUADS_SOURCE_DIR}/share/cmake/Modules/GetGitRevListCount.cmake"
+    "${STONEYDSP_BIQUADS_SOURCE_DIR}/share/cmake/Modules/StoneyDSPBiquadsHelpers.cmake"
     "${STONEYDSP_BIQUADS_SOURCE_DIR}/share/cmake/Modules/StoneyDSPBiquadsCPackIgnoreList.cmake"
     "${STONEYDSP_BIQUADS_SOURCE_DIR}/share/cmake/Modules/StoneyDSPBiquadsWriteVersionFile.cmake"
     "${STONEYDSP_BIQUADS_SOURCE_DIR}/share/cmake/Modules/JoinPaths.cmake"

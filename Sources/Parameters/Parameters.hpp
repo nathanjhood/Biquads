@@ -25,18 +25,18 @@
 #pragma once
 #define STONEYDSP_BIQUADS_PARAMETERS_HPP_INCLUDED
 
-// #include "../Biquads.hpp"
-
 // #ifndef STONEYDSP_BIQUADS_HPP_INCLUDED
-// #include <juce_audio_basics/juce_audio_basics.h>                                // depends: juce_core
-// #include <juce_audio_processors/juce_audio_processors.h>                        // depends: juce_gui_extra, juce_audio_basics
-// #include <juce_core/juce_core.h>                                                //
-// #include <juce_data_structures/juce_data_structures.h>                          // depends: juce_events
-// #include <juce_events/juce_events.h>                                            // depends: juce_core
-// #include <juce_graphics/juce_graphics.h>                                        // depends: juce_events
-// #include <juce_gui_basics/juce_gui_basics.h>                                    // depends: juce_graphics, juce_data_structures
-// #include <juce_gui_extra/juce_gui_extra.h>                                      // depends: juce_gui_basics
+#include <juce_audio_basics/juce_audio_basics.h>                                // depends: juce_core
+#include <juce_audio_processors/juce_audio_processors.h>                        // depends: juce_gui_extra, juce_audio_basics
+#include <juce_core/juce_core.h>                                                //
+#include <juce_data_structures/juce_data_structures.h>                          // depends: juce_events
+#include <juce_events/juce_events.h>                                            // depends: juce_core
+#include <juce_graphics/juce_graphics.h>                                        // depends: juce_events
+#include <juce_gui_basics/juce_gui_basics.h>                                    // depends: juce_graphics, juce_data_structures
+#include <juce_gui_extra/juce_gui_extra.h>                                      // depends: juce_gui_basics
 // #endif // STONEYDSP_BIQUADS_HPP_INCLUDED
+
+#include "Processor.hpp"
 
 namespace StoneyDSP {
 /** @addtogroup StoneyDSP @{ */
@@ -44,14 +44,22 @@ namespace StoneyDSP {
 namespace Biquads {
 /** @addtogroup Biquads @{ */
 
-class AudioPluginAudioProcessor;
+// namespace ProjectInfo
+// {
+//     extern const char* const  projectName    = "Biquads";
+//     extern const char* const  companyName    = "StoneyDSP";
+//     extern const char* const  versionString  = "1.2.3.167";
+//     extern const int          versionNumber  =  0x10203a7;
+// }
 
-class AudioPluginAudioProcessorParameters
+// class Processor;
+
+class Parameters
 {
 public:
     //==========================================================================
     /** Constructor. */
-    AudioPluginAudioProcessorParameters(AudioPluginAudioProcessor& p);
+    Parameters(Processor& p);
 
     //==============================================================================
     juce::UndoManager& getUndoManager() { return undoManager; }
@@ -84,19 +92,22 @@ private:
     //==========================================================================
     // This reference is provided as a quick way for the wrapper to
     // access the processor object that created it.
-    AudioPluginAudioProcessor& audioProcessor;
+    Processor& audioProcessor;
 
-    std::unique_ptr<juce::UndoManager> undoManagerPtr                           { nullptr };
-    juce::UndoManager& undoManager;
+    // std::unique_ptr<juce::UndoManager> undoManagerPtr                           { nullptr };
+    // juce::UndoManager& undoManager;
 
-    std::unique_ptr<juce::AudioProcessorValueTreeState> apvtsPtr                { nullptr };
-    juce::AudioProcessorValueTreeState& apvts;
+    // std::unique_ptr<juce::AudioProcessorValueTreeState> apvtsPtr                { nullptr };
+    // juce::AudioProcessorValueTreeState& apvts;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(AudioPluginAudioProcessorParameters)
+    juce::UndoManager undoManager;
+    juce::AudioProcessorValueTreeState apvts;
+
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Parameters)
 };
 
-  /// @} group Biquads
+  /** @} group Biquads */
 } // namespace Biquads
 
-  /// @} group StoneyDSP
+  /** @} group StoneyDSP */
 } // namespace StoneyDSP

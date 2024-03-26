@@ -25,9 +25,7 @@
 #pragma once
 #define STONEYDSP_BIQUADS_EDITOR_HPP_INCLUDED
 
-// #include "../Biquads.hpp"
-
-// #ifndef STONEYDSP_BIQUADS_HPP_INCLUDED
+// // #ifndef STONEYDSP_BIQUADS_HPP_INCLUDED
 // #include <juce_audio_basics/juce_audio_basics.h>
 // #include <juce_audio_devices/juce_audio_devices.h>
 // #include <juce_audio_formats/juce_audio_formats.h>
@@ -41,7 +39,7 @@
 // #include <juce_graphics/juce_graphics.h>
 // #include <juce_gui_basics/juce_gui_basics.h>
 // #include <juce_gui_extra/juce_gui_extra.h>
-// #endif
+// // #endif
 
 namespace StoneyDSP {
 /** @addtogroup StoneyDSP @{ */
@@ -75,8 +73,8 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioPluginAudioProcessorEditor)
 };
 
-  /// @} group Biquads
+  /** @} group Biquads */
 } // namespace Biquads
 
-  /// @} group StoneyDSP
+  /** @} group StoneyDSP */
 } // namespace StoneyDSP

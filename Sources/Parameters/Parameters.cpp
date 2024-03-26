@@ -22,6 +22,10 @@
 
  ******************************************************************************/
 
+// #ifdef STONEYDSP_BIQUADS_PARAMETERS_HPP_INCLUDED
+//  #error "Incorrect usage of 'Parameters.cpp'!"
+// #endif
+
 #include "Parameters.hpp"
 
 namespace StoneyDSP {
@@ -30,18 +34,14 @@ namespace StoneyDSP {
 namespace Biquads {
 /** @addtogroup Biquads  @{ */
 
-AudioPluginAudioProcessorParameters::AudioPluginAudioProcessorParameters(AudioPluginAudioProcessor& p /* , juce::AudioProcessorValueTreeState& apvts */)
+Parameters::Parameters(Processor& p)
 : audioProcessor  (p)
-, undoManagerPtr  (std::make_unique<juce::UndoManager>())
-, undoManager     (*undoManagerPtr.get())
-, apvtsPtr        (std::make_unique<juce::AudioProcessorValueTreeState>(p, &undoManager, juce::Identifier { "Parameters" }, createParameterLayout()))
-, apvts           (*apvtsPtr.get())
+, undoManager     ()
+, apvts           (p, &undoManager, juce::Identifier { "Parameters" }, createParameterLayout())
 {
-    jassert(undoManagerPtr      != nullptr);
-    jassert(apvtsPtr            != nullptr);
 }
 
-void AudioPluginAudioProcessorParameters::setParameterLayout(juce::AudioProcessorValueTreeState::ParameterLayout& newParameterLayout)
+void Parameters::setParameterLayout(juce::AudioProcessorValueTreeState::ParameterLayout& newParameterLayout)
 {
     const auto dBMax        = juce::Decibels::gainToDecibels(16.0f);
     const auto dBMin        = juce::Decibels::gainToDecibels(0.0625f);
@@ -180,7 +180,7 @@ void AudioPluginAudioProcessorParameters::setParameterLayout(juce::AudioProcesso
     const auto bandsString = juce::StringArray({ "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O" });
 }
 
-juce::AudioProcessorValueTreeState::ParameterLayout AudioPluginAudioProcessorParameters::createParameterLayout()
+juce::AudioProcessorValueTreeState::ParameterLayout Parameters::createParameterLayout()
 {
     juce::AudioProcessorValueTreeState::ParameterLayout parameterLayout;
 
@@ -189,15 +189,15 @@ juce::AudioProcessorValueTreeState::ParameterLayout AudioPluginAudioProcessorPar
     return parameterLayout;
 }
 
-juce::AudioProcessorParameterGroup AudioPluginAudioProcessorParameters::createParameterGroup()
+juce::AudioProcessorParameterGroup Parameters::createParameterGroup()
 {
     juce::AudioProcessorParameterGroup parameterGroup;
 
     return parameterGroup;
 }
 //==============================================================================
-  /// @} group Biquads
+  /** @} group Biquads */
 } // namespace Biquads
 
-  /// @} group StoneyDSP
+  /** @} group StoneyDSP */
 } // namespace StoneyDSP

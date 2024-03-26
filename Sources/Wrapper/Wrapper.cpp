@@ -506,8 +506,8 @@ void AudioPluginAudioProcessorWrapper<SampleType>::update()
 template class AudioPluginAudioProcessorWrapper<float>;
 template class AudioPluginAudioProcessorWrapper<double>;
 
-  /// @} group Biquads
+  /** @} group Biquads */
 } // namespace Biquads
 
-  /// @} group StoneyDSP
+  /** @} group StoneyDSP */
 } // namespace StoneyDSP

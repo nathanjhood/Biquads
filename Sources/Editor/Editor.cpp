@@ -22,6 +22,10 @@
 
  ******************************************************************************/
 
+// #ifdef STONEYDSP_BIQUADS_EDITOR_HPP_INCLUDED
+//  #error "Incorrect usage of 'Editor.cpp'!"
+// #endif
+
 #include "Editor.hpp"
 
 namespace StoneyDSP {
@@ -78,8 +82,8 @@ void AudioPluginAudioProcessorEditor::resized()
     redoButton.resized();
 }
 
-  /// @} group Biquads
+  /** @} group Biquads */
 } // namespace Biquads
 
-  /// @} group StoneyDSP
+  /** @} group StoneyDSP */
 } // namespace StoneyDSP

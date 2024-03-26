@@ -25,10 +25,6 @@
 #pragma once
 #define STONEYDSP_BIQUADS_PROCESSOR_HPP_INCLUDED
 
-// #include "../Biquads.hpp"
-// #include "../Parameters/Parameters.hpp"
-// #include "../Wrapper/Wrapper.hpp"
-
 // #ifndef STONEYDSP_BIQUADS_HPP_INCLUDED
 #include <juce_audio_basics/juce_audio_basics.h>                                // depends: juce_core
 #include <juce_audio_formats/juce_audio_formats.h>                              // depends: juce_audio_basics
@@ -41,13 +37,15 @@
 #include <juce_gui_basics/juce_gui_basics.h>                                    // depends: juce_graphics, juce_data_structures
 #include <juce_gui_extra/juce_gui_extra.h>                                      // depends: juce_gui_basics
 
-#include <stoneydsp_audio/stoneydsp_audio.h>
-#include <stoneydsp_core/stoneydsp_core.h>
+// #include <stoneydsp_audio/stoneydsp_audio.h>
+// #include <stoneydsp_core/stoneydsp_core.h>
 // #endif // STONEYDSP_BIQUADS_HPP_INCLUDED
 
 // #include "Biquads.hpp"
-// #include "Parameters.hpp"
-// #include "Wrapper.hpp"
+
+// #include "Parameters/Parameters.hpp"
+// #include "Wrapper/Wrapper.hpp"
+// #include "Editor/Editor.hpp"
 
 namespace StoneyDSP {
 /** @addtogroup StoneyDSP @{ */
@@ -55,12 +53,20 @@ namespace StoneyDSP {
 namespace Biquads {
 /** @addtogroup Biquads @{ */
 
-class AudioPluginAudioProcessor final : public juce::AudioProcessor
+// namespace ProjectInfo
+// {
+//     extern const char* const  projectName    = "Biquads";
+//     extern const char* const  companyName    = "StoneyDSP";
+//     extern const char* const  versionString  = "1.2.3.167";
+//     extern const int          versionNumber  =  0x10203a7;
+// }
+
+class Processor final : public juce::AudioProcessor
 {
 public:
     //==============================================================================
-    AudioPluginAudioProcessor();
-    ~AudioPluginAudioProcessor() override;
+    Processor();
+    ~Processor() override;
     //==============================================================================
     juce::AudioProcessorParameter* getBypassParameter() const override;
     bool isBypassed() const noexcept;
@@ -101,41 +107,47 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
     void setCurrentProgramStateInformation(const void* data, int sizeInBytes) override;
     //==============================================================================
+private:
     juce::UndoManager& getUndoManager() { return undoManager; }
     //==============================================================================
     juce::AudioProcessorValueTreeState& getApvts() { return apvts; }
     //==============================================================================
     juce::dsp::ProcessSpec& getSpec() { return spec; }
     //==============================================================================
-    const AudioPluginAudioProcessorParameters& getParameters() { return parameters; }
-
-private:
+    static juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
     //==============================================================================
-    AudioPluginAudioProcessorWrapper<float>& getProcessorFlt() { return processorFlt; }
-    AudioPluginAudioProcessorWrapper<double>& getProcessorDbl() { return processorDbl; }
+    // const Parameters& getParameters() { return parameters; }
+    //==============================================================================
+    // Wrapper<float>& getProcessorFlt() { return processorFlt; }
+    // Wrapper<double>& getProcessorDbl() { return processorDbl; }
     //==============================================================================
     juce::AudioProcessor::ProcessingPrecision processingPrecision;
     juce::dsp::ProcessSpec spec;
     //==============================================================================
-    std::unique_ptr<AudioPluginAudioProcessorParameters> parametersPtr { nullptr };
-    AudioPluginAudioProcessorParameters& parameters;
+    // std::unique_ptr<Parameters> parametersPtr { nullptr };
+    // Parameters& parameters;
     //==============================================================================
-    juce::UndoManager& undoManager;
-    juce::AudioProcessorValueTreeState& apvts;
+    // std::unique_ptr<juce::UndoManager> undoManagerPtr                           { nullptr };
+    // juce::UndoManager& undoManager;
+    // std::unique_ptr<juce::AudioProcessorValueTreeState> apvtsPtr                { nullptr };
+    // juce::AudioProcessorValueTreeState& apvts;
+
+    juce::UndoManager undoManager;
+    juce::AudioProcessorValueTreeState apvts;
+    // //==============================================================================
+    // std::unique_ptr<Wrapper<float>> processorFltPtr { nullptr };
+    // std::unique_ptr<Wrapper<double>> processorDblPtr { nullptr };
     //==============================================================================
-    std::unique_ptr<AudioPluginAudioProcessorWrapper<float>> processorFltPtr { nullptr };
-    std::unique_ptr<AudioPluginAudioProcessorWrapper<double>> processorDblPtr { nullptr };
-    //==============================================================================
-    AudioPluginAudioProcessorWrapper<float>& processorFlt;
-    AudioPluginAudioProcessorWrapper<double>& processorDbl;
+    // Wrapper<float>& processorFlt;
+    // Wrapper<double>& processorDbl;
     //==============================================================================
     juce::AudioParameterBool* bypassState { nullptr };
     //==============================================================================
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioPluginAudioProcessor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Processor)
 };
 
-  /// @} group Biquads
+  /** @} group Biquads */
 } // namespace Biquads
 
-  /// @} group StoneyDSP
+  /** @} group StoneyDSP */
 } // namespace StoneyDSP
