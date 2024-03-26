@@ -2,7 +2,7 @@
 
 <JUCERPROJECT id="jER3fq" name="Biquads" projectType="audioplug" useAppConfig="1"
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
-              companyName="StoneyDSP" cppLanguageStandard="latest" version="1.2.3.155"
+              companyName="StoneyDSP" cppLanguageStandard="latest" version="1.2.3.171"
               pluginAUMainType="'aufx'" pluginVST3Category="EQ,Fx" pluginFormats="buildAU,buildStandalone,buildVST3"
               companyEmail="nathanjhood@googlemail.com" companyWebsite="https://stoneydsp.com"
               pluginName="Biquads" pluginManufacturer="StoneyDSP" pluginManufacturerCode="Manu"
@@ -14,24 +14,24 @@
     <FILE id="BNhTZz" name="Biquads.hpp" compile="0" resource="0" file="Sources/Biquads.hpp"/>
     <FILE id="M8Cygh" name="Biquads.mm" compile="1" resource="0" file="Sources/Biquads.mm"/>
     <GROUP id="{45895ACC-B5FE-3A7B-1995-2577D6E55BB8}" name="Processor">
-      <FILE id="DQbjso" name="Processor.cpp" compile="1" resource="0" file="Sources/Processor.cpp"/>
-      <FILE id="kqNQTA" name="Processor.hpp" compile="0" resource="0" file="Sources/Processor.hpp"/>
-      <FILE id="goOrlu" name="Processor.mm" compile="1" resource="0" file="Sources/Processor.mm"/>
+      <FILE id="DQbjso" name="Processor.cpp" compile="1" resource="0" file="Sources/Processor/Processor.cpp"/>
+      <FILE id="kqNQTA" name="Processor.hpp" compile="0" resource="0" file="Sources/Processor/Processor.hpp"/>
+      <FILE id="goOrlu" name="Processor.mm" compile="1" resource="0" file="Sources/Processor/Processor.mm"/>
     </GROUP>
     <GROUP id="{D93DAB18-5F49-5885-BAE5-123A8A44218C}" name="Editor">
-      <FILE id="KcAXEe" name="Editor.cpp" compile="1" resource="0" file="Sources/Editor.cpp"/>
-      <FILE id="ndB3H3" name="Editor.hpp" compile="0" resource="0" file="Sources/Editor.hpp"/>
-      <FILE id="KQS2Oq" name="Editor.mm" compile="1" resource="0" file="Sources/Editor.mm"/>
+      <FILE id="KcAXEe" name="Editor.cpp" compile="1" resource="0" file="Sources/Editor/Editor.cpp"/>
+      <FILE id="ndB3H3" name="Editor.hpp" compile="0" resource="0" file="Sources/Editor/Editor.hpp"/>
+      <FILE id="KQS2Oq" name="Editor.mm" compile="1" resource="0" file="Sources/Editor/Editor.mm"/>
     </GROUP>
     <GROUP id="{EB523045-6BC0-5048-8EE1-DD51F26132C7}" name="Wrapper">
-      <FILE id="phjZfL" name="Wrapper.cpp" compile="1" resource="0" file="Sources/Wrapper.cpp"/>
-      <FILE id="hdTypU" name="Wrapper.hpp" compile="0" resource="0" file="Sources/Wrapper.hpp"/>
-      <FILE id="o2AVAU" name="Wrapper.mm" compile="1" resource="0" file="Sources/Wrapper.mm"/>
+      <FILE id="phjZfL" name="Wrapper.cpp" compile="1" resource="0" file="Sources/Wrapper/Wrapper.cpp"/>
+      <FILE id="hdTypU" name="Wrapper.hpp" compile="0" resource="0" file="Sources/Wrapper/Wrapper.hpp"/>
+      <FILE id="o2AVAU" name="Wrapper.mm" compile="1" resource="0" file="Sources/Wrapper/Wrapper.mm"/>
     </GROUP>
     <GROUP id="{EA5C6C1A-08C7-6E47-E1A0-F1FF7873673A}" name="Parameters">
-      <FILE id="V7cSw0" name="Parameters.cpp" compile="1" resource="0" file="Sources/Parameters.cpp"/>
-      <FILE id="SIadj8" name="Parameters.hpp" compile="0" resource="0" file="Sources/Parameters.hpp"/>
-      <FILE id="tTJow3" name="Parameters.mm" compile="1" resource="0" file="Sources/Parameters.mm"/>
+      <FILE id="V7cSw0" name="Parameters.cpp" compile="1" resource="0" file="Sources/Parameters/Parameters.cpp"/>
+      <FILE id="SIadj8" name="Parameters.hpp" compile="0" resource="0" file="Sources/Parameters/Parameters.hpp"/>
+      <FILE id="tTJow3" name="Parameters.mm" compile="1" resource="0" file="Sources/Parameters/Parameters.mm"/>
     </GROUP>
   </MAINGROUP>
   <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1" JUCE_VST3_CAN_REPLACE_VST2="0"/>
