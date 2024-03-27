@@ -186,8 +186,8 @@ set (STONEYDSP_BIQUADS_INCLUDEDIR "${STONEYDSP_BIQUADS_BINARY_DIR}/Sources") # d
 set (STONEYDSP_BIQUADS_UNIT_FILES "")
 list (APPEND STONEYDSP_BIQUADS_UNIT_FILES
     "Parameters"
-    # "Wrapper"
-    # "Editor"
+    "Wrapper"
+    "Editor"
     "Processor"
 )
 
@@ -199,6 +199,21 @@ list (APPEND STONEYDSP_BIQUADS_UNIT_FILE_EXTENSIONS
 )
 
 include (StoneyDSPBiquadsHelpers)
+# stoneydsp_biquads_add_juce_object_library(juce_core)
+
+stoneydsp_biquads_add_juce_object_library(juce_audio_basics)
+stoneydsp_biquads_add_juce_object_library(juce_audio_devices)
+stoneydsp_biquads_add_juce_object_library(juce_audio_formats)
+stoneydsp_biquads_add_juce_object_library(juce_audio_plugin_client)
+stoneydsp_biquads_add_juce_object_library(juce_audio_processors)
+stoneydsp_biquads_add_juce_object_library(juce_audio_utils)
+stoneydsp_biquads_add_juce_object_library(juce_core)
+stoneydsp_biquads_add_juce_object_library(juce_data_structures)
+stoneydsp_biquads_add_juce_object_library(juce_dsp)
+stoneydsp_biquads_add_juce_object_library(juce_events)
+stoneydsp_biquads_add_juce_object_library(juce_graphics)
+stoneydsp_biquads_add_juce_object_library(juce_gui_basics)
+stoneydsp_biquads_add_juce_object_library(juce_gui_extra)
 
 #[=============================================================================[
 #   target: StoneyDSP::Biquads::Parameters
@@ -206,6 +221,28 @@ include (StoneyDSPBiquadsHelpers)
 #   target: StoneyDSP::Biquads::Editor
 #   target: StoneyDSP::Biquads::Processor
 #]=============================================================================]
+
+# The below custom function generates several libraries using some simplified
+# arguments. The libraries generated may vary, but are generally as follows:
+#
+# <namespace>::<name>_INTERFACE - an INTERFACE library carrying the header and source files for this unit
+# <namespace>::<name>_JUCE_DEPENDENCIES - an INTERFACE library carrying all of the JUCE requirements for this unit
+# <namespace>::<name>_OBJECT - an OBJECT library representing the sum total of this compilation unit (for customary debugging/unit-testing stuff)
+# <namespace>::<name> - an INTERFACE library representing the sum total of this unit (for linking to our plugin target)
+#
+# Other libs might get added, or these might get shuffled around internally, as
+# I do battle with JUCE's unusual CMake implementation, which makes it
+# impossible to call the regular CMake 'export()' and 'install()' commands on
+# targets that consume their modules (and helpers).
+#
+# The idea is, we will seperate the headers/sources and JUCE their dependencies
+# into logical targets, and make it possible to export/install our unit files
+# without any stated linkaged requirements to JUCE; CMake's package config file
+# helpers can then be used to write up the 'StoneyDSPBiquadsConfig.cmake' file
+# which will in turn tell end-users' CMake about the JUCE requirements later on.
+# We basically need to 'bluff' the export/install commands, and pass the JUCE
+# requirements along - probably using a more convential configuration - for the
+# config file to do the remainder of the work, post - export/install.
 
 foreach (STONEYDSP_BIQUADS_UNIT_FILE IN LISTS STONEYDSP_BIQUADS_UNIT_FILES)
 
@@ -215,26 +252,23 @@ foreach (STONEYDSP_BIQUADS_UNIT_FILE IN LISTS STONEYDSP_BIQUADS_UNIT_FILES)
         VERSION "${STONEYDSP_BIQUADS_VERSION_MAJOR}.${STONEYDSP_BIQUADS_VERSION_MINOR}.${STONEYDSP_BIQUADS_VERSION_PATCH}"
         SOVERSION "${STONEYDSP_BIQUADS_VERSION_MAJOR}"
 
-        SOURCE_INTERFACE    "Sources/${STONEYDSP_BIQUADS_UNIT_FILE}"
-        BUILD_INTERFACE     "Sources/${STONEYDSP_BIQUADS_UNIT_FILE}"
-        INSTALL_INTERFACE   "include/StoneyDSP/Biquads/${STONEYDSP_BIQUADS_UNIT_FILE}"
+        SOURCE_INTERFACE    "Sources/${STONEYDSP_BIQUADS_UNIT_FILE}" # Where to find the source files for this unit
+        BUILD_INTERFACE     "Sources/${STONEYDSP_BIQUADS_UNIT_FILE}" # Where to place the configured files for this unit
+        INSTALL_INTERFACE   "include/StoneyDSP/Biquads/${STONEYDSP_BIQUADS_UNIT_FILE}" # Where to prefix the installation of this unit
     )
 
-    list (APPEND STONEYDSP_BIQUADS_EXPORT_TARGETS ${STONEYDSP_BIQUADS_UNIT_FILE}_INTERFACE)
+    list (APPEND STONEYDSP_BIQUADS_EXPORT_TARGETS ${STONEYDSP_BIQUADS_UNIT_FILE}_INTERFACE) # Keep a list of targets to pass to 'export/install()' later...
 
 endforeach ()
 
-# target_link_libraries (Wrapper_INTERFACE
-#     INTERFACE
-#         StoneyDSP::Biquads::Parameters_INTERFACE
-# )
+# The targets created above, once known, can then be called on as regular
+# CMake targets, with the properties of the library types described above.
 
-# target_link_libraries (Processor_INTERFACE
-#     INTERFACE
-#         StoneyDSP::Biquads::Wrapper_INTERFACE
-#         StoneyDSP::Biquads::Parameters_INTERFACE
-#         StoneyDSP::Biquads::Editor_INTERFACE
-# )
+# Here, we can specifiy every '#include <juce*/juce_*.h>' file we need in each
+# unit, rather than relying a global JUCE header. The function wraps our
+# libraries in such a way that no JUCE objects are duplicated during the build
+# process, avoiding unneccessary build times and linker symbol duplication
+# errors, but still permitting export/install to some degree.
 
 target_link_libraries (Parameters_JUCE_DEPENDENCIES
     INTERFACE
@@ -242,6 +276,37 @@ target_link_libraries (Parameters_JUCE_DEPENDENCIES
         juce::juce_audio_processors # depends: juce_gui_extra, juce_audio_basics
         juce::juce_core
         juce::juce_data_structures # depends: juce_events
+        juce::juce_events # depends: juce_core
+        juce::juce_graphics # depends: juce_events
+        juce::juce_gui_basics # depends: juce_graphics, juce_data_structures
+        juce::juce_gui_extra # depends: juce_gui_basics
+)
+
+target_link_libraries (Wrapper_JUCE_DEPENDENCIES
+    INTERFACE
+        juce::juce_audio_basics # depends: juce_core
+        juce::juce_audio_formats # depends: juce_audio_basics
+        juce::juce_audio_processors # depends: juce_gui_extra, juce_audio_basics
+        juce::juce_core #
+        juce::juce_data_structures # depends: juce_events
+        juce::juce_dsp # depends: juce_audio_formats
+        juce::juce_events # depends: juce_core
+        juce::juce_graphics # depends: juce_events
+        juce::juce_gui_basics # depends: juce_graphics, juce_data_structures
+        juce::juce_gui_extra # depends: juce_gui_basics
+
+        # StoneyDSP::stoneydsp_audio
+        # StoneyDSP::stoneydsp_core
+)
+
+target_link_libraries (Editor_JUCE_DEPENDENCIES # This one may change...
+    INTERFACE
+        juce::juce_audio_basics # depends: juce_core
+        juce::juce_audio_formats # depends: juce_audio_basics
+        juce::juce_audio_processors # depends: juce_gui_extra, juce_audio_basics
+        juce::juce_core
+        juce::juce_data_structures # depends: juce_events
+        juce::juce_dsp # depends: juce_audio_formats
         juce::juce_events # depends: juce_core
         juce::juce_graphics # depends: juce_events
         juce::juce_gui_basics # depends: juce_graphics, juce_data_structures
@@ -262,26 +327,148 @@ target_link_libraries (Processor_JUCE_DEPENDENCIES
         juce::juce_gui_extra # depends: juce_gui_basics
 )
 
-# Pretend this is a plugin... we want to see all link/include lines resolved,
-# but only one copy of each object - *and* the required JUCE modules - being built.
-# I wrapped this away because I may have to tweak the implementation further to
-# make the components compatible with CMake's install interface, which requires
-# tricky workarounds because of JUCE's CMake implementation...
-# Later, this might become a useful framework for unit tests and stuff.
-add_library (test SHARED)
-add_library (StoneyDSP::Biquads::test ALIAS test)
+# Likewise, if one unit depends on another, we can specify that here. Since
+# the INTERFACE targets are all safe to export/install, we may as well specify
+# these inter-dendencies now, instead of passing this on to the config file,
+# for downstream installers of this module.
 
-target_link_libraries (test
-    PRIVATE
-        StoneyDSP::Biquads::Parameters_OBJECT
-        StoneyDSP::Biquads::Processor_OBJECT
+target_link_libraries (Wrapper_INTERFACE
+    INTERFACE
+        StoneyDSP::Biquads::Parameters_INTERFACE
 )
 
-return ()
+target_link_libraries (Processor_INTERFACE
+    INTERFACE
+        StoneyDSP::Biquads::Wrapper_INTERFACE
+        StoneyDSP::Biquads::Parameters_INTERFACE
+        StoneyDSP::Biquads::Editor_INTERFACE
+)
+
+# These objects can be globally shared to save compilation times! (WIP)
+
+target_sources (Processor_OBJECT
+    PRIVATE
+        $<TARGET_OBJECTS:juce_audio_basics_OBJECT> # depends: juce_core
+        $<TARGET_OBJECTS:juce_audio_formats_OBJECT> # depends: juce_audio_basics
+        $<TARGET_OBJECTS:juce_audio_processors_OBJECT> # depends: juce_gui_extra, juce_audio_basics
+        $<TARGET_OBJECTS:juce_core_OBJECT>
+        $<TARGET_OBJECTS:juce_data_structures_OBJECT> # depends: juce_events
+        $<TARGET_OBJECTS:juce_dsp_OBJECT> # depends: juce_audio_formats
+        $<TARGET_OBJECTS:juce_events_OBJECT> # depends: juce_core
+        $<TARGET_OBJECTS:juce_graphics_OBJECT> # depends: juce_events
+        $<TARGET_OBJECTS:juce_gui_basics_OBJECT> # depends: juce_graphics, juce_data_structures
+        $<TARGET_OBJECTS:juce_gui_extra_OBJECT> # depends: juce_gui_basics
+)
+
+#[=============================================================================[
+#   target: StoneyDSP::Biquads
+#]=============================================================================]
+
+add_library (Biquads OBJECT)
+add_library (StoneyDSP::Biquads::Biquads ALIAS Biquads)
+
+target_compile_features(Biquads PUBLIC cxx_std_17)
+
+set (STONEYDSP_BIQUADS_JUCE_MODULE_DEPENDENCIES "")
+list(APPEND STONEYDSP_BIQUADS_JUCE_MODULE_DEPENDENCIES
+    juce_audio_basics
+    juce_audio_devices
+    juce_audio_formats
+    juce_audio_plugin_client
+    juce_audio_processors
+    juce_audio_utils
+    juce_core
+    juce_data_structures
+    juce_dsp
+    juce_events
+    juce_graphics
+    juce_gui_basics
+    juce_gui_extra
+)
+foreach(STONEYDSP_BIQUADS_JUCE_MODULE_DEPENDENCY IN LISTS STONEYDSP_BIQUADS_JUCE_MODULE_DEPENDENCIES)
+    target_link_libraries (Biquads
+        PRIVATE
+            juce::${STONEYDSP_BIQUADS_JUCE_MODULE_DEPENDENCY}
+    )
+endforeach()
+
+set (STONEYDSP_BIQUADS_STONEYDSP_MODULE_DEPENDENCIES "")
+list (APPEND STONEYDSP_BIQUADS_STONEYDSP_MODULE_DEPENDENCIES
+    stoneydsp_core
+    stoneydsp_audio
+    # stoneydsp_graphics
+)
+foreach(STONEYDSP_BIQUADS_STONEYDSP_MODULE_DEPENDENCY IN LISTS STONEYDSP_BIQUADS_STONEYDSP_MODULE_DEPENDENCIES)
+    target_link_libraries (Biquads
+        PRIVATE
+            StoneyDSP::${STONEYDSP_BIQUADS_STONEYDSP_MODULE_DEPENDENCY}
+    )
+endforeach()
+
+configure_file (
+    "Sources/Biquads.hpp"
+    "Biquads_Audio_Plugin_artefacts/Sources/Biquads.hpp"
+)
+configure_file (
+    "Sources/Biquads.cpp"
+    "Biquads_Audio_Plugin_artefacts/Sources/Biquads.cpp"
+)
+configure_file (
+    "Sources/Biquads.mm"
+    "Biquads_Audio_Plugin_artefacts/Sources/Biquads.mm"
+)
+
+source_group ("Biquads"
+    FILES
+        "${STONEYDSP_BIQUADS_BINARY_DIR}/Biquads_Audio_Plugin_artefacts/Sources/Biquads.hpp"
+        "${STONEYDSP_BIQUADS_BINARY_DIR}/Biquads_Audio_Plugin_artefacts/Sources/Biquads.cpp"
+        "${STONEYDSP_BIQUADS_BINARY_DIR}/Biquads_Audio_Plugin_artefacts/Sources/Biquads.mm"
+)
+
+if (CMAKE_MAJOR_VERSION GREATER_EQUAL 3 AND (CMAKE_MINOR_VERSION LESS 23))
+    target_include_directories (Biquads
+        PUBLIC
+            $<BUILD_INTERFACE:${STONEYDSP_BIQUADS_BINARY_DIR}/Biquads_Audio_Plugin_artefacts/Sources>
+            $<INSTALL_INTERFACE:include/StoneyDSP/Biquads>
+    )
+else ()
+    target_sources (Biquads
+        PUBLIC
+            FILE_SET biquads_AUDIO_PLUGIN_INTERFACE_HEADERS
+            TYPE HEADERS
+            BASE_DIRS
+                $<BUILD_INTERFACE:${STONEYDSP_BIQUADS_BINARY_DIR}/Biquads_Audio_Plugin_artefacts/Sources>
+                $<INSTALL_INTERFACE:include/StoneyDSP>
+            FILES
+                $<BUILD_INTERFACE:${STONEYDSP_BIQUADS_BINARY_DIR}/Biquads_Audio_Plugin_artefacts/Sources/Biquads.hpp>
+                $<INSTALL_INTERFACE:include/StoneyDSP/Biquads.hpp>
+    )
+endif()
+
+target_sources (Biquads
+    PRIVATE
+        $<BUILD_INTERFACE:${STONEYDSP_BIQUADS_BINARY_DIR}/Biquads_Audio_Plugin_artefacts/Sources/Biquads.cpp>
+        $<INSTALL_INTERFACE:include/StoneyDSP/Biquads.cpp>
+
+        $<TARGET_OBJECTS:Parameters_OBJECT>
+        $<TARGET_OBJECTS:Processor_OBJECT>
+        $<TARGET_OBJECTS:Wrapper_OBJECT>
+        $<TARGET_OBJECTS:Editor_OBJECT>
+)
+target_compile_definitions (Biquads
+    PUBLIC
+        JUCE_WEB_BROWSER=0
+        JUCE_USE_CURL=0
+        JUCE_VST3_CAN_REPLACE_VST2=0
+        DONT_SET_USING_JUCE_NAMESPACE=1
+)
 
 #[=============================================================================[
 #   target: StoneyDSP::Biquads_Audio_Plugin
 #]=============================================================================]
+
+option (STONEYDSP_BIQUADS_BUILD_AUDIO_PLUGIN "" OFF)
+if (STONEYDSP_BIQUADS_BUILD_AUDIO_PLUGIN)
 
 juce_add_plugin (Biquads_Audio_Plugin
     # VERSION ...                                                               # Set this if the plugin version is different to the project version
@@ -326,105 +513,29 @@ juce_add_plugin (Biquads_Audio_Plugin
     # UNITY_COPY_DIR
 )
 
-target_compile_features(Biquads_Audio_Plugin PUBLIC cxx_std_17)
-
-set (STONEYDSP_BIQUADS_JUCE_MODULE_DEPENDENCIES "")
-list(APPEND STONEYDSP_BIQUADS_JUCE_MODULE_DEPENDENCIES
-    juce_audio_basics
-    juce_audio_devices
-    juce_audio_formats
-    juce_audio_plugin_client
-    juce_audio_processors
-    juce_audio_utils
-    juce_core
-    juce_data_structures
-    juce_dsp
-    juce_events
-    juce_graphics
-    juce_gui_basics
-    juce_gui_extra
-)
-foreach(STONEYDSP_BIQUADS_JUCE_MODULE_DEPENDENCY IN LISTS STONEYDSP_BIQUADS_JUCE_MODULE_DEPENDENCIES)
-    target_link_libraries (Biquads_Audio_Plugin
-        PRIVATE
-            juce::${STONEYDSP_BIQUADS_JUCE_MODULE_DEPENDENCY}
-    )
-endforeach()
-
-set (STONEYDSP_BIQUADS_STONEYDSP_MODULE_DEPENDENCIES "")
-list (APPEND STONEYDSP_BIQUADS_STONEYDSP_MODULE_DEPENDENCIES
-    stoneydsp_core
-    stoneydsp_audio
-    # stoneydsp_graphics
-)
-foreach(STONEYDSP_BIQUADS_STONEYDSP_MODULE_DEPENDENCY IN LISTS STONEYDSP_BIQUADS_STONEYDSP_MODULE_DEPENDENCIES)
-    target_link_libraries (Biquads_Audio_Plugin
-        PRIVATE
-            StoneyDSP::${STONEYDSP_BIQUADS_STONEYDSP_MODULE_DEPENDENCY}
-    )
-endforeach()
-
-configure_file (
-    "Sources/Biquads.hpp"
-    "Biquads_Audio_Plugin_artefacts/Sources/Biquads.hpp"
-)
-configure_file (
-    "Sources/Biquads.cpp"
-    "Biquads_Audio_Plugin_artefacts/Sources/Biquads.cpp"
-)
-configure_file (
-    "Sources/Biquads.mm"
-    "Biquads_Audio_Plugin_artefacts/Sources/Biquads.mm"
-)
-
-source_group ("Biquads"
-    FILES
-        "${STONEYDSP_BIQUADS_BINARY_DIR}/Biquads_Audio_Plugin_artefacts/Sources/Biquads.hpp"
-        "${STONEYDSP_BIQUADS_BINARY_DIR}/Biquads_Audio_Plugin_artefacts/Sources/Biquads.cpp"
-        "${STONEYDSP_BIQUADS_BINARY_DIR}/Biquads_Audio_Plugin_artefacts/Sources/Biquads.mm"
-)
-
-if (CMAKE_MAJOR_VERSION GREATER_EQUAL 3 AND (CMAKE_MINOR_VERSION LESS 23))
-
-    target_include_directories (Biquads_Audio_Plugin
-        PUBLIC
-            $<BUILD_INTERFACE:${STONEYDSP_BIQUADS_BINARY_DIR}/Biquads_Audio_Plugin_artefacts/Sources>
-            $<INSTALL_INTERFACE:include/StoneyDSP/Biquads>
-    )
-
-else ()
-
-    target_sources (Biquads_Audio_Plugin
-
-        PUBLIC
-            FILE_SET biquads_AUDIO_PLUGIN_INTERFACE_HEADERS
-            TYPE HEADERS
-            BASE_DIRS
-                $<BUILD_INTERFACE:${STONEYDSP_BIQUADS_BINARY_DIR}/Biquads_Audio_Plugin_artefacts/Sources>
-                $<INSTALL_INTERFACE:include/StoneyDSP>
-            FILES
-                $<BUILD_INTERFACE:${STONEYDSP_BIQUADS_BINARY_DIR}/Biquads_Audio_Plugin_artefacts/Sources/Biquads.hpp>
-                $<INSTALL_INTERFACE:include/StoneyDSP/Biquads.hpp>
-    )
-endif()
-
 target_sources (Biquads_Audio_Plugin
     PRIVATE
-        $<BUILD_INTERFACE:${STONEYDSP_BIQUADS_BINARY_DIR}/Biquads_Audio_Plugin_artefacts/Sources/Biquads.cpp>
-        $<INSTALL_INTERFACE:include/StoneyDSP/Biquads.cpp>
+
+        # $<TARGET_OBJECTS:Parameters_OBJECT>
+        # $<TARGET_OBJECTS:Processor_OBJECT>
+        # $<TARGET_OBJECTS:Wrapper_OBJECT>
+        # $<TARGET_OBJECTS:Editor_OBJECT>
+        $<TARGET_OBJECTS:Biquads>
 )
 
-target_link_libraries (Biquads_Audio_Plugin
-    PRIVATE
-        # StoneyDSP::Biquads::Parameters
-        # StoneyDSP::Biquads::Wrapper
-        # StoneyDSP::Biquads::Editor
-        # StoneyDSP::Biquads::Processor
-        $<TARGET_OBJECTS:Parameters_OBJECT>
-        $<TARGET_OBJECTS:Processor_OBJECT>
-        $<TARGET_OBJECTS:Wrapper_OBJECT>
-        $<TARGET_OBJECTS:Editor_OBJECT>
-)
+# target_link_libraries (Biquads_Audio_Plugin
+#     PRIVATE
+#     StoneyDSP::Biquads::Biquads
+#         # StoneyDSP::Biquads::Parameters
+#         # StoneyDSP::Biquads::Wrapper
+#         # StoneyDSP::Biquads::Editor
+#         # StoneyDSP::Biquads::Processor
+
+#         StoneyDSP::Biquads::Parameters_INTERFACE
+#         StoneyDSP::Biquads::Wrapper_INTERFACE
+#         StoneyDSP::Biquads::Editor_INTERFACE
+#         StoneyDSP::Biquads::Processor_INTERFACE
+# )
 
 set (STONEYDSP_BIQUADS_JUCE_FLAGS "")
 if (STONEYDSP_BIQUADS_USING_JUCE_RECOMMENDED_CONFIG_FLAGS)
@@ -444,13 +555,6 @@ foreach (STONEYDSP_BIQUADS_JUCE_FLAG IN LISTS STONEYDSP_BIQUADS_JUCE_FLAGS)
     )
 endforeach ()
 
-target_compile_definitions (Biquads_Audio_Plugin
-    PUBLIC
-        JUCE_WEB_BROWSER=0
-        JUCE_USE_CURL=0
-        JUCE_VST3_CAN_REPLACE_VST2=0
-        DONT_SET_USING_JUCE_NAMESPACE=1
-)
 
 #[=============================================================================[
 #   Helpers
@@ -468,13 +572,60 @@ if (STONEYDSP_BIQUADS_COPY_PLUGIN_AFTER_BUILD)
     juce_enable_copy_plugin_step    (Biquads_Audio_Plugin)
 endif ()
 
+endif (STONEYDSP_BIQUADS_BUILD_AUDIO_PLUGIN)
+
 #[=============================================================================[
 #   CTest configuration
 #]=============================================================================]
 
 if (STONEYDSP_BIQUADS_BUILD_TESTS AND (STONEYDSP_BIQUADS_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR))
     enable_testing ()
+if (FALSE)
+    # Pretend this is a plugin... we want to see all link/include lines resolved,
+    # but only one copy of each object - *and* the required JUCE modules - being built.
+    # I wrapped this away because I may have to tweak the implementation further to
+    # make the components compatible with CMake's install interface, which requires
+    # tricky workarounds because of JUCE's CMake implementation...
+    # Later, this might become a useful framework for unit tests and stuff.
+    add_library (unit_tests SHARED)
+    add_library (StoneyDSP::Biquads::unit_tests ALIAS unit_tests)
+    set_target_properties (unit_tests PROPERTIES EXCLUDE_FROM_ALL TRUE)
+    target_link_libraries (unit_tests
+        PUBLIC
+            StoneyDSP::Biquads::Parameters
+            StoneyDSP::Biquads::Wrapper
+            StoneyDSP::Biquads::Editor
+            StoneyDSP::Biquads::Processor
+    )
+endif ()
+if (FALSE)
+    add_library (interface_tests SHARED)
+    add_library (StoneyDSP::Biquads::interface_tests ALIAS interface_tests)
+    set_target_properties (interface_tests PROPERTIES EXCLUDE_FROM_ALL TRUE)
+    target_link_libraries (interface_tests
+        PUBLIC
+            StoneyDSP::Biquads::Parameters_INTERFACE
+            StoneyDSP::Biquads::Wrapper_INTERFACE
+            StoneyDSP::Biquads::Editor_INTERFACE
+            StoneyDSP::Biquads::Processor_INTERFACE
+    )
+endif ()
+if (FALSE)
+    add_library (object_tests SHARED)
+    add_library (StoneyDSP::Biquads::object_tests ALIAS object_tests)
+    set_target_properties (object_tests PROPERTIES EXCLUDE_FROM_ALL TRUE)
+    target_sources (object_tests
+        PRIVATE
+            $<TARGET_OBJECTS:Parameters_OBJECT>
+            $<TARGET_OBJECTS:Processor_OBJECT>
+            $<TARGET_OBJECTS:Wrapper_OBJECT>
+            $<TARGET_OBJECTS:Editor_OBJECT>
+    )
+endif ()
+
+    # This way for Tracktion Pluginval tests against the built plugin...
     add_subdirectory (Testing)
+
 endif ()
 
 #[=============================================================================[
@@ -487,44 +638,44 @@ set (STONEYDSP_BIQUADS_INCLUDEDIR
     $<INSTALL_INTERFACE:include/StoneyDSP/Biquads>
 )
 
-export (
-    TARGETS ${STONEYDSP_BIQUADS_EXPORT_TARGETS}
-    NAMESPACE StoneyDSP::Biquads::
-    FILE StoneyDSPBiquadsTargets.cmake
-)
+# export (
+#     TARGETS ${STONEYDSP_BIQUADS_EXPORT_TARGETS}
+#     NAMESPACE StoneyDSP::Biquads::
+#     FILE StoneyDSPBiquadsTargets.cmake
+# )
 
-if (CMAKE_MAJOR_VERSION GREATER_EQUAL 3 AND (CMAKE_MINOR_VERSION GREATER_EQUAL 23))
-    install (TARGETS ${STONEYDSP_BIQUADS_EXPORT_TARGETS}
-        EXPORT StoneyDSPBiquadsTargets
-        LIBRARY DESTINATION  "${CMAKE_INSTALL_LIBDIR}"
-        ARCHIVE DESTINATION  "${CMAKE_INSTALL_LIBDIR}"
-        RUNTIME DESTINATION  "${CMAKE_INSTALL_BINDIR}"
-        INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/StoneyDSP/Biquads"
+# if (CMAKE_MAJOR_VERSION GREATER_EQUAL 3 AND (CMAKE_MINOR_VERSION GREATER_EQUAL 23))
+#     install (TARGETS ${STONEYDSP_BIQUADS_EXPORT_TARGETS}
+#         EXPORT StoneyDSPBiquadsTargets
+#         LIBRARY DESTINATION  "${CMAKE_INSTALL_LIBDIR}"
+#         ARCHIVE DESTINATION  "${CMAKE_INSTALL_LIBDIR}"
+#         RUNTIME DESTINATION  "${CMAKE_INSTALL_BINDIR}"
+#         INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/StoneyDSP/Biquads"
 
-        FILE_SET biquads_Wrapper_INTERFACE_HEADERS DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/StoneyDSP/Biquads/Wrapper"
-        FILE_SET biquads_Parameters_INTERFACE_HEADERS DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/StoneyDSP/Biquads/Parameters"
-        FILE_SET biquads_Editor_INTERFACE_HEADERS DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/StoneyDSP/Biquads/Editor"
-        FILE_SET biquads_Processor_INTERFACE_HEADERS DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/StoneyDSP/Biquads/Processor"
-    )
-else ()
-    install (TARGETS ${STONEYDSP_BIQUADS_EXPORT_TARGETS}
-        EXPORT StoneyDSPBiquadsTargets
-        LIBRARY DESTINATION  "${CMAKE_INSTALL_LIBDIR}"
-        ARCHIVE DESTINATION  "${CMAKE_INSTALL_LIBDIR}"
-        RUNTIME DESTINATION  "${CMAKE_INSTALL_BINDIR}"
-        INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/StoneyDSP/Biquads"
+#         FILE_SET biquads_Wrapper_INTERFACE_HEADERS DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/StoneyDSP/Biquads/Wrapper"
+#         FILE_SET biquads_Parameters_INTERFACE_HEADERS DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/StoneyDSP/Biquads/Parameters"
+#         FILE_SET biquads_Editor_INTERFACE_HEADERS DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/StoneyDSP/Biquads/Editor"
+#         FILE_SET biquads_Processor_INTERFACE_HEADERS DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/StoneyDSP/Biquads/Processor"
+#     )
+# else ()
+#     install (TARGETS ${STONEYDSP_BIQUADS_EXPORT_TARGETS}
+#         EXPORT StoneyDSPBiquadsTargets
+#         LIBRARY DESTINATION  "${CMAKE_INSTALL_LIBDIR}"
+#         ARCHIVE DESTINATION  "${CMAKE_INSTALL_LIBDIR}"
+#         RUNTIME DESTINATION  "${CMAKE_INSTALL_BINDIR}"
+#         INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/StoneyDSP/Biquads"
 
-        PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/StoneyDSP/Biquads" # hmmm... not right.
-    )
-endif ()
+#         PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/StoneyDSP/Biquads" # hmmm... not right.
+#     )
+# endif ()
 
-install(
-  EXPORT StoneyDSPBiquadsTargets
-  FILE StoneyDSPBiquadsTargets.cmake
-  NAMESPACE StoneyDSP::Biquads::
-  DESTINATION "lib/cmake/StoneyDSP/Biquads"
-  EXPORT_LINK_INTERFACE_LIBRARIES
-)
+# install(
+#   EXPORT StoneyDSPBiquadsTargets
+#   FILE StoneyDSPBiquadsTargets.cmake
+#   NAMESPACE StoneyDSP::Biquads::
+#   DESTINATION "lib/cmake/StoneyDSP/Biquads"
+#   EXPORT_LINK_INTERFACE_LIBRARIES
+# )
 
 #[=============================================================================[
 #   Install & CPack configuration

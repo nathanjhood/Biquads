@@ -1,3 +1,55 @@
+function (stoneydsp_biquads_add_juce_object_library name)
+
+    add_library (${name}_OBJECT OBJECT)
+    add_library (juce::${name}::${name}_OBJECT ALIAS ${name}_OBJECT)
+
+    get_target_property (sources ${name} INTERFACE_SOURCES)
+
+    if (NOT sources STREQUAL "sources-NOTFOUND")
+    target_sources (${name}_OBJECT
+        PRIVATE
+            ${sources}
+    )
+    endif()
+
+    get_target_property (include_directories ${name} INTERFACE_INCLUDE_DIRECTORIES)
+    if (NOT include_directories STREQUAL "include_directories-NOTFOUND")
+    target_include_directories (${name}_OBJECT
+        PUBLIC
+            ${include_directories}
+    )
+    endif()
+
+    get_target_property (link_libraries ${name} INTERFACE_LINK_LIBRARIES)
+
+    target_link_libraries (${name}_OBJECT
+        PRIVATE
+            ${link_libraries}
+    )
+
+    get_target_property (link_options ${name} INTERFACE_LINK_OPTIONS)
+
+    target_link_options (${name}_OBJECT
+        PUBLIC
+            ${link_options}
+    )
+
+    get_target_property (compile_definitions ${name} INTERFACE_COMPILE_DEFINITIONS)
+
+    target_compile_definitions (${name}_OBJECT
+        PUBLIC
+            ${compile_definitions}
+    )
+
+    get_target_property (compile_options ${name} INTERFACE_COMPILE_OPTIONS)
+
+    target_compile_options (${name}_OBJECT
+        PUBLIC
+            ${compile_options}
+    )
+
+endfunction ()
+
 function (stoneydsp_biquads_add_unit name)
 
     # Avoid duplicate target names
@@ -90,7 +142,13 @@ function (stoneydsp_biquads_add_unit name)
         FILES
             $<BUILD_INTERFACE:${STONEYDSP_BIQUADS_BINARY_DIR}/${build_dir}/${name}.hpp>
             $<INSTALL_INTERFACE:${install_dir}/${name}.hpp>
+
+        SOURCES
+            $<BUILD_INTERFACE:${STONEYDSP_BIQUADS_BINARY_DIR}/${build_dir}/${name}.cpp>
+            $<INSTALL_INTERFACE:${install_dir}/${name}.cpp>
     )
+
+    target_link_libraries (${name}_INTERFACE INTERFACE ${namespace}::${name}_JUCE_DEPENDENCIES)
 
     # OBJECT
 
@@ -101,6 +159,8 @@ function (stoneydsp_biquads_add_unit name)
 
     stoneydsp_biquads_add_unit_object (${name}
 
+        EXCLUDE_FOM_ALL TRUE
+
         NAMESPACE StoneyDSP::Biquads
 
         INCLUDE_DIRECTORIES
@@ -109,7 +169,14 @@ function (stoneydsp_biquads_add_unit name)
         SOURCES
             $<BUILD_INTERFACE:${STONEYDSP_BIQUADS_BINARY_DIR}/${build_dir}/${name}.cpp>
             $<INSTALL_INTERFACE:${install_dir}/${name}.cpp>
+
+        HEADERS
+            $<BUILD_INTERFACE:${STONEYDSP_BIQUADS_BINARY_DIR}/${build_dir}/${name}.hpp>
+            $<INSTALL_INTERFACE:${install_dir}/${name}.hpp>
     )
+    # target_link_libraries (${name}_OBJECT INTERFACE ${namespace}::${name}_INTERFACE)
+
+    # target_link_libraries (${name}_OBJECT PUBLIC ${namespace}::${name}_JUCE_DEPENDENCIES)
 
     # OBJCXX
 
@@ -120,21 +187,22 @@ function (stoneydsp_biquads_add_unit name)
 
     # LINK
 
-    target_link_libraries (${name}_INTERFACE INTERFACE ${namespace}::${name}_JUCE_DEPENDENCIES)
-
-    # target_link_libraries (${name}_JUCE_DEPENDENCIES INTERFACE ${namespace}::${name}_INTERFACE)
-
-    target_link_libraries (${name}_OBJECT INTERFACE ${namespace}::${name}_INTERFACE)
-
-    target_link_libraries (${name}_OBJECT INTERFACE ${namespace}::${name}_JUCE_DEPENDENCIES)
-
-
     source_group ("${name}"
         FILES
             "${build_dir}/${name}.hpp"
             "${build_dir}/${name}.cpp"
             "${build_dir}/${name}.mm"
     )
+
+    add_library ("${name}" INTERFACE)
+    add_library ("${namespace}::${name}" ALIAS "${name}")
+
+    target_link_libraries (${name} INTERFACE ${namespace}::${name}_OBJECT)
+
+    target_link_libraries (${name} INTERFACE ${namespace}::${name}_INTERFACE)
+
+    target_link_libraries (${name} INTERFACE ${namespace}::${name}_JUCE_DEPENDENCIES)
+
 
 endfunction (stoneydsp_biquads_add_unit)
 
@@ -176,6 +244,7 @@ function (stoneydsp_biquads_add_unit_interface name)
         "CONFIGURATIONS"
         "BASE_DIRS"
         "FILES"
+        "SOURCES"
     )
     list (APPEND args
         "${ARGN}"
@@ -205,14 +274,14 @@ function (stoneydsp_biquads_add_unit_interface name)
     set (${name}_INTERFACE_HEADERS_FILES "")
     list (APPEND ${name}_INTERFACE_HEADERS_FILES ${ARG_FILES})
 
-    # set (${name}_INTERFACE_SOURCES "")
-    # list (APPEND ${name}_INTERFACE_SOURCES ${ARG_SOURCES})
+    set (${name}_INTERFACE_SOURCES "")
+    list (APPEND ${name}_INTERFACE_SOURCES ${ARG_SOURCES})
 
 
-    # set_target_properties (${name}_INTERFACE PROPERTIES
-    #     INTERFACE_INCLUDE_DIRECTORIES   "${${name}_INTERFACE_INCLUDE_DIRECTORIES}"
-    #     INTERFACE_SOURCES               "${${name}_INTERFACE_SOURCES}"
-    # )
+    set_target_properties (${name}_INTERFACE PROPERTIES
+        # INTERFACE_INCLUDE_DIRECTORIES   "${${name}_INTERFACE_INCLUDE_DIRECTORIES}"
+        INTERFACE_SOURCES               "${${name}_INTERFACE_SOURCES}"
+    )
 
     if (${name}_HAS_FILE_SET)
 
@@ -256,6 +325,12 @@ function (stoneydsp_biquads_add_unit_object name)
     string (TOUPPER "${name}" name_uppercase)
     string (TOLOWER "${name}" name_lowercase)
 
+    if (CMAKE_MAJOR_VERSION GREATER_EQUAL 3 AND (CMAKE_MINOR_VERSION GREATER_EQUAL 23))
+        set (${name}_HAS_FILE_SET TRUE)
+    else ()
+        set (${name}_HAS_FILE_SET FALSE)
+    endif ()
+
     # PARSE ARGS
 
     set (options "")
@@ -276,6 +351,7 @@ function (stoneydsp_biquads_add_unit_object name)
     list (APPEND multi_value_keywords
         "CONFIGURATIONS"
         "SOURCES"
+        "HEADERS"
         "INCLUDE_DIRECTORIES"
     )
     list (APPEND args
@@ -298,8 +374,14 @@ function (stoneydsp_biquads_add_unit_object name)
     set (${name}_OBJECT_INCLUDE_DIRECTORIES "")
     list (APPEND ${name}_OBJECT_INCLUDE_DIRECTORIES ${ARG_INCLUDE_DIRECTORIES})
 
+    set (${name}_OBJECT_HEADERS "")
+    list (APPEND ${name}_OBJECT_HEADERS ${ARG_HEADERS})
+
     set (${name}_OBJECT_SOURCES "")
     list (APPEND ${name}_OBJECT_SOURCES ${ARG_SOURCES})
+
+    set (${name}_OBJECT_EXCLUDE_FROM_ALL "")
+    list (APPEND ${name}_OBJECT_EXCLUDE_FROM_ALL ${ARG_EXCLUDE_FROM_ALL})
 
     target_sources (${name}_OBJECT
         PRIVATE
@@ -311,7 +393,31 @@ function (stoneydsp_biquads_add_unit_object name)
             ${${name}_OBJECT_INCLUDE_DIRECTORIES}
     )
 
+    if (${name}_HAS_FILE_SET)
 
+        target_sources (${name}_OBJECT
+            PUBLIC
+                FILE_SET "biquads_${name}_OBJECT_HEADERS"
+                TYPE "HEADERS"
+                BASE_DIRS
+                    ${${name}_OBJECT_INCLUDE_DIRECTORIES}
+                FILES
+                    ${${name}_OBJECT_HEADERS}
+        )
+
+    else () # ${name}_HAS_FILE_SET
+
+        set_property(TARGET ${name}_OBJECT
+            APPEND PROPERTY
+                INCLUDE_DIRECTORIES
+                    ${${name}_OBJECT_INCLUDE_DIRECTORIES}
+        )
+
+    endif () # ${name}_HAS_FILE_SET
+
+    set_target_properties (${name}_OBJECT PROPERTIES
+        EXCLUDE_FROM_ALL "${${name}_OBJECT_EXCLUDE_FROM_ALL}"
+    )
 
 endfunction (stoneydsp_biquads_add_unit_object)
 

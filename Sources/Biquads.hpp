@@ -78,6 +78,13 @@ namespace ProjectInfo
     extern const int          versionNumber;
 }
 
+class BiquadsAudioPlugin : public Processor
+{
+public:
+private:
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(BiquadsAudioPlugin)
+};
+
 /** Will need these later... */
 template <typename FloatType>
 struct Cartesian
