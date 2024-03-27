@@ -1,0 +1,150 @@
+{
+	"version": 6,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 23,
+    "patch": 0
+  },
+	"configurePresets": [
+		{
+      "name": "base",
+			"hidden": true,
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/Builds/Default",
+			"installDir": "${sourceDir}/Installed"
+    },
+		{
+			"name": "default",
+			"displayName": "Default",
+			"description": "Default Configure preset",
+			"hidden": false,
+			"inherits": "base"
+		}
+	],
+	"include": [
+		"share/cmake/Presets/CMakePresets.Biquads.json"
+	],
+	"buildPresets": [
+		{
+			"name": "base",
+			"hidden": true,
+			"targets": [
+				"all",
+				"install",
+				"clean",
+				"juce_vst3_helper",
+
+				"Biquads_Audio_Plugin",
+				"Biquads_Audio_Plugin_Standalone",
+				"Biquads_Audio_Plugin_VST3",
+				"Biquads_Audio_Plugin_All"
+			]
+		},
+		{
+			"name": "default",
+			"hidden": false,
+			"displayName": "Default",
+			"description": "Default Build preset",
+			"inherits": "base",
+			"configurePreset": "default"
+		},
+		{
+			"name": "default-verbose",
+			"hidden": false,
+			"displayName": "Default (Verbose)",
+			"description": "Default Build preset (verbose)",
+			"inherits": "base",
+			"configurePreset": "default",
+			"verbose": true
+		}
+	],
+	"testPresets": [
+		{
+      "name": "global",
+			"hidden": true,
+      "output": {
+				"outputOnFailure": true,
+				"verbosity": "default"
+			},
+      "execution": {
+				"noTestsAction": "error",
+				"stopOnFailure": true
+			}
+    },
+		{
+      "name": "default",
+			"hidden": false,
+			"displayName": "Default",
+			"description": "Default Test preset",
+      "configurePreset": "default",
+			"inherits": "global"
+    }
+	],
+	"packagePresets": [
+		{
+			"name": "global",
+			"hidden": true
+		},
+		{
+			"name": "default",
+			"hidden": false,
+			"displayName": "Default",
+			"description": "Default Package Preset",
+			"inherits": "global",
+			"configurePreset": "default"
+		}
+	],
+	"workflowPresets": [
+    {
+      "name": "default",
+			"displayName": "Default",
+			"description": "Default Workflow preset",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "default"
+        },
+        {
+          "type": "build",
+          "name": "default"
+        },
+        {
+          "type": "test",
+          "name": "default"
+        },
+        {
+          "type": "package",
+          "name": "default"
+        }
+      ]
+    }
+  ],
+	"vendor": {
+		"microsoft.com/VisualStudioSettings/CMake/1.0": {
+			"intelliSenseOptions": {
+				"useCompilerDefaults": true,
+				"additionalCompilerArgs": []
+			}
+		},
+		"microsoft.com/VisualStudioRemoteSettings/CMake/1.0": {
+			"sourceDir": "$env{HOME}/.vs/$ms{projectDirName}",
+			"copySources": true,
+			"copySourcesOptions": {
+				"exclusionList": [ ".vs", ".git", "out" ],
+				"method": "rsync",
+				"concurrentCopies": 5,
+				"outputVerbosity": "Normal"
+			},
+			"rsyncCommandArgs": [ "-t", "--delete", "--delete-excluded" ],
+			"copyBuildOutput": false,
+			"copyOptimizations": {
+				"maxSmallChange": 10,
+				"useOptimizations": "RsyncAndSftp",
+				"rsyncSingleDirectoryCommandArgs": [ "-t", "-d" ]
+			},
+			"copyAdditionalIncludeDirectoriesList": [],
+			"copyExcludeDirectoriesList": [],
+			"forceWSL1Toolset": false
+		}
+	}
+}

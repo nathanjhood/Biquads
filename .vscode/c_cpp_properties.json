@@ -3,9 +3,9 @@
 		{
 			"name": "GCC 11.4.0 x86_64-linux-gnu",
 			"includePath": [
-				"${workspaceFolder}/modules/**",
+				"${workspaceFolder}/Modules/**",
 				"${workspaceFolder}/JuceLibraryCode/**",
-				"${workspaceFolder}/include/**",
+				"${workspaceFolder}/Sources/**"
 			],
 			"defines": [],
 			"compilerPath": "/usr/bin/gcc",
@@ -13,15 +13,15 @@
 			"cppStandard": "gnu++17",
 			"intelliSenseMode": "linux-gcc-x64",
 			"configurationProvider": "ms-vscode.cmake-tools",
-			"mergeConfigurations": true
-			// "compileCommands": "${workspaceFolder}/build/compile_commands.json"
+			"mergeConfigurations": true,
+			"compileCommands": "${workspaceFolder}/Builds/compile_commands.json"
 		},
 		{
 			"name": "Clang 14.0.0 x86_64-pc-linux-gnu",
 			"includePath": [
-				"${workspaceFolder}/modules/**",
+				"${workspaceFolder}/Modules/**",
 				"${workspaceFolder}/JuceLibraryCode/**",
-				"${workspaceFolder}/include/**",
+				"${workspaceFolder}/Sources/**"
 			],
 			"defines": [],
 			"compilerPath": "/usr/bin/clang",
@@ -30,13 +30,14 @@
 			"intelliSenseMode": "linux-clang-x64",
 			"configurationProvider": "ms-vscode.cmake-tools",
 			"mergeConfigurations": true,
-			"compileCommands": "${workspaceFolder}/build/compile_commands.json"
+			"compileCommands": "${workspaceFolder}/Builds/compile_commands.json"
 		},
 		{
 			"name": "MSYS2 MSYS64 GCC 13.2.0 x86_64-pc-msys",
 			"includePath": [
-				"${workspaceFolder}/include/**",
-				"${workspaceFolder}/modules/**",
+				"${workspaceFolder}/Modules/**",
+				"${workspaceFolder}/JuceLibraryCode/**",
+				"${workspaceFolder}/Sources/**"
 			],
 			"defines": [],
 			"compilerPath": "C:/msys64/usr/bin/gcc",
@@ -44,13 +45,15 @@
 			"cppStandard": "gnu++17",
 			"intelliSenseMode": "linux-gcc-x64",
 			"configurationProvider": "ms-vscode.cmake-tools",
-			"mergeConfigurations": true
+			"mergeConfigurations": true,
+			"compileCommands": "${workspaceFolder}/Builds/compile_commands.json"
 		},
 		{
 			"name": "MSYS2 MSYS64 Clang x86_64-pc-msys",
 			"includePath": [
-				"${workspaceFolder}/include/**",
-				"${workspaceFolder}/modules/**",
+				"${workspaceFolder}/Modules/**",
+				"${workspaceFolder}/JuceLibraryCode/**",
+				"${workspaceFolder}/Sources/**"
 			],
 			"defines": [],
 			"compilerPath": "C:/msys64/usr/bin/clang",
@@ -58,20 +61,23 @@
 			"cppStandard": "c++17",
 			"intelliSenseMode": "linux-gcc-x64",
 			"configurationProvider": "ms-vscode.cmake-tools",
-			"mergeConfigurations": true
+			"mergeConfigurations": true,
+			"compileCommands": "${workspaceFolder}/Builds/compile_commands.json"
 		},
 		{
 			"name": "MSYS2 MINGW64 GCC x86_64-pc-mingw64",
 			"includePath": [
-				"${workspaceFolder}/include/**",
-				"${workspaceFolder}/modules/**",
+				"${workspaceFolder}/Modules/**",
+				"${workspaceFolder}/JuceLibraryCode/**",
+				"${workspaceFolder}/Sources/**"
 			],
 			"compilerPath": "C:/msys64/mingw64/bin/gcc",
 			"cStandard": "c17",
 			"cppStandard": "c++17",
 			"intelliSenseMode": "windows-gcc-x64",
 			"configurationProvider": "ms-vscode.cmake-tools",
-			"mergeConfigurations": true
+			"mergeConfigurations": true,
+			"compileCommands": "${workspaceFolder}/Builds/compile_commands.json"
 		}
 	],
 	"version": 4

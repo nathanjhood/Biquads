@@ -1,0 +1,156 @@
+{
+	"version": 6,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 23,
+    "patch": 0
+  },
+	"configurePresets": [
+		{
+			"name": "windows-base",
+			"hidden": true,
+			"displayName": "Windows-base configuration",
+			"description": "This build is only available on Windows",
+			"generator": "Ninja",
+      "binaryDir": "${sourceDir}/Builds",
+			"installDir": "${sourceDir}/Installed",
+			"toolchainFile": "$penv{HOME}/vcpkg/scripts/buildsystems/vcpkg.cmake",
+			"environment": {
+				"DISPLAY": ":0",
+				"VCPKG_DEFAULT_TRIPLET": "x64-windows",
+				"VCPKG_DEFAULT_HOST_TRIPLET": "x64-windows"
+			},
+			"cacheVariables": {
+				"CMAKE_EXPORT_COMPILE_COMMANDS": {
+          "type": "BOOL",
+          "value": "ON"
+        }
+			},
+			"errors": {
+				"deprecated": false,
+				"dev": false
+			},
+			"warnings": {
+				"deprecated": false,
+				"dev": false,
+				"systemVars": false,
+				"uninitialized": false,
+				"unusedCli": false
+			},
+			"condition": {
+				"type": "equals",
+				"lhs": "${hostSystemName}",
+				"rhs": "Windows"
+			},
+			"vendor": {
+				"microsoft.com/VisualStudioSettings/CMake/1.0": {
+					"hostOS": [ "Windows" ],
+					"intelliSenseMode": "windows-msvc-x64",
+					"intelliSenseOptions": {
+						"useCompilerDefaults": true,
+						"additionalCompilerArgs": []
+					}
+				},
+				"microsoft.com/VisualStudioRemoteSettings/CMake/1.0": {
+					"sourceDir": "$env{HOME}/.vs/$ms{projectDirName}"
+			 	}
+			}
+		},
+
+		{
+      "name": "windows-base-multi-config",
+			"hidden": true,
+      "inherits": "windows-base",
+      "generator": "Ninja Multi-Config"
+    },
+
+		{
+			"name": "windows-ninja-multi-config",
+			"inherits": "windows-base-multi-config",
+			"displayName": "Ninja Multi-Config",
+			"description": "Default Windows build using Ninja Multi-Config generator",
+			"cacheVariables": {
+				"CMAKE_CONFIGURATION_TYPES": {
+					"type": "STRING",
+					"value": "Debug;Release"
+				}
+			}
+		}
+	],
+
+	"buildPresets": [
+		{
+			"displayName": "Windows",
+			"name": "windows-base",
+			"hidden": true,
+			"targets": [
+				"all",
+				"install",
+				"clean",
+				"juce_vst3_helper",
+
+				"Biquads_Audio_Plugin",
+				"Biquads_Audio_Plugin_Standalone",
+				"Biquads_Audio_Plugin_VST3",
+				"Biquads_Audio_Plugin_All"
+			],
+			"condition": {
+				"type": "equals",
+				"lhs": "${hostSystemName}",
+				"rhs": "Windows"
+			}
+		},
+		{
+			"name": "windows-default",
+			"hidden": true,
+			"inherits": "windows-base",
+			"verbose": false
+		},
+
+		{
+			"displayName": "Debug",
+			"inherits": "windows-base",
+			"configuration": "Debug",
+			"configurePreset": "windows-ninja-multi-config",
+			"name": "windows-ninja-multi-config-debug"
+		},
+		{
+			"displayName": "Release",
+			"inherits": "windows-base",
+			"configuration": "Release",
+			"configurePreset": "windows-ninja-multi-config",
+			"name": "windows-ninja-multi-config-release"
+		},
+		{
+			"displayName": "Debug (Verbose)",
+			"inherits": "windows-ninja-multi-config-debug",
+			"name": "windows-ninja-multi-config-debug-verbose",
+			"verbose": true
+		},
+		{
+			"displayName": "Release (Verbose)",
+			"inherits": "windows-ninja-multi-config-release",
+			"name": "windows-ninja-multi-config-release-verbose",
+			"verbose": true
+		}
+	],
+	"testPresets": [
+		{
+      "name": "windows-base",
+			"hidden": true,
+      "output": {
+				"outputOnFailure": true,
+				"verbosity": "default"
+			},
+      "execution": {
+				"noTestsAction": "error",
+				"stopOnFailure": true
+			},
+			"condition": {
+				"type": "equals",
+				"lhs": "${hostSystemName}",
+				"rhs": "Windows"
+			}
+    }
+	]
+}

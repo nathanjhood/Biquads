@@ -91,7 +91,7 @@ list(APPEND STONEYDSP_BIQUADS_CPACK_IGNORE_LIST
     /install
     #/out
 
-    #/Builds
+    /Builds
 
     #/Release
     #/Debug

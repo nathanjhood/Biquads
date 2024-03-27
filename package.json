@@ -1,6 +1,6 @@
 {
   "name": "@stoneydsp/biquads",
-  "version": "1.2.2.174",
+  "version": "1.2.3.155",
   "main": "index.js",
   "author": {
 		"email": "nathanjhood@googlemail.com",
@@ -14,16 +14,27 @@
 	"readme": "https://github.com/nathanjhood/Biquads/README.md",
   "license": "GPL-3.0",
   "scripts": {
-    "configure":    "cmake         -S . -B ./build -DSTONEYDSP_BIQUADS_BUILD_TESTS:BOOL=TRUE -DCMAKE_INSTALL_PREFIX:PATH=./install -G Ninja",
-    "reconfigure":  "cmake --fresh -S . -B ./build -DSTONEYDSP_BIQUADS_BUILD_TESTS:BOOL=TRUE -DCMAKE_INSTALL_PREFIX:PATH=./install -G Ninja",
-    "build":        "cmake --build         ./build",
-    "postbuild":    "cmake --install       ./build",
-    "ctest":        "ctest --test-dir      ./build --rerun-failed --output-on-failure --verbose",
-    "cpack":        "cpack --config        ./build/CPackSourceConfig.cmake -B ./install",
-    "cdist":        "cpack --config        ./build/CPackConfig.cmake       -B ./install",
 
-		"sys:config":   "cmake --fresh -S . -B ./build -DSTONEYDSP_BIQUADS_BUILD_TESTS:BOOL=TRUE -GNinja",
-		"sys:install":  "cmake --build         ./build && cmake --build         ./build --target install"
+    "configure":       "cmake            -S . -B ./Builds -G Ninja",
+    "reconfigure":     "cmake --fresh    -S . -B ./Builds -G Ninja",
+    "build":           "cmake --build            ./Builds",
+    "postbuild":       "cmake --install          ./Builds",
+    "ctest":           "ctest --test-dir         ./Builds --rerun-failed --output-on-failure --verbose",
+    "cpack":           "cpack --config           ./Builds/CPackSourceConfig.cmake -B ./Installed",
+    "cdist":           "cpack --config           ./Builds/CPackConfig.cmake       -B ./Installed",
+		"clean": 			  	 "cmake --build            ./Builds --target clean",
+
+		"dbg:configure":   "cmake            -S . -B ./Builds -DCMAKE_BUILD_TYPE:STRING=Debug   -G Ninja",
+		"dbg:reconfigure": "cmake --fresh    -S . -B ./Builds --config Debug -G Ninja",
+		"dbg:build":       "cmake --build            ./Builds --config Debug",
+		"dbg:postbuild":   "cmake --install          ./Builds --config Debug --prefix ./Installed",
+		"dbg:clean": 		   "cmake --build            ./Builds --config Debug --target clean",
+
+		"rel:configure":   "cmake            -S . -B ./Builds -DCMAKE_BUILD_TYPE:STRING=Release -G Ninja",
+		"rel:reconfigure": "cmake --fresh    -S . -B ./Builds --config Debug -G Ninja",
+		"rel:build":       "cmake --build            ./Builds --config Release",
+		"rel:postbuild":   "cmake --install          ./Builds --config Release --prefix ./Installed",
+		"rel:clean": 		   "cmake --build            ./Builds --config Release --target clean"
   },
 	"engines": {
 		"node": ">=16.8.0"
